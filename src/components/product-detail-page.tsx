@@ -12,7 +12,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
 
   return (
     <div className="space-y-24 pb-24">
-      <section className="relative overflow-hidden rounded-[46px] bg-[#111111] p-8 shadow-[0_40px_140px_rgba(10,10,10,0.18)] md:p-14">
+      <section className="relative overflow-hidden rounded-[30px] bg-[#111111] p-6 shadow-[0_40px_140px_rgba(10,10,10,0.18)] md:rounded-[46px] md:p-10 lg:p-14">
         <MotionMedia
           frames={[visual.hero, ...visual.gallery.slice(0, 3)]}
           alt={`${product.name} 히어로 모션`}
@@ -25,14 +25,14 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
           }`}
         />
 
-        <div className="relative z-10 grid items-center gap-10 lg:grid-cols-[0.88fr_1.12fr]">
+        <div className="relative z-10 grid items-start gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:gap-12">
           <div className="space-y-6">
             <p className="text-xs uppercase tracking-[0.32em] text-white/58">{product.englishName}</p>
             <div className="space-y-4">
               <p className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs tracking-[0.18em] text-white/72 backdrop-blur">
                 {warmTheme ? "Clinic-ready Daily Solution" : "Clinic-focused Night Solution"}
               </p>
-              <h1 className="display-font text-5xl font-semibold tracking-[-0.04em] text-white md:text-7xl">
+              <h1 className="display-font text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl md:text-6xl lg:text-7xl">
                 {product.heroTitle}
               </h1>
               <p className="max-w-2xl text-base leading-8 text-white/72 md:text-lg">
@@ -64,7 +64,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
                 레퍼럴 구매
               </Link>
             </div>
-            <div className="grid gap-3 pt-2 md:grid-cols-3">
+            <div className="grid gap-3 pt-2 sm:grid-cols-2 xl:grid-cols-3">
               {product.introPoints.map((point) => (
                 <div
                   key={point}
@@ -76,8 +76,8 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-[0.72fr_0.28fr]">
-            <div className="relative min-h-[540px] overflow-hidden rounded-[34px] bg-white/10 shadow-[0_34px_90px_rgba(0,0,0,0.3)]">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
+            <div className="relative min-h-[320px] overflow-hidden rounded-[26px] bg-white/10 shadow-[0_34px_90px_rgba(0,0,0,0.3)] sm:min-h-[420px] md:rounded-[34px] lg:min-h-[540px]">
               <Image
                 src={visual.hero}
                 alt={visual.alt}
@@ -87,9 +87,9 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
                 priority
               />
             </div>
-            <div className="grid gap-4">
+            <div className="hidden gap-4 lg:grid">
               {visual.gallery.slice(0, 2).map((image, index) => (
-                <div key={index} className="relative min-h-[262px] overflow-hidden rounded-[28px] bg-white/10">
+                <div key={index} className="relative min-h-[258px] overflow-hidden rounded-[28px] bg-white/10">
                   <Image
                     src={image}
                     alt={`${product.name} 서브 이미지 ${index + 1}`}
@@ -112,7 +112,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
               왜 새로운 루틴이 필요할까요?
             </h2>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {product.problemPoints.map((problem) => (
               <article
                 key={problem}
@@ -129,7 +129,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
         {product.sections.map((section, index) => (
           <article
             key={section.title}
-            className="grid gap-8 rounded-[38px] border border-[rgba(116,88,59,0.12)] bg-white p-7 shadow-[0_24px_80px_rgba(65,45,20,0.04)] md:p-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center"
+            className="grid gap-8 rounded-[30px] border border-[rgba(116,88,59,0.12)] bg-white p-7 shadow-[0_24px_80px_rgba(65,45,20,0.04)] md:rounded-[38px] md:p-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center"
           >
             <div className={index % 2 === 1 ? "lg:order-2" : undefined}>
               <p className="text-xs uppercase tracking-[0.28em] text-stone-500">{section.accent}</p>
@@ -147,7 +147,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
             </div>
 
             <div className={index % 2 === 1 ? "lg:order-1" : undefined}>
-              <div className="relative min-h-[360px] overflow-hidden rounded-[30px] bg-[#f7f4ef]">
+              <div className="relative min-h-[280px] overflow-hidden rounded-[24px] bg-[#f7f4ef] sm:min-h-[320px] md:rounded-[30px] md:min-h-[360px]">
                 <Image
                   src={visual.gallery[(index + 2) % visual.gallery.length]}
                   alt={`${product.name} 섹션 이미지 ${index + 1}`}

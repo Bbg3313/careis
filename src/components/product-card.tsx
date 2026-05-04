@@ -11,13 +11,13 @@ export function ProductCard({ product }: { product: ProductContent }) {
 
   return (
     <article
-      className={`group overflow-hidden rounded-[40px] border p-8 transition duration-300 hover:-translate-y-1 ${
+      className={`group overflow-hidden rounded-[28px] border p-6 transition duration-300 hover:-translate-y-1 md:rounded-[40px] md:p-8 ${
         isWarm
           ? "border-[#e1d2c1] bg-[linear-gradient(180deg,#f9f1e8_0%,#f4ece2_100%)]"
           : "border-[#d8dfed] bg-[linear-gradient(180deg,#f8fbff_0%,#eef3fa_100%)]"
       }`}
     >
-      <div className="relative mb-8 h-[27rem] overflow-hidden rounded-[32px]">
+      <div className="relative mb-8 h-80 overflow-hidden rounded-[24px] md:h-[24rem] md:rounded-[32px] lg:h-[27rem]">
         <Image
           src={visual.card}
           alt={visual.alt}

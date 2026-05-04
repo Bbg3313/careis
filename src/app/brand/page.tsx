@@ -7,15 +7,15 @@ import { homeVisuals } from "@/lib/site-assets";
 export default function BrandPage() {
   return (
     <div className="space-y-16 pb-24">
-      <section className="grid gap-8 overflow-hidden rounded-[42px] bg-[linear-gradient(145deg,#fbf3eb_0%,#eef2fa_100%)] p-10 shadow-[0_30px_90px_rgba(62,46,24,0.08)] md:p-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+      <section className="grid gap-8 overflow-hidden rounded-[28px] bg-[linear-gradient(145deg,#fbf3eb_0%,#eef2fa_100%)] p-8 shadow-[0_30px_90px_rgba(62,46,24,0.08)] md:rounded-[42px] md:p-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div>
           <div className="mb-6">
             <SiteLogo compact />
           </div>
           <p className="text-xs uppercase tracking-[0.34em] text-stone-500">Brand</p>
-          <h1 className="display-font mt-4 text-5xl font-semibold tracking-tight text-stone-900 md:text-6xl">
+          <h1 className="display-font mt-4 text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl md:text-6xl">
             CAREIS는 병원과 클리닉에서
-            <br />
+            <br className="hidden sm:block" />
             먼저 설명 가능한 브랜드여야 합니다.
           </h1>
           <p className="mt-6 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">
@@ -37,7 +37,7 @@ export default function BrandPage() {
         </div>
       </section>
 
-      <section className="grid gap-6 md:grid-cols-3">
+      <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         <article className="rounded-[30px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)]">
           <h2 className="text-xl font-semibold text-stone-900">Clinical Premium</h2>
           <p className="mt-3 text-sm leading-7 text-stone-600">

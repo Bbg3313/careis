@@ -9,9 +9,14 @@ type ProductVisualSet = {
 
 export const homeVisuals = {
   sunHero: "/images/sun-hero.png",
-  illuminatorHero: "/images/illum-ice.png",
-  heroMotion: ["/images/sun-hero.png", "/images/illum-ice.png", "/images/sun-lifestyle.png", "/images/illum-dark.png"],
-  brandFilm: ["/images/sun-object.png", "/images/illum-hero.png", "/images/sun-texture.png", "/images/illum-ice.png"],
+  illuminatorHero: "/images/illum-hero.png",
+  heroMotion: [
+    "/images/sun-hero.png",
+    "/images/sun-lifestyle.png",
+    "/images/sun-texture.png",
+    "/images/sun-model-warm.png",
+  ],
+  brandFilm: ["/images/sun-object.png", "/images/illum-hero.png", "/images/sun-texture.png", "/images/illum-model.png"],
 };
 
 export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet> = {
@@ -32,11 +37,11 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
     card: "/images/illum-model.png",
     alt: "일루미네이터 시스테아민 5% 제품 이미지",
     gallery: [
-      "/images/illum-ice.png",
-      "/images/illum-dark.png",
       "/images/illum-model.png",
-      "/images/illum-pack.png",
       "/images/illum-hero.png",
+      "/images/illum-model.png",
+      "/images/illum-hero.png",
+      "/images/illum-model.png",
     ],
   },
 };

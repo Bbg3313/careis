@@ -5,7 +5,7 @@ import { SiteLogo } from "@/components/site-logo";
 export function SiteFooter() {
   return (
     <footer className="border-t border-[rgba(116,88,59,0.08)] bg-[linear-gradient(180deg,#f7f1ea_0%,#efe7de_100%)]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-[1.3fr_0.7fr]">
+      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 lg:grid-cols-2">
         <div className="space-y-4">
           <div>
             <SiteLogo />
@@ -17,7 +17,7 @@ export function SiteFooter() {
           </p>
         </div>
 
-        <div className="grid gap-8 text-sm text-stone-600 sm:grid-cols-2 md:grid-cols-1">
+        <div className="grid gap-8 text-sm text-stone-600 sm:grid-cols-2">
           <div className="space-y-3">
             <p className="font-medium text-stone-800">Policy</p>
             <div className="flex flex-col gap-2">
