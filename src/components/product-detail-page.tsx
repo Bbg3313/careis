@@ -1,0 +1,230 @@
+import Image from "next/image";
+import Link from "next/link";
+
+import type { ProductContent } from "@/lib/product-data";
+import { productVisuals } from "@/lib/site-assets";
+import { formatCurrency } from "@/lib/utils";
+
+export function ProductDetailPage({ product }: { product: ProductContent }) {
+  const warmTheme = product.theme === "warm";
+  const visual = productVisuals[product.slug];
+
+  return (
+    <div className="space-y-24 pb-24">
+      <section
+        className={`overflow-hidden rounded-[44px] p-8 shadow-[0_30px_90px_rgba(48,36,24,0.08)] md:p-14 ${
+          warmTheme
+            ? "bg-[linear-gradient(145deg,#fbf3eb_0%,#f0ded0_50%,#e5ceb8_100%)]"
+            : "bg-[linear-gradient(145deg,#fbfdff_0%,#eef3fb_55%,#dbe4f5_100%)]"
+        }`}
+      >
+        <div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="space-y-6">
+            <p className="text-xs uppercase tracking-[0.32em] text-stone-500">{product.englishName}</p>
+            <div className="space-y-4">
+              <h1 className="text-4xl font-semibold tracking-[-0.04em] text-stone-900 md:text-6xl">
+                {product.heroTitle}
+              </h1>
+              <p className="max-w-2xl text-base leading-8 text-stone-600 md:text-lg">
+                {product.heroDescription}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {product.keywords.map((keyword) => (
+                <span
+                  key={keyword}
+                  className="rounded-full border border-[rgba(116,88,59,0.14)] bg-white px-4 py-2 text-sm text-stone-700"
+                >
+                  {keyword}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-wrap items-center gap-4 pt-2">
+              <p className="text-2xl font-semibold text-stone-900">{formatCurrency(product.price)}</p>
+              <Link
+                href={`/order?product=${product.slug}`}
+                className="rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-stone-900/10"
+              >
+                구매하기
+              </Link>
+            </div>
+            <div className="grid gap-3 pt-2 md:grid-cols-3">
+              {product.introPoints.map((point) => (
+                <div
+                  key={point}
+                  className="rounded-[20px] border border-white/60 bg-white/70 p-4 text-sm leading-7 text-stone-700 backdrop-blur"
+                >
+                  {point}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-[0.72fr_0.28fr]">
+            <div className="relative min-h-[520px] overflow-hidden rounded-[34px] bg-white/70 shadow-[0_34px_90px_rgba(41,31,20,0.12)]">
+              <Image
+                src={visual.hero}
+                alt={visual.alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+              />
+            </div>
+            <div className="grid gap-4">
+              {visual.gallery.slice(0, 2).map((image, index) => (
+                <div key={index} className="relative min-h-[252px] overflow-hidden rounded-[28px] bg-white/80">
+                  <Image
+                    src={image}
+                    alt={`${product.name} 서브 이미지 ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 18vw"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {product.problemPoints?.length ? (
+        <section className="grid gap-8 lg:grid-cols-[0.74fr_1.26fr] lg:items-start">
+          <div className="space-y-3">
+            <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Problem</p>
+            <h2 className="text-3xl font-semibold tracking-[-0.03em] text-stone-900 md:text-4xl">
+              왜 새로운 루틴이 필요할까요?
+            </h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {product.problemPoints.map((problem) => (
+              <article
+                key={problem}
+                className="rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-white p-7 text-stone-700 shadow-[0_20px_60px_rgba(65,45,20,0.04)]"
+              >
+                {problem}
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="grid gap-12">
+        {product.sections.map((section, index) => (
+          <article
+            key={section.title}
+            className="grid gap-8 rounded-[38px] border border-[rgba(116,88,59,0.12)] bg-white p-7 shadow-[0_24px_80px_rgba(65,45,20,0.04)] md:p-10 lg:grid-cols-[1.02fr_0.98fr] lg:items-center"
+          >
+            <div className={index % 2 === 1 ? "lg:order-2" : undefined}>
+              <p className="text-xs uppercase tracking-[0.28em] text-stone-500">{section.accent}</p>
+              <h3 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-stone-900">
+                {section.title}
+              </h3>
+              <p className="mt-4 text-sm leading-8 text-stone-600 md:text-base">{section.description}</p>
+              {section.bullets?.length ? (
+                <ul className="mt-6 space-y-2 text-sm leading-8 text-stone-700">
+                  {section.bullets.map((bullet) => (
+                    <li key={bullet}>- {bullet}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+
+            <div className={index % 2 === 1 ? "lg:order-1" : undefined}>
+              <div className="relative min-h-[360px] overflow-hidden rounded-[30px] bg-[#f7f4ef]">
+                <Image
+                  src={visual.gallery[(index + 2) % visual.gallery.length]}
+                  alt={`${product.name} 섹션 이미지 ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                />
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="rounded-[40px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_24px_80px_rgba(65,45,20,0.04)] md:p-12">
+        <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
+          <div className="space-y-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Benefits</p>
+            <h2 className="text-3xl font-semibold tracking-[-0.03em] text-stone-900 md:text-4xl">
+              {product.tagline}
+            </h2>
+            <p className="text-sm leading-8 text-stone-600 md:text-base">
+              제품 소개서에서 확인한 강점을 브랜드 사이트용 카피로 재구성해, 정보 전달과 구매
+              설득이 동시에 되도록 구성했습니다.
+            </p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {product.benefits.map((benefit) => (
+              <div
+                key={benefit}
+                className="rounded-[24px] bg-[#f8f5ef] p-5 text-sm leading-7 text-stone-700"
+              >
+                {benefit}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="grid gap-8 lg:grid-cols-[1fr_1fr]">
+        <div className="rounded-[36px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_24px_80px_rgba(65,45,20,0.04)] md:p-12">
+          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">FAQ</p>
+          <div className="mt-6 space-y-6">
+            {product.faq.map((item) => (
+              <div key={item.question} className="border-b border-stone-100 pb-6 last:border-b-0">
+                <p className="text-lg font-semibold text-stone-900">{item.question}</p>
+                <p className="mt-3 text-sm leading-7 text-stone-600">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[36px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_24px_80px_rgba(65,45,20,0.04)] md:p-12">
+          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Product Info</p>
+          <div className="mt-6 space-y-4">
+            {product.info.map((entry) => (
+              <div key={entry.label} className="rounded-[22px] bg-[#f8f5ef] p-5">
+                <p className="text-sm font-semibold text-stone-900">{entry.label}</p>
+                <p className="mt-2 text-sm leading-7 text-stone-600">{entry.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-[40px] bg-stone-900 px-8 py-12 text-white shadow-[0_40px_100px_rgba(23,19,18,0.18)] md:px-12 md:py-16">
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-white/70">Order</p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] md:text-5xl">
+              공구 유입도, 일반 유입도 모두 같은 주문 흐름으로 연결됩니다.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-8 text-white/75 md:text-base">
+              URL의 `ref` 파라미터가 자동 저장되고 주문서에는 `referral_code`가 함께 기록되어,
+              인플루언서별 정산과 주문 관리가 한 번에 가능하도록 설계했습니다.
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+            <Link
+              href={`/cart?product=${product.slug}`}
+              className="rounded-full border border-white/20 px-5 py-3 text-sm font-semibold"
+            >
+              장바구니
+            </Link>
+            <Link
+              href={`/order?product=${product.slug}`}
+              className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-stone-900"
+            >
+              바로 주문
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
