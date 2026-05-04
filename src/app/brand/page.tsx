@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { SiteLogo } from "@/components/site-logo";
 import { homeVisuals } from "@/lib/site-assets";
 
 export default function BrandPage() {
@@ -8,21 +9,25 @@ export default function BrandPage() {
     <div className="space-y-16 pb-24">
       <section className="grid gap-8 overflow-hidden rounded-[42px] bg-[linear-gradient(145deg,#fbf3eb_0%,#eef2fa_100%)] p-10 shadow-[0_30px_90px_rgba(62,46,24,0.08)] md:p-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div>
-        <p className="text-xs uppercase tracking-[0.34em] text-stone-500">Brand</p>
-        <h1 className="display-font mt-4 text-5xl font-semibold tracking-tight text-stone-900 md:text-6xl">
-          CAREIS는 적게, 깊게 설명하는 더마 코스메틱 커머스입니다.
-        </h1>
-        <p className="mt-6 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">
-          병원 유통 기반의 신뢰를 바탕으로, 낮에는 피부를 보호하고 밤에는 집중적으로 관리하는
-          2-step 루틴을 구성합니다. SKU가 적기 때문에 더 많은 배너 대신 더 깊은 설명과 더
-          높은 완성도의 상세페이지에 집중합니다.
-        </p>
+          <div className="mb-6">
+            <SiteLogo compact />
+          </div>
+          <p className="text-xs uppercase tracking-[0.34em] text-stone-500">Brand</p>
+          <h1 className="display-font mt-4 text-5xl font-semibold tracking-tight text-stone-900 md:text-6xl">
+            CAREIS는 병원과 클리닉에서
+            <br />
+            먼저 설명 가능한 브랜드여야 합니다.
+          </h1>
+          <p className="mt-6 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">
+            병원 유통 기반의 신뢰를 바탕으로, 낮에는 피부를 보호하고 밤에는 집중적으로 관리하는
+            2-step 제품 구조를 제안합니다. 제품 수보다 설명의 깊이, 과장보다 신뢰를 우선합니다.
+          </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/products" className="rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white">
-              제품 보기
+            <Link href="/contact" className="rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white">
+              도입 문의
             </Link>
-            <Link href="/order?product=sun-pack" className="rounded-full border border-stone-900/10 bg-white/70 px-5 py-3 text-sm font-semibold text-stone-900">
-              주문 흐름 보기
+            <Link href="/products" className="rounded-full border border-stone-900/10 bg-white/70 px-5 py-3 text-sm font-semibold text-stone-900">
+              제품 보기
             </Link>
           </div>
         </div>
@@ -40,15 +45,15 @@ export default function BrandPage() {
           </p>
         </article>
         <article className="rounded-[30px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)]">
-          <h2 className="text-xl font-semibold text-stone-900">Protect + Correct</h2>
+          <h2 className="text-xl font-semibold text-stone-900">Clinic-ready Structure</h2>
           <p className="mt-3 text-sm leading-7 text-stone-600">
             선팩은 데일리 보호, 일루미네이터는 야간 집중 관리라는 명확한 역할 분리를 갖습니다.
           </p>
         </article>
         <article className="rounded-[30px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)]">
-          <h2 className="text-xl font-semibold text-stone-900">Referral Ready</h2>
+          <h2 className="text-xl font-semibold text-stone-900">Open Referral Purchase</h2>
           <p className="mt-3 text-sm leading-7 text-stone-600">
-            공구 유입은 referral_code로 기록되며, 주문 데이터와 함께 관리자 화면에서 추적됩니다.
+            공개 사이트에서도 인플루언서 레퍼럴 구매를 병행할 수 있도록 추적 구조가 준비되어 있습니다.
           </p>
         </article>
       </section>

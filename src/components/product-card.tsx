@@ -11,13 +11,13 @@ export function ProductCard({ product }: { product: ProductContent }) {
 
   return (
     <article
-      className={`group overflow-hidden rounded-[36px] border p-8 transition duration-300 hover:-translate-y-1 ${
+      className={`group overflow-hidden rounded-[40px] border p-8 transition duration-300 hover:-translate-y-1 ${
         isWarm
-          ? "border-[#ddcdbb] bg-[#f9f2e9]"
-          : "border-[#d4d9e8] bg-[linear-gradient(180deg,#f7faff_0%,#eef2fb_100%)]"
+          ? "border-[#e1d2c1] bg-[linear-gradient(180deg,#f9f1e8_0%,#f4ece2_100%)]"
+          : "border-[#d8dfed] bg-[linear-gradient(180deg,#f8fbff_0%,#eef3fa_100%)]"
       }`}
     >
-      <div className="relative mb-8 h-80 overflow-hidden rounded-[30px]">
+      <div className="relative mb-8 h-[27rem] overflow-hidden rounded-[32px]">
         <Image
           src={visual.card}
           alt={visual.alt}
@@ -37,8 +37,10 @@ export function ProductCard({ product }: { product: ProductContent }) {
       <div className="space-y-4">
         <p className="text-xs uppercase tracking-[0.3em] text-stone-500">{product.englishName}</p>
         <div>
-          <h3 className="text-3xl font-semibold text-stone-900">{product.name}</h3>
-          <p className="mt-2 text-sm leading-6 text-stone-600">{product.tagline}</p>
+          <h3 className="display-font text-4xl font-semibold leading-none text-stone-900 md:text-5xl">
+            {product.shortName}
+          </h3>
+          <p className="mt-3 text-sm leading-7 text-stone-600">{product.heroDescription}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {product.keywords.map((keyword) => (
@@ -54,9 +56,9 @@ export function ProductCard({ product }: { product: ProductContent }) {
           <p className="text-lg font-semibold text-stone-900">{formatCurrency(product.price)}</p>
           <Link
             href={`/products/${product.slug}`}
-            className="rounded-full bg-stone-900 px-4 py-2 text-sm font-medium text-white"
+            className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white"
           >
-            상세 보기
+            Explore
           </Link>
         </div>
       </div>

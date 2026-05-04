@@ -1,107 +1,78 @@
-import Image from "next/image";
 import Link from "next/link";
 
+import { MotionMedia } from "@/components/motion-media";
 import { ProductCard } from "@/components/product-card";
+import { SiteLogo } from "@/components/site-logo";
 import { products, siteHighlights } from "@/lib/product-data";
 import { homeVisuals } from "@/lib/site-assets";
 
 export default function HomePage() {
   return (
     <div className="space-y-28 pb-24">
-      <section className="relative overflow-hidden rounded-[44px] border border-white/50 bg-[linear-gradient(135deg,#f8eee3_0%,#f5efe7_32%,#eef1f7_61%,#edf6fb_100%)] px-8 py-10 shadow-[0_30px_80px_rgba(103,82,52,0.08)] md:px-14 md:py-16">
-        <div className="absolute left-[-12%] top-[-22%] h-72 w-72 rounded-full bg-[#e9ceb0]/45 blur-3xl" />
-        <div className="absolute bottom-[-12%] right-[-8%] h-80 w-80 rounded-full bg-[#cad8f0]/40 blur-3xl" />
+      <section className="relative min-h-[92vh] overflow-hidden rounded-[46px] bg-[#111111] shadow-[0_40px_140px_rgba(10,10,10,0.24)]">
+        <MotionMedia
+          frames={homeVisuals.heroMotion}
+          alt="케어이즈 히어로 모션"
+          priority
+          className="absolute inset-0"
+          overlayClassName="absolute inset-0 bg-[linear-gradient(90deg,rgba(9,9,9,0.82)_0%,rgba(9,9,9,0.38)_45%,rgba(9,9,9,0.58)_100%)]"
+        />
 
-        <div className="relative grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-          <div className="space-y-8">
-            <p className="text-xs uppercase tracking-[0.34em] text-stone-500">
-              Clinical Premium Dermacosmetic
+        <div className="relative z-10 flex min-h-[92vh] flex-col justify-between px-8 py-8 md:px-14 md:py-12">
+          <div className="pt-2">
+            <SiteLogo dark compact />
+          </div>
+
+          <div className="max-w-3xl pt-12 md:pt-20">
+            <p className="text-xs uppercase tracking-[0.34em] text-white/60">
+              Hospital Distributed Dermacosmetic
             </p>
-            <div className="space-y-5">
-              <p className="inline-flex rounded-full border border-[rgba(116,88,59,0.12)] bg-white/70 px-4 py-2 text-xs tracking-[0.2em] text-stone-600 backdrop-blur">
-                Protect + Correct
-              </p>
-              <h1 className="max-w-4xl text-5xl font-semibold tracking-[-0.04em] text-stone-900 md:text-7xl">
-                병원 유통 기반의 더마 코스메틱을 더 고급스럽게.
-              </h1>
-              <p className="max-w-2xl text-base leading-8 text-stone-600 md:text-lg">
-                CAREIS는 제품 수를 늘리는 대신, 낮의 보호와 밤의 집중 케어라는 두 개의 루틴을
-                깊이 있게 설명하는 브랜드 커머스를 제안합니다.
-              </p>
-            </div>
-            <div className="grid max-w-2xl gap-3 text-sm leading-7 text-stone-600 md:grid-cols-3">
-              <div className="rounded-[22px] border border-[rgba(116,88,59,0.08)] bg-white/70 p-4 backdrop-blur">
-                병원 유통 기반 신뢰
-              </div>
-              <div className="rounded-[22px] border border-[rgba(116,88,59,0.08)] bg-white/70 p-4 backdrop-blur">
-                2개 SKU 집중 운영
-              </div>
-              <div className="rounded-[22px] border border-[rgba(116,88,59,0.08)] bg-white/70 p-4 backdrop-blur">
-                공구 트래킹 대응 구조
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-3">
+            <h1 className="display-font mt-6 text-6xl font-semibold leading-[0.9] text-white md:text-8xl">
+              Elevated dermacosmetic
+              <br />
+              for clinics and
+              <br />
+              curated retail.
+            </h1>
+            <p className="mt-8 max-w-2xl text-sm leading-8 text-white/72 md:text-base">
+              CAREIS는 병원과 클리닉에서 먼저 설명 가능한 제품 언어를 중심에 두고, 인플루언서
+              레퍼럴 구매는 그 다음 동선으로 자연스럽게 연결하는 하이엔드 더마코스메틱 브랜드
+              사이트를 지향합니다.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-3">
               <Link
-                href="/products"
-                className="rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-stone-900/10"
+                href="/contact"
+                className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900"
               >
-                제품 보기
+                도입 문의
               </Link>
               <Link
-                href="/order?product=sun-pack"
-                className="rounded-full border border-stone-900/10 bg-white/70 px-6 py-3 text-sm font-semibold text-stone-900 backdrop-blur"
+                href="/products"
+                className="rounded-full border border-white/16 bg-white/8 px-6 py-3 text-sm font-semibold text-white backdrop-blur"
               >
-                공구 구매하기
+                제품 소개
               </Link>
             </div>
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="relative min-h-[520px] overflow-hidden rounded-[34px] shadow-[0_40px_90px_rgba(36,25,14,0.14)]">
-              <Image
-                src={homeVisuals.sunHero}
-                alt="심플스틱 선팩 메인 이미지"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 40vw"
-                priority
-              />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_35%,rgba(0,0,0,0.42)_100%)]" />
-              <div className="absolute bottom-0 left-0 right-0 p-7 text-white">
-                <p className="text-xs uppercase tracking-[0.34em] text-white/75">Day Care</p>
-                <h2 className="mt-3 text-3xl font-semibold">Simple Stick Sun Pack</h2>
-                <p className="mt-2 text-sm leading-7 text-white/80">
-                  필름막 기술을 통해 가볍고 오래가는 데일리 선 케어.
-                </p>
-              </div>
+          <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr_0.7fr]">
+            <div className="soft-panel rounded-[30px] border border-white/10 p-6 text-stone-800">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-stone-500">Brand Positioning</p>
+              <p className="mt-4 text-xl font-semibold tracking-[-0.03em] text-stone-900">
+                판매보다 먼저, 신뢰와 설명의 깊이를 보여줍니다.
+              </p>
             </div>
-
-            <div className="grid gap-5">
-              <div className="relative min-h-[250px] overflow-hidden rounded-[34px] bg-white shadow-[0_24px_80px_rgba(30,33,61,0.12)]">
-                <Image
-                  src={homeVisuals.illuminatorHero}
-                  alt="일루미네이터 메인 이미지"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 24vw"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(30,32,44,0.34)_100%)]" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <p className="text-xs uppercase tracking-[0.34em] text-white/75">Night Care</p>
-                  <h2 className="mt-2 text-2xl font-semibold">Illuminator Cysteamine 5%</h2>
-                </div>
-              </div>
-
-              <div className="rounded-[34px] border border-white/50 bg-white/70 p-7 backdrop-blur">
-                <p className="text-xs uppercase tracking-[0.28em] text-stone-500">Design Direction</p>
-                <p className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-stone-900">
-                  메인은 브랜드 신뢰를, 상세는 제품별 무드를 담당합니다.
-                </p>
-                <p className="mt-3 text-sm leading-7 text-stone-600">
-                  선팩은 warm sand, 일루미네이터는 cool pearl 무드로 분리해 같은 브랜드 안에서
-                  각 제품의 역할이 뚜렷하게 보이도록 구성했습니다.
-                </p>
-              </div>
+            <div className="soft-panel rounded-[30px] border border-white/10 p-6 text-stone-800">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-stone-500">Open Referral Purchase</p>
+              <p className="mt-4 text-sm leading-7 text-stone-700">
+                레퍼럴 링크 유입은 공개 구매 동선으로 연결되며, 주문 데이터에는 추적 코드가 함께 남습니다.
+              </p>
+            </div>
+            <div className="rounded-[30px] border border-white/10 bg-white/6 p-6 text-white backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-white/55">Brand Film</p>
+              <p className="mt-4 text-sm leading-7 text-white/78">
+                영상 자산이 들어오면 이 히어로 구조 그대로 교체할 수 있도록 설계했습니다.
+              </p>
             </div>
           </div>
         </div>
@@ -122,15 +93,17 @@ export default function HomePage() {
 
       <section className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
         <div className="space-y-4">
-          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Routine System</p>
-          <h2 className="text-4xl font-semibold tracking-[-0.04em] text-stone-900 md:text-5xl">
-            낮에는 보호, 밤에는 집중 케어.
+          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Product Edit</p>
+          <h2 className="display-font text-5xl font-semibold tracking-[-0.03em] text-stone-900 md:text-6xl">
+            Less products.
+            <br />
+            Stronger story.
           </h2>
         </div>
         <p className="max-w-3xl text-sm leading-8 text-stone-600 md:text-base">
-          메인에서는 제품을 단순 나열하지 않고, 사용자의 피부 루틴 안에서 각 제품의 역할을
-          명확히 분리해 이해시키는 구조로 설계했습니다. 공구 유입 시에도 제품 특성과 구매
-          동선이 빠르게 이어질 수 있습니다.
+          선팩은 데일리 보호 솔루션, 일루미네이터는 야간 집중 관리 솔루션으로 구분됩니다.
+          사이트는 두 제품의 역할과 기술적 차별점을 병원/클리닉 관점에서 먼저 설명하고,
+          일반 구매는 보조적으로 연결합니다.
         </p>
       </section>
 
@@ -140,37 +113,94 @@ export default function HomePage() {
         ))}
       </section>
 
-      <section className="rounded-[42px] bg-stone-900 px-8 py-12 text-white shadow-[0_40px_100px_rgba(23,19,18,0.18)] md:px-12 md:py-16">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-white/60">Referral Ready Commerce</p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] md:text-5xl">
-              인플루언서 공구 링크는 저장되고,
-              <br className="hidden md:block" /> 주문서와 정산 데이터에 그대로 남습니다.
-            </h2>
-          </div>
-          <div className="space-y-5">
-            <p className="text-sm leading-8 text-white/75 md:text-base">
-              `?ref=mina` 같은 링크 유입은 브라우저에 저장되고, 주문 저장 시 `referral_code`,
-              `paymentMethod`, `paymentStatus`와 함께 DB에 남습니다. 관리자 화면에서는 주문 조회와
-              XLSX 다운로드까지 한 번에 처리할 수 있습니다.
+      <section className="grid gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
+        <div className="relative min-h-[520px] overflow-hidden rounded-[40px] bg-[#111111] shadow-[0_40px_120px_rgba(11,11,11,0.18)]">
+          <MotionMedia
+            frames={homeVisuals.brandFilm}
+            alt="케어이즈 브랜드 필름 무드"
+            className="absolute inset-0"
+            overlayClassName="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.14)_0%,rgba(0,0,0,0.52)_100%)]"
+          />
+          <div className="absolute bottom-0 left-0 right-0 p-8 text-white md:p-10">
+            <p className="text-xs uppercase tracking-[0.34em] text-white/62">Brand Film Section</p>
+            <p className="mt-4 max-w-xl text-2xl font-semibold tracking-[-0.03em]">
+              시네마틱 무드와 브랜드 신뢰를 동시에 보여주는 메인 비주얼 섹션.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/admin/orders"
-                className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900"
-              >
-                관리자 주문 보기
-              </Link>
-              <Link
-                href="/order?product=sun-pack"
-                className="rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white"
-              >
-                구매 흐름 보기
-              </Link>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Visual Direction</p>
+          <h2 className="display-font text-5xl font-semibold tracking-[-0.03em] text-stone-900 md:text-6xl">
+            Hero first.
+            <br />
+            Explanation later.
+          </h2>
+          <p className="text-sm leading-8 text-stone-600 md:text-base">
+            첫 화면에서 모든 걸 설명하려 하지 않고, 영상 같은 모션과 이미지의 질감으로 브랜드
+            인상을 먼저 만든 뒤, 아래 섹션에서 기술과 제품 이야기를 차분하게 이어가는 구성이 더
+            현대적이고 고급스럽습니다.
+          </p>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-[28px] bg-white p-6 shadow-[0_20px_60px_rgba(70,50,24,0.05)]">
+              <p className="text-sm font-semibold text-stone-900">B2B Inquiry First</p>
+              <p className="mt-3 text-sm leading-7 text-stone-600">
+                병원/클리닉 도입 문의를 메인 CTA로 유지합니다.
+              </p>
+            </div>
+            <div className="rounded-[28px] bg-white p-6 shadow-[0_20px_60px_rgba(70,50,24,0.05)]">
+              <p className="text-sm font-semibold text-stone-900">Referral Purchase Open</p>
+              <p className="mt-3 text-sm leading-7 text-stone-600">
+                공개 구매 동선은 살리되, 메인 구조는 브랜드 중심으로 정리합니다.
+              </p>
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-2">
+        <article className="rounded-[38px] bg-stone-900 px-8 py-12 text-white shadow-[0_40px_100px_rgba(23,19,18,0.18)] md:px-12 md:py-16">
+          <p className="text-xs uppercase tracking-[0.3em] text-white/60">B2B Inquiry</p>
+          <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] md:text-5xl">
+            병원 및 클리닉 도입 문의를 우선합니다.
+          </h2>
+          <p className="mt-4 text-sm leading-8 text-white/75 md:text-base">
+            사이트의 1차 목적은 구매보다 브랜드 소개와 제품 이해입니다. 도입 상담, 운영 방향,
+            제품 포지셔닝 문의는 전용 문의 페이지에서 연결됩니다.
+          </p>
+          <div className="mt-8">
+            <Link
+              href="/contact"
+              className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900"
+            >
+              도입 문의하기
+            </Link>
+          </div>
+        </article>
+
+        <article className="rounded-[38px] border border-[rgba(116,88,59,0.12)] bg-white px-8 py-12 shadow-[0_24px_80px_rgba(73,53,26,0.05)] md:px-12 md:py-16">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Open Referral Purchase</p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-stone-900 md:text-5xl">
+              인플루언서용 레퍼럴 구매도 공개적으로 운영할 수 있습니다.
+            </h2>
+          </div>
+          <div className="mt-4 space-y-5">
+            <p className="text-sm leading-8 text-stone-600 md:text-base">
+              `?ref=mina` 같은 링크 유입은 브라우저에 저장되고, 주문 저장 시 `referral_code`,
+              `paymentMethod`, `paymentStatus`와 함께 DB에 남습니다. 즉, 사이트는 B2B 중심이지만
+              인플루언서 공구 운영도 동시에 감당할 수 있습니다.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/order?product=sun-pack"
+                className="rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white"
+              >
+                레퍼럴 구매 보기
+              </Link>
+            </div>
+          </div>
+        </article>
       </section>
     </div>
   );
