@@ -30,12 +30,12 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
             <p className="text-xs uppercase tracking-[0.32em] text-white/58">{product.englishName}</p>
             <div className="space-y-4">
               <p className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs tracking-[0.18em] text-white/72 backdrop-blur">
-                {warmTheme ? "Clinic-ready Daily Solution" : "Clinic-focused Night Solution"}
+                {warmTheme ? "Clinic-ready Day Protocol" : "Clinic-ready Night Protocol"}
               </p>
-              <h1 className="display-font text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl md:text-6xl lg:text-7xl">
+              <h1 className="display-font headline-balance text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl md:text-6xl lg:text-7xl">
                 {product.heroTitle}
               </h1>
-              <p className="max-w-2xl text-base leading-8 text-white/72 md:text-lg">
+              <p className="copy-pretty max-w-2xl text-base leading-8 text-white/72 md:text-lg">
                 {product.heroDescription}
               </p>
             </div>
@@ -108,8 +108,8 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
         <section className="grid gap-8 lg:grid-cols-[0.74fr_1.26fr] lg:items-start">
           <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Problem</p>
-            <h2 className="display-font text-4xl font-semibold tracking-[-0.03em] text-stone-900 md:text-5xl">
-              왜 새로운 루틴이 필요할까요?
+            <h2 className="display-font headline-balance text-4xl font-semibold tracking-[-0.03em] text-stone-900 md:text-5xl">
+              왜 병원 채널에서 이 루틴이 필요할까요?
             </h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -133,10 +133,10 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
           >
             <div className={index % 2 === 1 ? "lg:order-2" : undefined}>
               <p className="text-xs uppercase tracking-[0.28em] text-stone-500">{section.accent}</p>
-              <h3 className="display-font mt-4 text-4xl font-semibold tracking-[-0.03em] text-stone-900">
+              <h3 className="display-font headline-balance mt-4 text-4xl font-semibold tracking-[-0.03em] text-stone-900">
                 {section.title}
               </h3>
-              <p className="mt-4 text-sm leading-8 text-stone-600 md:text-base">{section.description}</p>
+              <p className="copy-pretty mt-4 text-sm leading-8 text-stone-600 md:text-base">{section.description}</p>
               {section.bullets?.length ? (
                 <ul className="mt-6 space-y-2 text-sm leading-8 text-stone-700">
                   {section.bullets.map((bullet) => (
@@ -165,13 +165,13 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
         <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
           <div className="space-y-4">
             <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Benefits</p>
-            <h2 className="display-font text-4xl font-semibold tracking-[-0.03em] text-stone-900 md:text-5xl">
+            <h2 className="display-font headline-balance text-4xl font-semibold tracking-[-0.03em] text-stone-900 md:text-5xl">
               {product.tagline}
             </h2>
-            <p className="text-sm leading-8 text-stone-600 md:text-base">
-              제품 소개서에서 확인한 강점을 병원/클리닉에서 설명 가능한 언어로 재구성했습니다.
-              공개 구매는 가능하지만, 이 페이지의 1차 목적은 제품의 기술과 도입 맥락을 이해시키는
-              것입니다.
+            <p className="copy-pretty text-sm leading-8 text-stone-600 md:text-base">
+              제안서와 소개서에서 확인한 핵심 포인트를 병원 및 클리닉 도입 설명에 맞는 언어로
+              재구성했습니다. 공개 구매는 가능하지만, 이 페이지의 1차 목적은 제품의 기술과 도입
+              맥락을 이해시키는 것입니다.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -217,13 +217,13 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
         <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-white/70">B2B + Referral</p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] md:text-5xl">
-              도입 문의는 앞단에 두고,
-              <br className="hidden md:block" /> 레퍼럴 구매는 공개적으로 병행합니다.
+            <h2 className="headline-balance mt-4 text-3xl font-semibold tracking-[-0.03em] md:text-5xl">
+              도입 문의는 앞단에 두고, 레퍼럴 구매는 공개적으로 병행합니다.
             </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-8 text-white/75 md:text-base">
-              병원 및 클리닉 대상 문의는 별도 상담 흐름으로, 인플루언서 유입은 `referral_code`
-              기반 공개 구매 흐름으로 연결됩니다. 두 구조가 충돌하지 않도록 분리해 설계했습니다.
+            <p className="copy-pretty mt-3 max-w-2xl text-sm leading-8 text-white/75 md:text-base">
+              병원 및 클리닉 대상 문의는 별도 상담 흐름으로 연결하고, 인플루언서 및 제휴 채널 유입은
+              `referral_code` 기반 공개 구매로 병행합니다. 두 구조가 충돌하지 않도록 분리해
+              설계했습니다.
             </p>
           </div>
 

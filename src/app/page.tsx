@@ -19,17 +19,15 @@ export default function HomePage() {
           <div className="space-y-8 px-4 py-6 md:px-6 lg:px-0">
             <div className="space-y-4">
               <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">
-                Premium Dermacosmetic
+                Hospital-Distributed Dermacosmetic
               </p>
-              <h1 className="display-font text-5xl font-semibold leading-[1.08] tracking-[-0.02em] text-stone-900 sm:text-6xl md:text-[64px]">
-                Clinical Excellence
-                <br />
-                Meets Luxury
+              <h1 className="display-font headline-balance text-5xl font-semibold leading-[1.08] tracking-[-0.02em] text-stone-900 sm:text-6xl md:text-[64px]">
+                병원 채널을 위한 2-Step Dermacosmetic
               </h1>
-              <p className="max-w-xl pt-3 text-[15px] leading-[1.9] text-stone-600 md:text-[17px]">
-                병원과 클리닉을 위한 프리미엄 더마코스메틱 브랜드.
-                <br />
-                과장된 뷰티 커머스가 아니라, 설명 가능한 기술과 루틴을 전면에 둡니다.
+              <p className="copy-pretty max-w-xl pt-3 text-[15px] leading-[1.9] text-stone-600 md:text-[17px]">
+                CAREIS는 병원과 클리닉에서 먼저 설명되고 도입될 수 있도록, 낮에는 보호하고 밤에는
+                집중 관리하는 2-step 제품 구조를 제안합니다. 공개 구매는 가능하지만 사이트의 1차
+                목적은 브랜드 소개와 도입 상담입니다.
               </p>
             </div>
 
@@ -102,7 +100,8 @@ export default function HomePage() {
               <div className="mx-auto max-w-7xl">
                 <p className="text-[12px] uppercase tracking-[0.22em] text-white/60">Brand Motion</p>
                 <p className="mt-3 max-w-xl text-lg font-medium tracking-[-0.02em] text-white/92 md:text-2xl">
-                  풀스크린 무드는 유지하되, 영상은 프레임 안에서 더 정제되게 보여줍니다.
+                  제품보다 먼저 브랜드 톤을, 설명보다 먼저 신뢰의 무드를 보여주는 브랜드 모션
+                  섹션입니다.
                 </p>
               </div>
             </div>
@@ -116,12 +115,12 @@ export default function HomePage() {
             <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
               Hospital-Distributed Excellence
             </p>
-            <h2 className="display-font text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
-              병원이 선택한 신뢰
+            <h2 className="display-font headline-balance text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
+              도입 전에 먼저 읽히는 브랜드 구조
             </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
-              피부과학 기반의 설계와 의료기관 유통 경험을 바탕으로, 병원 현장에서 설명 가능한
-              프리미엄 더마코스메틱 구조를 만듭니다.
+            <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
+              피부과학 기반 설계와 의료기관 유통 경험을 바탕으로, 병원 현장에서 바로 설명할 수 있는
+              제품 언어와 도입 상담 흐름을 함께 설계했습니다.
             </p>
           </div>
 
@@ -172,13 +171,11 @@ export default function HomePage() {
                 </div>
 
                 <p className="text-[13px] uppercase tracking-[0.2em] text-stone-500">Day Protection</p>
-                <h2 className="display-font mt-4 text-5xl font-semibold tracking-[-0.02em] text-stone-900 md:text-[56px]">
+                <h2 className="display-font headline-balance mt-4 text-5xl font-semibold tracking-[-0.02em] text-stone-900 md:text-[56px]">
                   DAY CARE
                 </h2>
-                <p className="mx-auto mt-4 max-w-md text-[17px] leading-[1.8] text-stone-600">
-                  자외선과 외부 환경으로부터 피부를 보호하는
-                  <br />
-                  프리미엄 선케어 솔루션
+                <p className="copy-pretty mx-auto mt-4 max-w-md text-[17px] leading-[1.8] text-stone-600">
+                  특허 필름막 기술과 데일리 사용성을 함께 설계한 병원 유통 선케어
                 </p>
 
                 <div className="mt-10 border border-black/10 bg-white/65 p-6 md:p-7 backdrop-blur-sm">
@@ -222,13 +219,11 @@ export default function HomePage() {
                 </div>
 
                 <p className="text-[13px] uppercase tracking-[0.2em] text-white/55">Night Renewal</p>
-                <h2 className="display-font mt-4 text-5xl font-semibold tracking-[-0.02em] text-white md:text-[56px]">
+                <h2 className="display-font headline-balance mt-4 text-5xl font-semibold tracking-[-0.02em] text-white md:text-[56px]">
                   NIGHT CARE
                 </h2>
-                <p className="mx-auto mt-4 max-w-md text-[17px] leading-[1.8] text-white/68">
-                  밤사이 피부를 집중 관리하는
-                  <br />
-                  브라이트닝 인텐시브 케어
+                <p className="copy-pretty mx-auto mt-4 max-w-md text-[17px] leading-[1.8] text-white/68">
+                  시스테아민 5%와 ODT 프로토콜로 접근하는 야간 브라이트닝 집중 케어
                 </p>
 
                 <div className="mt-10 border border-white/10 bg-white/5 p-6 md:p-7 backdrop-blur-sm">
@@ -264,8 +259,8 @@ export default function HomePage() {
             <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
               Two Essential Solutions
             </p>
-            <h2 className="display-font text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
-              완벽한 하루를 위한 두 가지 선택
+            <h2 className="display-font headline-balance text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
+              낮과 밤을 나누는 2-Step 솔루션
             </h2>
           </div>
 
@@ -306,14 +301,13 @@ export default function HomePage() {
                       </span>
                       <div className="h-px flex-1 bg-black/10" />
                     </div>
-                    <h3 className="display-font text-[32px] font-semibold tracking-[-0.01em] text-stone-900">
+                    <h3 className="display-font headline-balance text-[32px] font-semibold tracking-[-0.01em] text-stone-900">
                       {isWarm ? "DAY CARE" : "NIGHT CARE"}
                     </h3>
-                    <p className="text-[15px] leading-[1.8] text-stone-600">
-                      {product.tagline}
-                      <br />
-                      {product.heroDescription}
-                    </p>
+                    <div className="space-y-2 text-[15px] leading-[1.8] text-stone-600">
+                      <p className="headline-balance font-medium text-stone-900/88">{product.tagline}</p>
+                      <p className="copy-pretty">{product.heroDescription}</p>
+                    </div>
                     <Link
                       href={`/products/${product.slug}`}
                       className="inline-block pt-2 text-[13px] tracking-[0.1em] text-stone-900 underline underline-offset-4 transition hover:text-stone-600"
@@ -339,15 +333,12 @@ export default function HomePage() {
         </div>
         <div className="relative z-10 mx-auto max-w-5xl text-center">
           <p className="text-[13px] uppercase tracking-[0.2em] text-white/50">Visual Direction</p>
-          <h2 className="display-font mt-6 text-5xl font-semibold leading-[1.08] tracking-[-0.02em] md:text-[72px]">
-            Hero First,
-            <br />
-            Explanation Later
+          <h2 className="display-font headline-balance mt-6 text-5xl font-semibold leading-[1.08] tracking-[-0.02em] md:text-[72px]">
+            Hero First, Explanation Later
           </h2>
-          <p className="mx-auto mt-8 max-w-2xl text-[16px] leading-[1.9] text-white/65">
-            시각이 먼저 말하고, 제품이 증명합니다.
-            <br />
-            CAREIS의 브랜드 철학을 담은 비주얼 중심 메인 섹션입니다.
+          <p className="copy-pretty mx-auto mt-8 max-w-2xl text-[16px] leading-[1.9] text-white/65">
+            시각이 먼저 말하고, 제품이 증명합니다. 병원 유통 기반 브랜드가 가져야 할 정제된 무드와
+            프리미엄 톤을 먼저 전달하는 비주얼 중심 섹션입니다.
           </p>
         </div>
       </section>
@@ -365,13 +356,12 @@ export default function HomePage() {
             <p className="mt-8 text-[13px] uppercase tracking-[0.15em] text-stone-500">
               Partnership Inquiry
             </p>
-            <h2 className="display-font mt-4 text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
+            <h2 className="display-font headline-balance mt-4 text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
               병원·클리닉 도입 문의
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-[16px] leading-[1.9] text-stone-600">
-              CAREIS는 병원, 클리닉, 에스테틱 파트너와의 도입 상담을 우선합니다.
-              <br />
-              운영 방향과 제품 포지셔닝에 맞춘 상담 흐름을 제공합니다.
+            <p className="copy-pretty mx-auto mt-6 max-w-xl text-[16px] leading-[1.9] text-stone-600">
+              CAREIS는 병원, 클리닉, 에스테틱 파트너를 위한 도입 상담을 우선합니다. 유통 가능성,
+              제품 포지셔닝, 루틴 제안 방식까지 함께 논의할 수 있도록 구성했습니다.
             </p>
 
             <div className="pt-10">
@@ -381,7 +371,7 @@ export default function HomePage() {
               >
                 병원·클리닉 도입 문의하기
               </Link>
-              <p className="mt-4 text-[12px] text-stone-500">브랜드 및 도입 문의는 별도 상담 흐름으로 연결됩니다.</p>
+              <p className="mt-4 text-[12px] text-stone-500">브랜드 소개, 제품 설명, 도입 검토는 별도 상담 흐름으로 연결됩니다.</p>
             </div>
 
             <div className="mt-12 grid gap-8 border-t border-black/5 pt-12 md:grid-cols-3">
@@ -396,12 +386,13 @@ export default function HomePage() {
       <section className="bg-[#FAFAF8] px-4 py-20 md:px-6 md:py-24">
         <div className="mx-auto max-w-4xl text-center">
           <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">Referral Purchase</p>
-          <h2 className="display-font mt-4 text-3xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[36px]">
+          <h2 className="display-font headline-balance mt-4 text-3xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[36px]">
             추천을 통한 개인 구매
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.8] text-stone-600">
+          <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.8] text-stone-600">
             병원 또는 전문가 추천이 있는 경우 공개 레퍼럴 링크를 통해 개인 구매도 가능합니다.
-            메인 구조는 브랜드와 도입 문의를 우선하되, 추천 구매 동선은 자연스럽게 병행합니다.
+            주문 데이터에는 추천 코드와 결제수단이 함께 저장되어, 공구 운영과 추적 관리까지 이어질
+            수 있도록 설계했습니다.
           </p>
 
           <div className="pt-10">

@@ -30,17 +30,17 @@ export function ProductCard({ product }: { product: ProductContent }) {
           <p className="text-xs uppercase tracking-[0.3em] text-white/75">
             {isWarm ? "Day Care" : "Night Care"}
           </p>
-          <p className="mt-2 text-lg font-medium">{product.tagline}</p>
+          <p className="headline-balance mt-2 text-lg font-medium">{product.tagline}</p>
         </div>
       </div>
 
       <div className="space-y-4">
         <p className="text-xs uppercase tracking-[0.3em] text-stone-500">{product.englishName}</p>
         <div>
-          <h3 className="display-font text-4xl font-semibold leading-none text-stone-900 md:text-5xl">
+          <h3 className="display-font headline-balance text-4xl font-semibold leading-none text-stone-900 md:text-5xl">
             {product.shortName}
           </h3>
-          <p className="mt-3 text-sm leading-7 text-stone-600">{product.heroDescription}</p>
+          <p className="copy-pretty mt-3 text-sm leading-7 text-stone-600">{product.heroDescription}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {product.keywords.map((keyword) => (
@@ -58,7 +58,7 @@ export function ProductCard({ product }: { product: ProductContent }) {
             href={`/products/${product.slug}`}
             className="btn-luxe-primary rounded-full px-5 py-2.5 text-sm font-medium"
           >
-            Explore
+            상세 보기
           </Link>
         </div>
       </div>

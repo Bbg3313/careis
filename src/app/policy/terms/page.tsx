@@ -3,11 +3,11 @@ export default function TermsPage() {
     <div className="space-y-8 pb-20">
       <section className="rounded-[36px] bg-white p-8 md:p-12">
         <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Terms</p>
-        <h1 className="mt-4 text-4xl font-semibold text-stone-900">이용약관</h1>
+        <h1 className="headline-balance mt-4 text-4xl font-semibold text-stone-900">이용약관</h1>
         <p className="mt-4 text-sm leading-7 text-stone-500">
           시행일자: 2026년 5월 6일
         </p>
-        <div className="mt-8 space-y-8 text-sm leading-8 text-stone-600">
+        <div className="copy-pretty mt-8 space-y-8 text-sm leading-8 text-stone-600">
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">제1조 (목적)</h2>
             <p>

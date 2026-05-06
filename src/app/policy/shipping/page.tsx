@@ -3,8 +3,8 @@ export default function ShippingPage() {
     <div className="space-y-8 pb-20">
       <section className="rounded-[36px] bg-white p-8 md:p-12">
         <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Shipping</p>
-        <h1 className="mt-4 text-4xl font-semibold text-stone-900">배송 / 교환 / 반품</h1>
-        <div className="mt-6 space-y-5 text-sm leading-8 text-stone-600">
+        <h1 className="headline-balance mt-4 text-4xl font-semibold text-stone-900">배송 / 교환 / 반품</h1>
+        <div className="copy-pretty mt-6 space-y-5 text-sm leading-8 text-stone-600">
           <p>기본 배송비와 무료배송 기준은 운영 정책에 따라 조정 가능합니다.</p>
           <p>
             단순 변심에 의한 교환 및 반품은 상품 수령 후 7일 이내 가능하며, 개봉 또는 사용 흔적이

@@ -55,6 +55,16 @@ button {
   font-family: var(--display-font), serif;
 }
 
+.headline-balance {
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+.copy-pretty {
+  text-wrap: pretty;
+  word-break: keep-all;
+}
+
 .soft-panel {
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(18px);

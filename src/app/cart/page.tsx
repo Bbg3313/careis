@@ -31,7 +31,7 @@ export default async function CartPage({
     <div className="space-y-10 pb-24">
       <section className="space-y-3">
         <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Cart</p>
-        <h1 className="display-font text-5xl font-semibold text-stone-900">주문 전 상품 확인</h1>
+        <h1 className="display-font headline-balance text-5xl font-semibold text-stone-900">주문 전 상품 확인</h1>
       </section>
 
       <section className="grid gap-8 lg:grid-cols-[1fr_360px]">
@@ -44,8 +44,8 @@ export default async function CartPage({
             </div>
             <div className="space-y-4">
               <p className="text-xs uppercase tracking-[0.28em] text-stone-500">{product.englishName}</p>
-              <h2 className="text-3xl font-semibold text-stone-900">{product.name}</h2>
-              <p className="text-sm leading-7 text-stone-600">{product.tagline}</p>
+              <h2 className="headline-balance text-3xl font-semibold text-stone-900">{product.name}</h2>
+              <p className="copy-pretty text-sm leading-7 text-stone-600">{product.tagline}</p>
               <div className="flex flex-wrap gap-2">
                 {product.keywords.map((keyword) => (
                   <span key={keyword} className="rounded-full bg-[#f7f3ec] px-3 py-1 text-xs text-stone-700">

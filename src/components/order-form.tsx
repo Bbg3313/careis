@@ -203,8 +203,8 @@ export function OrderForm({ product, referralCode, initialQuantity = 1 }: OrderF
       <aside className="space-y-6 rounded-[32px] border border-[rgba(116,88,59,0.12)] bg-[#f8f3ec] p-8">
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.28em] text-stone-500">{product.englishName}</p>
-          <h2 className="text-2xl font-semibold text-stone-900">{product.name}</h2>
-          <p className="text-sm leading-6 text-stone-600">{product.tagline}</p>
+          <h2 className="headline-balance text-2xl font-semibold text-stone-900">{product.name}</h2>
+          <p className="copy-pretty text-sm leading-6 text-stone-600">{product.tagline}</p>
         </div>
 
         <div className="rounded-[28px] bg-white p-6">

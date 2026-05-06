@@ -11,7 +11,7 @@ export default function PolicyPage() {
     <div className="space-y-10 pb-20">
       <section className="space-y-3">
         <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Policy</p>
-        <h1 className="text-4xl font-semibold text-stone-900">정책 안내</h1>
+        <h1 className="headline-balance text-4xl font-semibold text-stone-900">정책 안내</h1>
       </section>
 
       <div className="grid gap-5 md:grid-cols-3">
@@ -21,8 +21,8 @@ export default function PolicyPage() {
             href={policy.href}
             className="rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-white p-7"
           >
-            <h2 className="text-xl font-semibold text-stone-900">{policy.title}</h2>
-            <p className="mt-3 text-sm leading-7 text-stone-600">{policy.description}</p>
+            <h2 className="headline-balance text-xl font-semibold text-stone-900">{policy.title}</h2>
+            <p className="copy-pretty mt-3 text-sm leading-7 text-stone-600">{policy.description}</p>
           </Link>
         ))}
       </div>
