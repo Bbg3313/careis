@@ -6,6 +6,17 @@ import { products, siteHighlights } from "@/lib/product-data";
 import { homeVisuals, productVisuals } from "@/lib/site-assets";
 
 const highlightIcons = [BuildingIcon, SparklesIcon, ExpertIcon];
+const brandSignals = [
+  { label: "Hospital Flow", value: "도입 상담 우선", detail: "병원·클리닉 중심 첫 동선" },
+  { label: "Routine Design", value: "2-Step 구조", detail: "DAY CARE / NIGHT CARE 분리" },
+  { label: "Referral Ready", value: "추적 가능 구매", detail: "추천 코드 기반 공개 구매 병행" },
+];
+
+const brandNotes = [
+  "병원 도입용 설명 자료와 공개 구매용 전환 흐름을 한 사이트 안에서 분리해 설계합니다.",
+  "선팩은 데일리 보호, 일루미네이터는 야간 집중 관리라는 역할이 한눈에 읽히도록 구성합니다.",
+  "과장된 광고성 표현보다 기술 포인트, 사용 장면, 상담 연결성이 먼저 드러나도록 정리합니다.",
+];
 
 export default function HomePage() {
   const sunPack = products.find((product) => product.slug === "sun-pack");
@@ -111,7 +122,7 @@ export default function HomePage() {
 
       <section id="brand" className="scroll-mt-32 bg-white px-4 py-20 md:px-6 md:py-24 md:scroll-mt-36 lg:scroll-mt-32">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-16 text-center md:mb-20">
+          <div className="mb-12 text-center md:mb-14">
             <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
               Hospital-Distributed Excellence
             </p>
@@ -124,6 +135,69 @@ export default function HomePage() {
             </p>
           </div>
 
+          <div className="mb-12 grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-stretch">
+            <article className="overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_60%,#f6f1ea_100%)] p-8 shadow-[0_24px_80px_rgba(73,53,26,0.06)] md:p-10">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="rounded-full border border-[rgba(157,116,66,0.14)] bg-white/80 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                  Brand Architecture
+                </span>
+                <span className="rounded-full border border-[rgba(157,116,66,0.14)] bg-white/80 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-stone-500">
+                  Clinical Premium
+                </span>
+              </div>
+
+              <div className="mt-8 grid gap-6 md:grid-cols-3">
+                {brandSignals.map((signal) => (
+                  <div key={signal.label} className="space-y-2 border-l border-[rgba(157,116,66,0.18)] pl-4">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">{signal.label}</p>
+                    <p className="headline-balance text-2xl font-semibold tracking-[-0.03em] text-stone-900">
+                      {signal.value}
+                    </p>
+                    <p className="copy-pretty text-sm leading-7 text-stone-600">{signal.detail}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 rounded-[28px] border border-[rgba(116,88,59,0.08)] bg-white/82 p-6">
+                <p className="text-sm font-semibold text-stone-900">왜 이 구조가 필요한가</p>
+                <div className="mt-4 grid gap-3">
+                  {brandNotes.map((note) => (
+                    <div key={note} className="flex gap-3 text-sm leading-7 text-stone-600">
+                      <span className="mt-[10px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#b89156]" />
+                      <p className="copy-pretty">{note}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </article>
+
+            <aside className="rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[#1f1b18] p-8 text-white shadow-[0_24px_80px_rgba(29,20,11,0.16)] md:p-10">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/45">Key Message</p>
+              <h3 className="display-font headline-balance mt-4 text-3xl font-semibold leading-[1.15] tracking-[-0.03em] md:text-[40px]">
+                병원 채널에서는 설명이 먼저고,
+                <br className="hidden md:block" /> 공개 구매에서는 전환이 자연스러워야 합니다.
+              </h3>
+              <p className="copy-pretty mt-5 text-sm leading-8 text-white/68">
+                CAREIS는 병원·클리닉 도입 상담과 인플루언서 레퍼럴 구매를 하나의 브랜드 언어 안에서
+                함께 운영할 수 있도록 설계된 구조를 지향합니다.
+              </p>
+              <div className="mt-8 space-y-4">
+                <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Consulting First</p>
+                  <p className="mt-2 text-sm leading-7 text-white/78">
+                    도입 검토, 유통 가능성, 운영 방향 상담을 먼저 연결하는 구조
+                  </p>
+                </div>
+                <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Public Purchase Second</p>
+                  <p className="mt-2 text-sm leading-7 text-white/78">
+                    추천 코드 기반 주문과 결제 추적 구조를 별도 회원가입 없이 병행
+                  </p>
+                </div>
+              </div>
+            </aside>
+          </div>
+
           <div className="grid gap-6 md:grid-cols-3 md:gap-8">
             {siteHighlights.map((highlight, index) => {
               const Icon = highlightIcons[index] ?? BuildingIcon;
@@ -131,16 +205,27 @@ export default function HomePage() {
               return (
                 <article
                   key={highlight.title}
-                  className="border border-black/5 bg-[#FAFAF8] p-10 md:p-12"
+                  className="group rounded-[30px] border border-[rgba(116,88,59,0.1)] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f4ed_100%)] p-8 shadow-[0_18px_60px_rgba(73,53,26,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(73,53,26,0.08)] md:p-10"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/5 text-stone-700">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#f4ece2_0%,#ffffff_100%)] text-stone-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
                     <Icon />
                   </div>
-                  <h3 className="mt-6 text-[20px] font-medium tracking-[-0.01em] text-stone-900">
+                  <p className="mt-6 text-[11px] uppercase tracking-[0.2em] text-stone-500">
+                    {index === 0 ? "Trust Layer" : index === 1 ? "Routine Layer" : "Commerce Layer"}
+                  </p>
+                  <h3 className="mt-3 text-[22px] font-medium tracking-[-0.02em] text-stone-900">
                     {highlight.title}
                   </h3>
-                  <p className="mt-4 text-[14px] leading-[1.8] text-stone-600">
+                  <p className="copy-pretty mt-4 text-[14px] leading-[1.8] text-stone-600">
                     {highlight.description}
+                  </p>
+                  <div className="mt-6 h-px w-full bg-[linear-gradient(90deg,rgba(184,145,86,0.3)_0%,rgba(184,145,86,0)_100%)]" />
+                  <p className="copy-pretty mt-5 text-[13px] leading-[1.8] text-stone-500">
+                    {index === 0
+                      ? "병원·클리닉 현장에서 제품 설명과 도입 제안이 자연스럽게 이어질 수 있어야 합니다."
+                      : index === 1
+                        ? "데이 케어와 나이트 케어를 명확히 나누면 제품 이해도와 도입 설득력이 함께 높아집니다."
+                        : "브랜드 사이트는 B2B 중심으로 두되, 공개 구매와 정산 추적 구조는 동시에 갖춰야 합니다."}
                   </p>
                 </article>
               );
@@ -151,6 +236,15 @@ export default function HomePage() {
 
       {sunPack && illuminator ? (
         <section className="relative overflow-hidden scroll-mt-32 md:scroll-mt-36 lg:scroll-mt-32" id="product">
+          <div className="bg-white px-4 pb-10 pt-6 text-center md:px-6 md:pb-14 md:pt-8">
+            <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
+              Two Essential Solutions
+            </p>
+            <h2 className="display-font headline-balance text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
+              낮과 밤을 나누는 2-Step 솔루션
+            </h2>
+          </div>
+
           <div className="grid min-h-[840px] lg:min-h-[100vh] lg:grid-cols-2">
             <article className="relative overflow-hidden bg-[linear-gradient(145deg,#FBF8F1_0%,#F5F1EA_55%,#EDE8DD_100%)] px-8 py-20">
               <div className="absolute inset-0 opacity-[0.12]">
@@ -174,9 +268,14 @@ export default function HomePage() {
                 <h2 className="display-font headline-balance mt-4 text-5xl font-semibold tracking-[-0.02em] text-stone-900 md:text-[56px]">
                   DAY CARE
                 </h2>
-                <p className="copy-pretty mx-auto mt-4 max-w-md text-[17px] leading-[1.8] text-stone-600">
-                  특허 필름막 기술과 데일리 사용성을 함께 설계한 병원 유통 선케어
-                </p>
+                <div className="mx-auto mt-4 max-w-xl space-y-3">
+                  <p className="headline-balance text-[18px] font-medium leading-[1.7] text-stone-900">
+                    {sunPack.tagline}
+                  </p>
+                  <p className="copy-pretty text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
+                    {sunPack.heroDescription}
+                  </p>
+                </div>
 
                 <div className="mt-10 border border-black/10 bg-white/65 p-6 md:p-7 backdrop-blur-sm">
                   <div className="relative h-72 w-56 md:h-80 md:w-64">
@@ -222,9 +321,14 @@ export default function HomePage() {
                 <h2 className="display-font headline-balance mt-4 text-5xl font-semibold tracking-[-0.02em] text-white md:text-[56px]">
                   NIGHT CARE
                 </h2>
-                <p className="copy-pretty mx-auto mt-4 max-w-md text-[17px] leading-[1.8] text-white/68">
-                  시스테아민 5%와 ODT 프로토콜로 접근하는 야간 브라이트닝 집중 케어
-                </p>
+                <div className="mx-auto mt-4 max-w-xl space-y-3">
+                  <p className="headline-balance text-[18px] font-medium leading-[1.7] text-white">
+                    {illuminator.tagline}
+                  </p>
+                  <p className="copy-pretty text-[15px] leading-[1.9] text-white/72 md:text-[16px]">
+                    {illuminator.heroDescription}
+                  </p>
+                </div>
 
                 <div className="mt-10 border border-white/10 bg-white/5 p-6 md:p-7 backdrop-blur-sm">
                   <div className="relative h-72 w-56 md:h-80 md:w-64">
@@ -252,75 +356,6 @@ export default function HomePage() {
           <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.18)_12%,rgba(0,0,0,0.18)_88%,transparent_100%)] lg:block" />
         </section>
       ) : null}
-
-      <section className="bg-white px-4 py-24 md:px-6 md:py-32">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-20 text-center md:mb-24">
-            <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
-              Two Essential Solutions
-            </p>
-            <h2 className="display-font headline-balance text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
-              낮과 밤을 나누는 2-Step 솔루션
-            </h2>
-          </div>
-
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            {products.map((product) => {
-              const isWarm = product.theme === "warm";
-              const visual = productVisuals[product.slug];
-
-              return (
-                <article key={product.slug} className="group">
-                  <div
-                    className={`relative mb-8 aspect-[3/4] overflow-hidden ${
-                      isWarm
-                        ? "bg-[linear-gradient(145deg,#FBF8F1_0%,#F0EBE3_100%)]"
-                        : "bg-[linear-gradient(145deg,#2A3247_0%,#1A1F2E_100%)]"
-                    }`}
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative h-80 w-64 md:h-[22rem] md:w-72">
-                        <Image
-                          src={visual.card}
-                          alt={visual.alt}
-                          fill
-                          className="object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.18)]"
-                          sizes="(max-width: 1024px) 80vw, 28vw"
-                        />
-                      </div>
-                    </div>
-                    <div className="absolute right-8 top-8 text-stone-900/45">
-                      {isWarm ? <SunMiniIcon /> : <MoonMiniIcon />}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-[11px] uppercase tracking-[0.2em] text-stone-500">
-                        {isWarm ? "Day Protection" : "Night Renewal"}
-                      </span>
-                      <div className="h-px flex-1 bg-black/10" />
-                    </div>
-                    <h3 className="display-font headline-balance text-[32px] font-semibold tracking-[-0.01em] text-stone-900">
-                      {isWarm ? "DAY CARE" : "NIGHT CARE"}
-                    </h3>
-                    <div className="space-y-2 text-[15px] leading-[1.8] text-stone-600">
-                      <p className="headline-balance font-medium text-stone-900/88">{product.tagline}</p>
-                      <p className="copy-pretty">{product.heroDescription}</p>
-                    </div>
-                    <Link
-                      href={`/products/${product.slug}`}
-                      className="inline-block pt-2 text-[13px] tracking-[0.1em] text-stone-900 underline underline-offset-4 transition hover:text-stone-600"
-                    >
-                      제품 상세정보
-                    </Link>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
 
       <section className="relative overflow-hidden bg-[#1A1A1A] px-4 py-28 text-white md:px-6 md:py-36">
         <div className="absolute inset-0">
