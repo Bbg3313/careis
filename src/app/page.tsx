@@ -117,34 +117,151 @@ export default function HomePage() {
                 </video>
               </div>
             </div>
-
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(10,10,10,0)_0%,rgba(10,10,10,0.62)_100%)] px-6 py-8 text-white md:px-10 md:py-10 lg:px-14 lg:py-12">
-              <div className="mx-auto max-w-7xl">
-                <p className="text-[12px] uppercase tracking-[0.22em] text-white/60">Brand Motion</p>
-                <p className="mt-3 max-w-xl text-lg font-medium tracking-[-0.02em] text-white/92 md:text-2xl">
-                  제품보다 먼저 브랜드 톤을, 설명보다 먼저 오래 남는 무드를 보여주는 브랜드 모션
-                  섹션입니다.
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      <section id="brand" className="scroll-mt-32 bg-white px-4 py-20 md:px-6 md:py-24 md:scroll-mt-36 lg:scroll-mt-32">
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">Editorial Story</p>
-            <h2 className="display-font headline-balance mt-6 text-4xl font-semibold leading-[1.16] tracking-[-0.03em] text-stone-900 md:text-[54px]">
-              빛이 머무는 낮,
-              <br className="hidden md:block" /> 결이 깊어지는 밤
+      <section
+        id="brand"
+        className="relative scroll-mt-32 overflow-hidden bg-[linear-gradient(180deg,#fffdf9_0%,#f8f1e7_100%)] px-4 py-20 md:px-6 md:py-24 md:scroll-mt-36 lg:scroll-mt-32"
+      >
+        <div className="absolute inset-0">
+          <div className="absolute left-1/2 top-6 h-[280px] w-[min(100%,1120px)] -translate-x-1/2 text-[#c9b08b]/45 md:h-[340px]">
+            <svg viewBox="0 0 1200 420" className="h-full w-full" fill="none" aria-hidden="true">
+              <path d="M150 336V176H330V336" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M240 336V120H520V336" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M470 336V146H740V336" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M690 336V194H910V336" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M860 336V162H1040V336" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M120 336H1080" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M358 120V86H402V120" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M372 86V58H388V86" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M560 146V110H650V146" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M930 162V124H970V162" stroke="currentColor" strokeWidth="1.2" />
+              <path d="M946 124V96H954V124" stroke="currentColor" strokeWidth="1.2" />
+              {Array.from({ length: 7 }).map((_, row) =>
+                Array.from({ length: 5 }).map((_, col) => (
+                  <rect
+                    key={`left-${row}-${col}`}
+                    x={176 + col * 28}
+                    y={200 + row * 18}
+                    width="14"
+                    height="10"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                  />
+                )),
+              )}
+              {Array.from({ length: 9 }).map((_, row) =>
+                Array.from({ length: 7 }).map((_, col) => (
+                  <rect
+                    key={`mid-${row}-${col}`}
+                    x={280 + col * 30}
+                    y={144 + row * 18}
+                    width="15"
+                    height="10"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                  />
+                )),
+              )}
+              {Array.from({ length: 8 }).map((_, row) =>
+                Array.from({ length: 6 }).map((_, col) => (
+                  <rect
+                    key={`right-${row}-${col}`}
+                    x={760 + col * 28}
+                    y={186 + row * 18}
+                    width="14"
+                    height="10"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                  />
+                )),
+              )}
+            </svg>
+          </div>
+          <div className="absolute left-10 top-8 h-32 w-32 rounded-full bg-[#c89f63]/18 blur-3xl" />
+          <div className="absolute bottom-10 right-10 h-40 w-40 rounded-full bg-[#ecd8bb]/28 blur-3xl" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,251,245,0.74)_0%,rgba(255,248,241,0.88)_24%,rgba(248,241,231,0.96)_100%)]" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl">
+          <div className="mx-auto max-w-5xl overflow-hidden rounded-[38px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,rgba(255,252,247,0.92)_0%,rgba(250,244,235,0.96)_100%)] px-6 py-10 shadow-[0_34px_90px_rgba(120,85,37,0.08)] backdrop-blur-sm md:px-10 md:py-14">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.46)_50%,transparent_100%)]" />
+            <div className="mx-auto flex w-fit items-center gap-3 rounded-full border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9)_0%,rgba(249,240,226,0.92)_100%)] px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-[#8b673f] shadow-[0_12px_30px_rgba(120,85,37,0.08)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#b89156]" />
+              Premium Clinical Line
+            </div>
+            <h2 className="display-font headline-balance mt-6 text-4xl font-semibold leading-[1.12] tracking-[-0.03em] text-stone-900 md:text-[56px]">
+              병원에서 먼저 소개된
+              <br className="hidden md:block" />
+              <span className="bg-[linear-gradient(135deg,#b89156_0%,#8b673f_100%)] bg-clip-text text-transparent">
+                프리미엄 더마코스메틱 루틴
+              </span>
             </h2>
-            <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
-              피부 위에 남는 감각은 시간에 따라 달라집니다. CAREIS는 낮에는 더 가볍고 밝게, 밤에는 더
-              차분하고 깊게 이어지는 두 장면을 하나의 루틴 안에 담았습니다.
+            <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-700 md:text-[16px]">
+              병원 채널에서 먼저 소개된 CAREIS 제품을
+              <br className="hidden md:block" />
+              일상에서도 자연스럽게 사용할 수 있도록 더 세련된 루틴으로 정리했습니다.
             </p>
-            <p className="mx-auto mt-5 max-w-xl text-[13px] leading-[1.8] text-stone-500 md:text-[14px]">
-              아래 배너에서 낮과 밤의 장면을 먼저 보고, 이어서 두 제품의 차이를 바로 확인할 수 있습니다.
+            <div className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">
+              <span className="rounded-full border border-[rgba(184,145,86,0.18)] bg-white/84 px-4 py-2 shadow-[0_10px_24px_rgba(120,85,37,0.05)]">Hospital Channel</span>
+              <span className="rounded-full border border-[rgba(184,145,86,0.18)] bg-white/84 px-4 py-2 shadow-[0_10px_24px_rgba(120,85,37,0.05)]">Premium Texture</span>
+              <span className="rounded-full border border-[rgba(184,145,86,0.18)] bg-white/84 px-4 py-2 shadow-[0_10px_24px_rgba(120,85,37,0.05)]">Day &amp; Night Routine</span>
+            </div>
+            <div className="mx-auto mt-10 grid max-w-4xl gap-4 text-left md:grid-cols-2">
+              <div className="relative overflow-hidden rounded-[24px] border border-[rgba(184,145,86,0.2)] bg-[linear-gradient(180deg,#fffdfa_0%,#f7efe3_100%)] p-6 shadow-[0_24px_54px_rgba(120,85,37,0.08)]">
+                <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.5)_50%,transparent_100%)]" />
+                <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-[#d8ba86]/12 blur-2xl" />
+                <div className="relative flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#8b673f]">Sun Pack</p>
+                    <p className="mt-3 text-xl font-semibold tracking-[-0.02em] text-stone-900">Patent Film Technology</p>
+                  </div>
+                  <span className="rounded-full border border-[rgba(184,145,86,0.18)] bg-white/90 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">
+                    Day Care
+                  </span>
+                </div>
+                <p className="mt-4 text-sm leading-7 text-stone-700">
+                  특허 기반 셀룰로오스 필름막 기술과 가벼운 사용감으로, 데일리 선케어를 더 편안하게
+                  이어갈 수 있도록 돕습니다.
+                </p>
+                <div className="mt-5 flex items-center gap-3 text-[12px] uppercase tracking-[0.14em] text-[#8b673f]">
+                  <span>SPF50+</span>
+                  <span className="h-1 w-1 rounded-full bg-[#b89156]" />
+                  <span>PA+++</span>
+                  <span className="h-1 w-1 rounded-full bg-[#b89156]" />
+                  <span>Light Texture</span>
+                </div>
+              </div>
+              <div className="relative overflow-hidden rounded-[24px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,#fffdfa_0%,#f4eee6_100%)] p-6 shadow-[0_24px_54px_rgba(120,85,37,0.08)]">
+                <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.42)_50%,transparent_100%)]" />
+                <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-[#d7c2a4]/12 blur-2xl" />
+                <div className="relative flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#8b673f]">Illuminator</p>
+                    <p className="mt-3 text-xl font-semibold tracking-[-0.02em] text-stone-900">Cysteamine 5% Care</p>
+                  </div>
+                  <span className="rounded-full border border-[rgba(184,145,86,0.18)] bg-white/90 px-3 py-1 text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">
+                    Night Care
+                  </span>
+                </div>
+                <p className="mt-4 text-sm leading-7 text-stone-700">
+                  시스테아민 5%를 중심으로 한 집중 브라이트닝 케어로, 밤사이 더 정돈된 피부 인상을
+                  위한 루틴을 완성합니다.
+                </p>
+                <div className="mt-5 flex items-center gap-3 text-[12px] uppercase tracking-[0.14em] text-[#8b673f]">
+                  <span>5%</span>
+                  <span className="h-1 w-1 rounded-full bg-[#b89156]" />
+                  <span>Brightening</span>
+                  <span className="h-1 w-1 rounded-full bg-[#b89156]" />
+                  <span>Night Routine</span>
+                </div>
+              </div>
+            </div>
+            <p className="mx-auto mt-7 max-w-2xl text-[13px] leading-[1.8] text-stone-600 md:text-[14px]">
+              병원 유통 기반의 신뢰감과 프리미엄 사용감을 함께 보여주는 두 제품을 아래에서 바로 확인할
+              수 있습니다.
             </p>
           </div>
         </div>
@@ -312,8 +429,8 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden bg-[#f8f2ea] px-4 py-6 md:px-6 md:py-8">
-        <div className="mx-auto max-w-[1800px]">
+      <section className="bg-[#f8f2ea] px-4 py-8 md:px-6 md:py-10">
+        <div className="mx-auto max-w-6xl">
           <FeatureBannerSlider slides={featureBannerSlides} />
         </div>
       </section>
