@@ -18,12 +18,12 @@ export default async function OrderCompletePage({
           준비되어 있습니다.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/products" className="rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white">
+          <Link href="/products" className="btn-luxe-primary rounded-full px-5 py-3 text-sm font-semibold">
             제품 계속 보기
           </Link>
           <Link
             href="/admin/orders"
-            className="rounded-full border border-stone-900 px-5 py-3 text-sm font-semibold text-stone-900"
+            className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold"
           >
             관리자 주문 확인
           </Link>

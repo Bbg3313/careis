@@ -20,7 +20,7 @@ export default async function CartPage({
     return (
       <div className="rounded-[36px] bg-white p-12 text-center">
         <p className="text-lg font-semibold text-stone-900">장바구니에 담긴 상품이 없습니다.</p>
-        <Link href="/products" className="mt-6 inline-flex rounded-full bg-stone-900 px-5 py-3 text-sm text-white">
+        <Link href="/products" className="btn-luxe-primary mt-6 inline-flex rounded-full px-5 py-3 text-sm">
           제품 보러가기
         </Link>
       </div>
@@ -75,7 +75,7 @@ export default async function CartPage({
 
           <Link
             href={`/order?product=${product.slug}&qty=${quantity}`}
-            className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white"
+            className="btn-luxe-primary mt-8 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
           >
             주문서 작성하기
           </Link>

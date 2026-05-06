@@ -2,81 +2,107 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { MotionMedia } from "@/components/motion-media";
-import { ProductCard } from "@/components/product-card";
-import { SiteLogo } from "@/components/site-logo";
 import { products, siteHighlights } from "@/lib/product-data";
 import { homeVisuals, productVisuals } from "@/lib/site-assets";
+
+const highlightIcons = [BuildingIcon, SparklesIcon, ExpertIcon];
 
 export default function HomePage() {
   const sunPack = products.find((product) => product.slug === "sun-pack");
   const illuminator = products.find((product) => product.slug === "illuminator");
 
   return (
-    <div className="space-y-28 pb-24">
-      <section className="relative overflow-hidden rounded-[30px] bg-[#111111] shadow-[0_40px_140px_rgba(10,10,10,0.24)] md:rounded-[46px]">
-        <MotionMedia
-          frames={homeVisuals.heroMotion}
-          alt="케어이즈 히어로 모션"
-          priority
-          className="absolute inset-0"
-          overlayClassName="absolute inset-0 bg-[linear-gradient(90deg,rgba(9,9,9,0.82)_0%,rgba(9,9,9,0.38)_45%,rgba(9,9,9,0.58)_100%)]"
-        />
+    <div className="space-y-24 pb-24">
+      <section className="relative overflow-hidden px-2 pb-8 pt-4">
+        <div className="absolute right-[-2rem] top-8 h-48 w-48 rounded-full bg-[#d4af37]/10 blur-3xl" />
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div className="space-y-8 px-4 py-6 md:px-6 lg:px-0">
+            <div className="space-y-4">
+              <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">
+                Premium Dermacosmetic
+              </p>
+              <h1 className="display-font text-5xl font-semibold leading-[1.08] tracking-[-0.02em] text-stone-900 sm:text-6xl md:text-[64px]">
+                Clinical Excellence
+                <br />
+                Meets Luxury
+              </h1>
+              <p className="max-w-xl pt-3 text-[15px] leading-[1.9] text-stone-600 md:text-[17px]">
+                병원과 클리닉을 위한 프리미엄 더마코스메틱 브랜드.
+                <br />
+                과장된 뷰티 커머스가 아니라, 설명 가능한 기술과 루틴을 전면에 둡니다.
+              </p>
+            </div>
 
-        <div className="relative z-10 px-6 py-8 md:px-10 md:py-10 lg:px-14 lg:py-14">
-          <div className="grid min-h-[72vh] gap-10 lg:min-h-[78vh] lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
-            <div className="flex h-full flex-col justify-between gap-12">
-              <div className="pt-2">
-                <SiteLogo dark compact />
-              </div>
+            <div className="flex flex-wrap gap-4 pt-2">
+              <Link
+                href="/contact"
+                className="btn-luxe-primary inline-flex items-center gap-2 px-8 py-4 text-[13px] tracking-[0.1em]"
+              >
+                도입 문의
+                <ArrowAccent />
+              </Link>
+              <Link
+                href="/products"
+                className="border border-black/15 px-8 py-4 text-[13px] tracking-[0.1em] text-stone-900 transition hover:border-black/40"
+              >
+                제품 소개
+              </Link>
+            </div>
+          </div>
 
-              <div className="max-w-3xl">
-                <p className="text-xs uppercase tracking-[0.34em] text-white/60">
-                  Hospital Distributed Dermacosmetic
-                </p>
-                <h1 className="display-font mt-6 text-5xl font-semibold leading-[0.92] text-white sm:text-6xl md:text-7xl lg:text-[5.5rem]">
-                  Elevated dermacosmetic
-                  <br className="hidden md:block" />
-                  for clinics and curated retail.
-                </h1>
-                <p className="mt-8 max-w-2xl text-sm leading-8 text-white/72 md:text-base">
-                  CAREIS는 병원과 클리닉에서 먼저 설명 가능한 제품 언어를 중심에 두고, 인플루언서
-                  레퍼럴 구매는 그 다음 동선으로 자연스럽게 연결하는 하이엔드 더마코스메틱 브랜드
-                  사이트를 지향합니다.
-                </p>
-                <div className="mt-10 flex flex-wrap gap-3">
-                  <Link
-                    href="/contact"
-                    className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900"
-                  >
-                    도입 문의
-                  </Link>
-                  <Link
-                    href="/products"
-                    className="rounded-full border border-white/16 bg-white/8 px-6 py-3 text-sm font-semibold text-white backdrop-blur"
-                  >
-                    제품 소개
-                  </Link>
-                </div>
+          <div className="relative h-[440px] overflow-hidden bg-[linear-gradient(135deg,#f5f1ea_0%,#ffffff_100%)] md:h-[560px] lg:h-[640px]">
+            <MotionMedia
+              frames={homeVisuals.heroMotion}
+              alt="CAREIS hero visual"
+              priority
+              className="absolute inset-0"
+              overlayClassName="absolute inset-0 bg-[linear-gradient(135deg,rgba(245,241,234,0.16)_0%,rgba(255,255,255,0.22)_100%)]"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden bg-[#111111]">
+        <div className="relative mx-auto min-h-[360px] w-full max-w-[1800px] px-4 py-6 md:min-h-[460px] md:px-6 md:py-8 lg:min-h-[560px] lg:px-8 lg:py-10">
+          <div className="absolute inset-0 overflow-hidden">
+            <video
+              className="h-full w-full scale-[1.08] object-cover blur-[30px] opacity-45"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            >
+              <source src="/media/main-banner.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,rgba(17,17,17,0.2)_40%,rgba(8,8,8,0.72)_100%)]" />
+          </div>
+
+          <div className="relative mx-auto flex min-h-[348px] max-w-[1500px] items-center justify-center md:min-h-[444px] lg:min-h-[540px]">
+            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(212,184,140,0.45)_50%,transparent_100%)]" />
+            <div className="absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(212,184,140,0.24)_50%,transparent_100%)]" />
+
+            <div className="relative w-full overflow-hidden rounded-[28px] border border-white/10 bg-black/20 shadow-[0_30px_80px_rgba(0,0,0,0.32)] backdrop-blur-[6px] md:rounded-[34px]">
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0)_22%,rgba(0,0,0,0.08)_100%)]" />
+              <div className="aspect-[21/9] min-h-[280px] md:min-h-[360px] lg:min-h-[460px]">
+                <video
+                  className="h-full w-full object-contain"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                >
+                  <source src="/media/main-banner.mp4" type="video/mp4" />
+                </video>
               </div>
             </div>
 
-            <div className="grid gap-4 self-end sm:grid-cols-2 lg:grid-cols-1">
-              <div className="soft-panel rounded-[24px] border border-white/10 p-6 text-stone-800 md:rounded-[30px]">
-                <p className="text-[11px] uppercase tracking-[0.3em] text-stone-500">Brand Positioning</p>
-                <p className="mt-4 text-lg font-semibold tracking-[-0.03em] text-stone-900 md:text-xl">
-                  판매보다 먼저, 신뢰와 설명의 깊이를 보여줍니다.
-                </p>
-              </div>
-              <div className="soft-panel rounded-[24px] border border-white/10 p-6 text-stone-800 md:rounded-[30px]">
-                <p className="text-[11px] uppercase tracking-[0.3em] text-stone-500">Open Referral Purchase</p>
-                <p className="mt-4 text-sm leading-7 text-stone-700">
-                  레퍼럴 링크 유입은 공개 구매 동선으로 연결되며, 주문 데이터에는 추적 코드가 함께 남습니다.
-                </p>
-              </div>
-              <div className="rounded-[24px] border border-white/10 bg-white/6 p-6 text-white backdrop-blur sm:col-span-2 lg:col-span-1 md:rounded-[30px]">
-                <p className="text-[11px] uppercase tracking-[0.3em] text-white/55">Brand Film</p>
-                <p className="mt-4 text-sm leading-7 text-white/78">
-                  영상 자산이 들어오면 이 히어로 구조 그대로 교체할 수 있도록 설계했습니다.
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,rgba(10,10,10,0)_0%,rgba(10,10,10,0.62)_100%)] px-6 py-8 text-white md:px-10 md:py-10 lg:px-14 lg:py-12">
+              <div className="mx-auto max-w-7xl">
+                <p className="text-[12px] uppercase tracking-[0.22em] text-white/60">Brand Motion</p>
+                <p className="mt-3 max-w-xl text-lg font-medium tracking-[-0.02em] text-white/92 md:text-2xl">
+                  풀스크린 무드는 유지하되, 영상은 프레임 안에서 더 정제되게 보여줍니다.
                 </p>
               </div>
             </div>
@@ -84,277 +110,407 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {siteHighlights.map((highlight) => (
-          <article
-            key={highlight.title}
-            className="rounded-[24px] border border-[rgba(116,88,59,0.12)] bg-white/85 p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)] md:rounded-[30px]"
-          >
-            <div className="h-12 w-12 rounded-full bg-[linear-gradient(135deg,#f0dcc3_0%,#dbe5f8_100%)]" />
-            <h2 className="mt-6 text-2xl font-semibold tracking-[-0.03em] text-stone-900">{highlight.title}</h2>
-            <p className="mt-3 text-sm leading-7 text-stone-600">{highlight.description}</p>
-          </article>
-        ))}
+      <section id="brand" className="scroll-mt-32 bg-white px-4 py-20 md:px-6 md:py-24 md:scroll-mt-36 lg:scroll-mt-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-16 text-center md:mb-20">
+            <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
+              Hospital-Distributed Excellence
+            </p>
+            <h2 className="display-font text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
+              병원이 선택한 신뢰
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
+              피부과학 기반의 설계와 의료기관 유통 경험을 바탕으로, 병원 현장에서 설명 가능한
+              프리미엄 더마코스메틱 구조를 만듭니다.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3 md:gap-8">
+            {siteHighlights.map((highlight, index) => {
+              const Icon = highlightIcons[index] ?? BuildingIcon;
+
+              return (
+                <article
+                  key={highlight.title}
+                  className="border border-black/5 bg-[#FAFAF8] p-10 md:p-12"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/5 text-stone-700">
+                    <Icon />
+                  </div>
+                  <h3 className="mt-6 text-[20px] font-medium tracking-[-0.01em] text-stone-900">
+                    {highlight.title}
+                  </h3>
+                  <p className="mt-4 text-[14px] leading-[1.8] text-stone-600">
+                    {highlight.description}
+                  </p>
+                </article>
+              );
+            })}
+          </div>
+        </div>
       </section>
 
       {sunPack && illuminator ? (
-        <section className="overflow-hidden rounded-[30px] border border-[rgba(116,88,59,0.12)] bg-white shadow-[0_28px_90px_rgba(73,53,26,0.06)] md:rounded-[42px]">
-          <div className="grid lg:grid-cols-2">
-            <article className="relative isolate overflow-hidden bg-[linear-gradient(145deg,#fff6df_0%,#f5ead4_48%,#efe2cf_100%)] p-8 md:p-10 lg:p-12">
-              <div className="absolute right-[-5%] top-[-6%] opacity-80">
-                <SunAccent />
+        <section className="relative overflow-hidden scroll-mt-32 md:scroll-mt-36 lg:scroll-mt-32" id="product">
+          <div className="grid min-h-[840px] lg:min-h-[100vh] lg:grid-cols-2">
+            <article className="relative overflow-hidden bg-[linear-gradient(145deg,#FBF8F1_0%,#F5F1EA_55%,#EDE8DD_100%)] px-8 py-20">
+              <div className="absolute inset-0 opacity-[0.12]">
+                <Image
+                  src={productVisuals["sun-pack"].gallery[4]}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="50vw"
+                />
               </div>
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,248,233,0.82)_100%)]" />
+              <div className="absolute right-12 top-12 h-72 w-72 rounded-full bg-[#D4AF37]/20 blur-3xl" />
 
-              <div className="relative z-10 flex h-full flex-col justify-between gap-10">
-                <div className="space-y-4">
-                  <p className="text-xs uppercase tracking-[0.32em] text-[#9f7b47]">DAY CARE</p>
-                  <h2 className="display-font text-4xl font-semibold tracking-[-0.04em] text-stone-900 sm:text-5xl md:text-6xl">
-                    해가 떠 있는 시간엔
-                    <br className="hidden sm:block" /> 보호가 먼저입니다.
-                  </h2>
-                  <p className="max-w-xl text-sm leading-8 text-stone-700 md:text-base">
-                    외출, 야외 활동, 메이크업 루틴까지 고려한 선 보호 제품이 먼저 전면에 보여야
-                    합니다. 밝은 톤의 데이 케어 무드에서 선팩의 역할이 즉시 읽히도록 구성했습니다.
-                  </p>
+              <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
+                <div className="relative mb-10">
+                  <SunHeroIcon />
+                  <div className="absolute inset-0 rounded-full bg-[#D4AF37]/20 blur-xl" />
                 </div>
 
-                <div className="grid items-end gap-8 md:grid-cols-[1fr_220px]">
-                  <div className="space-y-5">
-                    <div className="rounded-[24px] border border-[#d7bf96] bg-white/55 p-5 backdrop-blur">
-                      <p className="text-[11px] uppercase tracking-[0.28em] text-[#9f7b47]">Use This When</p>
-                      <p className="mt-3 text-lg font-semibold tracking-[-0.03em] text-stone-900">
-                        낮 동안 자외선과 외부 환경으로부터 피부를 지켜야 할 때
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      <Link
-                        href="/products/sun-pack"
-                        className="rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white"
-                      >
-                        선팩 상세 보기
-                      </Link>
-                      <Link
-                        href="/order?product=sun-pack"
-                        className="rounded-full border border-stone-900/10 bg-white/70 px-6 py-3 text-sm font-semibold text-stone-900"
-                      >
-                        데이 케어 구매
-                      </Link>
-                    </div>
-                  </div>
+                <p className="text-[13px] uppercase tracking-[0.2em] text-stone-500">Day Protection</p>
+                <h2 className="display-font mt-4 text-5xl font-semibold tracking-[-0.02em] text-stone-900 md:text-[56px]">
+                  DAY CARE
+                </h2>
+                <p className="mx-auto mt-4 max-w-md text-[17px] leading-[1.8] text-stone-600">
+                  자외선과 외부 환경으로부터 피부를 보호하는
+                  <br />
+                  프리미엄 선케어 솔루션
+                </p>
 
-                  <div className="relative h-64 md:h-72">
+                <div className="mt-10 border border-black/10 bg-white/65 p-6 md:p-7 backdrop-blur-sm">
+                  <div className="relative h-72 w-56 md:h-80 md:w-64">
                     <Image
                       src={productVisuals["sun-pack"].card}
                       alt={productVisuals["sun-pack"].alt}
                       fill
-                      className="object-contain drop-shadow-[0_28px_40px_rgba(115,85,36,0.22)]"
-                      sizes="220px"
+                      className="object-contain drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)]"
+                      sizes="224px"
                     />
                   </div>
                 </div>
+
+                <Link
+                  href="/products/sun-pack"
+                  className="mt-8 inline-flex items-center gap-2 border border-black/20 bg-white/80 px-8 py-3 text-[13px] tracking-[0.1em] text-stone-900 transition hover:bg-white"
+                >
+                  자세히 보기
+                  <ArrowAccent />
+                </Link>
               </div>
             </article>
 
-            <article className="relative isolate overflow-hidden bg-[linear-gradient(145deg,#131722_0%,#1b2131_44%,#0d1019_100%)] p-8 text-white md:p-10 lg:p-12">
-              <div className="absolute right-[-2%] top-[-8%] opacity-90">
-                <MoonAccent />
+            <article className="relative overflow-hidden bg-[linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] px-8 py-20 text-white">
+              <div className="absolute inset-0 opacity-[0.1]">
+                <Image
+                  src={productVisuals["illuminator"].hero}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="50vw"
+                />
               </div>
-              <div className="absolute left-10 top-16 h-28 w-28 rounded-full bg-[#95a4ff]/12 blur-3xl" />
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,rgba(10,12,20,0)_0%,rgba(10,12,20,0.84)_100%)]" />
+              <div className="absolute left-12 top-12 h-72 w-72 rounded-full bg-[#7B8FA8]/20 blur-3xl" />
 
-              <div className="relative z-10 flex h-full flex-col justify-between gap-10">
-                <div className="space-y-4">
-                  <p className="text-xs uppercase tracking-[0.32em] text-[#a8b4ff]">NIGHT CARE</p>
-                  <h2 className="display-font text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl md:text-6xl">
-                    밤에는 설명보다
-                    <br className="hidden sm:block" /> 집중 관리가 중요합니다.
-                  </h2>
-                  <p className="max-w-xl text-sm leading-8 text-white/76 md:text-base">
-                    색소 고민과 브라이트닝 니즈가 올라오는 시간에는 강한 나이트 케어 무드가
-                    필요합니다. 어두운 배경과 달 모티프로 일루미네이터의 집중 루틴을 바로 이해시키는
-                    구조로 바꿨습니다.
-                  </p>
+              <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
+                <div className="relative mb-10">
+                  <MoonHeroIcon />
+                  <div className="absolute inset-0 rounded-full bg-[#A8BCD4]/20 blur-xl" />
                 </div>
 
-                <div className="grid items-end gap-8 md:grid-cols-[1fr_220px]">
-                  <div className="space-y-5">
-                    <div className="rounded-[24px] border border-white/10 bg-white/8 p-5 backdrop-blur">
-                      <p className="text-[11px] uppercase tracking-[0.28em] text-[#a8b4ff]">Use This When</p>
-                      <p className="mt-3 text-lg font-semibold tracking-[-0.03em] text-white">
-                        밤 시간대 집중 케어와 브라이트닝 루틴을 강하게 어필해야 할 때
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      <Link
-                        href="/products/illuminator"
-                        className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900"
-                      >
-                        일루미네이터 상세 보기
-                      </Link>
-                      <Link
-                        href="/order?product=illuminator"
-                        className="rounded-full border border-white/16 bg-white/8 px-6 py-3 text-sm font-semibold text-white"
-                      >
-                        나이트 케어 구매
-                      </Link>
-                    </div>
-                  </div>
+                <p className="text-[13px] uppercase tracking-[0.2em] text-white/55">Night Renewal</p>
+                <h2 className="display-font mt-4 text-5xl font-semibold tracking-[-0.02em] text-white md:text-[56px]">
+                  NIGHT CARE
+                </h2>
+                <p className="mx-auto mt-4 max-w-md text-[17px] leading-[1.8] text-white/68">
+                  밤사이 피부를 집중 관리하는
+                  <br />
+                  브라이트닝 인텐시브 케어
+                </p>
 
-                  <div className="relative h-64 md:h-72">
+                <div className="mt-10 border border-white/10 bg-white/5 p-6 md:p-7 backdrop-blur-sm">
+                  <div className="relative h-72 w-56 md:h-80 md:w-64">
                     <Image
                       src={productVisuals["illuminator"].card}
                       alt={productVisuals["illuminator"].alt}
                       fill
-                      className="object-contain drop-shadow-[0_28px_40px_rgba(0,0,0,0.34)]"
-                      sizes="220px"
+                      className="object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)]"
+                      sizes="224px"
                     />
                   </div>
                 </div>
+
+                <Link
+                  href="/products/illuminator"
+                  className="mt-8 inline-flex items-center gap-2 border border-white/20 bg-white/10 px-8 py-3 text-[13px] tracking-[0.1em] text-white transition hover:bg-white/15"
+                >
+                  자세히 보기
+                  <ArrowAccent />
+                </Link>
               </div>
             </article>
           </div>
+
+          <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.18)_12%,rgba(0,0,0,0.18)_88%,transparent_100%)] lg:block" />
         </section>
       ) : null}
 
-      <section className="grid gap-6 lg:grid-cols-2">
-        {products.map((product) => (
-          <ProductCard key={product.slug} product={product} />
-        ))}
-      </section>
-
-      <section className="grid gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
-        <div className="relative min-h-[520px] overflow-hidden rounded-[40px] bg-[#111111] shadow-[0_40px_120px_rgba(11,11,11,0.18)]">
-          <MotionMedia
-            frames={homeVisuals.brandFilm}
-            alt="케어이즈 브랜드 필름 무드"
-            className="absolute inset-0"
-            overlayClassName="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.14)_0%,rgba(0,0,0,0.52)_100%)]"
-          />
-          <div className="absolute bottom-0 left-0 right-0 p-8 text-white md:p-10">
-            <p className="text-xs uppercase tracking-[0.34em] text-white/62">Brand Film Section</p>
-            <p className="mt-4 max-w-xl text-2xl font-semibold tracking-[-0.03em]">
-              시네마틱 무드와 브랜드 신뢰를 동시에 보여주는 메인 비주얼 섹션.
+      <section className="bg-white px-4 py-24 md:px-6 md:py-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-20 text-center md:mb-24">
+            <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
+              Two Essential Solutions
             </p>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Visual Direction</p>
-          <h2 className="display-font text-5xl font-semibold tracking-[-0.03em] text-stone-900 md:text-6xl">
-            Hero first.
-            <br />
-            Explanation later.
-          </h2>
-          <p className="text-sm leading-8 text-stone-600 md:text-base">
-            첫 화면에서 모든 걸 설명하려 하지 않고, 영상 같은 모션과 이미지의 질감으로 브랜드
-            인상을 먼저 만든 뒤, 아래 섹션에서 기술과 제품 이야기를 차분하게 이어가는 구성이 더
-            현대적이고 고급스럽습니다.
-          </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-[28px] bg-white p-6 shadow-[0_20px_60px_rgba(70,50,24,0.05)]">
-              <p className="text-sm font-semibold text-stone-900">B2B Inquiry First</p>
-              <p className="mt-3 text-sm leading-7 text-stone-600">
-                병원/클리닉 도입 문의를 메인 CTA로 유지합니다.
-              </p>
-            </div>
-            <div className="rounded-[28px] bg-white p-6 shadow-[0_20px_60px_rgba(70,50,24,0.05)]">
-              <p className="text-sm font-semibold text-stone-900">Referral Purchase Open</p>
-              <p className="mt-3 text-sm leading-7 text-stone-600">
-                공개 구매 동선은 살리되, 메인 구조는 브랜드 중심으로 정리합니다.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="grid gap-6 lg:grid-cols-2">
-        <article className="rounded-[38px] bg-stone-900 px-8 py-12 text-white shadow-[0_40px_100px_rgba(23,19,18,0.18)] md:px-12 md:py-16">
-          <p className="text-xs uppercase tracking-[0.3em] text-white/60">B2B Inquiry</p>
-          <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] md:text-5xl">
-            병원 및 클리닉 도입 문의를 우선합니다.
-          </h2>
-          <p className="mt-4 text-sm leading-8 text-white/75 md:text-base">
-            사이트의 1차 목적은 구매보다 브랜드 소개와 제품 이해입니다. 도입 상담, 운영 방향,
-            제품 포지셔닝 문의는 전용 문의 페이지에서 연결됩니다.
-          </p>
-          <div className="mt-8">
-            <Link
-              href="/contact"
-              className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900"
-            >
-              도입 문의하기
-            </Link>
-          </div>
-        </article>
-
-        <article className="rounded-[38px] border border-[rgba(116,88,59,0.12)] bg-white px-8 py-12 shadow-[0_24px_80px_rgba(73,53,26,0.05)] md:px-12 md:py-16">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Open Referral Purchase</p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-stone-900 md:text-5xl">
-              인플루언서용 레퍼럴 구매도 공개적으로 운영할 수 있습니다.
+            <h2 className="display-font text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
+              완벽한 하루를 위한 두 가지 선택
             </h2>
           </div>
-          <div className="mt-4 space-y-5">
-            <p className="text-sm leading-8 text-stone-600 md:text-base">
-              `?ref=mina` 같은 링크 유입은 브라우저에 저장되고, 주문 저장 시 `referral_code`,
-              `paymentMethod`, `paymentStatus`와 함께 DB에 남습니다. 즉, 사이트는 B2B 중심이지만
-              인플루언서 공구 운영도 동시에 감당할 수 있습니다.
+
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+            {products.map((product) => {
+              const isWarm = product.theme === "warm";
+              const visual = productVisuals[product.slug];
+
+              return (
+                <article key={product.slug} className="group">
+                  <div
+                    className={`relative mb-8 aspect-[3/4] overflow-hidden ${
+                      isWarm
+                        ? "bg-[linear-gradient(145deg,#FBF8F1_0%,#F0EBE3_100%)]"
+                        : "bg-[linear-gradient(145deg,#2A3247_0%,#1A1F2E_100%)]"
+                    }`}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative h-80 w-64 md:h-[22rem] md:w-72">
+                        <Image
+                          src={visual.card}
+                          alt={visual.alt}
+                          fill
+                          className="object-contain drop-shadow-[0_30px_40px_rgba(0,0,0,0.18)]"
+                          sizes="(max-width: 1024px) 80vw, 28vw"
+                        />
+                      </div>
+                    </div>
+                    <div className="absolute right-8 top-8 text-stone-900/45">
+                      {isWarm ? <SunMiniIcon /> : <MoonMiniIcon />}
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] uppercase tracking-[0.2em] text-stone-500">
+                        {isWarm ? "Day Protection" : "Night Renewal"}
+                      </span>
+                      <div className="h-px flex-1 bg-black/10" />
+                    </div>
+                    <h3 className="display-font text-[32px] font-semibold tracking-[-0.01em] text-stone-900">
+                      {isWarm ? "DAY CARE" : "NIGHT CARE"}
+                    </h3>
+                    <p className="text-[15px] leading-[1.8] text-stone-600">
+                      {product.tagline}
+                      <br />
+                      {product.heroDescription}
+                    </p>
+                    <Link
+                      href={`/products/${product.slug}`}
+                      className="inline-block pt-2 text-[13px] tracking-[0.1em] text-stone-900 underline underline-offset-4 transition hover:text-stone-600"
+                    >
+                      제품 상세정보
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-[#1A1A1A] px-4 py-28 text-white md:px-6 md:py-36">
+        <div className="absolute inset-0">
+          <MotionMedia
+            frames={homeVisuals.brandFilm}
+            alt="CAREIS brand film"
+            className="absolute inset-0"
+            overlayClassName="absolute inset-0 bg-black/65"
+          />
+        </div>
+        <div className="relative z-10 mx-auto max-w-5xl text-center">
+          <p className="text-[13px] uppercase tracking-[0.2em] text-white/50">Visual Direction</p>
+          <h2 className="display-font mt-6 text-5xl font-semibold leading-[1.08] tracking-[-0.02em] md:text-[72px]">
+            Hero First,
+            <br />
+            Explanation Later
+          </h2>
+          <p className="mx-auto mt-8 max-w-2xl text-[16px] leading-[1.9] text-white/65">
+            시각이 먼저 말하고, 제품이 증명합니다.
+            <br />
+            CAREIS의 브랜드 철학을 담은 비주얼 중심 메인 섹션입니다.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="inquiry"
+        className="scroll-mt-32 bg-[linear-gradient(145deg,#FAFAF8_0%,#ffffff_100%)] px-4 py-24 md:px-6 md:py-32 md:scroll-mt-36 lg:scroll-mt-32"
+      >
+        <div className="mx-auto max-w-4xl border border-black/10 bg-white p-10 md:p-16">
+          <div className="text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/5 text-stone-700">
+              <BuildingIcon />
+            </div>
+
+            <p className="mt-8 text-[13px] uppercase tracking-[0.15em] text-stone-500">
+              Partnership Inquiry
             </p>
-            <div className="flex flex-wrap gap-3">
+            <h2 className="display-font mt-4 text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
+              병원·클리닉 도입 문의
+            </h2>
+            <p className="mx-auto mt-6 max-w-xl text-[16px] leading-[1.9] text-stone-600">
+              CAREIS는 병원, 클리닉, 에스테틱 파트너와의 도입 상담을 우선합니다.
+              <br />
+              운영 방향과 제품 포지셔닝에 맞춘 상담 흐름을 제공합니다.
+            </p>
+
+            <div className="pt-10">
               <Link
-                href="/order?product=sun-pack"
-                className="rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white"
+                href="/contact"
+                className="btn-luxe-primary inline-flex w-full max-w-md items-center justify-center px-12 py-5 text-[14px] tracking-[0.1em]"
               >
-                레퍼럴 구매 보기
+                병원·클리닉 도입 문의하기
               </Link>
+              <p className="mt-4 text-[12px] text-stone-500">브랜드 및 도입 문의는 별도 상담 흐름으로 연결됩니다.</p>
+            </div>
+
+            <div className="mt-12 grid gap-8 border-t border-black/5 pt-12 md:grid-cols-3">
+              <InfoStat title="병원 유통 기반" description="클리닉 현장에서 설명 가능한 구조" />
+              <InfoStat title="2 SKU 집중 운영" description="낮과 밤 루틴을 명확히 분리" />
+              <InfoStat title="B2B 우선 설계" description="도입 문의를 가장 앞단에 배치" />
             </div>
           </div>
-        </article>
+        </div>
+      </section>
+
+      <section className="bg-[#FAFAF8] px-4 py-20 md:px-6 md:py-24">
+        <div className="mx-auto max-w-4xl text-center">
+          <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">Referral Purchase</p>
+          <h2 className="display-font mt-4 text-3xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[36px]">
+            추천을 통한 개인 구매
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-[1.8] text-stone-600">
+            병원 또는 전문가 추천이 있는 경우 공개 레퍼럴 링크를 통해 개인 구매도 가능합니다.
+            메인 구조는 브랜드와 도입 문의를 우선하되, 추천 구매 동선은 자연스럽게 병행합니다.
+          </p>
+
+          <div className="pt-10">
+            <Link
+              href="/order?product=sun-pack"
+              className="inline-flex items-center gap-2 border border-black/20 px-10 py-4 text-[13px] tracking-[0.1em] text-stone-900 transition hover:border-black/40"
+            >
+              추천 코드로 구매하기
+              <ArrowAccent />
+            </Link>
+          </div>
+
+          <p className="mt-8 text-[11px] text-stone-500">
+            * 추천 코드는 제휴 병원 또는 인플루언서 레퍼럴 링크를 통해 전달될 수 있습니다.
+          </p>
+        </div>
       </section>
     </div>
   );
 }
 
-function SunAccent() {
+function InfoStat({ title, description }: { title: string; description: string }) {
   return (
-    <svg width="220" height="220" viewBox="0 0 220 220" fill="none" aria-hidden="true">
-      <circle cx="110" cy="110" r="38" fill="#F7D27A" />
-      <circle cx="110" cy="110" r="60" stroke="#E1B157" strokeOpacity="0.34" strokeWidth="2" />
-      {Array.from({ length: 12 }).map((_, index) => {
-        const angle = (index * Math.PI) / 6;
-        const x1 = 110 + Math.cos(angle) * 78;
-        const y1 = 110 + Math.sin(angle) * 78;
-        const x2 = 110 + Math.cos(angle) * 102;
-        const y2 = 110 + Math.sin(angle) * 102;
+    <div className="space-y-2">
+      <p className="text-xl font-medium text-stone-900 md:text-2xl">{title}</p>
+      <p className="text-[12px] tracking-[0.1em] text-stone-500">{description}</p>
+    </div>
+  );
+}
 
-        return (
-          <line
-            key={index}
-            x1={x1}
-            y1={y1}
-            x2={x2}
-            y2={y2}
-            stroke="#D09B45"
-            strokeOpacity="0.72"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        );
+function ArrowAccent() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M2.5 7H11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M7.75 3.25L11.5 7L7.75 10.75" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function BuildingIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M4 17V5.5L10 3L16 5.5V17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 17V12H12V17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M7 8.5H7.01M10 8.5H10.01M13 8.5H13.01" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SparklesIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M10 2.5L11.5 7L16 8.5L11.5 10L10 14.5L8.5 10L4 8.5L8.5 7L10 2.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      <path d="M15 2.5L15.5 4L17 4.5L15.5 5L15 6.5L14.5 5L13 4.5L14.5 4L15 2.5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function ExpertIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="6.5" r="3" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M4.5 16C5.2 13.6 7.25 12 10 12C12.75 12 14.8 13.6 15.5 16" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SunHeroIcon() {
+  return (
+    <svg width="84" height="84" viewBox="0 0 84 84" fill="none" aria-hidden="true" className="relative z-10 text-[#D4AF37]">
+      <circle cx="42" cy="42" r="16" stroke="currentColor" strokeWidth="1.4" />
+      {Array.from({ length: 8 }).map((_, index) => {
+        const angle = (index * Math.PI) / 4;
+        const x1 = 42 + Math.cos(angle) * 24;
+        const y1 = 42 + Math.sin(angle) * 24;
+        const x2 = 42 + Math.cos(angle) * 34;
+        const y2 = 42 + Math.sin(angle) * 34;
+        return <line key={index} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />;
       })}
     </svg>
   );
 }
 
-function MoonAccent() {
+function MoonHeroIcon() {
   return (
-    <svg width="220" height="220" viewBox="0 0 220 220" fill="none" aria-hidden="true">
-      <circle cx="138" cy="92" r="54" fill="#CED6FF" fillOpacity="0.94" />
-      <circle cx="158" cy="82" r="54" fill="#131722" />
-      <circle cx="78" cy="54" r="3.5" fill="#D9DFFF" />
-      <circle cx="104" cy="34" r="2.5" fill="#D9DFFF" />
-      <circle cx="56" cy="98" r="2.5" fill="#D9DFFF" />
-      <circle cx="168" cy="146" r="3" fill="#A8B4FF" fillOpacity="0.8" />
+    <svg width="84" height="84" viewBox="0 0 84 84" fill="none" aria-hidden="true" className="relative z-10 text-[#A8BCD4]">
+      <path
+        d="M51.5 15.5C42 18.5 35.25 27.38 35.25 37.75C35.25 50.6 45.65 61 58.5 61C61.1 61 63.6 60.57 65.94 59.78C61.96 65.27 55.51 68.84 48.25 68.84C36.17 68.84 26.38 59.05 26.38 46.97C26.38 32.79 37.71 21.05 51.5 15.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SunMiniIcon() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <circle cx="16" cy="16" r="6.5" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M16 3.5V7.5M16 24.5V28.5M28.5 16H24.5M7.5 16H3.5M24.84 7.16L22.01 9.99M9.99 22.01L7.16 24.84M24.84 24.84L22.01 22.01M9.99 9.99L7.16 7.16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MoonMiniIcon() {
+  return (
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M22.2 5.8C18.64 6.92 16.11 10.25 16.11 14.14C16.11 18.95 20.01 22.85 24.82 22.85C25.79 22.85 26.72 22.69 27.6 22.39C26.11 24.44 23.69 25.77 20.96 25.77C16.42 25.77 12.74 22.09 12.74 17.55C12.74 12.22 17 7.81 22.2 5.8Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
     </svg>
   );
 }

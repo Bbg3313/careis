@@ -177,7 +177,7 @@ export function OrderForm({ product, referralCode, initialQuantity = 1 }: OrderF
                 key={method.value}
                 className={`rounded-2xl border px-4 py-4 text-sm transition ${
                   paymentMethod === method.value
-                    ? "border-stone-900 bg-stone-900 text-white"
+                    ? "border-[#a97d4d] bg-[linear-gradient(135deg,#b89156_0%,#9d7442_100%)] text-white shadow-[0_14px_30px_rgba(145,104,52,0.2)]"
                     : "border-stone-200 bg-stone-50 text-stone-700"
                 }`}
               >
@@ -238,7 +238,7 @@ export function OrderForm({ product, referralCode, initialQuantity = 1 }: OrderF
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-full bg-stone-900 px-6 py-4 text-sm font-semibold text-white disabled:opacity-60"
+          className="btn-luxe-primary w-full rounded-full px-6 py-4 text-sm font-semibold disabled:opacity-60"
         >
           {submitting ? "주문 저장 중..." : "주문 저장하기"}
         </button>

@@ -32,12 +32,12 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${notoSansKr.className} ${cormorant.variable}`}>
-        <div className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f6f0e9_52%,#f8f5ef_100%)]">
+        <div className="min-h-screen bg-[#FAFAF8]">
           <Suspense fallback={null}>
             <ReferralTracker />
           </Suspense>
           <SiteHeader />
-          <main className="mx-auto max-w-7xl px-6 py-10 md:py-14">{children}</main>
+          <main className="mx-auto max-w-7xl px-6 pb-10 pt-32 md:px-8 md:pb-14 md:pt-36 lg:pt-32">{children}</main>
           <SiteFooter />
         </div>
       </body>

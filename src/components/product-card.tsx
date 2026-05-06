@@ -56,7 +56,7 @@ export function ProductCard({ product }: { product: ProductContent }) {
           <p className="text-lg font-semibold text-stone-900">{formatCurrency(product.price)}</p>
           <Link
             href={`/products/${product.slug}`}
-            className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-medium text-white"
+            className="btn-luxe-primary rounded-full px-5 py-2.5 text-sm font-medium"
           >
             Explore
           </Link>

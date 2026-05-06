@@ -19,7 +19,7 @@ export default async function AdminOrdersPage() {
 
         <Link
           href="/api/admin/orders/export"
-          className="rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white"
+          className="btn-luxe-primary rounded-full px-5 py-3 text-sm font-semibold"
         >
           XLSX 다운로드
         </Link>

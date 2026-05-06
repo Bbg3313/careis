@@ -23,10 +23,10 @@ export default function BrandPage() {
             2-step 제품 구조를 제안합니다. 제품 수보다 설명의 깊이, 과장보다 신뢰를 우선합니다.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/contact" className="rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white">
+            <Link href="/contact" className="btn-luxe-primary rounded-full px-5 py-3 text-sm font-semibold">
               도입 문의
             </Link>
-            <Link href="/products" className="rounded-full border border-stone-900/10 bg-white/70 px-5 py-3 text-sm font-semibold text-stone-900">
+            <Link href="/products" className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold">
               제품 보기
             </Link>
           </div>

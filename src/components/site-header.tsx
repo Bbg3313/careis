@@ -3,40 +3,55 @@ import Link from "next/link";
 import { SiteLogo } from "@/components/site-logo";
 
 const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/brand", label: "Brand" },
-  { href: "/products", label: "Products" },
-  { href: "/contact", label: "Contact" },
+  { href: "/#brand", label: "BRAND" },
+  { href: "/#product", label: "PRODUCT" },
+  { href: "/#inquiry", label: "INQUIRY" },
+  { href: "/contact", label: "CONTACT" },
 ];
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-[rgba(116,88,59,0.08)] bg-[rgba(255,251,246,0.76)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <SiteLogo compact />
+    <header className="fixed inset-x-0 top-0 z-50 bg-transparent">
+      <div className="mx-auto max-w-7xl px-5 py-3 md:px-6 lg:px-8 lg:py-4">
+        <div className="flex items-center justify-between gap-4">
+          <SiteLogo compact />
 
-        <nav className="hidden items-center gap-7 text-sm text-stone-600 md:flex">
+          <Link
+            href="/contact"
+            className="btn-luxe-primary inline-flex shrink-0 items-center px-4 py-2.5 text-[11px] tracking-[0.1em] sm:px-5 lg:hidden"
+          >
+            도입 문의
+          </Link>
+
+          <nav className="hidden items-center gap-6 text-[12px] tracking-[0.05em] text-stone-600 xl:gap-8 xl:text-[13px] lg:flex">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="whitespace-nowrap transition hover:text-stone-900"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              href="/contact"
+              className="btn-luxe-primary whitespace-nowrap px-6 py-2.5 text-[12px] tracking-[0.1em]"
+            >
+              도입 문의
+            </Link>
+          </nav>
+        </div>
+
+        <nav className="nav-strip mt-3 flex items-center gap-5 overflow-x-auto pt-3 text-[12px] tracking-[0.08em] text-stone-600 lg:hidden">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="transition hover:text-stone-900"
+              className="shrink-0 whitespace-nowrap transition hover:text-stone-900"
             >
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/contact"
-            className="rounded-full border border-stone-900/10 bg-white/70 px-4 py-2 text-xs font-semibold tracking-[0.16em] text-stone-900"
-          >
-            B2B INQUIRY
-          </Link>
-          <Link
-            href="/order?product=sun-pack"
-            className="rounded-full bg-stone-900 px-4 py-2 text-xs font-semibold tracking-[0.16em] text-white"
-          >
-            REFERRAL BUY
-          </Link>
         </nav>
       </div>
     </header>
