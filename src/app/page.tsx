@@ -1,9 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { FeatureBannerSlider } from "@/components/feature-banner-slider";
 import { MotionMedia } from "@/components/motion-media";
 import { products } from "@/lib/product-data";
 import { homeVisuals, productVisuals } from "@/lib/site-assets";
+
+const featureBannerSlides = [
+  {
+    label: "Night Renewal",
+    title: "밤사이 더 맑고\n정돈된 피부 인상",
+    description:
+      "시스테아민 5%와 나이아신아마이드, 알부틴을 담아 칙칙한 피부 인상을 더 환하고 정돈된 느낌으로 가꿔주는 브라이트닝 인텐시브 케어입니다.",
+    highlights: ["색소 케어", "브라이트닝", "피부 결 정돈"],
+    image: "/images/illum-model-banner.png",
+    imageAlt: "일루미네이터 모델 비주얼",
+    tone: "light" as const,
+  },
+  {
+    label: "Day Protection",
+    title: "햇빛 아래 더 맑고\n편안한 피부 인상",
+    description:
+      "가볍게 밀착되는 사용감과 자연스러운 피부 표현으로 자외선이 강한 날에도 부담 없이 손이 가는 프리미엄 선케어입니다.",
+    highlights: ["자외선 보호", "데일리 선케어", "가벼운 밀착감"],
+    image: "/images/sun-model-banner.png",
+    imageAlt: "선팩 모델 비주얼",
+    tone: "light" as const,
+  },
+];
 
 export default function HomePage() {
   const sunPack = products.find((product) => product.slug === "sun-pack");
@@ -173,18 +197,18 @@ export default function HomePage() {
       {sunPack && illuminator ? (
         <section className="relative overflow-hidden scroll-mt-32 md:scroll-mt-36 lg:scroll-mt-32" id="product">
           <div className="bg-white px-4 pb-10 pt-6 md:px-6 md:pb-14 md:pt-8">
-            <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_54%,#f7f1e8_100%)] px-6 py-10 shadow-[0_24px_80px_rgba(73,53,26,0.06)] md:px-10 md:py-14">
+            <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[34px] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_54%,#f7f1e8_100%)] px-6 py-10 md:px-10 md:py-14">
               <div className="absolute left-10 top-8 h-28 w-28 rounded-full bg-[#d4af37]/12 blur-3xl" />
               <div className="absolute bottom-6 right-10 h-32 w-32 rounded-full bg-[#8ea4c5]/12 blur-3xl" />
 
               <div className="relative text-center">
                 <div className="flex flex-wrap items-center justify-center gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(157,116,66,0.16)] bg-white/90 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
                     Day Signature
                   </span>
                   <span className="hidden h-px w-12 bg-[linear-gradient(90deg,rgba(184,145,86,0.3)_0%,rgba(184,145,86,0)_100%)] md:block" />
-                  <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(111,129,158,0.16)] bg-white/90 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#8ea4c5]" />
                     Night Signature
                   </span>
@@ -197,29 +221,15 @@ export default function HomePage() {
                     2-Step Solution
                   </span>
                 </h2>
-                <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
-                  햇빛 아래에서는 더 맑고 가볍게, 밤이 깊어질수록 더 차분하고 정교하게. 시간에 따라 달라지는
-                  피부 인상을 두 가지 결로 나눠 담았습니다.
+                <p className="copy-pretty mx-auto mt-6 max-w-xl text-[15px] leading-[1.85] text-stone-600 md:text-[16px]">
+                  햇빛 아래에서는 더 맑고 가볍게, 밤이 깊어질수록 더 차분하고 깊게.
                 </p>
               </div>
 
-              <div className="relative mt-10 grid gap-4 md:grid-cols-2">
-                <div className="rounded-[24px] border border-[rgba(116,88,59,0.08)] bg-white/82 p-5 text-left">
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">Day Care</p>
-                  <p className="mt-3 text-lg font-medium tracking-[-0.02em] text-stone-900">
-                    피부를 맑고 편안하게 정돈하는
-                    <br />
-                    라이트 프로텍션
-                  </p>
-                </div>
-                <div className="rounded-[24px] border border-[rgba(116,88,59,0.08)] bg-[rgba(33,30,28,0.92)] p-5 text-left">
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-white/45">Night Care</p>
-                  <p className="mt-3 text-lg font-medium tracking-[-0.02em] text-white">
-                    더 깊고 맑은 피부 인상을 위한
-                    <br />
-                    인텐시브 브라이트닝
-                  </p>
-                </div>
+              <div className="relative mt-8 flex flex-wrap items-center justify-center gap-4 text-[12px] uppercase tracking-[0.22em] md:gap-6">
+                <span className="text-[#8b673f]">Light Protection</span>
+                <span className="h-3 w-px bg-black/10" />
+                <span className="text-stone-400">Intensive Brightening</span>
               </div>
             </div>
           </div>
@@ -350,42 +360,9 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden bg-[linear-gradient(180deg,#fbf7f1_0%,#f7f2eb_100%)]">
-        <div className="absolute inset-y-0 right-0 w-[58%] bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0)_62%)]" />
-        <div className="absolute left-[12%] top-14 h-44 w-44 rounded-full bg-[#d9b780]/10 blur-3xl" />
-
-        <div className="relative mx-auto grid min-h-[440px] max-w-[1800px] items-center gap-8 px-4 py-6 md:min-h-[560px] md:px-8 md:py-8 lg:min-h-[660px] lg:grid-cols-[0.72fr_1.28fr] lg:px-10">
-          <div className="relative z-10 px-4 py-8 md:px-8 lg:px-14">
-            <p className="text-[12px] uppercase tracking-[0.22em] text-stone-500">Night Renewal</p>
-            <h2 className="display-font headline-balance mt-6 text-4xl font-semibold leading-[1.14] tracking-[-0.03em] text-stone-900 md:text-6xl lg:text-[72px]">
-              밤사이 더 맑고
-              <br />
-              정돈된 피부 인상
-            </h2>
-            <p className="copy-pretty mt-6 max-w-xl text-[15px] leading-[1.9] text-stone-600 md:text-[17px]">
-              시스테아민 5%와 나이아신아마이드, 알부틴을 담아 칙칙한 피부 인상을 더 환하고 정돈된
-              느낌으로 가꿔주는 브라이트닝 인텐시브 케어입니다.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-4 text-[12px] tracking-[0.08em] text-stone-500 md:gap-5 md:text-[13px]">
-              <span>색소 케어</span>
-              <span className="h-3 w-px bg-black/10" />
-              <span>브라이트닝</span>
-              <span className="h-3 w-px bg-black/10" />
-              <span>피부 결 정돈</span>
-            </div>
-          </div>
-
-          <div className="relative min-h-[320px] md:min-h-[440px] lg:min-h-[620px]">
-            <Image
-              src={productVisuals["illuminator"].card}
-              alt={productVisuals["illuminator"].alt}
-              fill
-              className="object-contain object-right-bottom"
-              sizes="(max-width: 1024px) 100vw, 60vw"
-              priority
-            />
-          </div>
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden bg-[#f8f2ea] px-4 py-6 md:px-6 md:py-8">
+        <div className="mx-auto max-w-[1800px]">
+          <FeatureBannerSlider slides={featureBannerSlides} />
         </div>
       </section>
 
@@ -426,25 +403,6 @@ export default function HomePage() {
               <InfoStat title="Easy Checkout" description="비회원 구매와 간편 결제 지원" />
             </div>
 
-            <div className="mx-auto mt-10 max-w-2xl rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-[#faf6ef] p-6 text-left">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">For Partnership</p>
-              <p className="mt-3 text-lg font-semibold tracking-[-0.02em] text-stone-900">
-                병원·클리닉 제휴 문의는 별도 채널로 간단히 연결합니다.
-              </p>
-              <p className="copy-pretty mt-3 text-sm leading-7 text-stone-600">
-                구매는 홈에서 바로 이어가고, 제휴 및 입점 문의가 필요한 경우에만 별도 페이지에서
-                확인할 수 있습니다.
-              </p>
-              <div className="mt-5">
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-stone-900"
-                >
-                  제휴 문의 보기
-                  <ArrowAccent />
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </section>
