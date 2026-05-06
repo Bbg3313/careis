@@ -133,7 +133,7 @@ export default function HomePage() {
 
       <section id="brand" className="scroll-mt-32 bg-white px-4 py-20 md:px-6 md:py-24 md:scroll-mt-36 lg:scroll-mt-32">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-5xl text-center">
+          <div className="mx-auto max-w-3xl text-center">
             <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">Editorial Story</p>
             <h2 className="display-font headline-balance mt-6 text-4xl font-semibold leading-[1.16] tracking-[-0.03em] text-stone-900 md:text-[54px]">
               빛이 머무는 낮,
@@ -143,53 +143,9 @@ export default function HomePage() {
               피부 위에 남는 감각은 시간에 따라 달라집니다. CAREIS는 낮에는 더 가볍고 밝게, 밤에는 더
               차분하고 깊게 이어지는 두 장면을 하나의 루틴 안에 담았습니다.
             </p>
-          </div>
-
-          <div className="mt-14 overflow-hidden rounded-[40px] bg-[linear-gradient(145deg,#f9f4ec_0%,#ffffff_48%,#1f1b18_48%,#26211d_100%)] p-5 shadow-[0_28px_100px_rgba(73,53,26,0.08)] md:p-8">
-            <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
-              <div className="relative min-h-[380px] overflow-hidden rounded-[30px] md:min-h-[520px]">
-                <Image
-                  src={productVisuals["sun-pack"].gallery[4]}
-                  alt="선팩 에디토리얼 비주얼"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 56vw"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(246,239,229,0.18)_100%)]" />
-              </div>
-
-              <div className="grid gap-5">
-                <div className="relative min-h-[240px] overflow-hidden rounded-[30px] md:min-h-[310px]">
-                  <Image
-                    src={productVisuals["illuminator"].hero}
-                    alt="일루미네이터 에디토리얼 비주얼"
-                    fill
-                    className="object-contain bg-[rgba(16,16,16,0.18)] p-6"
-                    sizes="(max-width: 1024px) 100vw, 44vw"
-                  />
-                </div>
-
-                <div className="rounded-[30px] bg-white/72 p-7 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] backdrop-blur-sm md:p-8">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Mood Copy</p>
-                  <p className="headline-balance mt-4 text-2xl font-medium leading-[1.5] tracking-[-0.02em] text-stone-900 md:text-[30px]">
-                    하루의 시작은 더 맑게,
-                    <br />
-                    하루의 끝은 더 고요하게.
-                  </p>
-                  <p className="copy-pretty mt-5 text-sm leading-8 text-stone-600 md:text-[15px]">
-                    선팩은 햇빛 아래에서도 피부 인상을 가볍고 깨끗하게 정리하고, 일루미네이터는 밤사이 더
-                    차분하고 정돈된 결을 완성합니다. 서로 다른 두 장면이 이어질 때, CAREIS의 루틴은 더
-                    자연스럽고 또렷해집니다.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 text-center">
-              <p className="mx-auto max-w-3xl text-[15px] leading-[1.9] text-[rgba(57,44,32,0.72)] md:text-[16px]">
-                아래에서 낮과 밤을 위한 두 제품을 각각 더 선명하게 만나볼 수 있습니다.
-              </p>
-            </div>
+            <p className="mx-auto mt-5 max-w-xl text-[13px] leading-[1.8] text-stone-500 md:text-[14px]">
+              아래 배너에서 낮과 밤의 장면을 먼저 보고, 이어서 두 제품의 차이를 바로 확인할 수 있습니다.
+            </p>
           </div>
         </div>
       </section>
@@ -227,7 +183,6 @@ export default function HomePage() {
 
               <div className="relative mt-8 flex flex-wrap items-center justify-center gap-4 text-[12px] uppercase tracking-[0.22em] md:gap-6">
                 <span className="text-[#8b673f]">Light Protection</span>
-                <span className="h-3 w-px bg-black/10" />
                 <span className="text-stone-400">Intensive Brightening</span>
               </div>
             </div>
@@ -354,8 +309,6 @@ export default function HomePage() {
               </div>
             </article>
           </div>
-
-          <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.18)_12%,rgba(0,0,0,0.18)_88%,transparent_100%)] lg:block" />
         </section>
       ) : null}
 

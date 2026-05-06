@@ -37,7 +37,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
             }`}
           >
             <div
-              className={`grid min-h-[460px] items-center gap-6 px-6 py-8 md:min-h-[560px] md:px-10 md:py-10 lg:grid-cols-[0.78fr_1.22fr] lg:px-12 ${
+              className={`grid min-h-[460px] items-center gap-6 px-6 py-8 md:min-h-[560px] md:px-10 md:py-10 lg:grid-cols-[0.68fr_1.32fr] lg:px-12 ${
                 slide.tone === "light"
                   ? "bg-[linear-gradient(180deg,#fbf7f1_0%,#f6efe6_100%)] text-stone-900"
                   : "bg-[linear-gradient(180deg,#1d2230_0%,#252b3d_100%)] text-white"
@@ -76,12 +76,12 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                 </div>
               </div>
 
-              <div className="relative min-h-[300px] md:min-h-[420px] lg:min-h-[540px]">
+              <div className="relative min-h-[340px] self-stretch md:min-h-[480px] lg:min-h-[560px]">
                 <Image
                   src={slide.image}
                   alt={slide.imageAlt}
                   fill
-                  className="object-contain object-center"
+                  className="object-cover object-center"
                   sizes="(max-width: 1024px) 100vw, 60vw"
                   priority={index === 0}
                 />
