@@ -10,8 +10,7 @@ export function SiteFooter() {
           <div className="space-y-5">
             <SiteLogo dark footer />
             <div className="max-w-md space-y-1.5 text-[13px] leading-[1.75] text-white/60">
-              <p>상호: 케어이즈</p>
-              <p>대표자: 이명규</p>
+              <p>상호: 케어이즈 | 대표자: 이명규</p>
               <p>사업자번호: 215-86-78967</p>
               <p>통신판매업: 제2012-서울강남-01016호</p>
               <p>소재지: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)</p>

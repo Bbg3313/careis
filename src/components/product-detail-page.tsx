@@ -229,9 +229,8 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
               지금 바로 구매하거나, 추천 코드와 함께 시작할 수 있습니다.
             </h2>
             <p className="copy-pretty mt-3 max-w-2xl text-sm leading-8 text-white/75 md:text-base">
-              일반 구매는 바로 주문 페이지로, 추천 코드가 있는 경우에는 `referral_code` 기반의
-              레퍼럴 흐름으로 자연스럽게 이어질 수 있도록 구성했습니다. 제휴 문의가 필요한 경우에는
-              별도 페이지에서 확인할 수 있습니다.
+              일반 구매는 바로 주문 페이지에서 진행할 수 있고, 추천 코드가 있는 경우에는 레퍼럴 링크로
+              이어서 구매할 수 있습니다. 제휴 문의가 필요한 경우에는 별도 페이지에서 확인할 수 있습니다.
             </p>
           </div>
 
@@ -264,8 +263,8 @@ function SunPackDetailStory() {
           보내주신 선팩 상세 원본을 그대로 중심에 배치했습니다.
         </h2>
         <p className="copy-pretty mt-4 text-sm leading-8 text-stone-600 md:text-base">
-          제품 소개, 특허 기술, 사용 장면, FAQ, 상품 정보 고시까지 실제 상세페이지 흐름이 한 번에
-          읽히도록 원본 이미지 시퀀스를 그대로 노출합니다.
+          제품 소개부터 사용 장면, FAQ, 상품 정보까지 원본 상세의 인상을 그대로 읽을 수 있도록 이미지
+          시퀀스를 이어서 보여줍니다.
         </p>
       </div>
 

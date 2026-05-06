@@ -23,9 +23,9 @@ export default function HomePage() {
                 낮과 밤을 채우는 2-Step Dermacosmetic
               </h1>
               <p className="copy-pretty max-w-xl pt-3 text-[15px] leading-[1.9] text-stone-600 md:text-[17px]">
-                CAREIS는 낮에는 가볍게 보호하고 밤에는 집중적으로 정돈하는 2-step 루틴을 제안합니다.
-                일상 속에서 매일 손이 가는 사용감과 프리미엄 무드를 함께 담아, 자연스럽게 제품과
-                구매로 이어지도록 설계했습니다.
+                CAREIS는 낮에는 가볍게 보호하고 밤에는 집중적으로 정돈하는 2-step 루틴을 선보입니다.
+                일상 속에서 매일 손이 가는 사용감과 프리미엄 무드를 담아, 하루의 피부 리듬을 더
+                우아하게 채웁니다.
               </p>
             </div>
 
@@ -109,131 +109,119 @@ export default function HomePage() {
 
       <section id="brand" className="scroll-mt-32 bg-white px-4 py-20 md:px-6 md:py-24 md:scroll-mt-36 lg:scroll-mt-32">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center md:mb-14">
-            <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
-              Product Value
-            </p>
-            <h2 className="display-font headline-balance text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
-              하루의 피부는 하나의 텍스처로 설명되지 않습니다.
+          <div className="mx-auto max-w-5xl text-center">
+            <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">Editorial Story</p>
+            <h2 className="display-font headline-balance mt-6 text-4xl font-semibold leading-[1.16] tracking-[-0.03em] text-stone-900 md:text-[54px]">
+              빛이 머무는 낮,
+              <br className="hidden md:block" /> 결이 깊어지는 밤
             </h2>
             <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
-              선팩은 가볍고 편안하게, 일루미네이터는 더 깊고 밀도 있게. 서로 다른 시간에 필요한 결을
-              나눠 담아 CAREIS만의 2-step 루틴을 완성했습니다.
+              피부 위에 남는 감각은 시간에 따라 달라집니다. CAREIS는 낮에는 더 가볍고 밝게, 밤에는 더
+              차분하고 깊게 이어지는 두 장면을 하나의 루틴 안에 담았습니다.
             </p>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-            <article className="overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_62%,#f6efe5_100%)] p-8 shadow-[0_24px_80px_rgba(73,53,26,0.06)] md:p-10">
-              <div className="flex items-center justify-between gap-6">
-                <div>
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">Day Care Essence</p>
-                  <h3 className="display-font headline-balance mt-4 text-4xl font-semibold tracking-[-0.03em] text-stone-900 md:text-[44px]">
-                    가볍게 밀착되고,
-                    <br />
-                    오래 남는 데일리 보호감
-                  </h3>
-                </div>
-                <div className="hidden h-20 w-20 rounded-full bg-[#d4af37]/14 blur-2xl md:block" />
-              </div>
-
-              <p className="copy-pretty mt-6 max-w-2xl text-sm leading-8 text-stone-600 md:text-base">
-                선팩은 답답함보다 산뜻함이 먼저 느껴지고, 백탁보다 자연스러운 피부 표현이 오래 남도록
-                설계된 데이 루틴입니다. 외출 전, 메이크업 전후, 햇빛이 강한 하루에도 리듬을 흐트러뜨리지
-                않는 사용감이 매력의 중심이 됩니다.
-              </p>
-
-              <div className="mt-8 grid gap-4 md:grid-cols-[0.72fr_0.28fr] md:items-end">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="rounded-[24px] border border-[rgba(116,88,59,0.1)] bg-white/80 p-5">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Texture</p>
-                    <p className="mt-3 text-sm leading-7 text-stone-700">
-                      번들거림보다 부드럽고 얇게 밀착되는 텍스처로 낮 시간 내내 편안한 인상을 남깁니다.
-                    </p>
-                  </div>
-                  <div className="rounded-[24px] border border-[rgba(116,88,59,0.1)] bg-white/80 p-5">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Finish</p>
-                    <p className="mt-3 text-sm leading-7 text-stone-700">
-                      메이크업 위에서도 부담이 적고, 피부 위에 얹는 순간 전체 인상을 정돈하는 마무리감이
-                      돋보입니다.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="relative mx-auto h-[220px] w-[170px] md:h-[260px] md:w-[190px]">
-                  <Image
-                    src={productVisuals["sun-pack"].card}
-                    alt={productVisuals["sun-pack"].alt}
-                    fill
-                    className="object-contain drop-shadow-[0_28px_46px_rgba(116,88,59,0.18)]"
-                    sizes="190px"
-                  />
-                </div>
-              </div>
-            </article>
-
-            <article className="relative overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[#1f1b18] p-8 text-white shadow-[0_24px_80px_rgba(29,20,11,0.16)] md:p-10">
-              <div className="absolute inset-0 opacity-[0.22]">
+          <div className="mt-14 overflow-hidden rounded-[40px] bg-[linear-gradient(145deg,#f9f4ec_0%,#ffffff_48%,#1f1b18_48%,#26211d_100%)] p-5 shadow-[0_28px_100px_rgba(73,53,26,0.08)] md:p-8">
+            <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
+              <div className="relative min-h-[380px] overflow-hidden rounded-[30px] md:min-h-[520px]">
                 <Image
-                  src={productVisuals["illuminator"].hero}
-                  alt=""
+                  src={productVisuals["sun-pack"].gallery[4]}
+                  alt="선팩 에디토리얼 비주얼"
                   fill
                   className="object-cover"
-                  sizes="50vw"
+                  sizes="(max-width: 1024px) 100vw, 56vw"
                 />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(246,239,229,0.18)_100%)]" />
               </div>
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,19,18,0.32)_0%,rgba(23,19,18,0.88)_100%)]" />
 
-              <div className="relative z-10">
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/50">Night Care Essence</p>
-                <h3 className="display-font headline-balance mt-4 text-4xl font-semibold leading-[1.08] tracking-[-0.03em] md:text-[44px]">
-                  더 깊고 조용하게,
-                  <br />
-                  밤에 완성되는 브라이트닝 밀도
-                </h3>
-                <p className="copy-pretty mt-6 max-w-xl text-sm leading-8 text-white/74 md:text-base">
-                  일루미네이터는 낮의 피로가 남은 피부를 밤 사이 더 차분하고 매끈한 결로 정돈하는 나이트
-                  루틴입니다. 색소 고민을 위한 집중감과 스킨케어처럼 이어지는 부드러운 흐름을 함께 담아,
-                  하루의 끝에서 피부 컨디션을 다시 세팅합니다.
-                </p>
+              <div className="grid gap-5">
+                <div className="relative min-h-[240px] overflow-hidden rounded-[30px] md:min-h-[310px]">
+                  <Image
+                    src={productVisuals["illuminator"].hero}
+                    alt="일루미네이터 에디토리얼 비주얼"
+                    fill
+                    className="object-contain bg-[rgba(16,16,16,0.18)] p-6"
+                    sizes="(max-width: 1024px) 100vw, 44vw"
+                  />
+                </div>
 
-                <div className="mt-8 space-y-4">
-                  <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Care Point</p>
-                    <p className="mt-3 text-sm leading-7 text-white/78">
-                      기미, 잡티, PIH처럼 밤에 더 깊게 다루고 싶은 고민을 위한 집중 브라이트닝 루틴
-                    </p>
-                  </div>
-                  <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">After Feel</p>
-                    <p className="mt-3 text-sm leading-7 text-white/78">
-                      무겁기보다 밀도 있고, 자극적이기보다 차분하게 남는 밤 전용 사용감으로 루틴의 완성도를
-                      높입니다.
-                    </p>
-                  </div>
+                <div className="rounded-[30px] bg-white/72 p-7 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] backdrop-blur-sm md:p-8">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Mood Copy</p>
+                  <p className="headline-balance mt-4 text-2xl font-medium leading-[1.5] tracking-[-0.02em] text-stone-900 md:text-[30px]">
+                    하루의 시작은 더 맑게,
+                    <br />
+                    하루의 끝은 더 고요하게.
+                  </p>
+                  <p className="copy-pretty mt-5 text-sm leading-8 text-stone-600 md:text-[15px]">
+                    선팩은 햇빛 아래에서도 피부 인상을 가볍고 깨끗하게 정리하고, 일루미네이터는 밤사이 더
+                    차분하고 정돈된 결을 완성합니다. 서로 다른 두 장면이 이어질 때, CAREIS의 루틴은 더
+                    자연스럽고 또렷해집니다.
+                  </p>
                 </div>
               </div>
-            </article>
-          </div>
+            </div>
 
-          <div className="mt-10 border-t border-[rgba(116,88,59,0.1)] pt-8 text-center">
-            <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">Day To Night Flow</p>
-            <p className="headline-balance mx-auto mt-4 max-w-3xl text-xl font-medium tracking-[-0.02em] text-stone-900 md:text-[28px]">
-              아침에는 가볍고, 밤에는 깊게. 서로 다른 결이 하나의 루틴으로 이어질 때 CAREIS의 2-step
-              매력이 또렷해집니다.
-            </p>
+            <div className="mt-8 text-center">
+              <p className="mx-auto max-w-3xl text-[15px] leading-[1.9] text-[rgba(57,44,32,0.72)] md:text-[16px]">
+                아래에서 낮과 밤을 위한 두 제품을 각각 더 선명하게 만나볼 수 있습니다.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {sunPack && illuminator ? (
         <section className="relative overflow-hidden scroll-mt-32 md:scroll-mt-36 lg:scroll-mt-32" id="product">
-          <div className="bg-white px-4 pb-10 pt-6 text-center md:px-6 md:pb-14 md:pt-8">
-            <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
-              Two Essential Solutions
-            </p>
-            <h2 className="display-font headline-balance text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
-              낮과 밤을 나누는 2-Step 솔루션
-            </h2>
+          <div className="bg-white px-4 pb-10 pt-6 md:px-6 md:pb-14 md:pt-8">
+            <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_54%,#f7f1e8_100%)] px-6 py-10 shadow-[0_24px_80px_rgba(73,53,26,0.06)] md:px-10 md:py-14">
+              <div className="absolute left-10 top-8 h-28 w-28 rounded-full bg-[#d4af37]/12 blur-3xl" />
+              <div className="absolute bottom-6 right-10 h-32 w-32 rounded-full bg-[#8ea4c5]/12 blur-3xl" />
+
+              <div className="relative text-center">
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(157,116,66,0.16)] bg-white/90 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
+                    Day Signature
+                  </span>
+                  <span className="hidden h-px w-12 bg-[linear-gradient(90deg,rgba(184,145,86,0.3)_0%,rgba(184,145,86,0)_100%)] md:block" />
+                  <span className="inline-flex items-center gap-2 rounded-full border border-[rgba(111,129,158,0.16)] bg-white/90 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#8ea4c5]" />
+                    Night Signature
+                  </span>
+                </div>
+
+                <p className="mt-8 text-[12px] uppercase tracking-[0.26em] text-stone-500">Two Essential Solutions</p>
+                <h2 className="display-font headline-balance mt-5 text-4xl font-semibold leading-[1.08] tracking-[-0.04em] text-stone-900 md:text-[64px]">
+                  낮과 밤을 나누는
+                  <span className="block text-[44px] italic tracking-[-0.03em] text-[#8b673f] md:text-[76px]">
+                    2-Step Solution
+                  </span>
+                </h2>
+                <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
+                  햇빛 아래에서는 더 맑고 가볍게, 밤이 깊어질수록 더 차분하고 정교하게. 시간에 따라 달라지는
+                  피부 인상을 두 가지 결로 나눠 담았습니다.
+                </p>
+              </div>
+
+              <div className="relative mt-10 grid gap-4 md:grid-cols-2">
+                <div className="rounded-[24px] border border-[rgba(116,88,59,0.08)] bg-white/82 p-5 text-left">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">Day Care</p>
+                  <p className="mt-3 text-lg font-medium tracking-[-0.02em] text-stone-900">
+                    피부를 맑고 편안하게 정돈하는
+                    <br />
+                    라이트 프로텍션
+                  </p>
+                </div>
+                <div className="rounded-[24px] border border-[rgba(116,88,59,0.08)] bg-[rgba(33,30,28,0.92)] p-5 text-left">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-white/45">Night Care</p>
+                  <p className="mt-3 text-lg font-medium tracking-[-0.02em] text-white">
+                    더 깊고 맑은 피부 인상을 위한
+                    <br />
+                    인텐시브 브라이트닝
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="grid min-h-[840px] lg:min-h-[100vh] lg:grid-cols-2">
@@ -271,10 +259,10 @@ export default function HomePage() {
                 <div className="mt-10 border border-black/8 bg-white/50 p-5 md:p-6 backdrop-blur-sm">
                   <div className="relative h-[22rem] w-[17rem] md:h-[28rem] md:w-[21rem]">
                     <Image
-                      src={productVisuals["sun-pack"].gallery[4]}
+                      src={productVisuals["sun-pack"].card}
                       alt={productVisuals["sun-pack"].alt}
                       fill
-                      className="object-cover drop-shadow-[0_24px_36px_rgba(104,78,41,0.16)]"
+                      className="object-contain drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)]"
                       sizes="(max-width: 768px) 272px, 336px"
                     />
                   </div>
@@ -331,10 +319,10 @@ export default function HomePage() {
                 <div className="mt-10 border border-white/10 bg-white/5 p-5 md:p-6 backdrop-blur-sm">
                   <div className="relative h-[22rem] w-[17rem] md:h-[28rem] md:w-[21rem]">
                     <Image
-                      src={productVisuals["illuminator"].hero}
+                      src={productVisuals["illuminator"].card}
                       alt={productVisuals["illuminator"].alt}
                       fill
-                      className="object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.22)]"
+                      className="object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)]"
                       sizes="(max-width: 768px) 272px, 336px"
                     />
                   </div>
@@ -362,48 +350,41 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="relative overflow-hidden bg-[#1A1A1A] px-4 py-20 text-white md:px-6 md:py-24">
-        <div className="absolute left-[10%] top-16 h-48 w-48 rounded-full bg-[#d4af37]/10 blur-3xl" />
-        <div className="absolute bottom-10 right-[8%] h-56 w-56 rounded-full bg-[#8ea4c5]/12 blur-3xl" />
+      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden bg-[linear-gradient(180deg,#fbf7f1_0%,#f7f2eb_100%)]">
+        <div className="absolute inset-y-0 right-0 w-[58%] bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.92)_0%,rgba(255,255,255,0)_62%)]" />
+        <div className="absolute left-[12%] top-14 h-44 w-44 rounded-full bg-[#d9b780]/10 blur-3xl" />
 
-        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
-          <div className="text-center lg:text-left">
-            <p className="text-[13px] uppercase tracking-[0.2em] text-white/50">Visual Direction</p>
-            <h2 className="display-font headline-balance mt-6 text-5xl font-semibold leading-[1.08] tracking-[-0.02em] md:text-[72px]">
-              Hero First, Explanation Later
+        <div className="relative mx-auto grid min-h-[440px] max-w-[1800px] items-center gap-8 px-4 py-6 md:min-h-[560px] md:px-8 md:py-8 lg:min-h-[660px] lg:grid-cols-[0.72fr_1.28fr] lg:px-10">
+          <div className="relative z-10 px-4 py-8 md:px-8 lg:px-14">
+            <p className="text-[12px] uppercase tracking-[0.22em] text-stone-500">Night Renewal</p>
+            <h2 className="display-font headline-balance mt-6 text-4xl font-semibold leading-[1.14] tracking-[-0.03em] text-stone-900 md:text-6xl lg:text-[72px]">
+              밤사이 더 맑고
+              <br />
+              정돈된 피부 인상
             </h2>
-            <p className="copy-pretty mx-auto mt-8 max-w-2xl text-[16px] leading-[1.9] text-white/65 lg:mx-0">
-              시각이 먼저 말하고, 제품이 증명합니다. 정제된 무드와 프리미엄 톤을 먼저 전달해 제품을
-              더 기대하게 만드는 비주얼 중심 섹션입니다.
+            <p className="copy-pretty mt-6 max-w-xl text-[15px] leading-[1.9] text-stone-600 md:text-[17px]">
+              시스테아민 5%와 나이아신아마이드, 알부틴을 담아 칙칙한 피부 인상을 더 환하고 정돈된
+              느낌으로 가꿔주는 브라이트닝 인텐시브 케어입니다.
             </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-4 text-[12px] tracking-[0.08em] text-stone-500 md:gap-5 md:text-[13px]">
+              <span>색소 케어</span>
+              <span className="h-3 w-px bg-black/10" />
+              <span>브라이트닝</span>
+              <span className="h-3 w-px bg-black/10" />
+              <span>피부 결 정돈</span>
+            </div>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
-            <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.03)_100%)] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-sm md:p-8">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Day Care Visual</p>
-              <div className="relative mt-6 h-[320px] md:h-[380px]">
-                <Image
-                  src={productVisuals["sun-pack"].card}
-                  alt={productVisuals["sun-pack"].alt}
-                  fill
-                  className="object-contain drop-shadow-[0_24px_50px_rgba(212,175,55,0.18)]"
-                  sizes="(max-width: 768px) 100vw, 28vw"
-                />
-              </div>
-            </div>
-
-            <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.03)_100%)] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-sm md:p-8">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Night Care Visual</p>
-              <div className="relative mt-6 h-[320px] md:h-[380px]">
-                <Image
-                  src={productVisuals["illuminator"].hero}
-                  alt={productVisuals["illuminator"].alt}
-                  fill
-                  className="object-contain drop-shadow-[0_28px_56px_rgba(120,142,170,0.18)]"
-                  sizes="(max-width: 768px) 100vw, 28vw"
-                />
-              </div>
-            </div>
+          <div className="relative min-h-[320px] md:min-h-[440px] lg:min-h-[620px]">
+            <Image
+              src={productVisuals["illuminator"].card}
+              alt={productVisuals["illuminator"].alt}
+              fill
+              className="object-contain object-right-bottom"
+              sizes="(max-width: 1024px) 100vw, 60vw"
+              priority
+            />
           </div>
         </div>
       </section>
@@ -425,8 +406,8 @@ export default function HomePage() {
               지금 바로 루틴을 시작하세요
             </h2>
             <p className="copy-pretty mx-auto mt-6 max-w-xl text-[16px] leading-[1.9] text-stone-600">
-              DAY CARE와 NIGHT CARE 중 필요한 루틴부터 선택해 바로 구매하거나, 두 제품의 역할과
-              사용 타이밍을 비교한 뒤 나에게 맞는 흐름으로 시작할 수 있습니다.
+              DAY CARE와 NIGHT CARE 중 필요한 루틴부터 선택해 바로 구매할 수 있습니다. 두 제품의
+              분위기와 역할을 비교한 뒤, 나에게 더 잘 맞는 케어부터 가볍게 시작해보세요.
             </p>
 
             <div className="pt-10">
@@ -436,7 +417,7 @@ export default function HomePage() {
               >
                 구매 페이지로 이동하기
               </Link>
-              <p className="mt-4 text-[12px] text-stone-500">제품 비교 후 바로 주문할 수 있도록 간편 결제 흐름까지 준비되어 있습니다.</p>
+              <p className="mt-4 text-[12px] text-stone-500">원하는 제품을 고른 뒤 바로 주문할 수 있도록 간편 결제 환경을 준비했습니다.</p>
             </div>
 
             <div className="mt-12 grid gap-8 border-t border-black/5 pt-12 md:grid-cols-3">
@@ -451,8 +432,8 @@ export default function HomePage() {
                 병원·클리닉 제휴 문의는 별도 채널로 간단히 연결합니다.
               </p>
               <p className="copy-pretty mt-3 text-sm leading-7 text-stone-600">
-                홈에서는 구매 흐름을 우선 보여주고, 제휴 및 입점 문의가 필요한 경우에만 별도 페이지에서
-                안내받을 수 있도록 분리했습니다.
+                구매는 홈에서 바로 이어가고, 제휴 및 입점 문의가 필요한 경우에만 별도 페이지에서
+                확인할 수 있습니다.
               </p>
               <div className="mt-5">
                 <Link
@@ -475,9 +456,8 @@ export default function HomePage() {
             추천을 통한 개인 구매
           </h2>
           <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.8] text-stone-600">
-            추천 코드가 있다면 공개 레퍼럴 링크를 통해 바로 구매할 수 있습니다. 주문 데이터에는 추천
-            코드와 결제수단이 함께 저장되어, 공구 운영과 추적 관리까지 자연스럽게 이어질 수 있도록
-            설계했습니다.
+            추천 코드가 있다면 레퍼럴 링크를 통해 바로 구매할 수 있습니다. 공구 운영이나 채널별 주문
+            확인이 필요한 경우에도 추천 코드와 결제 정보가 함께 남아 깔끔하게 확인할 수 있습니다.
           </p>
 
           <div className="pt-10">

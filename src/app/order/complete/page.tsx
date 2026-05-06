@@ -18,8 +18,8 @@ export default async function OrderCompletePage({
         </h1>
         <p className="copy-pretty mt-4 text-sm leading-7 text-stone-600">
           주문번호는 <strong>{params.orderNumber ?? "-"}</strong> 입니다. 현재 상태는{" "}
-          <strong>{paymentStatus}</strong>이며, PG 연동 구조상 주문 생성, 결제창 호출, 승인/실패
-          콜백, 웹훅 반영까지 이어질 수 있도록 준비되어 있습니다.
+          <strong>{paymentStatus}</strong>입니다. 결제 진행 상태에 따라 다음 화면에서 계속 확인하실 수
+          있습니다.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/products" className="btn-luxe-primary rounded-full px-5 py-3 text-sm font-semibold">

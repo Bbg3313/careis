@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Noto_Sans_KR } from "next/font/google";
 
 import { ReferralTracker } from "@/components/referral-tracker";
+import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <ReferralTracker />
           </Suspense>
+          <ScrollToTopButton />
           <SiteHeader />
           <main className="mx-auto max-w-7xl px-6 pb-10 pt-8 md:px-8 md:pb-14 md:pt-10 lg:pt-8">{children}</main>
           <SiteFooter />

@@ -27,8 +27,8 @@ export default async function PaymentCheckoutPage({
           결제 연동 준비가 완료되었습니다.
         </h1>
         <p className="copy-pretty mt-4 max-w-3xl text-sm leading-8 text-stone-600 md:text-base">
-          실제 PG SDK 또는 결제창 호출은 이 단계에 연결하면 됩니다. 현재는 비회원 주문 기준의 결제
-          요청 데이터와 승인/실패/웹훅 흐름이 모두 준비된 상태입니다.
+          결제 전 주문 정보와 결제 수단을 한 번 더 확인하는 페이지입니다. 실제 결제창이 연결되면 이
+          화면 다음 단계에서 바로 결제를 진행할 수 있습니다.
         </p>
       </section>
 
@@ -46,21 +46,21 @@ export default async function PaymentCheckoutPage({
           </div>
 
           <div className="mt-8 rounded-[28px] bg-[#f8f3ec] p-6">
-            <p className="text-sm font-semibold text-stone-900">PG 연동 체크리스트</p>
+            <p className="text-sm font-semibold text-stone-900">결제 진행 안내</p>
             <ul className="mt-4 space-y-2 text-sm leading-7 text-stone-600">
-              <li>- 이 페이지에서 PG SDK 또는 리다이렉트 결제창을 호출합니다.</li>
-              <li>- 성공 시 `successUrl`로 복귀해 승인 API를 호출합니다.</li>
-              <li>- 실패 또는 취소 시 `failUrl`로 복귀해 실패 상태를 기록합니다.</li>
-              <li>- 서버 웹훅은 `webhookUrl`에서 승인/취소/환불 이벤트를 받습니다.</li>
+              <li>- 이 페이지 다음 단계에서 실제 결제창이 열립니다.</li>
+              <li>- 결제가 완료되면 주문 상태가 자동으로 반영됩니다.</li>
+              <li>- 실패 또는 취소 시에는 다시 이전 단계로 돌아갈 수 있습니다.</li>
+              <li>- 결제와 관련된 상세 정보는 주문번호 기준으로 확인할 수 있습니다.</li>
             </ul>
           </div>
         </article>
 
         <aside className="space-y-6 rounded-[32px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)]">
           <div>
-            <p className="text-sm font-semibold text-stone-900">준비된 결제 요청 Payload</p>
+            <p className="text-sm font-semibold text-stone-900">결제 요청 정보</p>
             <p className="mt-2 text-xs leading-6 text-stone-500">
-              실제 PG 연동 시 아래 값들을 기반으로 결제창 호출 파라미터를 매핑하면 됩니다.
+              결제창에 전달될 주요 정보를 아래에서 미리 확인할 수 있습니다.
             </p>
           </div>
 

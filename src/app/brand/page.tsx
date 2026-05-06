@@ -17,9 +17,9 @@ export default function BrandPage() {
             CAREIS는 하루의 루틴을 더 우아하게 완성하는 브랜드여야 합니다.
           </h1>
           <p className="copy-pretty mt-6 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">
-            낮에는 가볍게 보호하고 밤에는 깊이 있게 정돈하는 2-step 루틴을 제안합니다. 제품 수를
-            늘리기보다, 매일 손이 가는 사용감과 오래 남는 무드, 그리고 자연스러운 구매 흐름을 더
-            선명하게 전달하는 데 집중합니다.
+            낮에는 가볍게 보호하고 밤에는 깊이 있게 정돈하는 2-step 루틴을 보여줍니다. 제품 수를
+            늘리기보다, 매일 손이 가는 사용감과 오래 남는 무드, 그리고 두 제품이 주는 인상을 더 선명하게
+            전하는 데 집중합니다.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link href="/order?product=sun-pack" className="btn-luxe-primary rounded-full px-5 py-3 text-sm font-semibold">
@@ -53,8 +53,8 @@ export default function BrandPage() {
         <article className="rounded-[30px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)]">
           <h2 className="text-xl font-semibold text-stone-900">Purchase Flow Ready</h2>
           <p className="mt-3 text-sm leading-7 text-stone-600">
-            제품을 충분히 이해한 뒤 바로 구매하거나, 추천 코드가 있는 경우 레퍼럴 링크로 자연스럽게
-            이어질 수 있는 구조를 준비했습니다.
+            제품을 충분히 본 뒤 바로 구매할 수 있고, 추천 코드가 있는 경우에는 레퍼럴 링크로도 편하게
+            이어갈 수 있습니다.
           </p>
         </article>
       </section>

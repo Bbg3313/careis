@@ -25,8 +25,8 @@ export default async function OrderPage({
         <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Checkout</p>
         <h1 className="display-font headline-balance text-5xl font-semibold text-stone-900">주문서 작성</h1>
         <p className="copy-pretty max-w-2xl text-sm leading-8 text-stone-600">
-          레퍼럴 코드와 결제수단이 함께 저장되며, PG 연동 이후에는 같은 구조를 그대로 활용해
-          결제 완료 상태만 연결하면 됩니다.
+          주문 정보를 입력하고 원하는 결제수단을 선택하면 바로 결제를 이어갈 수 있습니다. 추천 코드가
+          있는 경우에는 함께 반영됩니다.
         </p>
       </section>
 

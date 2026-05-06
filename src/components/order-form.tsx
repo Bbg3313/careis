@@ -100,7 +100,7 @@ export function OrderForm({ product, referralCode, initialQuantity = 1 }: OrderF
         <div>
           <p className="text-sm font-semibold text-stone-900">주문자 정보</p>
           <p className="mt-2 text-sm text-stone-500">
-            PG 연동 전 단계에서도 결제수단 선택과 주문 상태를 구조적으로 저장합니다.
+            배송에 필요한 정보를 입력하고 결제수단을 선택해주세요.
           </p>
         </div>
 
@@ -203,8 +203,7 @@ export function OrderForm({ product, referralCode, initialQuantity = 1 }: OrderF
             ))}
           </div>
           <p className="text-xs leading-6 text-stone-500">
-            네이버페이, 신용카드, 토스페이, 카카오페이 선택 구조를 먼저 구현했습니다. 실제
-            PG 연결 이후에는 선택한 결제수단에 맞는 결제창 및 콜백 처리만 추가하면 됩니다.
+            네이버페이, 신용카드, 토스페이, 카카오페이 중 원하는 방식으로 결제를 진행할 수 있습니다.
           </p>
         </div>
       </section>
@@ -238,7 +237,7 @@ export function OrderForm({ product, referralCode, initialQuantity = 1 }: OrderF
           </div>
           <div className="flex items-center justify-between">
             <span>결제 상태</span>
-            <strong className="text-amber-700">PENDING 저장 후 PG 연동 대기</strong>
+            <strong className="text-amber-700">결제 진행 전</strong>
           </div>
         </div>
 
