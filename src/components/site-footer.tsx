@@ -45,7 +45,7 @@ export function SiteFooter() {
             <div className="space-y-4 text-left">
               <p className="text-[12px] uppercase tracking-[0.15em] text-white/40">Support</p>
               <div className="space-y-3 text-[13px] text-white/60">
-                <Link href="/order?product=sun-pack" className="block transition hover:text-white">
+                <Link href="/order" className="block transition hover:text-white">
                   레퍼럴 구매
                 </Link>
                 <Link href="/policy/terms" className="block transition hover:text-white">

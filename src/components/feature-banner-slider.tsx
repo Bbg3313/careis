@@ -25,8 +25,11 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
   }, [slides.length]);
 
   return (
-    <div className="relative overflow-hidden rounded-[40px] border border-[rgba(184,145,86,0.14)] bg-[linear-gradient(180deg,rgba(255,253,249,0.92)_0%,rgba(247,239,228,0.96)_100%)] shadow-[0_28px_80px_rgba(89,63,28,0.08)]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.46)_50%,transparent_100%)]" />
+    <div className="relative overflow-hidden rounded-[48px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(145deg,rgba(255,254,251,0.98)_0%,rgba(248,239,227,0.98)_52%,rgba(243,232,214,0.96)_100%)] shadow-[0_34px_90px_rgba(89,63,28,0.1)]">
+      <div className="pointer-events-none absolute inset-0 rounded-[48px] shadow-[inset_0_1px_0_rgba(255,255,255,0.72),inset_0_-1px_0_rgba(184,145,86,0.08)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.58)_50%,transparent_100%)]" />
+      <div className="pointer-events-none absolute -left-12 top-10 h-40 w-40 rounded-full bg-[#d5b27e]/18 blur-3xl" />
+      <div className="pointer-events-none absolute -right-10 bottom-8 h-44 w-44 rounded-full bg-[#f4e2c6]/44 blur-3xl" />
       {slides.map((slide, index) => {
         const isActive = index === activeIndex;
 
@@ -38,9 +41,9 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
             }`}
           >
             <div
-              className={`relative grid min-h-[460px] items-center gap-6 overflow-hidden px-6 py-8 md:min-h-[560px] md:px-10 md:py-10 lg:grid-cols-[0.72fr_1.28fr] lg:px-12 ${
+              className={`relative grid min-h-[460px] items-center gap-8 overflow-hidden px-7 py-9 md:min-h-[560px] md:px-11 md:py-11 lg:grid-cols-[1.04fr_0.96fr] lg:px-14 ${
                 slide.tone === "light"
-                  ? "bg-[radial-gradient(circle_at_20%_18%,rgba(211,180,132,0.18)_0%,rgba(255,255,255,0)_28%),linear-gradient(135deg,#fffdf9_0%,#f8f0e5_52%,#f3e8d8_100%)] text-stone-900"
+                  ? "bg-[radial-gradient(circle_at_18%_18%,rgba(211,180,132,0.2)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_32%),linear-gradient(135deg,#fffdf9_0%,#faf2e6_54%,#f1e6d4_100%)] text-stone-900"
                   : "bg-[radial-gradient(circle_at_18%_18%,rgba(212,184,140,0.18)_0%,rgba(29,34,48,0)_30%),radial-gradient(circle_at_82%_24%,rgba(143,164,191,0.16)_0%,rgba(37,43,61,0)_28%),linear-gradient(135deg,#1a1f2e_0%,#252b3d_58%,#2d3347_100%)] text-white"
               }`}
             >
@@ -63,17 +66,19 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   }`}
                 />
               </div>
-              <div className="relative z-10 max-w-xl text-center lg:text-left">
-                <p
-                  className={`text-[11px] uppercase tracking-[0.24em] ${
-                    slide.tone === "light" ? "text-stone-500" : "text-white/55"
-                  }`}
-                >
-                  {slide.label}
-                </p>
-                <h2 className="headline-balance whitespace-pre-line mt-6 text-3xl font-semibold leading-[1.18] tracking-[-0.03em] md:text-[48px] lg:text-[56px]">
-                  {slide.title}
-                </h2>
+              <div className="relative z-10 text-center lg:max-w-[640px] lg:text-left">
+                <div className="lg:-translate-y-3">
+                  <p
+                    className={`text-[11px] uppercase tracking-[0.24em] ${
+                      slide.tone === "light" ? "text-[#8b673f]" : "text-white/55"
+                    }`}
+                  >
+                    {slide.label}
+                  </p>
+                  <h2 className="headline-balance mt-3 text-[26px] font-semibold leading-[1.12] tracking-[-0.04em] text-stone-900 md:text-[32px] lg:mt-4 lg:text-[36px] lg:whitespace-nowrap">
+                    {slide.title}
+                  </h2>
+                </div>
                 <p
                   className={`copy-pretty mt-6 text-[15px] leading-[1.9] md:text-[17px] ${
                     slide.tone === "light" ? "text-stone-600" : "text-white/72"
@@ -82,14 +87,21 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   {slide.description}
                 </p>
 
-                <div
-                  className={`mt-8 flex flex-wrap items-center justify-center gap-4 text-[12px] tracking-[0.08em] lg:justify-start ${
-                    slide.tone === "light" ? "text-stone-500" : "text-white/58"
-                  }`}
-                >
-                  {slide.highlights.map((highlight, highlightIndex) => (
-                    <div key={highlight} className="inline-flex items-center gap-4">
-                      {highlightIndex > 0 ? <span className="h-3 w-px bg-current/20" /> : null}
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+                  {slide.highlights.map((highlight) => (
+                    <div
+                      key={highlight}
+                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[11px] font-medium tracking-[0.14em] shadow-[0_10px_24px_rgba(89,63,28,0.06)] ${
+                        slide.tone === "light"
+                          ? "border-[rgba(184,145,86,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9)_0%,rgba(248,238,224,0.96)_100%)] text-[#8b673f]"
+                          : "border-white/14 bg-white/8 text-white/78"
+                      }`}
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          slide.tone === "light" ? "bg-[#b89156]" : "bg-[#d4b389]"
+                        }`}
+                      />
                       <span>{highlight}</span>
                     </div>
                   ))}

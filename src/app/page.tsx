@@ -9,7 +9,7 @@ import { homeVisuals, productVisuals } from "@/lib/site-assets";
 const featureBannerSlides = [
   {
     label: "Night Renewal",
-    title: "밤사이 더 맑고\n정돈된 피부 인상",
+    title: "밤사이 더 맑고 정돈된 피부",
     description:
       "시스테아민 5%와 나이아신아마이드, 알부틴을 담아 칙칙한 피부 인상을 더 환하고 정돈된 느낌으로 가꿔주는 브라이트닝 인텐시브 케어입니다.",
     highlights: ["색소 케어", "브라이트닝", "피부 결 정돈"],
@@ -19,7 +19,7 @@ const featureBannerSlides = [
   },
   {
     label: "Day Protection",
-    title: "햇빛 아래 더 맑고\n편안한 피부 인상",
+    title: "햇빛 아래 더 맑고 편안한 피부",
     description:
       "가볍게 밀착되는 사용감과 자연스러운 피부 표현으로 자외선이 강한 날에도 부담 없이 손이 가는 프리미엄 선케어입니다.",
     highlights: ["자외선 보호", "데일리 선케어", "가벼운 밀착감"],
@@ -55,7 +55,7 @@ export default function HomePage() {
 
             <div className="flex flex-wrap gap-4 pt-2">
               <Link
-                href="/order?product=sun-pack"
+                href="/order"
                 className="btn-luxe-primary inline-flex items-center gap-2 px-8 py-4 text-[13px] tracking-[0.1em]"
               >
                 구매하러 가기
@@ -458,7 +458,7 @@ export default function HomePage() {
 
             <div className="pt-10">
               <Link
-                href="/order?product=sun-pack"
+                href="/order"
                 className="btn-luxe-primary inline-flex w-full max-w-md items-center justify-center px-12 py-5 text-[14px] tracking-[0.1em]"
               >
                 구매 페이지로 이동하기
@@ -489,7 +489,7 @@ export default function HomePage() {
 
           <div className="pt-10">
             <Link
-              href="/order?product=sun-pack"
+              href="/order"
               className="inline-flex items-center gap-2 border border-black/20 px-10 py-4 text-[13px] tracking-[0.1em] text-stone-900 transition hover:border-black/40"
             >
               추천 코드로 구매하기
@@ -508,9 +508,15 @@ export default function HomePage() {
 
 function InfoStat({ title, description }: { title: string; description: string }) {
   return (
-    <div className="space-y-2">
-      <p className="text-xl font-medium text-stone-900 md:text-2xl">{title}</p>
-      <p className="text-[12px] tracking-[0.1em] text-stone-500">{description}</p>
+    <div className="relative overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(249,242,232,0.96)_100%)] px-6 py-7 shadow-[0_16px_38px_rgba(89,63,28,0.06)]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.52)_50%,transparent_100%)]" />
+      <div className="pointer-events-none absolute right-0 top-0 h-20 w-20 rounded-full bg-[#d7b27d]/10 blur-2xl" />
+      <div className="relative">
+        <span className="mb-4 inline-flex h-2 w-2 rounded-full bg-[#b89156]" />
+        <p className="text-xl font-medium text-stone-900 md:text-2xl">{title}</p>
+        <p className="mt-3 text-[12px] tracking-[0.1em] text-stone-500">{description}</p>
+        <div className="mt-5 h-px w-14 bg-[linear-gradient(90deg,#b89156_0%,rgba(184,145,86,0.06)_100%)]" />
+      </div>
     </div>
   );
 }

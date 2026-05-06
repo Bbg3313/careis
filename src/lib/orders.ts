@@ -5,9 +5,16 @@ import { prisma } from "@/lib/db";
 import { getProductBySlug } from "@/lib/product-data";
 import { sanitizeReferralCode } from "@/lib/referral";
 
-export const createOrderSchema = z.object({
+const orderItemSchema = z.object({
   productSlug: z.enum(["sun-pack", "illuminator"]),
   quantity: z.coerce.number().int().min(1).max(10),
+});
+
+export const createOrderSchema = z
+  .object({
+    items: z.array(orderItemSchema).min(1).max(2).optional(),
+    productSlug: z.enum(["sun-pack", "illuminator"]).optional(),
+    quantity: z.coerce.number().int().min(1).max(10).optional(),
   customerName: z.string().min(2).max(30),
   phone: z.string().min(8).max(20),
   postalCode: z.string().min(3).max(10),
@@ -15,8 +22,12 @@ export const createOrderSchema = z.object({
   memo: z.string().max(300).optional().or(z.literal("")),
   couponCode: z.string().max(40).optional().or(z.literal("")),
   paymentMethod: z.nativeEnum(PaymentMethod),
-  referralCode: z.string().optional().nullable(),
-});
+    referralCode: z.string().optional().nullable(),
+  })
+  .refine((value) => (value.items?.length ?? 0) > 0 || Boolean(value.productSlug), {
+    message: "최소 1개 이상의 상품을 선택해주세요.",
+    path: ["items"],
+  });
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 
@@ -55,16 +66,43 @@ function createOrderNumber() {
 
 export async function createOrder(input: CreateOrderInput) {
   const parsed = createOrderSchema.parse(input);
-  const product = await prisma.product.findUnique({
-    where: { slug: parsed.productSlug },
+  const normalizedItems = (parsed.items?.length
+    ? parsed.items
+    : parsed.productSlug
+      ? [{ productSlug: parsed.productSlug, quantity: parsed.quantity ?? 1 }]
+      : []
+  ).reduce<Array<{ productSlug: "sun-pack" | "illuminator"; quantity: number }>>((accumulator, item) => {
+    const existing = accumulator.find((entry) => entry.productSlug === item.productSlug);
+    if (existing) {
+      existing.quantity = Math.min(10, existing.quantity + item.quantity);
+      return accumulator;
+    }
+
+    accumulator.push({
+      productSlug: item.productSlug,
+      quantity: item.quantity,
+    });
+
+    return accumulator;
+  }, []);
+
+  if (normalizedItems.length === 0) {
+    throw new Error("최소 1개 이상의 상품을 선택해주세요.");
+  }
+
+  const products = await prisma.product.findMany({
+    where: { slug: { in: normalizedItems.map((item) => item.productSlug) } },
   });
 
-  if (!product) {
-    throw new Error("선택한 상품을 찾을 수 없습니다.");
+  if (products.length !== normalizedItems.length) {
+    throw new Error("선택한 상품 정보를 일부 찾을 수 없습니다.");
   }
 
   const referralCode = sanitizeReferralCode(parsed.referralCode);
-  const totalAmount = product.price * parsed.quantity;
+  const totalAmount = normalizedItems.reduce((sum, item) => {
+    const product = products.find((entry) => entry.slug === item.productSlug);
+    return sum + (product?.price ?? 0) * item.quantity;
+  }, 0);
 
   return prisma.order.create({
     data: {
@@ -80,13 +118,21 @@ export async function createOrder(input: CreateOrderInput) {
       referralCode,
       totalAmount,
       orderItems: {
-        create: {
-          productId: product.id,
-          sku: product.sku,
-          productNameSnapshot: product.name,
-          quantity: parsed.quantity,
-          unitPrice: product.price,
-        },
+        create: normalizedItems.map((item) => {
+          const product = products.find((entry) => entry.slug === item.productSlug);
+
+          if (!product) {
+            throw new Error("선택한 상품 정보를 찾을 수 없습니다.");
+          }
+
+          return {
+            productId: product.id,
+            sku: product.sku,
+            productNameSnapshot: product.name,
+            quantity: item.quantity,
+            unitPrice: product.price,
+          };
+        }),
       },
     },
     include: {

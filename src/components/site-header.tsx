@@ -17,7 +17,7 @@ export function SiteHeader() {
           <SiteLogo compact />
 
           <Link
-            href="/order?product=sun-pack"
+            href="/order"
             className="btn-luxe-primary inline-flex shrink-0 items-center px-4 py-2.5 text-[11px] tracking-[0.1em] sm:px-5 lg:hidden"
           >
             구매하기
@@ -34,7 +34,7 @@ export function SiteHeader() {
               </Link>
             ))}
             <Link
-              href="/order?product=sun-pack"
+              href="/order"
               className="btn-luxe-primary whitespace-nowrap px-6 py-2.5 text-[12px] tracking-[0.1em]"
             >
               구매하기

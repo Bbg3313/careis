@@ -10,9 +10,9 @@ export default async function OrderPage({
   searchParams: Promise<{ product?: string; qty?: string }>;
 }) {
   const params = await searchParams;
-  const product = getProductBySlug(params.product ?? "sun-pack");
+  const selectedProduct = params.product ? getProductBySlug(params.product) : null;
 
-  if (!product) {
+  if (params.product && !selectedProduct) {
     redirect("/products");
   }
 
@@ -25,12 +25,24 @@ export default async function OrderPage({
         <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Checkout</p>
         <h1 className="display-font headline-balance text-5xl font-semibold text-stone-900">주문서 작성</h1>
         <p className="copy-pretty max-w-2xl text-sm leading-8 text-stone-600">
-          주문 정보를 입력하고 원하는 결제수단을 선택하면 바로 결제를 이어갈 수 있습니다. 추천 코드가
-          있는 경우에는 함께 반영됩니다.
+          원하는 제품을 한 개만 고르거나, 두 제품을 함께 담아 바로 결제를 이어갈 수 있습니다. 추천
+          코드가 있는 경우에는 함께 반영됩니다.
         </p>
       </section>
 
-      <OrderForm product={product} referralCode={referralCode} initialQuantity={quantity} />
+      <OrderForm
+        referralCode={referralCode}
+        initialItems={
+          selectedProduct
+            ? [
+                {
+                  productSlug: selectedProduct.slug,
+                  quantity,
+                },
+              ]
+            : []
+        }
+      />
     </div>
   );
 }

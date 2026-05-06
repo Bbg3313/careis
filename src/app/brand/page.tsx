@@ -22,7 +22,7 @@ export default function BrandPage() {
             전하는 데 집중합니다.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/order?product=sun-pack" className="btn-luxe-primary rounded-full px-5 py-3 text-sm font-semibold">
+            <Link href="/order" className="btn-luxe-primary rounded-full px-5 py-3 text-sm font-semibold">
               구매하기
             </Link>
             <Link href="/products" className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold">

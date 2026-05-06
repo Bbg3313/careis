@@ -6,9 +6,19 @@ import { createOrder } from "@/lib/orders";
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as Record<string, unknown>;
+    const items = Array.isArray(body.items)
+      ? body.items.map((item) => {
+          const entry = item as Record<string, unknown>;
+          return {
+            productSlug: String(entry.productSlug ?? "") as "sun-pack" | "illuminator",
+            quantity: Number(entry.quantity ?? 1),
+          };
+        })
+      : undefined;
     const order = await createOrder({
-      productSlug: String(body.productSlug ?? "") as "sun-pack" | "illuminator",
-      quantity: Number(body.quantity ?? 1),
+      items,
+      productSlug: body.productSlug ? (String(body.productSlug) as "sun-pack" | "illuminator") : undefined,
+      quantity: body.quantity ? Number(body.quantity) : undefined,
       customerName: String(body.customerName ?? ""),
       phone: String(body.phone ?? ""),
       postalCode: String(body.postalCode ?? ""),
