@@ -23,7 +23,7 @@ export function MotionMedia({
         <div
           key={`${alt}-${index}`}
           className="motion-frame"
-          style={{ animationDelay: `${index * 4.5}s` }}
+          style={{ animationDelay: `${index * 3.5}s` }}
         >
           <Image
             src={frame}

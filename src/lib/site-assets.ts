@@ -15,6 +15,8 @@ export const homeVisuals = {
     "/images/sun-lifestyle.png",
     "/images/sun-texture.png",
     "/images/sun-model-warm.png",
+    "/images/illum-model-banner.png",
+    "/images/illum-hero.png",
   ],
   brandFilm: ["/images/sun-object.png", "/images/illum-hero.png", "/images/sun-texture.png", "/images/illum-model.png"],
 };

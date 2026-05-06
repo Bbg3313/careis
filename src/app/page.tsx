@@ -207,7 +207,6 @@ export default function HomePage() {
                     <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
                     Day Signature
                   </span>
-                  <span className="hidden h-px w-12 bg-[linear-gradient(90deg,rgba(184,145,86,0.3)_0%,rgba(184,145,86,0)_100%)] md:block" />
                   <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#8ea4c5]" />
                     Night Signature
