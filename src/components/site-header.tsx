@@ -11,7 +11,7 @@ const navItems = [
 
 export function SiteHeader() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-transparent">
+    <header className="sticky inset-x-0 top-0 z-50 bg-transparent">
       <div className="mx-auto max-w-7xl px-5 py-3 md:px-6 lg:px-8 lg:py-4">
         <div className="flex items-center justify-between gap-4">
           <SiteLogo compact />
