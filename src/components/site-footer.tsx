@@ -19,10 +19,13 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="grid gap-10 py-12 md:grid-cols-3 md:gap-12">
+        <div className="grid gap-10 py-12 md:grid-cols-2 md:gap-12">
           <div className="space-y-4">
             <p className="text-[12px] uppercase tracking-[0.15em] text-white/40">Contact</p>
             <div className="space-y-3 text-[13px] text-white/60">
+              <a href="tel:07046473263" className="block transition hover:text-white">
+                070-4647-3263
+              </a>
               <a
                 href="mailto:startupscon@gmail.com"
                 className="block transition hover:text-white"
@@ -38,21 +41,6 @@ export function SiteFooter() {
                 <InstagramIcon />
                 <span>@sunlumi_labs</span>
               </a>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <p className="text-[12px] uppercase tracking-[0.15em] text-white/40">Company</p>
-            <div className="space-y-3 text-[13px] text-white/60">
-              <Link href="/brand" className="block transition hover:text-white">
-                브랜드 소개
-              </Link>
-              <Link href="/products" className="block transition hover:text-white">
-                제품
-              </Link>
-              <Link href="/contact" className="block transition hover:text-white">
-                도입 문의
-              </Link>
             </div>
           </div>
 

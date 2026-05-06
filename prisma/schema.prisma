@@ -53,6 +53,16 @@ model Order {
   totalAmount    Int
   paymentStatus  OrderStatus   @default(PENDING)
   paymentMethod  PaymentMethod
+  paymentProvider String?
+  paymentReference String?
+  paymentToken    String?
+  paymentRequestedAt DateTime?
+  paidAt          DateTime?
+  cancelledAt     DateTime?
+  refundedAt      DateTime?
+  paymentFailureCode String?
+  paymentFailureMessage String?
+  paymentPayload  String?
   referralCode   String?
   couponCode     String?
   createdAt      DateTime      @default(now())

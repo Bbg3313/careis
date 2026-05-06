@@ -3,12 +3,13 @@ import Link from "next/link";
 
 import { MotionMedia } from "@/components/motion-media";
 import type { ProductContent } from "@/lib/product-data";
-import { productVisuals } from "@/lib/site-assets";
+import { productVisuals, sunPackDetailAssets } from "@/lib/site-assets";
 import { formatCurrency } from "@/lib/utils";
 
 export function ProductDetailPage({ product }: { product: ProductContent }) {
   const warmTheme = product.theme === "warm";
   const visual = productVisuals[product.slug];
+  const isSunPack = product.slug === "sun-pack";
 
   return (
     <div className="space-y-24 pb-24">
@@ -104,7 +105,9 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
         </div>
       </section>
 
-      {product.problemPoints?.length ? (
+      {isSunPack ? <SunPackDetailStory /> : null}
+
+      {!isSunPack && product.problemPoints?.length ? (
         <section className="grid gap-8 lg:grid-cols-[0.74fr_1.26fr] lg:items-start">
           <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Problem</p>
@@ -125,6 +128,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
         </section>
       ) : null}
 
+      {!isSunPack ? (
       <section className="grid gap-12">
         {product.sections.map((section, index) => (
           <article
@@ -160,7 +164,9 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
           </article>
         ))}
       </section>
+      ) : null}
 
+      {!isSunPack ? (
       <section className="rounded-[42px] border border-[rgba(116,88,59,0.12)] bg-[linear-gradient(145deg,#f8f3ed_0%,#ffffff_100%)] p-8 shadow-[0_24px_80px_rgba(65,45,20,0.04)] md:p-12">
         <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr]">
           <div className="space-y-4">
@@ -186,7 +192,9 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
           </div>
         </div>
       </section>
+      ) : null}
 
+      {!isSunPack ? (
       <section className="grid gap-8 lg:grid-cols-[1fr_1fr]">
         <div className="rounded-[36px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_24px_80px_rgba(65,45,20,0.04)] md:p-12">
           <p className="text-xs uppercase tracking-[0.3em] text-stone-500">FAQ</p>
@@ -212,6 +220,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
           </div>
         </div>
       </section>
+      ) : null}
 
       <section className="rounded-[40px] bg-stone-900 px-8 py-12 text-white shadow-[0_40px_100px_rgba(23,19,18,0.18)] md:px-12 md:py-16">
         <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
@@ -244,5 +253,59 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
         </div>
       </section>
     </div>
+  );
+}
+
+function SunPackDetailStory() {
+  return (
+    <section className="space-y-10">
+      <div className="mx-auto max-w-5xl text-center">
+        <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Sun Pack Detail</p>
+        <h2 className="display-font headline-balance mt-4 text-4xl font-semibold tracking-[-0.03em] text-stone-900 md:text-5xl">
+          보내주신 선팩 상세 원본을 그대로 중심에 배치했습니다.
+        </h2>
+        <p className="copy-pretty mt-4 text-sm leading-8 text-stone-600 md:text-base">
+          제품 소개, 특허 기술, 사용 장면, FAQ, 상품 정보 고시까지 실제 상세페이지 흐름이 한 번에
+          읽히도록 원본 이미지 시퀀스를 그대로 노출합니다.
+        </p>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {sunPackDetailAssets.motionFrames.map((image, index) => (
+          <div
+            key={image}
+            className="relative overflow-hidden rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-white shadow-[0_24px_80px_rgba(65,45,20,0.05)]"
+          >
+            <div className="relative aspect-[3/2]">
+              <Image
+                src={image}
+                alt={`선팩 사용 장면 ${index + 1}`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-8">
+        {sunPackDetailAssets.storyImages.map((image, index) => (
+          <div
+            key={image}
+            className="relative mx-auto max-w-5xl overflow-hidden rounded-[30px] border border-[rgba(116,88,59,0.12)] bg-white shadow-[0_28px_90px_rgba(65,45,20,0.06)]"
+          >
+            <Image
+              src={image}
+              alt={`선팩 상세 원본 ${index + 1}`}
+              width={1200}
+              height={1800}
+              className="h-auto w-full"
+              sizes="(max-width: 1280px) 100vw, 1100px"
+            />
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

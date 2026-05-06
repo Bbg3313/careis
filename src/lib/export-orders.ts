@@ -12,6 +12,8 @@ export async function buildOrdersWorkbook() {
       주문일시: formatDate(order.createdAt),
       주문상태: order.paymentStatus,
       결제수단: order.paymentMethod,
+      PG사: order.paymentProvider ?? "",
+      결제참조값: order.paymentReference ?? "",
       고객명: order.customerName,
       연락처: order.phone,
       우편번호: order.postalCode,
@@ -23,6 +25,8 @@ export async function buildOrdersWorkbook() {
       주문금액: order.totalAmount,
       레퍼럴코드: order.referralCode ?? "",
       쿠폰코드: order.couponCode ?? "",
+      결제실패코드: order.paymentFailureCode ?? "",
+      결제실패메시지: order.paymentFailureMessage ?? "",
       요청사항: order.memo ?? "",
     })),
   );

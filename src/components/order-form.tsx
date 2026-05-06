@@ -52,7 +52,7 @@ export function OrderForm({ product, referralCode, initialQuantity = 1 }: OrderF
     setErrorMessage(null);
 
     try {
-      const response = await fetch("/api/orders", {
+      const response = await fetch("/api/payments/prepare", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,13 +71,22 @@ export function OrderForm({ product, referralCode, initialQuantity = 1 }: OrderF
         }),
       });
 
-      const data = (await response.json()) as { orderNumber?: string; error?: string };
+      const data = (await response.json()) as {
+        orderNumber?: string;
+        error?: string;
+        nextAction?: { type?: string; url?: string };
+      };
 
       if (!response.ok || !data.orderNumber) {
         throw new Error(data.error ?? "주문 저장 중 문제가 발생했습니다.");
       }
 
-      router.push(`/order/complete?orderNumber=${data.orderNumber}`);
+      if (data.nextAction?.type === "REDIRECT" && data.nextAction.url) {
+        router.push(data.nextAction.url);
+        return;
+      }
+
+      router.push(`/order/complete?orderNumber=${data.orderNumber}&paymentStatus=PENDING`);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "주문 처리에 실패했습니다.");
     } finally {

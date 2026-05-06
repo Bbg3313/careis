@@ -45,3 +45,14 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
     ],
   },
 };
+
+export const sunPackDetailAssets = {
+  motionFrames: ["/images/sunpack-detail-gif-01.png", "/images/sunpack-detail-gif-02.png"],
+  storyImages: [
+    "/images/sunpack-detail-part-01.png",
+    "/images/sunpack-detail-part-02.png",
+    "/images/sunpack-detail-part-03.png",
+    "/images/sunpack-detail-part-04.png",
+    "/images/sunpack-detail-part-05.png",
+  ],
+};

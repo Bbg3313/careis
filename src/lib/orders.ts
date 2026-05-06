@@ -20,6 +20,30 @@ export const createOrderSchema = z.object({
 
 export type CreateOrderInput = z.infer<typeof createOrderSchema>;
 
+type PaymentRequestMetadata = {
+  provider: string;
+  payload: string;
+  reference?: string | null;
+  token?: string | null;
+};
+
+type PaymentConfirmationInput = {
+  orderNumber: string;
+  amount: number;
+  paymentMethod: PaymentMethod;
+  provider: string;
+  reference?: string | null;
+  token?: string | null;
+  payload?: string | null;
+};
+
+type PaymentFailureInput = {
+  orderNumber: string;
+  code?: string | null;
+  message?: string | null;
+  payload?: string | null;
+};
+
 function createOrderNumber() {
   const now = new Date();
   const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
@@ -83,6 +107,96 @@ export async function getOrders() {
 export async function getOrderByNumber(orderNumber: string) {
   return prisma.order.findUnique({
     where: { orderNumber },
+    include: {
+      orderItems: true,
+    },
+  });
+}
+
+export async function setOrderPaymentRequested(orderNumber: string, metadata: PaymentRequestMetadata) {
+  return prisma.order.update({
+    where: { orderNumber },
+    data: {
+      paymentProvider: metadata.provider,
+      paymentPayload: metadata.payload,
+      paymentReference: metadata.reference ?? null,
+      paymentToken: metadata.token ?? null,
+      paymentRequestedAt: new Date(),
+      paymentFailureCode: null,
+      paymentFailureMessage: null,
+    },
+    include: {
+      orderItems: true,
+    },
+  });
+}
+
+export async function confirmOrderPayment(input: PaymentConfirmationInput) {
+  const order = await prisma.order.findUnique({
+    where: { orderNumber: input.orderNumber },
+    include: {
+      orderItems: true,
+    },
+  });
+
+  if (!order) {
+    throw new Error("주문 정보를 찾을 수 없습니다.");
+  }
+
+  if (order.totalAmount !== input.amount) {
+    throw new Error("결제 금액이 주문 금액과 일치하지 않습니다.");
+  }
+
+  return prisma.order.update({
+    where: { orderNumber: input.orderNumber },
+    data: {
+      paymentStatus: OrderStatus.PAID,
+      paymentMethod: input.paymentMethod,
+      paymentProvider: input.provider,
+      paymentReference: input.reference ?? order.paymentReference,
+      paymentToken: input.token ?? order.paymentToken,
+      paymentPayload: input.payload ?? order.paymentPayload,
+      paidAt: new Date(),
+      cancelledAt: null,
+      refundedAt: null,
+      paymentFailureCode: null,
+      paymentFailureMessage: null,
+    },
+    include: {
+      orderItems: true,
+    },
+  });
+}
+
+export async function failOrderPayment(input: PaymentFailureInput) {
+  const order = await prisma.order.findUnique({
+    where: { orderNumber: input.orderNumber },
+  });
+
+  if (!order) {
+    throw new Error("주문 정보를 찾을 수 없습니다.");
+  }
+
+  return prisma.order.update({
+    where: { orderNumber: input.orderNumber },
+    data: {
+      paymentStatus: OrderStatus.CANCELLED,
+      cancelledAt: new Date(),
+      paymentFailureCode: input.code ?? null,
+      paymentFailureMessage: input.message ?? "결제가 승인되지 않았습니다.",
+      paymentPayload: input.payload ?? order.paymentPayload,
+    },
+  });
+}
+
+export async function refundOrderPayment(orderNumber: string, payload?: string | null) {
+  return prisma.order.update({
+    where: { orderNumber },
+    data: {
+      paymentStatus: OrderStatus.REFUNDED,
+      refundedAt: new Date(),
+      paymentPayload: payload ?? undefined,
+    },
     include: {
       orderItems: true,
     },

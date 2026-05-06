@@ -23,7 +23,7 @@ export default function ContactPage() {
           <p className="text-sm font-semibold text-stone-900">문의 채널</p>
           <div className="mt-5 space-y-4 text-sm leading-8 text-stone-600">
             <p>
-              <strong className="text-stone-900">전화</strong>: 02-553-5502
+              <strong className="text-stone-900">전화</strong>: 070-4647-3263
             </p>
             <p>
               <strong className="text-stone-900">인스타그램</strong>: @careis.official

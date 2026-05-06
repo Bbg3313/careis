@@ -1,0 +1,19 @@
+import { PaymentFailHandler } from "@/components/payment-fail-handler";
+
+export default async function PaymentFailPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ orderNumber?: string; code?: string; message?: string }>;
+}) {
+  const params = await searchParams;
+
+  return (
+    <div className="pb-24">
+      <PaymentFailHandler
+        orderNumber={params.orderNumber ?? ""}
+        code={params.code ?? "PAYMENT_FAILED"}
+        message={params.message ?? "결제가 완료되지 않았습니다."}
+      />
+    </div>
+  );
+}
