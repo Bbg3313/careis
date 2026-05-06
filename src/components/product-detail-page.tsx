@@ -31,7 +31,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
             <p className="text-xs uppercase tracking-[0.32em] text-white/58">{product.englishName}</p>
             <div className="space-y-4">
               <p className="inline-flex rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs tracking-[0.18em] text-white/72 backdrop-blur">
-                {warmTheme ? "Clinic-ready Day Protocol" : "Clinic-ready Night Protocol"}
+                {warmTheme ? "Day Ritual Essential" : "Night Ritual Essential"}
               </p>
               <h1 className="display-font headline-balance text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl md:text-6xl lg:text-7xl">
                 {product.heroTitle}
@@ -53,16 +53,16 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <p className="text-2xl font-semibold text-white">{formatCurrency(product.price)}</p>
               <Link
-                href="/contact"
+                href={`/order?product=${product.slug}`}
                 className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-stone-900"
               >
-                도입 문의
+                바로 구매
               </Link>
               <Link
-                href={`/order?product=${product.slug}`}
+                href="/contact"
                 className="rounded-full border border-white/16 bg-white/8 px-5 py-3 text-sm font-semibold text-white backdrop-blur"
               >
-                레퍼럴 구매
+                제휴 문의
               </Link>
             </div>
             <div className="grid gap-3 pt-2 sm:grid-cols-2 xl:grid-cols-3">
@@ -112,7 +112,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
           <div className="space-y-3">
             <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Problem</p>
             <h2 className="display-font headline-balance text-4xl font-semibold tracking-[-0.03em] text-stone-900 md:text-5xl">
-              왜 병원 채널에서 이 루틴이 필요할까요?
+              왜 이 루틴이 더 매력적으로 느껴질까요?
             </h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -175,9 +175,8 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
               {product.tagline}
             </h2>
             <p className="copy-pretty text-sm leading-8 text-stone-600 md:text-base">
-              제안서와 소개서에서 확인한 핵심 포인트를 병원 및 클리닉 도입 설명에 맞는 언어로
-              재구성했습니다. 공개 구매는 가능하지만, 이 페이지의 1차 목적은 제품의 기술과 도입
-              맥락을 이해시키는 것입니다.
+              핵심 성분과 사용 포인트를 과하지 않게 정리해, 제품의 분위기와 루틴의 이유가 함께
+              읽히도록 구성했습니다. 설명은 가볍게, 사용 장면은 더 또렷하게 전달하는 데 집중했습니다.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -225,29 +224,29 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
       <section className="rounded-[40px] bg-stone-900 px-8 py-12 text-white shadow-[0_40px_100px_rgba(23,19,18,0.18)] md:px-12 md:py-16">
         <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-white/70">B2B + Referral</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-white/70">Purchase + Referral</p>
             <h2 className="headline-balance mt-4 text-3xl font-semibold tracking-[-0.03em] md:text-5xl">
-              도입 문의는 앞단에 두고, 레퍼럴 구매는 공개적으로 병행합니다.
+              지금 바로 구매하거나, 추천 코드와 함께 시작할 수 있습니다.
             </h2>
             <p className="copy-pretty mt-3 max-w-2xl text-sm leading-8 text-white/75 md:text-base">
-              병원 및 클리닉 대상 문의는 별도 상담 흐름으로 연결하고, 인플루언서 및 제휴 채널 유입은
-              `referral_code` 기반 공개 구매로 병행합니다. 두 구조가 충돌하지 않도록 분리해
-              설계했습니다.
+              일반 구매는 바로 주문 페이지로, 추천 코드가 있는 경우에는 `referral_code` 기반의
+              레퍼럴 흐름으로 자연스럽게 이어질 수 있도록 구성했습니다. 제휴 문의가 필요한 경우에는
+              별도 페이지에서 확인할 수 있습니다.
             </p>
           </div>
 
           <div className="flex gap-3">
             <Link
-              href="/contact"
+              href={`/order?product=${product.slug}`}
               className="rounded-full border border-white/20 px-5 py-3 text-sm font-semibold"
             >
-              도입 문의
+              바로 구매
             </Link>
             <Link
-              href={`/order?product=${product.slug}`}
+              href="/contact"
               className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-stone-900"
             >
-              레퍼럴 구매
+              제휴 문의
             </Link>
           </div>
         </div>

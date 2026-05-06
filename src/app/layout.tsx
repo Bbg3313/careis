@@ -21,7 +21,7 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: "CAREIS",
-  description: "병원 유통 기반 더마 코스메틱 브랜드 커머스 MVP",
+  description: "낮과 밤을 위한 2-step 더마코스메틱 루틴 브랜드",
 };
 
 export default function RootLayout({

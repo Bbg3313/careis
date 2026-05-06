@@ -39,9 +39,9 @@ export const products: ProductContent[] = [
     shortName: "선팩",
     englishName: "Simple Stick Sun Pack",
     tagline: "특허 필름막 기술로 완성한 데일리 UV 프로텍션",
-    heroTitle: "특허 기반 필름막 기술로 완성한 병원 유통 선케어",
+    heroTitle: "특허 기반 필름막 기술로 완성한 데일리 선케어",
     heroDescription:
-      "심플스틱 선팩은 바이오 셀룰로오스 필름막 기술을 바탕으로, 자외선 차단 성능과 가벼운 사용감을 함께 설계한 데일리 선케어입니다. 병원과 클리닉에서도 기술 포인트와 사용 장면을 명확하게 설명할 수 있습니다.",
+      "심플스틱 선팩은 바이오 셀룰로오스 필름막 기술을 바탕으로, 자외선 차단 성능과 가벼운 사용감을 함께 설계한 데일리 선케어입니다. 외출 전, 메이크업 전후, 야외 활동까지 부담 없이 손이 가는 루틴을 지향합니다.",
     theme: "warm",
     price: 59000,
     keywords: ["Film Formula", "Irritation Free", "Easy Wash"],
@@ -87,7 +87,7 @@ export const products: ProductContent[] = [
       {
         title: "메이크업과 야외 활동 루틴",
         description:
-          "골프, 외출, 이동이 많은 일정 속에서도 메이크업 루틴과 충돌하지 않는 간결한 사용 흐름을 지향합니다. 병원 채널에서도 실사용 장면을 쉽게 설명할 수 있습니다.",
+          "골프, 외출, 이동이 많은 일정 속에서도 메이크업 루틴과 충돌하지 않는 간결한 사용 흐름을 지향합니다. 하루 중 여러 번 손이 가도 부담 없는 사용감을 중심에 두었습니다.",
         bullets: [
           "메이크업 전후 사용 가능",
           "야외 활동 시 편안한 밀착감",
@@ -139,7 +139,7 @@ export const products: ProductContent[] = [
     tagline: "색소 고민과 PIH 케어를 위한 야간 브라이트닝 루틴",
     heroTitle: "시스테아민 5%와 ODT 기술로 설계한 집중 나이트 케어",
     heroDescription:
-      "일루미네이터는 시스테아민 5%를 중심으로 나이아신아마이드와 알부틴을 배합하고, ODT 크림 팩 프로토콜을 더한 집중 케어 제품입니다. 기미, 잡티, PIH 고민에 대해 병원과 클리닉에서 맥락 있게 설명할 수 있는 야간 루틴을 제안합니다.",
+      "일루미네이터는 시스테아민 5%를 중심으로 나이아신아마이드와 알부틴을 배합하고, ODT 크림 팩 프로토콜을 더한 집중 케어 제품입니다. 기미, 잡티, PIH 고민을 위한 야간 브라이트닝 루틴으로 더 맑고 정돈된 피부 컨디션을 제안합니다.",
     theme: "cool",
     price: 119000,
     keywords: ["Night Care", "ODT Film", "Cysteamine 5%"],
@@ -227,16 +227,16 @@ export const products: ProductContent[] = [
 
 export const siteHighlights = [
   {
-    title: "병원 유통 기반",
-    description: "도입 상담과 현장 설명에 맞춘 신뢰 중심 제품 구조",
+    title: "프리미엄 사용감",
+    description: "매일 손이 가는 텍스처와 무드를 중심으로 설계한 제품 구조",
   },
   {
     title: "낮과 밤 2-Step 설계",
     description: "선팩과 일루미네이터를 역할별로 명확히 분리한 루틴 구조",
   },
   {
-    title: "B2B 도입 + 레퍼럴 병행",
-    description: "병원 도입 흐름과 공개 구매 추적 구조를 충돌 없이 함께 운영",
+    title: "구매 전환 구조",
+    description: "브랜드 무드와 제품 이해, 추천 코드 구매 흐름을 자연스럽게 연결",
   },
 ];
 

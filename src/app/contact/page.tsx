@@ -7,14 +7,13 @@ export default function ContactPage() {
         <div className="mb-6">
           <SiteLogo compact />
         </div>
-        <p className="text-xs uppercase tracking-[0.34em] text-stone-500">B2B Inquiry</p>
+        <p className="text-xs uppercase tracking-[0.34em] text-stone-500">Partnership Contact</p>
         <h1 className="display-font headline-balance mt-4 text-5xl font-semibold text-stone-900 md:text-6xl">
-          병원 및 클리닉 도입 문의
+          제휴 및 파트너십 문의
         </h1>
         <p className="copy-pretty mt-6 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">
-          CAREIS는 병원 유통 기반의 더마코스메틱 브랜드로, 제품 도입 상담과 운영 방향에 맞춘 제안
-          흐름을 우선합니다. 아래 채널을 통해 제품 소개, 유통 검토, 운영 방향 상담을 접수할 수
-          있습니다.
+          CAREIS는 일반 구매를 메인으로 운영하되, 입점 제안이나 제휴 협업, 파트너십 문의가 필요한
+          경우 별도 채널로 소통할 수 있도록 준비했습니다.
         </p>
       </section>
 
@@ -36,11 +35,11 @@ export default function ContactPage() {
         </article>
 
         <article className="rounded-[32px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)]">
-          <p className="text-sm font-semibold text-stone-900">도입 상담 항목</p>
+          <p className="text-sm font-semibold text-stone-900">상담 가능 항목</p>
           <ul className="mt-5 space-y-3 text-sm leading-8 text-stone-600">
-            <li>- 병원 및 클리닉 채널 유통 가능 여부</li>
-            <li>- 선팩 / 일루미네이터 도입 우선순위 및 운영 방향</li>
-            <li>- 제품 소개서, 성분 포인트, 루틴 설명 자료 요청</li>
+            <li>- 오프라인 입점 및 파트너십 운영 여부</li>
+            <li>- 선팩 / 일루미네이터 제휴 판매 또는 협업 제안</li>
+            <li>- 제품 소개 자료 및 콘텐츠 협업 요청</li>
             <li>- 레퍼럴 구매 및 인플루언서 공구 연계 운영 여부</li>
           </ul>
         </article>

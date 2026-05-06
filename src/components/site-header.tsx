@@ -5,7 +5,7 @@ import { SiteLogo } from "@/components/site-logo";
 const navItems = [
   { href: "/#brand", label: "BRAND" },
   { href: "/#product", label: "PRODUCT" },
-  { href: "/#inquiry", label: "INQUIRY" },
+  { href: "/#inquiry", label: "SHOP" },
   { href: "/contact", label: "CONTACT" },
 ];
 
@@ -17,10 +17,10 @@ export function SiteHeader() {
           <SiteLogo compact />
 
           <Link
-            href="/contact"
+            href="/order?product=sun-pack"
             className="btn-luxe-primary inline-flex shrink-0 items-center px-4 py-2.5 text-[11px] tracking-[0.1em] sm:px-5 lg:hidden"
           >
-            도입 문의
+            구매하기
           </Link>
 
           <nav className="hidden items-center gap-6 text-[12px] tracking-[0.05em] text-stone-600 xl:gap-8 xl:text-[13px] lg:flex">
@@ -34,10 +34,10 @@ export function SiteHeader() {
               </Link>
             ))}
             <Link
-              href="/contact"
+              href="/order?product=sun-pack"
               className="btn-luxe-primary whitespace-nowrap px-6 py-2.5 text-[12px] tracking-[0.1em]"
             >
-              도입 문의
+              구매하기
             </Link>
           </nav>
         </div>

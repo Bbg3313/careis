@@ -7,15 +7,15 @@ import { homeVisuals, productVisuals } from "@/lib/site-assets";
 
 const highlightIcons = [BuildingIcon, SparklesIcon, ExpertIcon];
 const brandSignals = [
-  { label: "Hospital Flow", value: "도입 상담 우선", detail: "병원·클리닉 중심 첫 동선" },
+  { label: "Daily Mood", value: "데일리 루틴", detail: "매일 손이 가는 감각적인 첫 단계" },
   { label: "Routine Design", value: "2-Step 구조", detail: "DAY CARE / NIGHT CARE 분리" },
-  { label: "Referral Ready", value: "추적 가능 구매", detail: "추천 코드 기반 공개 구매 병행" },
+  { label: "Purchase Ready", value: "바로 구매 가능", detail: "일반 구매와 추천 링크 흐름 동시 지원" },
 ];
 
 const brandNotes = [
-  "병원 도입용 설명 자료와 공개 구매용 전환 흐름을 한 사이트 안에서 분리해 설계합니다.",
+  "브랜드 무드를 먼저 느끼고, 자연스럽게 제품과 구매로 이어지도록 흐름을 정리합니다.",
   "선팩은 데일리 보호, 일루미네이터는 야간 집중 관리라는 역할이 한눈에 읽히도록 구성합니다.",
-  "과장된 광고성 표현보다 기술 포인트, 사용 장면, 상담 연결성이 먼저 드러나도록 정리합니다.",
+  "복잡한 설명보다 사용감, 루틴, 사용 장면의 매력이 먼저 보이도록 정리합니다.",
 ];
 
 export default function HomePage() {
@@ -30,31 +30,31 @@ export default function HomePage() {
           <div className="space-y-8 px-4 py-6 md:px-6 lg:px-0">
             <div className="space-y-4">
               <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">
-                Hospital-Distributed Dermacosmetic
+                Day To Night Dermacosmetic
               </p>
               <h1 className="display-font headline-balance text-5xl font-semibold leading-[1.08] tracking-[-0.02em] text-stone-900 sm:text-6xl md:text-[64px]">
-                병원 채널을 위한 2-Step Dermacosmetic
+                낮과 밤을 채우는 2-Step Dermacosmetic
               </h1>
               <p className="copy-pretty max-w-xl pt-3 text-[15px] leading-[1.9] text-stone-600 md:text-[17px]">
-                CAREIS는 병원과 클리닉에서 먼저 설명되고 도입될 수 있도록, 낮에는 보호하고 밤에는
-                집중 관리하는 2-step 제품 구조를 제안합니다. 공개 구매는 가능하지만 사이트의 1차
-                목적은 브랜드 소개와 도입 상담입니다.
+                CAREIS는 낮에는 가볍게 보호하고 밤에는 집중적으로 정돈하는 2-step 루틴을 제안합니다.
+                일상 속에서 매일 손이 가는 사용감과 프리미엄 무드를 함께 담아, 자연스럽게 제품과
+                구매로 이어지도록 설계했습니다.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-4 pt-2">
               <Link
-                href="/contact"
+                href="/order?product=sun-pack"
                 className="btn-luxe-primary inline-flex items-center gap-2 px-8 py-4 text-[13px] tracking-[0.1em]"
               >
-                도입 문의
+                구매하러 가기
                 <ArrowAccent />
               </Link>
               <Link
                 href="/products"
                 className="border border-black/15 px-8 py-4 text-[13px] tracking-[0.1em] text-stone-900 transition hover:border-black/40"
               >
-                제품 소개
+                제품 보기
               </Link>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function HomePage() {
               <div className="mx-auto max-w-7xl">
                 <p className="text-[12px] uppercase tracking-[0.22em] text-white/60">Brand Motion</p>
                 <p className="mt-3 max-w-xl text-lg font-medium tracking-[-0.02em] text-white/92 md:text-2xl">
-                  제품보다 먼저 브랜드 톤을, 설명보다 먼저 신뢰의 무드를 보여주는 브랜드 모션
+                  제품보다 먼저 브랜드 톤을, 설명보다 먼저 오래 남는 무드를 보여주는 브랜드 모션
                   섹션입니다.
                 </p>
               </div>
@@ -124,14 +124,14 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center md:mb-14">
             <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
-              Hospital-Distributed Excellence
+              Routine Architecture
             </p>
             <h2 className="display-font headline-balance text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
-              도입 전에 먼저 읽히는 브랜드 구조
+              피부 위에 자연스럽게 스며드는 2-Step 리듬
             </h2>
             <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
-              피부과학 기반 설계와 의료기관 유통 경험을 바탕으로, 병원 현장에서 바로 설명할 수 있는
-              제품 언어와 도입 상담 흐름을 함께 설계했습니다.
+              데이 케어와 나이트 케어를 하나의 흐름으로 연결해, 사용 순간부터 다음 루틴까지 자연스럽게
+              이어지는 CAREIS만의 리듬을 담았습니다.
             </p>
           </div>
 
@@ -139,10 +139,10 @@ export default function HomePage() {
             <article className="overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_60%,#f6f1ea_100%)] p-8 shadow-[0_24px_80px_rgba(73,53,26,0.06)] md:p-10">
               <div className="flex flex-wrap items-center gap-3">
                 <span className="rounded-full border border-[rgba(157,116,66,0.14)] bg-white/80 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-stone-500">
-                  Brand Architecture
+                  Routine Value
                 </span>
                 <span className="rounded-full border border-[rgba(157,116,66,0.14)] bg-white/80 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-stone-500">
-                  Clinical Premium
+                  Texture And Mood
                 </span>
               </div>
 
@@ -159,7 +159,7 @@ export default function HomePage() {
               </div>
 
               <div className="mt-8 rounded-[28px] border border-[rgba(116,88,59,0.08)] bg-white/82 p-6">
-                <p className="text-sm font-semibold text-stone-900">왜 이 구조가 필요한가</p>
+                <p className="text-sm font-semibold text-stone-900">왜 이 루틴이 매력적인가</p>
                 <div className="mt-4 grid gap-3">
                   {brandNotes.map((note) => (
                     <div key={note} className="flex gap-3 text-sm leading-7 text-stone-600">
@@ -172,26 +172,32 @@ export default function HomePage() {
             </article>
 
             <aside className="rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[#1f1b18] p-8 text-white shadow-[0_24px_80px_rgba(29,20,11,0.16)] md:p-10">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/45">Key Message</p>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/45">Routine Pairing</p>
               <h3 className="display-font headline-balance mt-4 text-3xl font-semibold leading-[1.15] tracking-[-0.03em] md:text-[40px]">
-                병원 채널에서는 설명이 먼저고,
-                <br className="hidden md:block" /> 공개 구매에서는 전환이 자연스러워야 합니다.
+                낮에는 가볍게 보호하고,
+                <br className="hidden md:block" /> 밤에는 깊이 있게 정돈합니다.
               </h3>
               <p className="copy-pretty mt-5 text-sm leading-8 text-white/68">
-                CAREIS는 병원·클리닉 도입 상담과 인플루언서 레퍼럴 구매를 하나의 브랜드 언어 안에서
-                함께 운영할 수 있도록 설계된 구조를 지향합니다.
+                CAREIS는 하루의 피부 컨디션에 맞춰 서로 다른 텍스처와 역할을 제안하는 2-step
+                루틴입니다. 설명보다 먼저 무드가, 무드보다 오래 남는 사용감이 중심이 됩니다.
               </p>
               <div className="mt-8 space-y-4">
                 <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Consulting First</p>
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Day Care Mood</p>
                   <p className="mt-2 text-sm leading-7 text-white/78">
-                    도입 검토, 유통 가능성, 운영 방향 상담을 먼저 연결하는 구조
+                    백탁과 답답함 부담을 낮추고 매일 편안하게 손이 가는 데일리 프로텍션
                   </p>
                 </div>
                 <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Public Purchase Second</p>
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Night Care Mood</p>
                   <p className="mt-2 text-sm leading-7 text-white/78">
-                    추천 코드 기반 주문과 결제 추적 구조를 별도 회원가입 없이 병행
+                    색소 고민과 거친 결을 차분히 정돈하는 집중 브라이트닝 루틴
+                  </p>
+                </div>
+                <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Together</p>
+                  <p className="mt-2 text-sm leading-7 text-white/78">
+                    아침과 밤의 결을 나눠 관리할 때 더 또렷해지는 CAREIS만의 2-step 밸런스
                   </p>
                 </div>
               </div>
@@ -222,10 +228,10 @@ export default function HomePage() {
                   <div className="mt-6 h-px w-full bg-[linear-gradient(90deg,rgba(184,145,86,0.3)_0%,rgba(184,145,86,0)_100%)]" />
                   <p className="copy-pretty mt-5 text-[13px] leading-[1.8] text-stone-500">
                     {index === 0
-                      ? "병원·클리닉 현장에서 제품 설명과 도입 제안이 자연스럽게 이어질 수 있어야 합니다."
+                      ? "매일 손이 가는 사용감과 프리미엄 무드가 함께 보여야 루틴의 매력이 오래 남습니다."
                       : index === 1
-                        ? "데이 케어와 나이트 케어를 명확히 나누면 제품 이해도와 도입 설득력이 함께 높아집니다."
-                        : "브랜드 사이트는 B2B 중심으로 두되, 공개 구매와 정산 추적 구조는 동시에 갖춰야 합니다."}
+                        ? "데이 케어와 나이트 케어를 명확히 나누면 각 제품의 이유와 사용 타이밍이 직관적으로 읽힙니다."
+                        : "브랜드 무드, 제품 설명, 구매 전환이 한 흐름으로 이어질 때 커머스 경험이 더 자연스러워집니다."}
                   </p>
                 </article>
               );
@@ -268,25 +274,25 @@ export default function HomePage() {
                 <h2 className="display-font headline-balance mt-4 text-5xl font-semibold tracking-[-0.02em] text-stone-900 md:text-[56px]">
                   DAY CARE
                 </h2>
-                <div className="mx-auto mt-4 max-w-xl space-y-3">
+                <div className="mt-10 border border-black/10 bg-white/65 p-5 md:p-6 backdrop-blur-sm">
+                  <div className="relative h-[22rem] w-[17rem] md:h-[28rem] md:w-[21rem]">
+                    <Image
+                      src={productVisuals["sun-pack"].card}
+                      alt={productVisuals["sun-pack"].alt}
+                      fill
+                      className="object-contain drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)]"
+                      sizes="(max-width: 768px) 272px, 336px"
+                    />
+                  </div>
+                </div>
+
+                <div className="mx-auto mt-8 max-w-xl space-y-3">
                   <p className="headline-balance text-[18px] font-medium leading-[1.7] text-stone-900">
                     {sunPack.tagline}
                   </p>
                   <p className="copy-pretty text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
                     {sunPack.heroDescription}
                   </p>
-                </div>
-
-                <div className="mt-10 border border-black/10 bg-white/65 p-6 md:p-7 backdrop-blur-sm">
-                  <div className="relative h-72 w-56 md:h-80 md:w-64">
-                    <Image
-                      src={productVisuals["sun-pack"].card}
-                      alt={productVisuals["sun-pack"].alt}
-                      fill
-                      className="object-contain drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)]"
-                      sizes="224px"
-                    />
-                  </div>
                 </div>
 
                 <Link
@@ -321,25 +327,25 @@ export default function HomePage() {
                 <h2 className="display-font headline-balance mt-4 text-5xl font-semibold tracking-[-0.02em] text-white md:text-[56px]">
                   NIGHT CARE
                 </h2>
-                <div className="mx-auto mt-4 max-w-xl space-y-3">
+                <div className="mt-10 border border-white/10 bg-white/5 p-5 md:p-6 backdrop-blur-sm">
+                  <div className="relative h-[22rem] w-[17rem] md:h-[28rem] md:w-[21rem]">
+                    <Image
+                      src={productVisuals["illuminator"].card}
+                      alt={productVisuals["illuminator"].alt}
+                      fill
+                      className="object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)]"
+                      sizes="(max-width: 768px) 272px, 336px"
+                    />
+                  </div>
+                </div>
+
+                <div className="mx-auto mt-8 max-w-xl space-y-3">
                   <p className="headline-balance text-[18px] font-medium leading-[1.7] text-white">
                     {illuminator.tagline}
                   </p>
                   <p className="copy-pretty text-[15px] leading-[1.9] text-white/72 md:text-[16px]">
                     {illuminator.heroDescription}
                   </p>
-                </div>
-
-                <div className="mt-10 border border-white/10 bg-white/5 p-6 md:p-7 backdrop-blur-sm">
-                  <div className="relative h-72 w-56 md:h-80 md:w-64">
-                    <Image
-                      src={productVisuals["illuminator"].card}
-                      alt={productVisuals["illuminator"].alt}
-                      fill
-                      className="object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)]"
-                      sizes="224px"
-                    />
-                  </div>
                 </div>
 
                 <Link
@@ -372,8 +378,8 @@ export default function HomePage() {
             Hero First, Explanation Later
           </h2>
           <p className="copy-pretty mx-auto mt-8 max-w-2xl text-[16px] leading-[1.9] text-white/65">
-            시각이 먼저 말하고, 제품이 증명합니다. 병원 유통 기반 브랜드가 가져야 할 정제된 무드와
-            프리미엄 톤을 먼저 전달하는 비주얼 중심 섹션입니다.
+            시각이 먼저 말하고, 제품이 증명합니다. 정제된 무드와 프리미엄 톤을 먼저 전달해 제품을
+            더 기대하게 만드는 비주얼 중심 섹션입니다.
           </p>
         </div>
       </section>
@@ -389,30 +395,50 @@ export default function HomePage() {
             </div>
 
             <p className="mt-8 text-[13px] uppercase tracking-[0.15em] text-stone-500">
-              Partnership Inquiry
+              Purchase Guide
             </p>
             <h2 className="display-font headline-balance mt-4 text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
-              병원·클리닉 도입 문의
+              지금 바로 루틴을 시작하세요
             </h2>
             <p className="copy-pretty mx-auto mt-6 max-w-xl text-[16px] leading-[1.9] text-stone-600">
-              CAREIS는 병원, 클리닉, 에스테틱 파트너를 위한 도입 상담을 우선합니다. 유통 가능성,
-              제품 포지셔닝, 루틴 제안 방식까지 함께 논의할 수 있도록 구성했습니다.
+              DAY CARE와 NIGHT CARE 중 필요한 루틴부터 선택해 바로 구매하거나, 두 제품의 역할과
+              사용 타이밍을 비교한 뒤 나에게 맞는 흐름으로 시작할 수 있습니다.
             </p>
 
             <div className="pt-10">
               <Link
-                href="/contact"
+                href="/order?product=sun-pack"
                 className="btn-luxe-primary inline-flex w-full max-w-md items-center justify-center px-12 py-5 text-[14px] tracking-[0.1em]"
               >
-                병원·클리닉 도입 문의하기
+                구매 페이지로 이동하기
               </Link>
-              <p className="mt-4 text-[12px] text-stone-500">브랜드 소개, 제품 설명, 도입 검토는 별도 상담 흐름으로 연결됩니다.</p>
+              <p className="mt-4 text-[12px] text-stone-500">제품 비교 후 바로 주문할 수 있도록 간편 결제 흐름까지 준비되어 있습니다.</p>
             </div>
 
             <div className="mt-12 grid gap-8 border-t border-black/5 pt-12 md:grid-cols-3">
-              <InfoStat title="병원 유통 기반" description="클리닉 현장에서 설명 가능한 구조" />
-              <InfoStat title="2 SKU 집중 운영" description="낮과 밤 루틴을 명확히 분리" />
-              <InfoStat title="B2B 우선 설계" description="도입 문의를 가장 앞단에 배치" />
+              <InfoStat title="DAY CARE" description="가볍고 편안한 데일리 프로텍션" />
+              <InfoStat title="NIGHT CARE" description="집중 브라이트닝 나이트 루틴" />
+              <InfoStat title="Easy Checkout" description="비회원 구매와 간편 결제 지원" />
+            </div>
+
+            <div className="mx-auto mt-10 max-w-2xl rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-[#faf6ef] p-6 text-left">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">For Partnership</p>
+              <p className="mt-3 text-lg font-semibold tracking-[-0.02em] text-stone-900">
+                병원·클리닉 제휴 문의는 별도 채널로 간단히 연결합니다.
+              </p>
+              <p className="copy-pretty mt-3 text-sm leading-7 text-stone-600">
+                홈에서는 구매 흐름을 우선 보여주고, 제휴 및 입점 문의가 필요한 경우에만 별도 페이지에서
+                안내받을 수 있도록 분리했습니다.
+              </p>
+              <div className="mt-5">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-stone-900"
+                >
+                  제휴 문의 보기
+                  <ArrowAccent />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -425,9 +451,9 @@ export default function HomePage() {
             추천을 통한 개인 구매
           </h2>
           <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.8] text-stone-600">
-            병원 또는 전문가 추천이 있는 경우 공개 레퍼럴 링크를 통해 개인 구매도 가능합니다.
-            주문 데이터에는 추천 코드와 결제수단이 함께 저장되어, 공구 운영과 추적 관리까지 이어질
-            수 있도록 설계했습니다.
+            추천 코드가 있다면 공개 레퍼럴 링크를 통해 바로 구매할 수 있습니다. 주문 데이터에는 추천
+            코드와 결제수단이 함께 저장되어, 공구 운영과 추적 관리까지 자연스럽게 이어질 수 있도록
+            설계했습니다.
           </p>
 
           <div className="pt-10">
@@ -441,7 +467,7 @@ export default function HomePage() {
           </div>
 
           <p className="mt-8 text-[11px] text-stone-500">
-            * 추천 코드는 제휴 병원 또는 인플루언서 레퍼럴 링크를 통해 전달될 수 있습니다.
+            * 추천 코드는 인플루언서 또는 제휴 파트너 링크를 통해 전달될 수 있습니다.
           </p>
         </div>
       </section>
