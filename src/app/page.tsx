@@ -524,19 +524,3 @@ function MoonHeroIcon() {
   );
 }
 
-function SunMiniIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <circle cx="16" cy="16" r="6.5" stroke="currentColor" strokeWidth="1.2" />
-      <path d="M16 3.5V7.5M16 24.5V28.5M28.5 16H24.5M7.5 16H3.5M24.84 7.16L22.01 9.99M9.99 22.01L7.16 24.84M24.84 24.84L22.01 22.01M9.99 9.99L7.16 7.16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function MoonMiniIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M22.2 5.8C18.64 6.92 16.11 10.25 16.11 14.14C16.11 18.95 20.01 22.85 24.82 22.85C25.79 22.85 26.72 22.69 27.6 22.39C26.11 24.44 23.69 25.77 20.96 25.77C16.42 25.77 12.74 22.09 12.74 17.55C12.74 12.22 17 7.81 22.2 5.8Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
-    </svg>
-  );
-}

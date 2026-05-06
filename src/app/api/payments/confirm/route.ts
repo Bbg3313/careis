@@ -20,7 +20,6 @@ export async function POST(request: Request) {
       ok: true,
       orderNumber: order.orderNumber,
       paymentStatus: order.paymentStatus,
-      paidAt: order.paidAt,
     });
   } catch (error) {
     console.error(error);
