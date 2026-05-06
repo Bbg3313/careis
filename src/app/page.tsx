@@ -2,21 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { MotionMedia } from "@/components/motion-media";
-import { products, siteHighlights } from "@/lib/product-data";
+import { products } from "@/lib/product-data";
 import { homeVisuals, productVisuals } from "@/lib/site-assets";
-
-const highlightIcons = [BuildingIcon, SparklesIcon, ExpertIcon];
-const brandSignals = [
-  { label: "Daily Mood", value: "데일리 루틴", detail: "매일 손이 가는 감각적인 첫 단계" },
-  { label: "Routine Design", value: "2-Step 구조", detail: "DAY CARE / NIGHT CARE 분리" },
-  { label: "Purchase Ready", value: "바로 구매 가능", detail: "일반 구매와 추천 링크 흐름 동시 지원" },
-];
-
-const brandNotes = [
-  "브랜드 무드를 먼저 느끼고, 자연스럽게 제품과 구매로 이어지도록 흐름을 정리합니다.",
-  "선팩은 데일리 보호, 일루미네이터는 야간 집중 관리라는 역할이 한눈에 읽히도록 구성합니다.",
-  "복잡한 설명보다 사용감, 루틴, 사용 장면의 매력이 먼저 보이도록 정리합니다.",
-];
 
 export default function HomePage() {
   const sunPack = products.find((product) => product.slug === "sun-pack");
@@ -124,118 +111,116 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center md:mb-14">
             <p className="mb-6 text-[13px] uppercase tracking-[0.15em] text-stone-500">
-              Routine Architecture
+              Product Value
             </p>
             <h2 className="display-font headline-balance text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
-              피부 위에 자연스럽게 스며드는 2-Step 리듬
+              하루의 피부는 하나의 텍스처로 설명되지 않습니다.
             </h2>
             <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
-              데이 케어와 나이트 케어를 하나의 흐름으로 연결해, 사용 순간부터 다음 루틴까지 자연스럽게
-              이어지는 CAREIS만의 리듬을 담았습니다.
+              선팩은 가볍고 편안하게, 일루미네이터는 더 깊고 밀도 있게. 서로 다른 시간에 필요한 결을
+              나눠 담아 CAREIS만의 2-step 루틴을 완성했습니다.
             </p>
           </div>
 
-          <div className="mb-12 grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-stretch">
-            <article className="overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_60%,#f6f1ea_100%)] p-8 shadow-[0_24px_80px_rgba(73,53,26,0.06)] md:p-10">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full border border-[rgba(157,116,66,0.14)] bg-white/80 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-stone-500">
-                  Routine Value
-                </span>
-                <span className="rounded-full border border-[rgba(157,116,66,0.14)] bg-white/80 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-stone-500">
-                  Texture And Mood
-                </span>
+          <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+            <article className="overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_62%,#f6efe5_100%)] p-8 shadow-[0_24px_80px_rgba(73,53,26,0.06)] md:p-10">
+              <div className="flex items-center justify-between gap-6">
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">Day Care Essence</p>
+                  <h3 className="display-font headline-balance mt-4 text-4xl font-semibold tracking-[-0.03em] text-stone-900 md:text-[44px]">
+                    가볍게 밀착되고,
+                    <br />
+                    오래 남는 데일리 보호감
+                  </h3>
+                </div>
+                <div className="hidden h-20 w-20 rounded-full bg-[#d4af37]/14 blur-2xl md:block" />
               </div>
 
-              <div className="mt-8 grid gap-6 md:grid-cols-3">
-                {brandSignals.map((signal) => (
-                  <div key={signal.label} className="space-y-2 border-l border-[rgba(157,116,66,0.18)] pl-4">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">{signal.label}</p>
-                    <p className="headline-balance text-2xl font-semibold tracking-[-0.03em] text-stone-900">
-                      {signal.value}
+              <p className="copy-pretty mt-6 max-w-2xl text-sm leading-8 text-stone-600 md:text-base">
+                선팩은 답답함보다 산뜻함이 먼저 느껴지고, 백탁보다 자연스러운 피부 표현이 오래 남도록
+                설계된 데이 루틴입니다. 외출 전, 메이크업 전후, 햇빛이 강한 하루에도 리듬을 흐트러뜨리지
+                않는 사용감이 매력의 중심이 됩니다.
+              </p>
+
+              <div className="mt-8 grid gap-4 md:grid-cols-[0.72fr_0.28fr] md:items-end">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="rounded-[24px] border border-[rgba(116,88,59,0.1)] bg-white/80 p-5">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Texture</p>
+                    <p className="mt-3 text-sm leading-7 text-stone-700">
+                      번들거림보다 부드럽고 얇게 밀착되는 텍스처로 낮 시간 내내 편안한 인상을 남깁니다.
                     </p>
-                    <p className="copy-pretty text-sm leading-7 text-stone-600">{signal.detail}</p>
                   </div>
-                ))}
-              </div>
+                  <div className="rounded-[24px] border border-[rgba(116,88,59,0.1)] bg-white/80 p-5">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">Finish</p>
+                    <p className="mt-3 text-sm leading-7 text-stone-700">
+                      메이크업 위에서도 부담이 적고, 피부 위에 얹는 순간 전체 인상을 정돈하는 마무리감이
+                      돋보입니다.
+                    </p>
+                  </div>
+                </div>
 
-              <div className="mt-8 rounded-[28px] border border-[rgba(116,88,59,0.08)] bg-white/82 p-6">
-                <p className="text-sm font-semibold text-stone-900">왜 이 루틴이 매력적인가</p>
-                <div className="mt-4 grid gap-3">
-                  {brandNotes.map((note) => (
-                    <div key={note} className="flex gap-3 text-sm leading-7 text-stone-600">
-                      <span className="mt-[10px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#b89156]" />
-                      <p className="copy-pretty">{note}</p>
-                    </div>
-                  ))}
+                <div className="relative mx-auto h-[220px] w-[170px] md:h-[260px] md:w-[190px]">
+                  <Image
+                    src={productVisuals["sun-pack"].card}
+                    alt={productVisuals["sun-pack"].alt}
+                    fill
+                    className="object-contain drop-shadow-[0_28px_46px_rgba(116,88,59,0.18)]"
+                    sizes="190px"
+                  />
                 </div>
               </div>
             </article>
 
-            <aside className="rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[#1f1b18] p-8 text-white shadow-[0_24px_80px_rgba(29,20,11,0.16)] md:p-10">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/45">Routine Pairing</p>
-              <h3 className="display-font headline-balance mt-4 text-3xl font-semibold leading-[1.15] tracking-[-0.03em] md:text-[40px]">
-                낮에는 가볍게 보호하고,
-                <br className="hidden md:block" /> 밤에는 깊이 있게 정돈합니다.
-              </h3>
-              <p className="copy-pretty mt-5 text-sm leading-8 text-white/68">
-                CAREIS는 하루의 피부 컨디션에 맞춰 서로 다른 텍스처와 역할을 제안하는 2-step
-                루틴입니다. 설명보다 먼저 무드가, 무드보다 오래 남는 사용감이 중심이 됩니다.
-              </p>
-              <div className="mt-8 space-y-4">
-                <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Day Care Mood</p>
-                  <p className="mt-2 text-sm leading-7 text-white/78">
-                    백탁과 답답함 부담을 낮추고 매일 편안하게 손이 가는 데일리 프로텍션
-                  </p>
-                </div>
-                <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Night Care Mood</p>
-                  <p className="mt-2 text-sm leading-7 text-white/78">
-                    색소 고민과 거친 결을 차분히 정돈하는 집중 브라이트닝 루틴
-                  </p>
-                </div>
-                <div className="rounded-[22px] border border-white/10 bg-white/5 p-5">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Together</p>
-                  <p className="mt-2 text-sm leading-7 text-white/78">
-                    아침과 밤의 결을 나눠 관리할 때 더 또렷해지는 CAREIS만의 2-step 밸런스
-                  </p>
+            <article className="relative overflow-hidden rounded-[34px] border border-[rgba(116,88,59,0.12)] bg-[#1f1b18] p-8 text-white shadow-[0_24px_80px_rgba(29,20,11,0.16)] md:p-10">
+              <div className="absolute inset-0 opacity-[0.22]">
+                <Image
+                  src={productVisuals["illuminator"].hero}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="50vw"
+                />
+              </div>
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,19,18,0.32)_0%,rgba(23,19,18,0.88)_100%)]" />
+
+              <div className="relative z-10">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/50">Night Care Essence</p>
+                <h3 className="display-font headline-balance mt-4 text-4xl font-semibold leading-[1.08] tracking-[-0.03em] md:text-[44px]">
+                  더 깊고 조용하게,
+                  <br />
+                  밤에 완성되는 브라이트닝 밀도
+                </h3>
+                <p className="copy-pretty mt-6 max-w-xl text-sm leading-8 text-white/74 md:text-base">
+                  일루미네이터는 낮의 피로가 남은 피부를 밤 사이 더 차분하고 매끈한 결로 정돈하는 나이트
+                  루틴입니다. 색소 고민을 위한 집중감과 스킨케어처럼 이어지는 부드러운 흐름을 함께 담아,
+                  하루의 끝에서 피부 컨디션을 다시 세팅합니다.
+                </p>
+
+                <div className="mt-8 space-y-4">
+                  <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Care Point</p>
+                    <p className="mt-3 text-sm leading-7 text-white/78">
+                      기미, 잡티, PIH처럼 밤에 더 깊게 다루고 싶은 고민을 위한 집중 브라이트닝 루틴
+                    </p>
+                  </div>
+                  <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">After Feel</p>
+                    <p className="mt-3 text-sm leading-7 text-white/78">
+                      무겁기보다 밀도 있고, 자극적이기보다 차분하게 남는 밤 전용 사용감으로 루틴의 완성도를
+                      높입니다.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </aside>
+            </article>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3 md:gap-8">
-            {siteHighlights.map((highlight, index) => {
-              const Icon = highlightIcons[index] ?? BuildingIcon;
-
-              return (
-                <article
-                  key={highlight.title}
-                  className="group rounded-[30px] border border-[rgba(116,88,59,0.1)] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f4ed_100%)] p-8 shadow-[0_18px_60px_rgba(73,53,26,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(73,53,26,0.08)] md:p-10"
-                >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(135deg,#f4ece2_0%,#ffffff_100%)] text-stone-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-                    <Icon />
-                  </div>
-                  <p className="mt-6 text-[11px] uppercase tracking-[0.2em] text-stone-500">
-                    {index === 0 ? "Trust Layer" : index === 1 ? "Routine Layer" : "Commerce Layer"}
-                  </p>
-                  <h3 className="mt-3 text-[22px] font-medium tracking-[-0.02em] text-stone-900">
-                    {highlight.title}
-                  </h3>
-                  <p className="copy-pretty mt-4 text-[14px] leading-[1.8] text-stone-600">
-                    {highlight.description}
-                  </p>
-                  <div className="mt-6 h-px w-full bg-[linear-gradient(90deg,rgba(184,145,86,0.3)_0%,rgba(184,145,86,0)_100%)]" />
-                  <p className="copy-pretty mt-5 text-[13px] leading-[1.8] text-stone-500">
-                    {index === 0
-                      ? "매일 손이 가는 사용감과 프리미엄 무드가 함께 보여야 루틴의 매력이 오래 남습니다."
-                      : index === 1
-                        ? "데이 케어와 나이트 케어를 명확히 나누면 각 제품의 이유와 사용 타이밍이 직관적으로 읽힙니다."
-                        : "브랜드 무드, 제품 설명, 구매 전환이 한 흐름으로 이어질 때 커머스 경험이 더 자연스러워집니다."}
-                  </p>
-                </article>
-              );
-            })}
+          <div className="mt-10 border-t border-[rgba(116,88,59,0.1)] pt-8 text-center">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-stone-500">Day To Night Flow</p>
+            <p className="headline-balance mx-auto mt-4 max-w-3xl text-xl font-medium tracking-[-0.02em] text-stone-900 md:text-[28px]">
+              아침에는 가볍고, 밤에는 깊게. 서로 다른 결이 하나의 루틴으로 이어질 때 CAREIS의 2-step
+              매력이 또렷해집니다.
+            </p>
           </div>
         </div>
       </section>
@@ -274,24 +259,31 @@ export default function HomePage() {
                 <h2 className="display-font headline-balance mt-4 text-5xl font-semibold tracking-[-0.02em] text-stone-900 md:text-[56px]">
                   DAY CARE
                 </h2>
-                <div className="mt-10 border border-black/10 bg-white/65 p-5 md:p-6 backdrop-blur-sm">
+                <div className="mt-5 space-y-2 text-center text-stone-700">
+                  <p className="text-[18px] leading-[1.75] md:text-[20px]">
+                    자외선으로부터 피부를 보호하는
+                  </p>
+                  <p className="text-[18px] leading-[1.75] md:text-[20px]">
+                    프리미엄 선케어 솔루션
+                  </p>
+                </div>
+
+                <div className="mt-10 border border-black/8 bg-white/50 p-5 md:p-6 backdrop-blur-sm">
                   <div className="relative h-[22rem] w-[17rem] md:h-[28rem] md:w-[21rem]">
                     <Image
-                      src={productVisuals["sun-pack"].card}
+                      src={productVisuals["sun-pack"].gallery[4]}
                       alt={productVisuals["sun-pack"].alt}
                       fill
-                      className="object-contain drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)]"
+                      className="object-cover drop-shadow-[0_24px_36px_rgba(104,78,41,0.16)]"
                       sizes="(max-width: 768px) 272px, 336px"
                     />
                   </div>
                 </div>
 
-                <div className="mx-auto mt-8 max-w-xl space-y-3">
-                  <p className="headline-balance text-[18px] font-medium leading-[1.7] text-stone-900">
-                    {sunPack.tagline}
-                  </p>
+                <div className="mx-auto mt-8 max-w-md">
                   <p className="copy-pretty text-[15px] leading-[1.9] text-stone-600 md:text-[16px]">
-                    {sunPack.heroDescription}
+                    백탁과 답답함 부담을 낮추고, 메이크업 전후에도 자연스럽게 손이 가는 데일리 선케어
+                    루틴입니다.
                   </p>
                 </div>
 
@@ -327,24 +319,31 @@ export default function HomePage() {
                 <h2 className="display-font headline-balance mt-4 text-5xl font-semibold tracking-[-0.02em] text-white md:text-[56px]">
                   NIGHT CARE
                 </h2>
+                <div className="mt-5 space-y-2 text-center text-white/82">
+                  <p className="text-[18px] leading-[1.75] md:text-[20px]">
+                    밤사이 집중 관리하는
+                  </p>
+                  <p className="text-[18px] leading-[1.75] md:text-[20px]">
+                    브라이트닝 인텐시브 케어
+                  </p>
+                </div>
+
                 <div className="mt-10 border border-white/10 bg-white/5 p-5 md:p-6 backdrop-blur-sm">
                   <div className="relative h-[22rem] w-[17rem] md:h-[28rem] md:w-[21rem]">
                     <Image
-                      src={productVisuals["illuminator"].card}
+                      src={productVisuals["illuminator"].hero}
                       alt={productVisuals["illuminator"].alt}
                       fill
-                      className="object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)]"
+                      className="object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.22)]"
                       sizes="(max-width: 768px) 272px, 336px"
                     />
                   </div>
                 </div>
 
-                <div className="mx-auto mt-8 max-w-xl space-y-3">
-                  <p className="headline-balance text-[18px] font-medium leading-[1.7] text-white">
-                    {illuminator.tagline}
-                  </p>
+                <div className="mx-auto mt-8 max-w-md">
                   <p className="copy-pretty text-[15px] leading-[1.9] text-white/72 md:text-[16px]">
-                    {illuminator.heroDescription}
+                    기미, 잡티, PIH 고민을 위한 야간 브라이트닝 루틴으로, 더 맑고 정돈된 피부 컨디션을
+                    차분하게 완성합니다.
                   </p>
                 </div>
 
@@ -363,24 +362,49 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="relative overflow-hidden bg-[#1A1A1A] px-4 py-28 text-white md:px-6 md:py-36">
-        <div className="absolute inset-0">
-          <MotionMedia
-            frames={homeVisuals.brandFilm}
-            alt="CAREIS brand film"
-            className="absolute inset-0"
-            overlayClassName="absolute inset-0 bg-black/65"
-          />
-        </div>
-        <div className="relative z-10 mx-auto max-w-5xl text-center">
-          <p className="text-[13px] uppercase tracking-[0.2em] text-white/50">Visual Direction</p>
-          <h2 className="display-font headline-balance mt-6 text-5xl font-semibold leading-[1.08] tracking-[-0.02em] md:text-[72px]">
-            Hero First, Explanation Later
-          </h2>
-          <p className="copy-pretty mx-auto mt-8 max-w-2xl text-[16px] leading-[1.9] text-white/65">
-            시각이 먼저 말하고, 제품이 증명합니다. 정제된 무드와 프리미엄 톤을 먼저 전달해 제품을
-            더 기대하게 만드는 비주얼 중심 섹션입니다.
-          </p>
+      <section className="relative overflow-hidden bg-[#1A1A1A] px-4 py-20 text-white md:px-6 md:py-24">
+        <div className="absolute left-[10%] top-16 h-48 w-48 rounded-full bg-[#d4af37]/10 blur-3xl" />
+        <div className="absolute bottom-10 right-[8%] h-56 w-56 rounded-full bg-[#8ea4c5]/12 blur-3xl" />
+
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+          <div className="text-center lg:text-left">
+            <p className="text-[13px] uppercase tracking-[0.2em] text-white/50">Visual Direction</p>
+            <h2 className="display-font headline-balance mt-6 text-5xl font-semibold leading-[1.08] tracking-[-0.02em] md:text-[72px]">
+              Hero First, Explanation Later
+            </h2>
+            <p className="copy-pretty mx-auto mt-8 max-w-2xl text-[16px] leading-[1.9] text-white/65 lg:mx-0">
+              시각이 먼저 말하고, 제품이 증명합니다. 정제된 무드와 프리미엄 톤을 먼저 전달해 제품을
+              더 기대하게 만드는 비주얼 중심 섹션입니다.
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.03)_100%)] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-sm md:p-8">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Day Care Visual</p>
+              <div className="relative mt-6 h-[320px] md:h-[380px]">
+                <Image
+                  src={productVisuals["sun-pack"].card}
+                  alt={productVisuals["sun-pack"].alt}
+                  fill
+                  className="object-contain drop-shadow-[0_24px_50px_rgba(212,175,55,0.18)]"
+                  sizes="(max-width: 768px) 100vw, 28vw"
+                />
+              </div>
+            </div>
+
+            <div className="relative overflow-hidden rounded-[30px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0.03)_100%)] p-6 shadow-[0_24px_70px_rgba(0,0,0,0.26)] backdrop-blur-sm md:p-8">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-white/45">Night Care Visual</p>
+              <div className="relative mt-6 h-[320px] md:h-[380px]">
+                <Image
+                  src={productVisuals["illuminator"].hero}
+                  alt={productVisuals["illuminator"].alt}
+                  fill
+                  className="object-contain drop-shadow-[0_28px_56px_rgba(120,142,170,0.18)]"
+                  sizes="(max-width: 768px) 100vw, 28vw"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -499,24 +523,6 @@ function BuildingIcon() {
       <path d="M4 17V5.5L10 3L16 5.5V17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M8 17V12H12V17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M7 8.5H7.01M10 8.5H10.01M13 8.5H13.01" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function SparklesIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <path d="M10 2.5L11.5 7L16 8.5L11.5 10L10 14.5L8.5 10L4 8.5L8.5 7L10 2.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-      <path d="M15 2.5L15.5 4L17 4.5L15.5 5L15 6.5L14.5 5L13 4.5L14.5 4L15 2.5Z" fill="currentColor" />
-    </svg>
-  );
-}
-
-function ExpertIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-      <circle cx="10" cy="6.5" r="3" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M4.5 16C5.2 13.6 7.25 12 10 12C12.75 12 14.8 13.6 15.5 16" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
     </svg>
   );
 }

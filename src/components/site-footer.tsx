@@ -18,7 +18,7 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-2 md:justify-self-end md:gap-10">
+          <div className="grid gap-8 sm:grid-cols-2 md:self-end md:justify-self-end md:gap-10">
             <div className="space-y-4 text-left">
               <p className="text-[12px] uppercase tracking-[0.15em] text-white/40">Contact</p>
               <div className="space-y-3 text-[13px] text-white/60">
