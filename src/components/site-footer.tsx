@@ -8,7 +8,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl">
         <div className="border-b border-white/10 pb-12">
           <div className="space-y-6">
-            <SiteLogo dark />
+            <SiteLogo dark footer />
             <div className="max-w-md space-y-1.5 text-[13px] leading-[1.8] text-white/60">
               <p>상호: 케어이즈</p>
               <p>대표자: 이명규</p>

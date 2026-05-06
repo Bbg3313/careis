@@ -11,7 +11,7 @@ const navItems = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky inset-x-0 top-0 z-50 bg-transparent">
+    <header className="sticky inset-x-0 top-0 z-50 border-b border-[rgba(116,88,59,0.08)] bg-[rgba(250,248,244,0.86)] backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-5 py-3 md:px-6 lg:px-8 lg:py-4">
         <div className="flex items-center justify-between gap-4">
           <SiteLogo compact />
@@ -42,7 +42,7 @@ export function SiteHeader() {
           </nav>
         </div>
 
-        <nav className="nav-strip mt-3 flex items-center gap-5 overflow-x-auto pt-3 text-[12px] tracking-[0.08em] text-stone-600 lg:hidden">
+        <nav className="nav-strip mt-3 flex items-center gap-5 overflow-x-auto border-t border-black/5 pt-3 text-[12px] tracking-[0.08em] text-stone-600 lg:hidden">
           {navItems.map((item) => (
             <Link
               key={item.href}
