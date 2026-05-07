@@ -3,8 +3,10 @@ import Link from "next/link";
 
 import { MotionMedia } from "@/components/motion-media";
 import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
+import { SunPackStorySlide } from "@/components/sun-pack-story-slide";
+import { SunPackDetailTabs } from "@/components/sun-pack-detail-tabs";
 import type { ProductContent } from "@/lib/product-data";
-import { productVisuals, sunPackDetailAssets, SUN_PACK_DETAIL_MAX_WIDTH_PX, type SunPackStorySlide } from "@/lib/site-assets";
+import { productVisuals, sunPackDetailAssets, SUN_PACK_DETAIL_MAX_WIDTH_PX } from "@/lib/site-assets";
 import { formatCurrency } from "@/lib/utils";
 
 export function ProductDetailPage({ product }: { product: ProductContent }) {
@@ -300,10 +302,71 @@ function SunPackDetailPage({
   product: ProductContent;
   visual: (typeof productVisuals)["sun-pack"];
 }) {
+  const purchaseAsideBody = (
+    <>
+      <div className="space-y-3 border-b border-stone-100 pb-6">
+        <p className="text-sm text-stone-500">{product.englishName}</p>
+        <h1 className="text-3xl font-semibold tracking-[-0.03em] text-stone-900">{product.name}</h1>
+        <p className="text-base leading-7 text-stone-600">{product.heroDescription}</p>
+      </div>
+
+      <dl className="space-y-4 text-sm">
+        <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
+          <dt className="text-stone-500">상품명</dt>
+          <dd className="font-medium text-stone-900">{product.name}</dd>
+        </div>
+        <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
+          <dt className="text-stone-500">상품요약정보</dt>
+          <dd className="leading-7 text-stone-700">{product.tagline}</dd>
+        </div>
+        <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
+          <dt className="text-stone-500">판매가</dt>
+          <dd className="text-xl font-semibold text-stone-900">{formatCurrency(product.price)}</dd>
+        </div>
+        <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
+          <dt className="text-stone-500">배송방법</dt>
+          <dd className="text-stone-700">택배</dd>
+        </div>
+        <div className="grid grid-cols-[110px_1fr] gap-4 pb-1">
+          <dt className="text-stone-500">배송비</dt>
+          <dd className="text-stone-700">3,000원 (50,000원 이상 구매 시 무료)</dd>
+        </div>
+      </dl>
+
+      <div className="rounded-[18px] bg-[#f8f5ef] p-5">
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-sm text-stone-500">총 상품금액</span>
+          <strong className="text-2xl font-semibold text-stone-900">{formatCurrency(product.price)}</strong>
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <Link
+          href={`/order?product=${product.slug}`}
+          className="btn-luxe-primary inline-flex flex-1 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
+        >
+          바로 구매
+        </Link>
+        <Link
+          href="/cart?product=sun-pack"
+          className="btn-luxe-secondary inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
+        >
+          장바구니
+        </Link>
+      </div>
+    </>
+  );
+
   return (
-    <div className="space-y-10 pb-24">
-      <section className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_380px] lg:items-start">
-        <div className="space-y-5">
+    <div className="space-y-10 pb-28 lg:pb-24">
+      <section className="relative">
+        <div className="w-full lg:mr-[400px] xl:mr-[420px]">
+          <div className="mb-6 space-y-2 lg:hidden">
+            <p className="text-xs uppercase tracking-[0.16em] text-stone-500">{product.englishName}</p>
+            <h1 className="text-2xl font-semibold tracking-[-0.03em] text-stone-900">{product.name}</h1>
+            <p className="line-clamp-3 text-sm leading-relaxed text-stone-600">{product.heroDescription}</p>
+          </div>
+
           <SunPackDetailGallery
             defaultMainSrc={sunPackDetailAssets.heroImage}
             thumbnailSrcs={sunPackDetailAssets.thumbnailImages}
@@ -313,82 +376,44 @@ function SunPackDetailPage({
           />
         </div>
 
-        <aside className="top-28 space-y-6 rounded-[20px] border border-stone-200 bg-white p-7 lg:sticky">
-          <div className="space-y-3 border-b border-stone-100 pb-6">
-            <p className="text-sm text-stone-500">{product.englishName}</p>
-            <h1 className="text-3xl font-semibold tracking-[-0.03em] text-stone-900">{product.name}</h1>
-            <p className="text-base leading-7 text-stone-600">{product.heroDescription}</p>
-          </div>
-
-          <dl className="space-y-4 text-sm">
-            <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
-              <dt className="text-stone-500">상품명</dt>
-              <dd className="font-medium text-stone-900">{product.name}</dd>
-            </div>
-            <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
-              <dt className="text-stone-500">상품요약정보</dt>
-              <dd className="leading-7 text-stone-700">{product.tagline}</dd>
-            </div>
-            <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
-              <dt className="text-stone-500">판매가</dt>
-              <dd className="text-xl font-semibold text-stone-900">{formatCurrency(product.price)}</dd>
-            </div>
-            <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
-              <dt className="text-stone-500">배송방법</dt>
-              <dd className="text-stone-700">택배</dd>
-            </div>
-            <div className="grid grid-cols-[110px_1fr] gap-4 pb-1">
-              <dt className="text-stone-500">배송비</dt>
-              <dd className="text-stone-700">3,000원 (50,000원 이상 구매 시 무료)</dd>
-            </div>
-          </dl>
-
-          <div className="rounded-[18px] bg-[#f8f5ef] p-5">
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-sm text-stone-500">총 상품금액</span>
-              <strong className="text-2xl font-semibold text-stone-900">{formatCurrency(product.price)}</strong>
-            </div>
-          </div>
-
-          <div className="flex gap-3">
-            <Link
-              href={`/order?product=${product.slug}`}
-              className="btn-luxe-primary inline-flex flex-1 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
-            >
-              바로 구매
-            </Link>
-            <Link
-              href="/cart?product=sun-pack"
-              className="btn-luxe-secondary inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
-            >
-              장바구니
-            </Link>
-          </div>
+        <aside className="pointer-events-auto hidden max-h-[calc(100vh-11rem)] w-[min(380px,calc(100vw-3rem))] overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:fixed lg:top-[152px] lg:right-8 lg:z-40 lg:block lg:space-y-6">
+          {purchaseAsideBody}
         </aside>
       </section>
 
-      <nav className="nav-strip sticky top-[72px] z-20 overflow-x-auto border-y border-stone-200 bg-[rgba(252,250,246,0.92)] backdrop-blur">
-        <div className="flex min-w-max gap-8 px-1 py-4 text-sm font-medium text-stone-600">
-          <a href="#detail" className="whitespace-nowrap">
-            제품상세
-          </a>
-          <a href="#guide" className="whitespace-nowrap">
-            상품구매안내
-          </a>
-          <a href="#review" className="whitespace-nowrap">
-            리뷰
-          </a>
-          <a href="#qa" className="whitespace-nowrap">
-            Q&A
-          </a>
+      <div className="pointer-events-auto fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/90 bg-white/95 px-4 pt-3 shadow-[0_-12px_40px_rgba(0,0,0,0.08)] backdrop-blur-md lg:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="mx-auto flex max-w-lg items-center gap-3 py-1">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[13px] font-semibold text-stone-900">{product.name}</p>
+            <p className="text-lg font-bold tabular-nums tracking-tight text-stone-900">
+              {formatCurrency(product.price)}
+            </p>
+          </div>
+          <Link
+            href="/cart?product=sun-pack"
+            className="btn-luxe-secondary shrink-0 rounded-full px-4 py-2.5 text-xs font-semibold"
+          >
+            장바구니
+          </Link>
+          <Link
+            href={`/order?product=${product.slug}`}
+            className="btn-luxe-primary shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold"
+          >
+            바로 구매
+          </Link>
         </div>
-      </nav>
+      </div>
 
-      <section id="detail">
+      <SunPackDetailTabs />
+
+      <section id="detail" className="scroll-mt-[148px]">
         <SunPackDetailStory />
       </section>
 
-      <section id="guide" className="space-y-6 rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
+      <section
+        id="guide"
+        className="scroll-mt-[148px] space-y-6 rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
+      >
         <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품구매안내</h2>
 
         <article className="space-y-3 border-t border-stone-100 pt-6">
@@ -443,12 +468,12 @@ function SunPackDetailPage({
         </article>
       </section>
 
-      <section id="review" className="rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
+      <section id="review" className="scroll-mt-[148px] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
         <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 리뷰</h2>
         <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
       </section>
 
-      <section id="qa" className="rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
+      <section id="qa" className="scroll-mt-[148px] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
         <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 Q&amp;A</h2>
         <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
       </section>
@@ -458,51 +483,17 @@ function SunPackDetailPage({
   );
 }
 
-function SunPackStorySlideMedia({ slide, index }: { slide: SunPackStorySlide; index: number }) {
-  const ext = slide.src.split(".").pop()?.toLowerCase() ?? "";
-
-  if (ext === "mp4" || ext === "webm") {
-    const mime = ext === "webm" ? "video/webm" : "video/mp4";
-    return (
-      <video
-        className="block h-auto w-full bg-black object-contain"
-        autoPlay
-        loop
-        muted
-        playsInline
-        controls
-        preload="auto"
-      >
-        <source src={slide.src} type={mime} />
-      </video>
-    );
-  }
-
-  return (
-    <img
-      src={slide.src}
-      alt={`선팩 상세 ${index + 1}`}
-      width={slide.width}
-      height={slide.height}
-      className="block h-auto w-full"
-      loading={index < 2 ? "eager" : "lazy"}
-      decoding="async"
-    />
-  );
-}
-
 function SunPackDetailStory() {
   return (
-    <section
-      className="mx-auto w-full bg-[#fafaf9]"
-      style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}
-    >
-      <div className="space-y-0">
-        {sunPackDetailAssets.storyImages.map((slide, index) => (
-          <div key={`${slide.src}-${index}`} className="w-full">
-            <SunPackStorySlideMedia slide={slide} index={index} />
-          </div>
-        ))}
+    <section className="w-full bg-[#f7f3f0] py-1">
+      <div className="mx-auto w-full px-0" style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}>
+        <div className="space-y-0">
+          {sunPackDetailAssets.storyImages.map((slide, index) => (
+            <div key={`${slide.src}-${index}`} className="w-full overflow-hidden">
+              <SunPackStorySlide slide={slide} index={index} />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

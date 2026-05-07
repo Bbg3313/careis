@@ -61,9 +61,10 @@ export type SunPackStorySlide = {
 export const sunPackDetailAssets = {
   heroImage: "/images/sunpack-thumb-02.png",
   heroPixelSize: { width: 800, height: 800 },
-  /** 히어로와 동일한 이미지는 제외 — 6장 · 3열 2줄 */
+  /** 메인과 동일 파일 포함 가능 — 가로 스트립에서 전환 */
   thumbnailImages: [
     "/images/sunpack-thumb-01.png",
+    "/images/sunpack-thumb-02.png",
     "/images/sunpack-thumb-03.png",
     "/images/sunpack-thumb-04.png",
     "/images/sunpack-thumb-05.png",
@@ -71,7 +72,7 @@ export const sunPackDetailAssets = {
     "/images/sunpack-thumb-07.png",
   ],
   storyImages: [
-    { src: "/images/sunpack-priority-01.png", width: 526, height: 1024 },
+    { src: "/images/sunpack-detail-scroll-01.png", width: 526, height: 1024 },
     { src: "/images/sunpack-detail-gif-01.gif", width: 600, height: 338 },
     { src: "/images/sunpack-priority-03.png", width: 299, height: 1024 },
     { src: "/images/sunpack-priority-04.png", width: 853, height: 1024 },
