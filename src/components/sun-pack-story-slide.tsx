@@ -63,15 +63,19 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
     return <AutoPlayVideo src={slide.src} mime={mime} />;
   }
 
+  const isGif = ext === "gif";
+
   return (
+    // GIF는 레이아웃·애니메이션 안정성을 위해 next/image 미사용 (정적 최적화 시 프레임 고정 방지)
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={slide.src}
       alt={`선팩 상세 ${index + 1}`}
       width={slide.width}
       height={slide.height}
       className="block h-auto w-full max-w-full"
-      loading={index === 0 ? "eager" : "lazy"}
-      decoding="async"
+      loading={isGif || index === 0 ? "eager" : "lazy"}
+      decoding={isGif ? "sync" : "async"}
       fetchPriority={index === 0 ? "high" : undefined}
     />
   );

@@ -69,22 +69,35 @@ export function SunPackDetailGallery({
       style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}
     >
       <div className="overflow-hidden rounded-[20px] border border-stone-200 bg-white">
-        <Image
-          src={mainSrc}
-          alt={alt}
-          width={pixelSize.width}
-          height={pixelSize.height}
-          className="block h-auto w-full"
-          sizes={`(max-width: ${SUN_PACK_DETAIL_MAX_WIDTH_PX}px) 100vw, ${SUN_PACK_DETAIL_MAX_WIDTH_PX}px`}
-          priority
-          unoptimized
-        />
+        {mainSrc.toLowerCase().endsWith(".gif") ? (
+          // next/image는 GIF 애니메이션을 첫 프레임으로 고정하는 경우가 있어 네이티브 img 사용
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={mainSrc}
+            alt={alt}
+            width={pixelSize.width}
+            height={pixelSize.height}
+            className="block h-auto w-full max-w-full"
+            decoding="async"
+          />
+        ) : (
+          <Image
+            src={mainSrc}
+            alt={alt}
+            width={pixelSize.width}
+            height={pixelSize.height}
+            className="block h-auto w-full"
+            sizes={`(max-width: ${SUN_PACK_DETAIL_MAX_WIDTH_PX}px) 100vw, ${SUN_PACK_DETAIL_MAX_WIDTH_PX}px`}
+            priority
+            unoptimized
+          />
+        )}
       </div>
 
       <div className="relative">
         <div
           ref={stripRef}
-          className="-mx-1 flex gap-2 overflow-x-auto scroll-smooth px-1 pb-1 pt-0.5 [scrollbar-width:none] snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
+          className="-mx-1 flex gap-1.5 overflow-x-auto scroll-smooth px-1 pb-1 pt-0.5 [scrollbar-width:none] snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
         >
           {thumbnailSrcs.map((src, index) => {
             const selected = mainSrc === src;
@@ -96,7 +109,7 @@ export function SunPackDetailGallery({
                 }}
                 type="button"
                 onClick={() => selectThumb(src, index)}
-                className={`relative aspect-[2/3] w-[calc((100%-2rem)/5)] min-w-[68px] max-w-[172px] shrink-0 snap-start overflow-hidden rounded-[10px] border bg-white text-left shadow-sm transition md:min-w-[76px] md:max-w-[180px] ${
+                className={`relative aspect-[2/3] w-[calc((100%-1rem)/7)] min-w-[44px] max-w-[88px] shrink-0 snap-start overflow-hidden rounded-[8px] border bg-white text-left shadow-sm transition sm:max-w-[92px] md:min-w-[48px] md:max-w-[96px] ${
                   selected
                     ? "border-[#b89156] ring-2 ring-[#b89156]/40"
                     : "border-stone-200 hover:border-stone-300"
@@ -104,14 +117,25 @@ export function SunPackDetailGallery({
                 aria-label={`${productName} 썸네일 ${index + 1}번 보기`}
                 aria-pressed={selected}
               >
-                <Image
-                  src={src}
-                  alt={`${productName} 썸네일 ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  sizes="180px"
-                  unoptimized
-                />
+                {src.toLowerCase().endsWith(".gif") ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={src}
+                    alt={`${productName} 썸네일 ${index + 1}`}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <Image
+                    src={src}
+                    alt={`${productName} 썸네일 ${index + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="96px"
+                    unoptimized
+                  />
+                )}
               </button>
             );
           })}
