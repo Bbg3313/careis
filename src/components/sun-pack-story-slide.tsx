@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 import type { SunPackStorySlide } from "@/lib/site-assets";
@@ -70,22 +69,8 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
 
   const isGif = ext === "gif";
 
-  if (isGif) {
-    return (
-      <Image
-        src={slide.src}
-        alt={`선팩 상세 ${index + 1}`}
-        width={slide.width}
-        height={slide.height}
-        className="block h-auto w-full max-w-full"
-        sizes="(max-width: 960px) 100vw, 960px"
-        unoptimized
-        priority={index < 4}
-      />
-    );
-  }
-
   return (
+    // GIF는 반드시 네이티브 img — next/image 경로는 브라우저·버전에 따라 애니메이션이 멈출 수 있음
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={slide.src}
@@ -93,7 +78,7 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
       width={slide.width}
       height={slide.height}
       className="block h-auto w-full max-w-full"
-      loading={index === 0 ? "eager" : "lazy"}
+      loading={isGif || index < 3 ? "eager" : "lazy"}
       decoding="async"
       fetchPriority={index === 0 ? "high" : undefined}
     />

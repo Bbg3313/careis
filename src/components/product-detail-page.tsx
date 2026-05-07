@@ -358,7 +358,7 @@ function SunPackDetailPage({
   );
 
   return (
-    <div className="pb-28 lg:pb-24">
+    <div className="overflow-x-hidden pb-28 lg:pb-24">
       <div className="relative mx-auto w-full max-w-[1380px] px-4 sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-10 lg:px-8 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-12">
         <div className="min-w-0 space-y-10">
           <section>
@@ -454,7 +454,7 @@ function SunPackDetailPage({
           <ProductExchangeReturnSection />
         </div>
 
-        <aside className="pointer-events-auto sticky top-[148px] z-30 hidden max-h-[calc(100vh-10rem)] w-full overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:block lg:space-y-6 xl:top-[156px]">
+        <aside className="pointer-events-auto sticky top-[148px] z-30 mt-10 hidden max-h-[min(100vh-10rem,900px)] w-full shrink-0 overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:mt-0 lg:block lg:self-start lg:space-y-6 xl:top-[156px]">
           {purchaseAsideBody}
         </aside>
       </div>
