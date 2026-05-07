@@ -479,19 +479,19 @@ export default function HomePage() {
                   step="01"
                   eyebrow="Choose Your Routine"
                   title="원하는 제품 선택"
-                  description="필요한 제품만 골라 바로 담습니다."
+                  description="필요한 제품만 바로 담습니다."
                 />
                 <InfoStat
                   step="02"
                   eyebrow="Guest Checkout"
                   title="비회원 결제 진행"
-                  description="회원가입 없이 바로 주문할 수 있습니다."
+                  description="가입 없이 바로 주문합니다."
                 />
                 <InfoStat
                   step="03"
                   eyebrow="Delivery & Support"
                   title="배송 및 상담 확인"
-                  description="배송과 상담 안내까지 이어서 확인합니다."
+                  description="배송·상담 안내를 확인합니다."
                 />
               </div>
             </div>
@@ -507,38 +507,37 @@ export default function HomePage() {
           <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.35)_50%,transparent_100%)]" />
 
           <div className="relative">
-            <p className="text-[12px] uppercase tracking-[0.22em] text-[#8b673f]">By invitation</p>
+            <p className="text-[12px] uppercase tracking-[0.22em] text-[#8b673f]">Referral · 공구</p>
             <h2 className="display-font headline-balance mt-4 text-[32px] font-semibold leading-[1.18] tracking-[-0.02em] text-stone-900 md:text-[42px]">
-              초대 링크로 이어지는
+              인플루언서 공구로 받은
               <span className="mt-1 block bg-[linear-gradient(92deg,#9d7442_0%,#c49a5c_42%,#8b673f_100%)] bg-clip-text text-transparent">
-                프라이빗 주문
+                링크·코드 주문
               </span>
             </h2>
             <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.85] text-stone-600">
-              전해진 링크와 코드가 있을 때, 동일한 제품이라도 한층 여유로운 조건으로 주문을 시작할 수
-              있습니다. 불필요한 안내는 줄이고, 결제와 배송만 또렷하게 이어집니다.
+              공동구매에 참여 중이면 안내받은 링크로 들어오거나, 주문 시 추천 코드만 입력하면 공구 조건이 적용된 채로 결제할 수 있습니다.
             </p>
 
             <div className="mx-auto mt-8 grid max-w-3xl gap-4 text-left md:grid-cols-3">
               <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">Refined offer</p>
-                <p className="mt-3 text-lg font-semibold text-stone-900">조건이 정리된 결제</p>
-                <p className="mt-2 text-sm leading-7 text-stone-600">
-                  링크에 담긴 혜택이 그대로 반영되도록 주문 화면에서 확인할 수 있습니다.
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">공구 혜택</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">조건이 주문에 반영</p>
+                <p className="mt-2 text-sm leading-snug text-stone-600 break-keep">
+                  진행 중인 공구에서 안내된 혜택이 주문 금액·조건에 그대로 적용됩니다.
                 </p>
               </div>
               <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">Quiet entry</p>
-                <p className="mt-3 text-lg font-semibold text-stone-900">빠르게 이어지는 단계</p>
-                <p className="mt-2 text-sm leading-7 text-stone-600">
-                  코드만 맞으면 일반 주문과 같은 흐름으로, 더 짧은 설명으로 바로 담을 수 있습니다.
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">주문 방법</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">평소처럼 + 코드</p>
+                <p className="mt-2 text-sm leading-snug text-stone-600 break-keep">
+                  일반 구매와 같은 주문 화면에서 제품을 고르고, 받으신 추천 코드만 입력하면 됩니다.
                 </p>
               </div>
               <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">Same care</p>
-                <p className="mt-3 text-lg font-semibold text-stone-900">동일한 배송·상담</p>
-                <p className="mt-2 text-sm leading-7 text-stone-600">
-                  배송과 고객센터 안내는 언제나 동일한 기준으로 연결됩니다.
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">배송·문의</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">동일한 고객 지원</p>
+                <p className="mt-2 text-sm leading-snug text-stone-600 break-keep">
+                  배송과 고객센터 안내는 일반 구매 때와 같은 기준으로 안내됩니다.
                 </p>
               </div>
             </div>
@@ -548,13 +547,13 @@ export default function HomePage() {
                 href="/order"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[rgba(184,145,86,0.35)] bg-[linear-gradient(135deg,#f6e8d4_0%,#d2aa73_52%,#b89156_100%)] px-10 py-4 text-[13px] font-medium tracking-[0.08em] text-stone-900 shadow-[0_14px_36px_rgba(184,145,86,0.22)] transition hover:brightness-[1.03] sm:w-auto"
               >
-                초대 링크로 주문하기
+                공구 코드 입력하고 주문하기
                 <ArrowAccent />
               </Link>
             </div>
 
             <p className="mt-8 text-[11px] leading-relaxed text-stone-500">
-              * 링크와 코드는 안내를 받은 분께만 전달될 수 있습니다.
+              * 링크와 코드는 해당 공구를 진행하는 인플루언서 또는 안내 채널에서 받으실 수 있습니다.
             </p>
           </div>
         </div>
@@ -587,7 +586,7 @@ function InfoStat({
         </div>
         <p className="mt-5 text-[11px] uppercase tracking-[0.18em] text-[#8b673f]">{eyebrow}</p>
         <p className="mt-3 text-[24px] font-semibold tracking-[-0.03em] text-stone-900">{title}</p>
-        <p className="mt-4 text-sm leading-7 text-stone-600">{description}</p>
+        <p className="mt-4 text-sm leading-snug text-stone-600 break-keep hyphens-none">{description}</p>
         <div className="mt-6 h-px w-16 bg-[linear-gradient(90deg,#b89156_0%,rgba(184,145,86,0.06)_100%)]" />
       </div>
     </div>

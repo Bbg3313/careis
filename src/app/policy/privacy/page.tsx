@@ -115,9 +115,10 @@ export default function PrivacyPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">10. 개인정보 보호책임자</h2>
             <p>회사는 개인정보 처리에 관한 업무를 총괄하여 책임지고 있습니다.</p>
-            <p>개인정보 보호책임자: 케어이즈 운영책임자</p>
-            <p>연락처: 010-2556-3263</p>
-            <p>이메일: startupscon@gmail.com</p>
+            <p>개인정보 보호책임자: 정재문 상무</p>
+            <p>소속: 총무팀</p>
+            <p>연락처: 02-553-5502</p>
+            <p>이메일: sony120@hanmail.net</p>
           </section>
         </div>
       </section>
