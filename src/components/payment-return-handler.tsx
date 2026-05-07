@@ -29,6 +29,7 @@ export function PaymentReturnHandler({
 
     async function confirm() {
       try {
+        const paymentKey = token ?? reference;
         const response = await fetch("/api/payments/confirm", {
           method: "POST",
           headers: {
@@ -36,11 +37,13 @@ export function PaymentReturnHandler({
           },
           body: JSON.stringify({
             orderNumber,
+            orderId: orderNumber,
             amount,
             paymentMethod,
             provider,
             reference,
             token,
+            paymentKey,
           }),
         });
 

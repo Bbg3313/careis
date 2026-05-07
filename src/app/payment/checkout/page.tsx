@@ -1,6 +1,8 @@
+import { OrderStatus } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { TossCheckoutButton } from "@/components/toss-checkout-button";
 import { getOrderByNumber } from "@/lib/orders";
 import { formatCurrency } from "@/lib/utils";
 
@@ -21,6 +23,26 @@ export default async function PaymentCheckoutPage({
   const checkoutUrl = typeof payload.checkoutUrl === "string" ? payload.checkoutUrl : null;
   const paymentChannel = typeof payload.channel === "string" ? payload.channel : order.paymentMethod;
   const paymentProvider = typeof payload.provider === "string" ? payload.provider : order.paymentProvider ?? "PG 연동 예정";
+  const successUrl =
+    typeof payload.successUrl === "string" ? payload.successUrl : null;
+  const failUrl = typeof payload.failUrl === "string" ? payload.failUrl : null;
+
+  const tossClientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY?.trim() ?? "";
+  const tossSecretConfigured = Boolean(
+    process.env.TOSS_SECRET_KEY?.trim() || process.env.TOSS_PAYMENTS_SECRET_KEY?.trim(),
+  );
+  const canUseTossCheckout =
+    order.paymentStatus === OrderStatus.PENDING &&
+    Boolean(tossClientKey) &&
+    tossSecretConfigured &&
+    Boolean(successUrl && failUrl);
+  const orderName =
+    order.orderItems.length > 0
+      ? order.orderItems
+          .map((item) => `${item.productNameSnapshot} ×${item.quantity}`)
+          .join(", ")
+          .slice(0, 100)
+      : "케어이즈 주문";
 
   return (
     <div className="space-y-8 pb-24">
@@ -105,10 +127,31 @@ export default async function PaymentCheckoutPage({
               >
                 결제창으로 이동
               </a>
+            ) : canUseTossCheckout && successUrl && failUrl ? (
+              <TossCheckoutButton
+                clientKey={tossClientKey}
+                orderId={order.orderNumber}
+                orderName={orderName}
+                amount={order.totalAmount}
+                customerName={order.customerName}
+                successUrl={successUrl}
+                failUrl={failUrl}
+              />
             ) : (
               <div className="rounded-[24px] border border-[rgba(169,125,77,0.16)] bg-[#fcf8f2] p-5 text-sm leading-7 text-stone-600">
-                실제 PG 연결이 완료되면 이 영역에서 결제창으로 바로 이동합니다. 현재 화면은 주문 정보와
-                필수 고지 내용을 확인하는 단계로 구성되어 있습니다.
+                {tossClientKey && !tossSecretConfigured ? (
+                  <>
+                    클라이언트 키는 있으나 서버 시크릿 키(<code className="text-xs">TOSS_SECRET_KEY</code>)가 없어
+                    결제 승인을 할 수 없습니다. <code className="text-xs">.env</code>에 테스트/라이브 시크릿 키를
+                    함께 넣어주세요.
+                  </>
+                ) : (
+                  <>
+                    토스페이먼츠 연동을 위해{" "}
+                    <code className="text-xs">NEXT_PUBLIC_TOSS_CLIENT_KEY</code>와{" "}
+                    <code className="text-xs">TOSS_SECRET_KEY</code>를 설정하고 주문을 다시 진행해주세요.
+                  </>
+                )}
               </div>
             )}
             <Link href="/policy/terms" className="btn-luxe-secondary inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold">

@@ -48,8 +48,18 @@ export function getRequestOrigin(request: Request) {
   return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 }
 
+function resolvePaymentProvider(): string {
+  if (process.env.PG_PROVIDER?.trim()) {
+    return process.env.PG_PROVIDER.trim();
+  }
+  const tossReady =
+    Boolean(process.env.TOSS_SECRET_KEY?.trim() || process.env.TOSS_PAYMENTS_SECRET_KEY?.trim()) &&
+    Boolean(process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY?.trim());
+  return tossReady ? "TOSS_PAYMENTS" : "EXTERNAL_PG";
+}
+
 export function buildPaymentSession(input: PaymentSessionInput): PaymentSession {
-  const provider = process.env.PG_PROVIDER ?? "EXTERNAL_PG";
+  const provider = resolvePaymentProvider();
   const successUrl = `${input.requestOrigin}/payment/return?orderNumber=${encodeURIComponent(input.orderNumber)}`;
   const failUrl = `${input.requestOrigin}/payment/fail?orderNumber=${encodeURIComponent(input.orderNumber)}`;
   const webhookUrl = `${input.requestOrigin}/api/payments/webhook`;

@@ -189,6 +189,10 @@ export async function confirmOrderPayment(input: PaymentConfirmationInput) {
     throw new Error("주문 정보를 찾을 수 없습니다.");
   }
 
+  if (order.paymentStatus === OrderStatus.PAID) {
+    return order;
+  }
+
   if (order.totalAmount !== input.amount) {
     throw new Error("결제 금액이 주문 금액과 일치하지 않습니다.");
   }

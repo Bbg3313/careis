@@ -5,6 +5,7 @@ export default async function PaymentReturnPage({
 }: {
   searchParams: Promise<{
     orderNumber?: string;
+    orderId?: string;
     amount?: string;
     paymentMethod?: string;
     provider?: string;
@@ -13,15 +14,16 @@ export default async function PaymentReturnPage({
   }>;
 }) {
   const params = await searchParams;
+  const orderNumber = params.orderId ?? params.orderNumber ?? "";
 
   return (
     <div className="pb-24">
       <PaymentReturnHandler
-        orderNumber={params.orderNumber ?? ""}
+        orderNumber={orderNumber}
         amount={Number(params.amount ?? "0")}
         paymentMethod={params.paymentMethod ?? "CREDIT_CARD"}
-        provider={params.provider ?? "EXTERNAL_PG"}
-        reference={params.reference ?? null}
+        provider={params.provider ?? "TOSS_PAYMENTS"}
+        reference={params.reference ?? params.paymentKey ?? null}
         token={params.paymentKey ?? null}
       />
     </div>
