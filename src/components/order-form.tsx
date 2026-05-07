@@ -1,9 +1,12 @@
 "use client";
 
+import Image from "next/image";
+import Script from "next/script";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { paymentMethods, products, type ProductSlug } from "@/lib/product-data";
+import { productVisuals } from "@/lib/site-assets";
 import { formatCurrency } from "@/lib/utils";
 
 type OrderFormProps = {
@@ -12,6 +15,26 @@ type OrderFormProps = {
 };
 
 type SelectedItemState = Record<ProductSlug, { selected: boolean; quantity: number }>;
+
+declare global {
+  interface Window {
+    daum?: {
+      Postcode: new (options: {
+        oncomplete: (data: {
+          zonecode: string;
+          roadAddress: string;
+          jibunAddress: string;
+          userSelectedType: "R" | "J";
+          bname: string;
+          buildingName: string;
+          apartment: "Y" | "N";
+        }) => void;
+      }) => {
+        open: () => void;
+      };
+    };
+  }
+}
 
 export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   const router = useRouter();
@@ -31,6 +54,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   const [phone, setPhone] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [address, setAddress] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
   const [memo, setMemo] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<(typeof paymentMethods)[number]["value"]>(
@@ -60,6 +84,10 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
     () => orderItems.reduce((sum, item) => sum + item.amount, 0),
     [orderItems],
   );
+  const fullAddress = useMemo(
+    () => [address, addressDetail.trim()].filter(Boolean).join(" "),
+    [address, addressDetail],
+  );
 
   useEffect(() => {
     if (referralCode) {
@@ -76,10 +104,38 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
     setResolvedReferralCode(cookieReferral ?? storedReferral ?? null);
   }, [referralCode]);
 
+  function openAddressSearch() {
+    setErrorMessage(null);
+
+    if (!window.daum?.Postcode) {
+      setErrorMessage("주소 검색 서비스를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
+
+    new window.daum.Postcode({
+      oncomplete: (data) => {
+        const baseAddress = data.userSelectedType === "R" ? data.roadAddress : data.jibunAddress;
+        const extras =
+          data.userSelectedType === "R"
+            ? [data.bname, data.buildingName].filter(Boolean).join(", ")
+            : "";
+        const resolvedAddress = extras ? `${baseAddress} (${extras})` : baseAddress;
+
+        setPostalCode(data.zonecode);
+        setAddress(resolvedAddress);
+      },
+    }).open();
+  }
+
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (orderItems.length === 0) {
       setErrorMessage("구매할 상품을 최소 1개 이상 선택해주세요.");
+      return;
+    }
+
+    if (!postalCode || !address) {
+      setErrorMessage("Daum 주소찾기로 배송지를 먼저 선택해주세요.");
       return;
     }
 
@@ -100,7 +156,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           customerName,
           phone,
           postalCode,
-          address,
+          address: fullAddress,
           memo,
           couponCode,
           paymentMethod,
@@ -132,8 +188,10 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <section className="space-y-6 rounded-[32px] border border-[rgba(116,88,59,0.12)] bg-white p-8">
+    <>
+      <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" strategy="afterInteractive" />
+      <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
+      <section className="space-y-6 rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-white p-5 md:rounded-[32px] md:p-8">
         <div>
           <p className="text-sm font-semibold text-stone-900">상품 선택</p>
           <p className="mt-2 text-sm text-stone-500">선팩과 일루미네이터 중 원하는 제품만 골라 주문할 수 있습니다.</p>
@@ -146,21 +204,32 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             return (
               <div
                 key={product.slug}
-                className={`rounded-[28px] border p-5 transition ${
+                className={`rounded-[24px] border p-4 transition md:rounded-[28px] md:p-5 ${
                   itemState.selected
                     ? "border-[#b89156] bg-[linear-gradient(145deg,#fffaf3_0%,#f8efe3_100%)] shadow-[0_18px_48px_rgba(145,104,52,0.08)]"
                     : "border-stone-200 bg-stone-50"
                 }`}
               >
                 <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                  <div className="space-y-2">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">{product.englishName}</p>
-                    <h2 className="text-2xl font-semibold text-stone-900">{product.name}</h2>
-                    <p className="copy-pretty max-w-xl text-sm leading-7 text-stone-600">{product.tagline}</p>
-                    <p className="text-base font-semibold text-stone-900">{formatCurrency(product.price)}</p>
+                  <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left md:gap-5">
+                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[20px] border border-[rgba(184,145,86,0.12)] bg-white shadow-[0_10px_30px_rgba(89,63,28,0.05)] md:h-28 md:w-28 md:rounded-[24px]">
+                      <Image
+                        src={productVisuals[product.slug].card}
+                        alt={productVisuals[product.slug].alt}
+                        fill
+                        className="object-contain p-3"
+                        sizes="112px"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">{product.englishName}</p>
+                      <h2 className="text-[26px] font-semibold text-stone-900 md:text-2xl">{product.name}</h2>
+                      <p className="copy-pretty max-w-xl text-sm leading-6 text-stone-600 md:leading-7">{product.tagline}</p>
+                      <p className="text-base font-semibold text-stone-900">{formatCurrency(product.price)}</p>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col gap-3 md:items-end">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between md:flex-col md:items-end">
                     <button
                       type="button"
                       onClick={() =>
@@ -172,7 +241,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
                           },
                         }))
                       }
-                      className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                      className={`rounded-full px-4 py-2 text-sm font-semibold transition sm:min-w-[112px] ${
                         itemState.selected ? "btn-luxe-primary" : "btn-luxe-secondary"
                       }`}
                     >
@@ -196,7 +265,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
                             },
                           }))
                         }
-                        className="w-28 rounded-2xl border border-stone-200 bg-white px-4 py-3 outline-none disabled:opacity-50"
+                        className="w-full min-w-[112px] rounded-2xl border border-stone-200 bg-white px-4 py-3 outline-none disabled:opacity-50 sm:w-28"
                       />
                     </label>
                   </div>
@@ -215,7 +284,9 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
 
         <div className="grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm text-stone-700">
-            <span>이름</span>
+            <span>
+              이름 <strong className="text-[#a97d4d]">*</strong>
+            </span>
             <input
               required
               value={customerName}
@@ -224,7 +295,9 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             />
           </label>
           <label className="space-y-2 text-sm text-stone-700">
-            <span>연락처</span>
+            <span>
+              연락처 <strong className="text-[#a97d4d]">*</strong>
+            </span>
             <input
               required
               value={phone}
@@ -234,22 +307,35 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           </label>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-[180px_1fr]">
+        <div className="grid gap-4">
           <label className="space-y-2 text-sm text-stone-700">
-            <span>우편번호</span>
-            <input
-              required
-              value={postalCode}
-              onChange={(event) => setPostalCode(event.target.value)}
-              className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 outline-none"
-            />
+            <span>
+              배송지 주소 <strong className="text-[#a97d4d]">*</strong>
+            </span>
+            <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+              <input
+                required
+                readOnly
+                value={address}
+                placeholder="주소 찾기 버튼을 눌러 배송지를 선택해주세요."
+                className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 outline-none"
+              />
+              <button
+                type="button"
+                onClick={openAddressSearch}
+                className="btn-luxe-secondary w-full rounded-full px-5 py-3 text-sm font-semibold md:w-auto"
+              >
+                Daum 주소찾기
+              </button>
+            </div>
           </label>
+
           <label className="space-y-2 text-sm text-stone-700">
-            <span>주소</span>
+            <span>상세 주소</span>
             <input
-              required
-              value={address}
-              onChange={(event) => setAddress(event.target.value)}
+              value={addressDetail}
+              onChange={(event) => setAddressDetail(event.target.value)}
+              placeholder="상세 주소를 입력해주세요."
               className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 outline-none"
             />
           </label>
@@ -306,14 +392,14 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
         </div>
       </section>
 
-      <aside className="space-y-6 rounded-[32px] border border-[rgba(116,88,59,0.12)] bg-[#f8f3ec] p-8">
+      <aside className="space-y-6 rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-[#f8f3ec] p-5 md:rounded-[32px] md:p-8">
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-[0.28em] text-stone-500">Order Summary</p>
           <h2 className="headline-balance text-2xl font-semibold text-stone-900">선택한 상품 확인</h2>
           <p className="copy-pretty text-sm leading-6 text-stone-600">한 개만 선택하거나 두 제품을 함께 담아 결제를 진행할 수 있습니다.</p>
         </div>
 
-        <div className="rounded-[28px] bg-white p-6">
+        <div className="rounded-[24px] bg-white p-5 md:rounded-[28px] md:p-6">
           {orderItems.length === 0 ? (
             <p className="text-sm leading-7 text-stone-500">아직 선택한 상품이 없습니다. 왼쪽에서 상품을 선택해주세요.</p>
           ) : (
@@ -341,7 +427,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           </div>
         </div>
 
-        <div className="space-y-2 rounded-[28px] bg-white p-6 text-sm text-stone-600">
+        <div className="space-y-2 rounded-[24px] bg-white p-5 text-sm text-stone-600 md:rounded-[28px] md:p-6">
           <div className="flex items-center justify-between">
             <span>레퍼럴 코드</span>
             <strong className="text-stone-900">{resolvedReferralCode ?? "직접 유입"}</strong>
@@ -362,6 +448,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           {submitting ? "주문 저장 중..." : "주문 저장하기"}
         </button>
       </aside>
-    </form>
+      </form>
+    </>
   );
 }

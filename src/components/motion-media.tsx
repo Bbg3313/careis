@@ -29,7 +29,7 @@ export function MotionMedia({
             src={frame}
             alt={`${alt} ${index + 1}`}
             fill
-            className="object-cover"
+            className="object-contain md:object-cover"
             sizes="100vw"
             priority={priority && index === 0}
           />
