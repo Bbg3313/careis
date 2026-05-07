@@ -50,8 +50,10 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
   },
 };
 
+/** 실제 파일 픽셀 크기 — 표시 비율·업스케일 방지용 (파일 교체 시 함께 수정) */
 export const sunPackDetailAssets = {
-  heroImage: "/images/sunpack-priority-01.png",
+  heroImage: "/images/sunpack-thumb-02.png",
+  heroPixelSize: { width: 800, height: 800 },
   thumbnailImages: [
     "/images/sunpack-thumb-01.png",
     "/images/sunpack-thumb-02.png",
@@ -61,13 +63,14 @@ export const sunPackDetailAssets = {
     "/images/sunpack-thumb-06.png",
     "/images/sunpack-thumb-07.png",
   ],
+  thumbnailPixelSize: { width: 800, height: 800 },
   storyImages: [
-    "/images/sunpack-priority-01.png",
-    "/images/sunpack-priority-02.png",
-    "/images/sunpack-priority-03.png",
-    "/images/sunpack-priority-04.png",
-    "/images/sunpack-priority-05.png",
-    "/images/sunpack-priority-06.png",
-    "/images/sunpack-priority-07.png",
+    { src: "/images/sunpack-priority-01.png", width: 526, height: 1024 },
+    { src: "/images/sunpack-priority-02.png", width: 600, height: 338 },
+    { src: "/images/sunpack-priority-03.png", width: 299, height: 1024 },
+    { src: "/images/sunpack-priority-04.png", width: 853, height: 1024 },
+    { src: "/images/sunpack-priority-05.png", width: 600, height: 338 },
+    { src: "/images/sunpack-priority-06.png", width: 799, height: 1024 },
+    { src: "/images/sunpack-priority-07.png", width: 1005, height: 1024 },
   ],
 };

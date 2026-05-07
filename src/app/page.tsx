@@ -15,7 +15,7 @@ const featureBannerSlides = [
     highlights: ["색소 케어", "브라이트닝", "피부 결 정돈"],
     image: "/images/illum-model-banner.png",
     imageAlt: "일루미네이터 모델 비주얼",
-    tone: "light" as const,
+    tone: "dark" as const,
   },
   {
     label: "Day Protection",
@@ -340,7 +340,7 @@ export default function HomePage() {
                 <div className="group mt-8 overflow-hidden border border-black/8 bg-white/50 p-4 transition duration-500 hover:border-black/12 hover:bg-white/60 hover:shadow-[0_18px_40px_rgba(104,78,41,0.12)] md:mt-10 md:p-6 backdrop-blur-sm">
                   <div className="relative h-[18rem] w-[14rem] md:h-[28rem] md:w-[21rem]">
                     <Image
-                      src={productVisuals["sun-pack"].card}
+                      src="/images/sun-object.png"
                       alt={productVisuals["sun-pack"].alt}
                       fill
                       className="cursor-zoom-in object-contain drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)] transition-transform duration-500 ease-out group-hover:scale-[1.12]"
@@ -470,8 +470,7 @@ export default function HomePage() {
               <div className="mx-auto mb-6 max-w-2xl">
                 <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Order Flow</p>
                 <p className="mt-3 text-sm leading-7 text-stone-600">
-                  원하는 제품을 고르고, 비회원으로 결제를 진행한 뒤, 배송과 교환/반품 안내까지 한 번에
-                  확인할 수 있도록 구성했습니다.
+                  선택부터 결제, 배송 안내까지 간단하게 이어집니다.
                 </p>
               </div>
 
@@ -480,19 +479,19 @@ export default function HomePage() {
                   step="01"
                   eyebrow="Choose Your Routine"
                   title="원하는 제품 선택"
-                  description="DAY CARE 선팩과 NIGHT CARE 일루미네이터 중 필요한 제품만 선택하거나 두 제품을 함께 담아 주문할 수 있습니다."
+                  description="필요한 제품만 골라 바로 담습니다."
                 />
                 <InfoStat
                   step="02"
                   eyebrow="Guest Checkout"
                   title="비회원 결제 진행"
-                  description="이름, 연락처, 배송지를 입력하고 결제수단을 선택하면 별도 회원가입 없이 바로 주문을 진행할 수 있습니다."
+                  description="회원가입 없이 바로 주문할 수 있습니다."
                 />
                 <InfoStat
                   step="03"
                   eyebrow="Delivery & Support"
                   title="배송 및 상담 확인"
-                  description="결제 후 배송, 교환, 반품, 고객센터 안내까지 이어서 확인할 수 있어 주문 이후 과정도 쉽게 살펴볼 수 있습니다."
+                  description="배송과 상담 안내까지 이어서 확인합니다."
                 />
               </div>
             </div>
@@ -502,40 +501,44 @@ export default function HomePage() {
       </section>
 
       <section className="bg-[#FAFAF8] px-4 py-16 md:px-6 md:py-24">
-        <div className="mx-auto max-w-5xl overflow-hidden rounded-[30px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(135deg,#17171b_0%,#221f26_46%,#2b2522_100%)] px-6 py-10 text-center shadow-[0_28px_80px_rgba(18,14,10,0.24)] md:px-10 md:py-14">
-          <div className="pointer-events-none absolute" />
+        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[30px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(165deg,#ffffff_0%,#fdfbf7_48%,#faf6ef_100%)] px-6 py-10 text-center shadow-[0_22px_56px_rgba(89,63,28,0.07)] md:px-10 md:py-14">
+          <div className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-[#d7b27d]/14 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-12 h-48 w-48 rounded-full bg-[#c9a66b]/12 blur-3xl" />
+          <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.35)_50%,transparent_100%)]" />
+
           <div className="relative">
-            <p className="text-[12px] uppercase tracking-[0.22em] text-[#d5bc96]">Private Referral Access</p>
-            <h2 className="display-font headline-balance mt-4 text-[32px] font-semibold leading-[1.18] tracking-[-0.02em] text-white md:text-[42px]">
-              혜택이 열리는
-              <span className="block text-[#e1c391]">VIP 전용 구매 입구</span>
+            <p className="text-[12px] uppercase tracking-[0.22em] text-[#8b673f]">By invitation</p>
+            <h2 className="display-font headline-balance mt-4 text-[32px] font-semibold leading-[1.18] tracking-[-0.02em] text-stone-900 md:text-[42px]">
+              초대 링크로 이어지는
+              <span className="mt-1 block bg-[linear-gradient(92deg,#9d7442_0%,#c49a5c_42%,#8b673f_100%)] bg-clip-text text-transparent">
+                프라이빗 주문
+              </span>
             </h2>
-            <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-white/72">
-              추천 코드를 통해 입장하면 일반 구매보다 더 가볍게 시작할 수 있는 전용 혜택 구간으로
-              연결됩니다. 초대받은 고객만 들어오는 프라이빗 링크처럼, 혜택 적용 구매 흐름을 간결하게
-              안내합니다.
+            <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.85] text-stone-600">
+              전해진 링크와 코드가 있을 때, 동일한 제품이라도 한층 여유로운 조건으로 주문을 시작할 수
+              있습니다. 불필요한 안내는 줄이고, 결제와 배송만 또렷하게 이어집니다.
             </p>
 
-            <div className="mx-auto mt-8 grid max-w-3xl gap-3 text-left md:grid-cols-3">
-              <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-[#d5bc96]">Exclusive Benefit</p>
-                <p className="mt-3 text-lg font-semibold text-white">전용 혜택 적용</p>
-                <p className="mt-2 text-sm leading-7 text-white/68">
-                  추천 코드가 연결된 전용 구매 흐름에서 더 유리한 조건으로 주문을 진행할 수 있습니다.
+            <div className="mx-auto mt-8 grid max-w-3xl gap-4 text-left md:grid-cols-3">
+              <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">Refined offer</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">조건이 정리된 결제</p>
+                <p className="mt-2 text-sm leading-7 text-stone-600">
+                  링크에 담긴 혜택이 그대로 반영되도록 주문 화면에서 확인할 수 있습니다.
                 </p>
               </div>
-              <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-[#d5bc96]">Private Link</p>
-                <p className="mt-3 text-lg font-semibold text-white">전용 링크 진입</p>
-                <p className="mt-2 text-sm leading-7 text-white/68">
-                  코드가 있는 고객만 빠르게 진입할 수 있도록 구매 단계가 직관적으로 이어집니다.
+              <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">Quiet entry</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">빠르게 이어지는 단계</p>
+                <p className="mt-2 text-sm leading-7 text-stone-600">
+                  코드만 맞으면 일반 주문과 같은 흐름으로, 더 짧은 설명으로 바로 담을 수 있습니다.
                 </p>
               </div>
-              <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-[#d5bc96]">Trackable Order</p>
-                <p className="mt-3 text-lg font-semibold text-white">깔끔한 주문 확인</p>
-                <p className="mt-2 text-sm leading-7 text-white/68">
-                  추천 코드와 주문 정보가 함께 남아 운영 측에서도 채널별 흐름을 분명하게 확인할 수 있습니다.
+              <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#8b673f]">Same care</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">동일한 배송·상담</p>
+                <p className="mt-2 text-sm leading-7 text-stone-600">
+                  배송과 고객센터 안내는 언제나 동일한 기준으로 연결됩니다.
                 </p>
               </div>
             </div>
@@ -543,15 +546,15 @@ export default function HomePage() {
             <div className="pt-10">
               <Link
                 href="/order"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#d5bc96]/40 bg-[linear-gradient(135deg,#f4e1bf_0%,#d2aa73_100%)] px-10 py-4 text-[13px] font-medium tracking-[0.1em] text-stone-900 transition hover:brightness-105 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[rgba(184,145,86,0.35)] bg-[linear-gradient(135deg,#f6e8d4_0%,#d2aa73_52%,#b89156_100%)] px-10 py-4 text-[13px] font-medium tracking-[0.08em] text-stone-900 shadow-[0_14px_36px_rgba(184,145,86,0.22)] transition hover:brightness-[1.03] sm:w-auto"
               >
-                추천 코드 전용 혜택으로 구매하기
+                초대 링크로 주문하기
                 <ArrowAccent />
               </Link>
             </div>
 
-            <p className="mt-8 text-[11px] text-white/45">
-              * 추천 코드는 인플루언서 또는 제휴 파트너 링크를 통해 전달될 수 있습니다.
+            <p className="mt-8 text-[11px] leading-relaxed text-stone-500">
+              * 링크와 코드는 안내를 받은 분께만 전달될 수 있습니다.
             </p>
           </div>
         </div>
