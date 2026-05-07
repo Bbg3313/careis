@@ -29,8 +29,8 @@ export function MotionMedia({
             src={frame}
             alt={`${alt} ${index + 1}`}
             fill
-            className="object-contain md:object-cover"
-            sizes="100vw"
+            className="object-cover object-center"
+            sizes="(max-width: 767px) min(100vw, 440px), (max-width: 1024px) 50vw, 560px"
             priority={priority && index === 0}
           />
         </div>

@@ -139,6 +139,41 @@ button {
   will-change: transform, opacity;
 }
 
+/* 홈 히어로: 모바일은 스케일 없이 페이드만 — 짤림 방지, 프레임 동일 */
+@media (max-width: 767px) {
+  .hero-motion-root .motion-frame {
+    transform: scale(1);
+    animation: heroCrossfadeMobile 14s ease-in-out infinite;
+  }
+}
+
+@keyframes heroCrossfadeMobile {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+
+  8% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  28% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  38% {
+    opacity: 0;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
 @keyframes heroCrossfade {
   0% {
     opacity: 0;
@@ -162,5 +197,17 @@ button {
   100% {
     opacity: 0;
     transform: scale(1);
+  }
+}
+
+@keyframes featureBannerFade {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

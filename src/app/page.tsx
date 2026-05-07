@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { FeatureBannerSlider } from "@/components/feature-banner-slider";
+import { HomeVideoBanner } from "@/components/home-video-banner";
 import { MotionMedia } from "@/components/motion-media";
 import { products } from "@/lib/product-data";
 import { homeVisuals, productVisuals } from "@/lib/site-assets";
 
 const featureBannerSlides = [
   {
-    label: "Night Renewal",
+    label: "밤 케어",
     title: "밤사이 더 맑고 정돈된 피부",
     description:
       "시스테아민 5%와 나이아신아마이드, 알부틴을 담아 칙칙한 피부 인상을 더 환하고 정돈된 느낌으로 가꿔주는 브라이트닝 인텐시브 케어입니다.",
@@ -18,7 +19,7 @@ const featureBannerSlides = [
     tone: "dark" as const,
   },
   {
-    label: "Day Protection",
+    label: "낮 케어",
     title: "햇빛 아래 더 맑고 편안한 피부",
     description:
       "가볍게 밀착되는 사용감과 자연스러운 피부 표현으로 자외선이 강한 날에도 부담 없이 손이 가는 프리미엄 선케어입니다.",
@@ -70,7 +71,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative h-[320px] overflow-hidden bg-[linear-gradient(135deg,#f5f1ea_0%,#ffffff_100%)] sm:h-[400px] md:h-[560px] lg:h-[640px]">
+          <div className="hero-motion-root relative mx-auto w-full max-w-[440px] overflow-hidden rounded-[22px] bg-[linear-gradient(135deg,#f5f1ea_0%,#ffffff_100%)] aspect-[4/5] md:max-w-none md:aspect-auto md:h-[560px] md:rounded-none lg:h-[640px]">
             <MotionMedia
               frames={homeVisuals.heroMotion}
               alt="CAREIS hero visual"
@@ -82,44 +83,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen overflow-hidden bg-[#111111]">
-        <div className="relative mx-auto min-h-[280px] w-full max-w-[1800px] px-4 py-5 md:min-h-[460px] md:px-6 md:py-8 lg:min-h-[560px] lg:px-8 lg:py-10">
-          <div className="absolute inset-0 overflow-hidden">
-            <video
-              className="h-full w-full scale-[1.08] object-cover blur-[30px] opacity-45"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            >
-              <source src="/media/main-banner.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,rgba(17,17,17,0.2)_40%,rgba(8,8,8,0.72)_100%)]" />
-          </div>
-
-          <div className="relative mx-auto flex min-h-[268px] max-w-[1500px] items-center justify-center md:min-h-[444px] lg:min-h-[540px]">
-            <div className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(212,184,140,0.45)_50%,transparent_100%)]" />
-            <div className="absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(212,184,140,0.24)_50%,transparent_100%)]" />
-
-            <div className="relative w-full overflow-hidden rounded-[24px] border border-white/10 bg-black/20 shadow-[0_30px_80px_rgba(0,0,0,0.32)] backdrop-blur-[6px] md:rounded-[34px]">
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0)_22%,rgba(0,0,0,0.08)_100%)]" />
-              <div className="aspect-[16/10] min-h-[220px] md:aspect-[21/9] md:min-h-[360px] lg:min-h-[460px]">
-                <video
-                  className="h-full w-full object-contain"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                >
-                  <source src="/media/main-banner.mp4" type="video/mp4" />
-                </video>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomeVideoBanner />
 
       <section
         id="brand"
@@ -429,7 +393,7 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="bg-[#f8f2ea] px-4 py-8 md:px-6 md:py-10">
+      <section className="overflow-x-clip bg-[#f8f2ea] px-4 py-8 md:px-6 md:py-10">
         <div className="mx-auto max-w-6xl">
           <FeatureBannerSlider slides={featureBannerSlides} />
         </div>
@@ -439,7 +403,7 @@ export default function HomePage() {
         id="inquiry"
         className="scroll-mt-32 bg-[linear-gradient(145deg,#FAFAF8_0%,#ffffff_100%)] px-4 py-16 md:px-6 md:py-32 md:scroll-mt-36 lg:scroll-mt-32"
       >
-        <div className="mx-auto max-w-4xl border border-black/10 bg-white p-6 md:p-16">
+        <div className="mx-auto max-w-4xl border border-black/10 bg-white p-5 sm:p-8 md:p-16">
           <div className="text-center">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/5 text-stone-700">
               <BuildingIcon />
@@ -448,10 +412,10 @@ export default function HomePage() {
             <p className="mt-8 text-[13px] uppercase tracking-[0.15em] text-stone-500">
               Purchase Guide
             </p>
-            <h2 className="display-font headline-balance mt-4 text-4xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[48px]">
+            <h2 className="display-font headline-balance mt-4 text-[28px] font-semibold leading-[1.15] tracking-[-0.02em] text-stone-900 sm:text-4xl md:text-[48px]">
               지금 바로 루틴을 시작하세요
             </h2>
-            <p className="copy-pretty mx-auto mt-6 max-w-xl text-[16px] leading-[1.9] text-stone-600">
+            <p className="copy-pretty mx-auto mt-5 max-w-xl text-[15px] leading-[1.85] text-stone-600 sm:mt-6 sm:text-[16px] sm:leading-[1.9]">
               DAY CARE와 NIGHT CARE 중 필요한 루틴부터 선택해 바로 구매할 수 있습니다. 두 제품의
               분위기와 역할을 비교한 뒤, 나에게 더 잘 맞는 케어부터 가볍게 시작해보세요.
             </p>
@@ -466,33 +430,65 @@ export default function HomePage() {
               <p className="mt-4 text-[12px] text-stone-500">원하는 제품을 고른 뒤 바로 주문할 수 있도록 간편 결제 환경을 준비했습니다.</p>
             </div>
 
-            <div className="mt-12 border-t border-black/5 pt-12">
-              <div className="mx-auto mb-6 max-w-2xl">
+            <div className="mt-12 border-t border-black/5 pt-10 md:pt-12">
+              <div className="mx-auto mb-5 max-w-2xl text-center md:mb-8">
                 <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Order Flow</p>
                 <p className="mt-3 text-sm leading-7 text-stone-600">
                   선택부터 결제, 배송 안내까지 간단하게 이어집니다.
                 </p>
               </div>
 
-              <div className="grid gap-5 md:grid-cols-3">
-                <InfoStat
-                  step="01"
-                  eyebrow="Choose Your Routine"
-                  title="원하는 제품 선택"
-                  description="필요한 제품만 바로 담습니다."
-                />
-                <InfoStat
-                  step="02"
-                  eyebrow="Guest Checkout"
-                  title="비회원 결제 진행"
-                  description="가입 없이 바로 주문합니다."
-                />
-                <InfoStat
-                  step="03"
-                  eyebrow="Delivery & Support"
-                  title="배송 및 상담 확인"
-                  description="배송·상담 안내를 확인합니다."
-                />
+              <div className="overflow-hidden rounded-[20px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,#fffdfb_0%,#faf6ef_100%)] shadow-[0_14px_40px_rgba(89,63,28,0.06)] md:rounded-[28px] md:shadow-[0_18px_42px_rgba(89,63,28,0.06)]">
+                <ol className="divide-y divide-[rgba(184,145,86,0.14)] md:grid md:grid-cols-3 md:divide-x md:divide-y-0">
+                  <li className="flex gap-4 px-4 py-4 sm:px-5 sm:py-5 md:flex-col md:gap-5 md:px-7 md:py-8">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#b89156_0%,#9d7442_100%)] text-[12px] font-semibold tracking-[0.08em] text-white">
+                      01
+                    </span>
+                    <div className="min-w-0 flex-1 text-left">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-[#8b673f] sm:text-[11px]">
+                        Choose Your Routine
+                      </p>
+                      <p className="mt-1.5 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 sm:text-[18px] md:text-[20px]">
+                        원하는 제품 선택
+                      </p>
+                      <p className="mt-2 text-[13px] leading-relaxed text-stone-600 sm:text-sm">
+                        필요한 제품만 바로 담습니다.
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex gap-4 px-4 py-4 sm:px-5 sm:py-5 md:flex-col md:gap-5 md:px-7 md:py-8">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#b89156_0%,#9d7442_100%)] text-[12px] font-semibold tracking-[0.08em] text-white">
+                      02
+                    </span>
+                    <div className="min-w-0 flex-1 text-left">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-[#8b673f] sm:text-[11px]">
+                        Guest Checkout
+                      </p>
+                      <p className="mt-1.5 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 sm:text-[18px] md:text-[20px]">
+                        비회원 결제 진행
+                      </p>
+                      <p className="mt-2 text-[13px] leading-relaxed text-stone-600 sm:text-sm">
+                        가입 없이 바로 주문합니다.
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex gap-4 px-4 py-4 sm:px-5 sm:py-5 md:flex-col md:gap-5 md:px-7 md:py-8">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#b89156_0%,#9d7442_100%)] text-[12px] font-semibold tracking-[0.08em] text-white">
+                      03
+                    </span>
+                    <div className="min-w-0 flex-1 text-left">
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-[#8b673f] sm:text-[11px]">
+                        Delivery &amp; Support
+                      </p>
+                      <p className="mt-1.5 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 sm:text-[18px] md:text-[20px]">
+                        배송 및 상담 확인
+                      </p>
+                      <p className="mt-2 text-[13px] leading-relaxed text-stone-600 sm:text-sm">
+                        배송·상담 안내를 확인합니다.
+                      </p>
+                    </div>
+                  </li>
+                </ol>
               </div>
             </div>
 
@@ -558,37 +554,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </div>
-  );
-}
-
-function InfoStat({
-  step,
-  eyebrow,
-  title,
-  description,
-}: {
-  step: string;
-  eyebrow: string;
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="relative overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.94)_0%,rgba(249,242,232,0.98)_100%)] px-6 py-7 text-left shadow-[0_18px_42px_rgba(89,63,28,0.06)]">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.52)_50%,transparent_100%)]" />
-      <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-[#d7b27d]/10 blur-2xl" />
-      <div className="relative">
-        <div className="flex items-start justify-between gap-4">
-          <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#b89156_0%,#9d7442_100%)] text-[12px] font-semibold tracking-[0.08em] text-white">
-            {step}
-          </div>
-          <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#b89156]" />
-        </div>
-        <p className="mt-5 text-[11px] uppercase tracking-[0.18em] text-[#8b673f]">{eyebrow}</p>
-        <p className="mt-3 text-[24px] font-semibold tracking-[-0.03em] text-stone-900">{title}</p>
-        <p className="mt-4 text-sm leading-snug text-stone-600 break-keep hyphens-none">{description}</p>
-        <div className="mt-6 h-px w-16 bg-[linear-gradient(90deg,#b89156_0%,rgba(184,145,86,0.06)_100%)]" />
-      </div>
     </div>
   );
 }

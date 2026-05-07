@@ -25,7 +25,7 @@ export default function ContactPage() {
               <strong className="text-stone-900">전화</strong>: 010-2556-3263
             </p>
             <p>
-              <strong className="text-stone-900">운영시간</strong>: 평일 10:00~17:00 / 점심 12:00~13:00 / 주말·공휴일 휴무
+              <strong className="text-stone-900">운영시간</strong>: 평일 10:00~17:00 · 점심 12:00~13:00 · 주말·공휴일 휴무
             </p>
             <p>
               <strong className="text-stone-900">인스타그램</strong>: @careis.official
@@ -49,10 +49,8 @@ export default function ContactPage() {
         <article className="rounded-[32px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)]">
           <p className="text-sm font-semibold text-stone-900">고객센터 및 안내</p>
           <div className="mt-5 space-y-3 text-sm leading-8 text-stone-600">
-            <p>- 주문, 결제, 배송, 교환/반품 문의는 고객센터를 통해 접수할 수 있습니다.</p>
-            <p>- 오프라인 입점 및 파트너십, 제휴 판매, 콘텐츠 협업 문의도 동일 채널로 접수 가능합니다.</p>
-            <p>- 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은 휴무입니다.</p>
-            <p>- 사업자 정보와 운영정책은 푸터 및 정책안내 페이지에서 상시 확인할 수 있습니다.</p>
+            <p>- 주문, 결제, 배송, 교환·반품 및 제휴·파트너십 문의는 고객센터 채널(위 연락처)로 접수할 수 있습니다.</p>
+            <p>- 사업자 정보와 운영 정책은 푸터 및 정책안내 페이지에서 확인할 수 있습니다.</p>
           </div>
         </article>
       </section>
