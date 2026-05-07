@@ -78,7 +78,30 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-stone-900">제7조 (이용자의 의무)</h2>
+            <h2 className="text-lg font-semibold text-stone-900">제7조 (비회원 구매)</h2>
+            <p>
+              이용자는 회원가입 없이도 비회원 주문을 진행할 수 있으며, 주문 및 결제, 배송 처리를 위해
+              필요한 최소한의 개인정보를 입력해야 합니다.
+            </p>
+            <p>
+              비회원 주문 시 이용자는 본 약관, 개인정보처리방침, 배송/교환/반품 정책을 확인한 것으로
+              봅니다.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-lg font-semibold text-stone-900">제8조 (청약철회 및 반품)</h2>
+            <p>
+              이용자는 전자상거래 등에서의 소비자보호에 관한 법률 등 관련 법령이 정하는 바에 따라
+              청약철회 및 반품을 요청할 수 있습니다.
+            </p>
+            <p>
+              구체적인 교환, 반품, 환불 기준은 서비스 내 별도 게시된 배송/교환/반품 정책에 따릅니다.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-lg font-semibold text-stone-900">제9조 (이용자의 의무)</h2>
             <p>이용자는 다음 행위를 하여서는 안 됩니다.</p>
             <p>1. 타인의 정보 도용 또는 허위 정보 입력</p>
             <p>2. 서비스 운영을 방해하는 행위</p>
@@ -87,7 +110,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-stone-900">제8조 (회사의 책임 제한)</h2>
+            <h2 className="text-lg font-semibold text-stone-900">제10조 (회사의 책임 제한)</h2>
             <p>
               회사는 천재지변, 통신 장애, 시스템 점검, 제3자 서비스 장애 등 불가항력적 사유로 인한
               서비스 제공 불능에 대하여 책임을 지지 않습니다.
@@ -99,7 +122,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-stone-900">제9조 (지식재산권)</h2>
+            <h2 className="text-lg font-semibold text-stone-900">제11조 (지식재산권)</h2>
             <p>
               서비스 내의 상표, 로고, 이미지, 문구, 디자인, 콘텐츠에 대한 권리는 회사 또는 정당한
               권리자에게 귀속되며, 이용자는 회사의 사전 동의 없이 이를 복제, 배포, 전송, 수정할 수
@@ -108,7 +131,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-3">
-            <h2 className="text-lg font-semibold text-stone-900">제10조 (준거법 및 관할)</h2>
+            <h2 className="text-lg font-semibold text-stone-900">제12조 (준거법 및 관할)</h2>
             <p>
               본 약관은 대한민국 법령에 따라 해석되며, 서비스 이용과 관련하여 회사와 이용자 간 분쟁이
               발생할 경우 관련 법령에 따른 관할 법원을 제1심 관할 법원으로 합니다.

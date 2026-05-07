@@ -28,6 +28,10 @@ export default async function OrderPage({
           원하는 제품을 한 개만 고르거나, 두 제품을 함께 담아 바로 결제를 이어갈 수 있습니다. 추천
           코드가 있는 경우에는 함께 반영됩니다.
         </p>
+        <p className="copy-pretty max-w-2xl text-sm leading-8 text-stone-500">
+          비회원 주문이 가능하며, 이용약관, 개인정보처리방침, 배송/교환/반품 정책은 주문 단계에서
+          다시 확인할 수 있습니다.
+        </p>
       </section>
 
       <OrderForm

@@ -9,6 +9,12 @@ export default function PrivacyPage() {
         </p>
         <div className="copy-pretty mt-8 space-y-8 text-sm leading-8 text-stone-600">
           <section className="space-y-3">
+            <h2 className="text-lg font-semibold text-stone-900">0. 개인정보처리방침 적용 대상</h2>
+            <p>본 방침은 CAREIS가 운영하는 웹사이트 및 비회원 주문, 고객 문의, 결제 및 배송 관련 서비스 전반에 적용됩니다.</p>
+            <p>상호: 케어이즈 / 대표자: 이명규 / 연락처: 010-2556-3263 / 이메일: startupscon@gmail.com</p>
+          </section>
+
+          <section className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">1. 개인정보의 처리 목적</h2>
             <p>케어이즈는 다음의 목적을 위하여 개인정보를 처리합니다.</p>
             <p>1. 상품 주문 접수, 결제 확인, 배송 및 교환/반품 처리</p>
@@ -45,6 +51,13 @@ export default function PrivacyPage() {
               회사는 정보주체의 개인정보를 원칙적으로 외부에 제공하지 않습니다. 다만, 법령에 특별한
               규정이 있거나 정보주체의 별도 동의가 있는 경우에는 예외로 합니다.
             </p>
+            <p>
+              결제 진행 시에는 전자결제 처리 및 승인 확인을 위해 계약된 결제대행사(PG) 또는 간편결제
+              사업자에게 주문번호, 결제금액, 구매자명, 연락처 등 필요한 범위의 정보가 제공될 수 있습니다.
+            </p>
+            <p>
+              상품 배송이 필요한 경우에는 배송 수행을 위해 수취인 정보가 택배사 또는 물류 수행사에 제공될 수 있습니다.
+            </p>
           </section>
 
           <section className="space-y-3">
@@ -53,7 +66,9 @@ export default function PrivacyPage() {
               회사는 원활한 서비스 제공을 위해 필요한 경우 일부 업무를 외부 전문업체에 위탁할 수
               있으며, 위탁 시 관련 법령에 따라 수탁자를 관리·감독합니다.
             </p>
-            <p>예시 위탁 업무: 결제 처리, 배송 업무, 고객상담 시스템 운영, 호스팅 및 시스템 관리</p>
+            <p>현재 확인 가능한 위탁 범위: 호스팅 및 시스템 운영, 결제 처리, 배송 업무, 고객상담 및 주문 처리</p>
+            <p>호스팅 및 시스템 운영: Vercel</p>
+            <p>실제 계약된 PG사, 택배사, 물류사 등 수탁자가 확정되는 경우 본 방침에 반영하여 고지합니다.</p>
           </section>
 
           <section className="space-y-3">
@@ -100,7 +115,8 @@ export default function PrivacyPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">10. 개인정보 보호책임자</h2>
             <p>회사는 개인정보 처리에 관한 업무를 총괄하여 책임지고 있습니다.</p>
-            <p>개인정보 보호책임자: 케어이즈</p>
+            <p>개인정보 보호책임자: 케어이즈 운영책임자</p>
+            <p>연락처: 010-2556-3263</p>
             <p>이메일: startupscon@gmail.com</p>
           </section>
         </div>

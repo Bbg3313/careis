@@ -52,6 +52,17 @@ export function PaymentFailHandler({ orderNumber, code, message }: PaymentFailHa
         {message}
         {saved ? " 주문 상태에도 실패 정보가 반영되었습니다." : ""}
       </p>
+      <div className="mx-auto mt-8 max-w-xl rounded-[28px] bg-[#f8f3ec] p-6 text-sm leading-7 text-stone-600">
+        주문번호: <strong className="text-stone-900">{orderNumber || "-"}</strong>
+        <br />
+        고객센터: 010-2556-3263
+        <br />
+        이메일: startupscon@gmail.com
+        <br />
+        운영시간: 평일 10:00~17:00 / 점심 12:00~13:00 / 주말·공휴일 휴무
+        <br />
+        결제 오류가 반복되면 다른 결제수단을 선택하거나 고객센터로 문의해주세요.
+      </div>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
           href={orderNumber ? `/payment/checkout?orderNumber=${encodeURIComponent(orderNumber)}` : "/"}

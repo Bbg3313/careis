@@ -233,7 +233,7 @@ function SunPackDetailPage({
         <div className="space-y-5">
           <div className="relative overflow-hidden rounded-[20px] border border-stone-200 bg-white">
             <Image
-              src={visual.hero}
+              src={sunPackDetailAssets.heroImage}
               alt={visual.alt}
               width={1400}
               height={1400}
@@ -244,7 +244,7 @@ function SunPackDetailPage({
             />
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {[visual.card, ...sunPackDetailAssets.motionFrames].map((image, index) => (
+            {sunPackDetailAssets.thumbnailImages.map((image, index) => (
               <div
                 key={`${image}-${index}`}
                 className="relative overflow-hidden rounded-[16px] border border-stone-200 bg-white"
@@ -375,9 +375,8 @@ function SunPackDetailPage({
         <article className="space-y-3 border-t border-stone-100 pt-6">
           <h3 className="text-lg font-semibold text-stone-900">교환/반품 안내</h3>
           <p className="text-sm leading-7 text-stone-600">
-            제품 수령 후 7일 이내 접수된 건에 한해 교환 및 반품이 가능하며, 단순 변심에 의한 반송 비용은
-            고객 부담입니다. 상품 가치가 훼손되었거나 사용 흔적이 있는 경우에는 교환 및 반품이 제한될 수
-            있습니다.
+            교환 및 반품 관련 상세 기준은 페이지 하단의 안내 내용을 통해 확인할 수 있습니다. 단순 변심에
+            의한 반송 비용은 고객 부담이며, 상품 상태에 따라 교환 및 반품이 제한될 수 있습니다.
           </p>
           <p className="text-sm leading-7 text-stone-600">
             교환 및 반품 주소: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)
@@ -387,8 +386,9 @@ function SunPackDetailPage({
         <article className="space-y-3 border-t border-stone-100 pt-6">
           <h3 className="text-lg font-semibold text-stone-900">서비스문의</h3>
           <p className="text-sm leading-7 text-stone-600">
-            제품 및 주문 관련 문의는 `070-4647-3263` 또는 `startupscon@gmail.com`으로 안내받을 수
-            있습니다.
+            제품 및 주문 관련 문의는 010-2556-3263 또는 startupscon@gmail.com으로 안내받을 수
+            있습니다. 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은
+            휴무입니다.
           </p>
         </article>
       </section>
@@ -402,6 +402,73 @@ function SunPackDetailPage({
         <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 Q&amp;A</h2>
         <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
       </section>
+
+      <section className="overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1e7_100%)] shadow-[0_24px_60px_rgba(89,63,28,0.06)]">
+        <div className="border-b border-[rgba(184,145,86,0.16)] px-6 py-6 md:px-8">
+          <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Exchange &amp; Return Guide</p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-[-0.02em] text-stone-900 md:text-3xl">
+            교환 / 반품 안내
+          </h2>
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-stone-600">
+            상품 수령 후 교환 및 반품이 필요한 경우 아래 기준에 따라 접수할 수 있습니다. 접수 전 상품
+            상태와 가능 여부를 먼저 확인해주세요.
+          </p>
+        </div>
+
+        <div className="grid gap-4 px-6 py-6 md:px-8 md:py-8">
+          <article className="rounded-[22px] bg-white/80 p-5">
+            <h3 className="text-base font-semibold text-stone-900">교환 및 반품 주소</h3>
+            <p className="mt-3 text-sm leading-7 text-stone-600">
+              서울특별시 강남구 테헤란로43길 14 청수빌딩 13층 케어이즈
+            </p>
+          </article>
+
+          <article className="rounded-[22px] bg-white/80 p-5">
+            <h3 className="text-base font-semibold text-stone-900">교환 및 반품이 가능한 경우</h3>
+            <ul className="mt-3 space-y-3 text-sm leading-7 text-stone-600">
+              <li>
+                - 계약내용에 관한 서면을 받은 날부터 7일 이내. 단, 그 서면을 받은 때보다 재화 등의 공급이
+                늦게 이루어진 경우에는 재화 등을 공급받거나 재화 등의 공급이 시작된 날부터 7일 이내
+              </li>
+              <li>
+                - 공급받으신 상품 및 용역의 내용이 표시, 광고 내용과 다르거나 계약내용과 다르게 이행된
+                때에는 당해 재화 등을 공급받은 날부터 3개월 이내, 그 사실을 알게 된 날 또는 알 수 있었던
+                날부터 30일 이내
+              </li>
+            </ul>
+          </article>
+
+          <article className="rounded-[22px] bg-white/80 p-5">
+            <h3 className="text-base font-semibold text-stone-900">교환 및 반품이 불가능한 경우</h3>
+            <ul className="mt-3 space-y-3 text-sm leading-7 text-stone-600">
+              <li>
+                - 이용자에게 책임 있는 사유로 재화 등이 멸실 또는 훼손된 경우(다만, 재화 등의 내용을
+                확인하기 위하여 포장 등을 훼손한 경우에는 청약철회를 할 수 있습니다)
+              </li>
+              <li>- 이용자의 사용 또는 일부 소비에 의하여 재화 등의 가치가 현저히 감소한 경우</li>
+              <li>- 시간의 경과에 의하여 재판매가 곤란할 정도로 재화 등의 가치가 현저히 감소한 경우</li>
+              <li>- 복제가 가능한 재화 등의 포장을 훼손한 경우</li>
+              <li>
+                - 개별 주문 생산되는 재화 등 청약철회 시 판매자에게 회복할 수 없는 피해가 예상되어
+                소비자의 사전 동의를 얻은 경우
+              </li>
+              <li>
+                - 디지털 콘텐츠의 제공이 개시된 경우(다만, 가분적 용역 또는 가분적 디지털콘텐츠로 구성된
+                계약의 경우 제공이 개시되지 아니한 부분은 청약철회를 할 수 있습니다.)
+              </li>
+            </ul>
+          </article>
+
+          <article className="rounded-[22px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(250,244,235,0.96)_100%)] p-5">
+            <p className="text-sm leading-7 text-stone-700">
+              ※ 고객님의 마음이 바뀌어 교환, 반품을 하실 경우 상품반송 비용은 고객님께서 부담하셔야
+              합니다.
+              <br />
+              (색상 교환, 사이즈 교환 등 포함)
+            </p>
+          </article>
+        </div>
+      </section>
     </div>
   );
 }
@@ -409,22 +476,6 @@ function SunPackDetailPage({
 function SunPackDetailStory() {
   return (
     <section className="mx-auto max-w-[960px] space-y-0">
-      <div className="space-y-0">
-        {sunPackDetailAssets.motionFrames.map((image, index) => (
-          <div key={image} className="relative">
-            <Image
-              src={image}
-              alt={`선팩 상세 이미지 ${index + 1}`}
-              width={1200}
-              height={1200}
-              className="h-auto w-full"
-              sizes="(max-width: 960px) 100vw, 960px"
-              unoptimized
-            />
-          </div>
-        ))}
-      </div>
-
       <div className="space-y-0">
         {sunPackDetailAssets.storyImages.map((image, index) => (
           <div key={image} className="relative">

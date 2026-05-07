@@ -23,15 +23,17 @@ export const homeVisuals = {
 
 export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet> = {
   "sun-pack": {
-    hero: "/images/sun-hero.png",
-    card: "/images/sun-object.png",
-    alt: "심플스틱 선팩 제품 이미지",
+    hero: "/images/sunpack-thumb-02.png",
+    card: "/images/sunpack-thumb-02.png",
+    alt: "심플스틱 선팩 모델 썸네일 이미지",
     gallery: [
-      "/images/sun-object.png",
-      "/images/sun-texture.png",
-      "/images/sun-model-warm.png",
-      "/images/sun-package.png",
-      "/images/sun-lifestyle.png",
+      "/images/sunpack-thumb-01.png",
+      "/images/sunpack-thumb-02.png",
+      "/images/sunpack-thumb-03.png",
+      "/images/sunpack-thumb-04.png",
+      "/images/sunpack-thumb-05.png",
+      "/images/sunpack-thumb-06.png",
+      "/images/sunpack-thumb-07.png",
     ],
   },
   illuminator: {
@@ -49,12 +51,23 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
 };
 
 export const sunPackDetailAssets = {
-  motionFrames: ["/images/sunpack-detail-gif-01.png", "/images/sunpack-detail-gif-02.png"],
+  heroImage: "/images/sunpack-priority-01.png",
+  thumbnailImages: [
+    "/images/sunpack-thumb-01.png",
+    "/images/sunpack-thumb-02.png",
+    "/images/sunpack-thumb-03.png",
+    "/images/sunpack-thumb-04.png",
+    "/images/sunpack-thumb-05.png",
+    "/images/sunpack-thumb-06.png",
+    "/images/sunpack-thumb-07.png",
+  ],
   storyImages: [
-    "/images/sunpack-detail-part-01.png",
-    "/images/sunpack-detail-part-02.png",
-    "/images/sunpack-detail-part-03.png",
-    "/images/sunpack-detail-part-04.png",
-    "/images/sunpack-detail-part-05.png",
+    "/images/sunpack-priority-01.png",
+    "/images/sunpack-priority-02.png",
+    "/images/sunpack-priority-03.png",
+    "/images/sunpack-priority-04.png",
+    "/images/sunpack-priority-05.png",
+    "/images/sunpack-priority-06.png",
+    "/images/sunpack-priority-07.png",
   ],
 };

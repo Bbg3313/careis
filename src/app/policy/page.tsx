@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const policies = [
-  { href: "/policy/terms", title: "이용약관", description: "서비스 이용에 대한 기본 약관" },
-  { href: "/policy/privacy", title: "개인정보처리방침", description: "주문 및 배송 정보 처리 기준" },
-  { href: "/policy/shipping", title: "배송/교환/반품", description: "배송비, 교환, 반품 안내" },
+  { href: "/policy/terms", title: "이용약관", description: "비회원 구매 및 서비스 이용 기본 약관" },
+  { href: "/policy/privacy", title: "개인정보처리방침", description: "주문·결제·배송 관련 개인정보 처리 기준" },
+  { href: "/policy/shipping", title: "배송/교환/반품", description: "배송, 교환, 반품, 환불 안내" },
 ];
 
 export default function PolicyPage() {

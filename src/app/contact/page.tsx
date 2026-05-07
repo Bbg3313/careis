@@ -22,26 +22,38 @@ export default function ContactPage() {
           <p className="text-sm font-semibold text-stone-900">문의 채널</p>
           <div className="mt-5 space-y-4 text-sm leading-8 text-stone-600">
             <p>
-              <strong className="text-stone-900">전화</strong>: 070-4647-3263
+              <strong className="text-stone-900">전화</strong>: 010-2556-3263
+            </p>
+            <p>
+              <strong className="text-stone-900">운영시간</strong>: 평일 10:00~17:00 / 점심 12:00~13:00 / 주말·공휴일 휴무
             </p>
             <p>
               <strong className="text-stone-900">인스타그램</strong>: @careis.official
+            </p>
+            <p>
+              <strong className="text-stone-900">이메일</strong>: startupscon@gmail.com
             </p>
             <p className="copy-pretty">
               <strong className="text-stone-900">주소</strong>: 서울 강남구 역삼동 테헤란로 43길 14,
               청수빌딩 13층
             </p>
+            <p>
+              <strong className="text-stone-900">사업자번호</strong>: 215-86-78967
+            </p>
+            <p>
+              <strong className="text-stone-900">통신판매업</strong>: 제2012-서울강남-01016호
+            </p>
           </div>
         </article>
 
         <article className="rounded-[32px] border border-[rgba(116,88,59,0.12)] bg-white p-8 shadow-[0_18px_60px_rgba(73,53,26,0.05)]">
-          <p className="text-sm font-semibold text-stone-900">상담 가능 항목</p>
-          <ul className="mt-5 space-y-3 text-sm leading-8 text-stone-600">
-            <li>- 오프라인 입점 및 파트너십 운영 여부</li>
-            <li>- 선팩 / 일루미네이터 제휴 판매 또는 협업 제안</li>
-            <li>- 제품 소개 자료 및 콘텐츠 협업 요청</li>
-            <li>- 레퍼럴 구매 및 인플루언서 공구 연계 운영 여부</li>
-          </ul>
+          <p className="text-sm font-semibold text-stone-900">고객센터 및 안내</p>
+          <div className="mt-5 space-y-3 text-sm leading-8 text-stone-600">
+            <p>- 주문, 결제, 배송, 교환/반품 문의는 고객센터를 통해 접수할 수 있습니다.</p>
+            <p>- 오프라인 입점 및 파트너십, 제휴 판매, 콘텐츠 협업 문의도 동일 채널로 접수 가능합니다.</p>
+            <p>- 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은 휴무입니다.</p>
+            <p>- 사업자 정보와 운영정책은 푸터 및 정책안내 페이지에서 상시 확인할 수 있습니다.</p>
+          </div>
         </article>
       </section>
     </div>

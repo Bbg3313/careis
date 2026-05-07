@@ -11,9 +11,21 @@ export function SiteFooter() {
             <SiteLogo dark footer />
             <div className="max-w-md space-y-1.5 text-[13px] leading-[1.75] text-white/60">
               <p>상호: 케어이즈 | 대표자: 이명규</p>
-              <p>사업자번호: 215-86-78967</p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p>사업자번호: 215-86-78967</p>
+                <a
+                  href="https://teht.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/ca/a/b/UTECAABA12.xml"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center rounded-full border border-white/16 px-3 py-1 text-[11px] font-medium tracking-[0.08em] text-white/78 transition hover:border-white/32 hover:text-white"
+                >
+                  사업자번호 확인
+                </a>
+              </div>
               <p>통신판매업: 제2012-서울강남-01016호</p>
               <p>소재지: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)</p>
+              <p>고객센터: 010-2556-3263 | startupscon@gmail.com</p>
+              <p>운영시간: 평일 10:00~17:00 | 점심 12:00~13:00 | 주말·공휴일 휴무</p>
             </div>
           </div>
 
@@ -21,8 +33,8 @@ export function SiteFooter() {
             <div className="space-y-4 text-left">
               <p className="text-[12px] uppercase tracking-[0.15em] text-white/40">Contact</p>
               <div className="space-y-3 text-[13px] text-white/60">
-                <a href="tel:07046473263" className="block transition hover:text-white">
-                  070-4647-3263
+                <a href="tel:01025563263" className="block transition hover:text-white">
+                  010-2556-3263
                 </a>
                 <a
                   href="mailto:startupscon@gmail.com"
@@ -53,6 +65,9 @@ export function SiteFooter() {
                 </Link>
                 <Link href="/policy/privacy" className="block transition hover:text-white">
                   개인정보처리방침
+                </Link>
+                <Link href="/policy" className="block transition hover:text-white">
+                  정책안내
                 </Link>
               </div>
             </div>

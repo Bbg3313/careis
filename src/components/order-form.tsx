@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,12 @@ type OrderFormProps = {
 };
 
 type SelectedItemState = Record<ProductSlug, { selected: boolean; quantity: number }>;
+type AgreementState = {
+  terms: boolean;
+  privacy: boolean;
+  shipping: boolean;
+  paymentDelegation: boolean;
+};
 
 declare global {
   interface Window {
@@ -60,6 +67,12 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   const [paymentMethod, setPaymentMethod] = useState<(typeof paymentMethods)[number]["value"]>(
     "CREDIT_CARD",
   );
+  const [agreements, setAgreements] = useState<AgreementState>({
+    terms: false,
+    privacy: false,
+    shipping: false,
+    paymentDelegation: false,
+  });
   const [resolvedReferralCode, setResolvedReferralCode] = useState(referralCode);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -136,6 +149,11 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
 
     if (!postalCode || !address) {
       setErrorMessage("Daum 주소찾기로 배송지를 먼저 선택해주세요.");
+      return;
+    }
+
+    if (!agreements.terms || !agreements.privacy || !agreements.shipping || !agreements.paymentDelegation) {
+      setErrorMessage("필수 약관 및 개인정보 관련 동의 항목을 모두 확인해주세요.");
       return;
     }
 
@@ -325,7 +343,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
                 onClick={openAddressSearch}
                 className="btn-luxe-secondary w-full rounded-full px-5 py-3 text-sm font-semibold md:w-auto"
               >
-                Daum 주소찾기
+                주소찾기
               </button>
             </div>
           </label>
@@ -390,6 +408,101 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             네이버페이, 신용카드, 토스페이, 카카오페이 중 원하는 방식으로 결제를 진행할 수 있습니다.
           </p>
         </div>
+
+        <div className="space-y-4 rounded-[24px] border border-[rgba(169,125,77,0.16)] bg-[#fcf8f2] p-5">
+          <div>
+            <p className="text-sm font-semibold text-stone-900">구매 동의</p>
+            <p className="mt-2 text-xs leading-6 text-stone-500">
+              비회원 주문 결제를 진행하려면 아래 필수 항목을 모두 확인해주세요.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <label className="flex items-start gap-3 text-sm text-stone-700">
+              <input
+                type="checkbox"
+                checked={agreements.terms}
+                onChange={(event) =>
+                  setAgreements((current) => ({
+                    ...current,
+                    terms: event.target.checked,
+                  }))
+                }
+                className="mt-1 h-4 w-4 rounded border-stone-300 text-[#a97d4d] focus:ring-[#a97d4d]"
+              />
+              <span className="leading-6">
+                <strong className="text-stone-900">[필수]</strong> 비회원 구매조건 및{" "}
+                <Link href="/policy/terms" target="_blank" className="underline underline-offset-4">
+                  이용약관
+                </Link>
+                을 확인했습니다.
+              </span>
+            </label>
+
+            <label className="flex items-start gap-3 text-sm text-stone-700">
+              <input
+                type="checkbox"
+                checked={agreements.privacy}
+                onChange={(event) =>
+                  setAgreements((current) => ({
+                    ...current,
+                    privacy: event.target.checked,
+                  }))
+                }
+                className="mt-1 h-4 w-4 rounded border-stone-300 text-[#a97d4d] focus:ring-[#a97d4d]"
+              />
+              <span className="leading-6">
+                <strong className="text-stone-900">[필수]</strong> 주문·결제·배송 처리를 위한{" "}
+                <Link href="/policy/privacy" target="_blank" className="underline underline-offset-4">
+                  개인정보 수집 및 이용
+                </Link>
+                에 동의합니다.
+              </span>
+            </label>
+
+            <label className="flex items-start gap-3 text-sm text-stone-700">
+              <input
+                type="checkbox"
+                checked={agreements.shipping}
+                onChange={(event) =>
+                  setAgreements((current) => ({
+                    ...current,
+                    shipping: event.target.checked,
+                  }))
+                }
+                className="mt-1 h-4 w-4 rounded border-stone-300 text-[#a97d4d] focus:ring-[#a97d4d]"
+              />
+              <span className="leading-6">
+                <strong className="text-stone-900">[필수]</strong>{" "}
+                <Link href="/policy/shipping" target="_blank" className="underline underline-offset-4">
+                  배송/교환/반품 정책
+                </Link>
+                을 확인했습니다.
+              </span>
+            </label>
+
+            <label className="flex items-start gap-3 text-sm text-stone-700">
+              <input
+                type="checkbox"
+                checked={agreements.paymentDelegation}
+                onChange={(event) =>
+                  setAgreements((current) => ({
+                    ...current,
+                    paymentDelegation: event.target.checked,
+                  }))
+                }
+                className="mt-1 h-4 w-4 rounded border-stone-300 text-[#a97d4d] focus:ring-[#a97d4d]"
+              />
+              <span className="leading-6">
+                <strong className="text-stone-900">[필수]</strong> 결제 처리 및 상품 배송을 위한 개인정보의{" "}
+                <Link href="/policy/privacy" target="_blank" className="underline underline-offset-4">
+                  제3자 제공 및 처리위탁
+                </Link>
+                에 동의합니다.
+              </span>
+            </label>
+          </div>
+        </div>
       </section>
 
       <aside className="space-y-6 rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-[#f8f3ec] p-5 md:rounded-[32px] md:p-8">
@@ -438,6 +551,13 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           </div>
         </div>
 
+        <div className="space-y-3 rounded-[24px] bg-white p-5 text-sm leading-6 text-stone-600 md:rounded-[28px] md:p-6">
+          <p className="font-semibold text-stone-900">주문 전 확인사항</p>
+          <p>비회원 주문이 가능하며, 주문 완료 후 선택한 결제수단으로 안전하게 결제가 진행됩니다.</p>
+          <p>주문 및 결제 문의는 고객센터 010-2556-3263 또는 startupscon@gmail.com으로 접수할 수 있습니다.</p>
+          <p>운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은 휴무입니다.</p>
+        </div>
+
         {errorMessage ? <p className="text-sm text-red-600">{errorMessage}</p> : null}
 
         <button
@@ -445,7 +565,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           disabled={submitting}
           className="btn-luxe-primary w-full rounded-full px-6 py-4 text-sm font-semibold disabled:opacity-60"
         >
-          {submitting ? "주문 저장 중..." : "주문 저장하기"}
+          {submitting ? "결제 준비 중..." : "결제 진행하기"}
         </button>
       </aside>
       </form>
