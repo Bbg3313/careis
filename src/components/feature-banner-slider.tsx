@@ -51,28 +51,32 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   </>
                 ) : (
                   <>
-                    <div className="absolute -left-[32%] top-[8%] h-[92%] w-[58%] rounded-full bg-[radial-gradient(circle_at_center,rgba(49,65,120,0.42)_0%,rgba(30,41,78,0.14)_38%,transparent_72%)] blur-3xl" />
-                    <div className="absolute -right-[26%] bottom-[-12%] h-[85%] w-[56%] rounded-full bg-[radial-gradient(circle_at_center,rgba(28,38,72,0.38)_0%,rgba(15,23,42,0.1)_40%,transparent_74%)] blur-3xl" />
-                    <div className="absolute left-[45%] top-[-10%] h-[55%] w-[48%] rounded-full bg-[radial-gradient(circle,rgba(147,172,232,0.18)_0%,transparent_68%)] blur-3xl" />
+                    <div className="absolute inset-0 bg-[linear-gradient(105deg,#0b0f18_0%,#121a28_42%,rgba(18,26,40,0.82)_58%,rgba(32,38,52,0.35)_100%)]" />
+                    <div className="absolute -right-[18%] top-[6%] h-[78%] w-[52%] rounded-full bg-[radial-gradient(circle_at_center,rgba(76,96,160,0.28)_0%,transparent_68%)] blur-3xl" />
+                    <div className="absolute inset-y-0 left-0 w-[58%] bg-[linear-gradient(90deg,rgba(8,11,18,0.72)_0%,rgba(8,11,18,0.35)_55%,transparent_100%)]" />
                   </>
                 )}
               </div>
-              <div className="relative z-10 text-center lg:max-w-[640px] lg:text-left">
+              <div
+                className={`relative z-10 text-center lg:max-w-[640px] lg:text-left ${
+                  slide.tone === "dark"
+                    ? "rounded-[26px] border border-white/12 bg-[rgba(10,14,22,0.55)] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-md md:p-8"
+                    : ""
+                }`}
+              >
                 <div className="lg:-translate-y-6">
                   <p
-                    className={`text-[11px] uppercase tracking-[0.24em] ${
+                    className={`text-[11px] uppercase tracking-[0.24em] md:text-[12px] ${
                       slide.tone === "light"
                         ? "text-[#8b673f]"
-                        : "text-[#d4defc] [text-shadow:0_1px_18px_rgba(15,23,42,0.55)]"
+                        : "text-[#c8d7ff]"
                     }`}
                   >
                     {slide.label}
                   </p>
                   <h2
                     className={`headline-balance mt-3 text-[23px] font-semibold leading-[1.16] tracking-[-0.04em] md:text-[32px] lg:mt-4 lg:text-[36px] lg:whitespace-nowrap ${
-                      slide.tone === "light"
-                        ? "text-stone-900"
-                        : "text-white [text-shadow:0_2px_28px_rgba(15,23,42,0.62)]"
+                      slide.tone === "light" ? "text-stone-900" : "text-white"
                     }`}
                   >
                     {slide.title}
@@ -80,27 +84,25 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                 </div>
                 <p
                   className={`copy-pretty mt-6 text-[15px] leading-[1.9] md:text-[17px] ${
-                    slide.tone === "light"
-                      ? "text-stone-600"
-                      : "text-white/78 [text-shadow:0_1px_16px_rgba(15,23,42,0.5)]"
+                    slide.tone === "light" ? "text-stone-600" : "text-white/92"
                   }`}
                 >
                   {slide.description}
                 </p>
 
-                <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5 md:mt-8 md:gap-3 lg:justify-start">
+                <div className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-9 md:gap-3.5 lg:justify-start">
                   {slide.highlights.map((highlight) => (
                     <div
                       key={highlight}
-                      className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[10px] font-medium tracking-[0.12em] md:px-4 md:text-[11px] md:tracking-[0.14em] ${
+                      className={`inline-flex items-center gap-2.5 rounded-full border font-semibold md:gap-3 ${
                         slide.tone === "light"
-                          ? "border-[rgba(184,145,86,0.16)] bg-white/80 text-[#8b673f] shadow-[0_10px_24px_rgba(89,63,28,0.06)] backdrop-blur-sm"
-                          : "border-white/14 bg-white/10 text-[#eef2ff] shadow-[0_12px_32px_rgba(15,23,42,0.2)] backdrop-blur-md"
+                          ? "border-[rgba(184,145,86,0.22)] bg-white/90 px-5 py-3 text-[12px] tracking-[0.08em] text-[#6b4f2f] shadow-[0_10px_28px_rgba(89,63,28,0.08)] backdrop-blur-sm md:px-6 md:py-3.5 md:text-[13px]"
+                          : "border-white/25 bg-[rgba(18,24,38,0.85)] px-5 py-3 text-[12px] tracking-[0.09em] text-white shadow-[0_14px_36px_rgba(0,0,0,0.45)] backdrop-blur-sm md:px-7 md:py-4 md:text-[13px]"
                       }`}
                     >
                       <span
-                        className={`h-1.5 w-1.5 rounded-full ${
-                          slide.tone === "light" ? "bg-[#b89156]" : "bg-[#b7c8ff]"
+                        className={`h-2 w-2 shrink-0 rounded-full md:h-2.5 md:w-2.5 ${
+                          slide.tone === "light" ? "bg-[#b89156]" : "bg-[#a8bcff]"
                         }`}
                       />
                       <span>{highlight}</span>

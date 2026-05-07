@@ -500,47 +500,62 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="relative w-full overflow-hidden bg-[linear-gradient(180deg,#f7f3ec_0%,#ebe4d8_42%,#f3efe6_100%)] px-6 py-20 md:py-28 lg:py-36">
-        <div className="pointer-events-none absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-[#d7b27d]/12 blur-3xl" />
-        <div className="pointer-events-none absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-[#c9a66b]/10 blur-3xl" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.35)_50%,transparent_100%)]" />
+      <section className="bg-[#FAFAF8] px-4 py-16 md:px-6 md:py-24">
+        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[30px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(165deg,#ffffff_0%,#fdfbf7_48%,#faf6ef_100%)] px-6 py-10 text-center shadow-[0_22px_56px_rgba(89,63,28,0.07)] md:px-10 md:py-14">
+          <div className="pointer-events-none absolute -right-16 -top-20 h-52 w-52 rounded-full bg-[#d7b27d]/14 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-12 h-48 w-48 rounded-full bg-[#c9a66b]/12 blur-3xl" />
+          <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.35)_50%,transparent_100%)]" />
 
-        <div className="relative mx-auto max-w-[720px] text-center">
-          <p className="text-[11px] uppercase tracking-[0.32em] text-[#8b673f]">Private referral access</p>
+          <div className="relative">
+            <p className="text-[12px] font-medium tracking-[0.18em] text-[#8b673f]">레퍼럴 안내</p>
+            <h2 className="display-font headline-balance mt-4 text-[32px] font-semibold leading-[1.18] tracking-[-0.02em] text-stone-900 md:text-[42px]">
+              안내된 링크와 코드로
+              <span className="mt-1 block bg-[linear-gradient(92deg,#9d7442_0%,#c49a5c_42%,#8b673f_100%)] bg-clip-text text-transparent">
+                주문하기
+              </span>
+            </h2>
+            <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.85] text-stone-600">
+              인플루언서 등으로 받은 링크로 들어오거나, 주문 시 추천 코드를 입력하면 안내된 조건 그대로 결제할 수 있습니다.
+            </p>
 
-          <h2 className="display-font headline-balance mt-6 text-[30px] font-semibold leading-[1.2] tracking-[-0.03em] text-stone-900 md:text-[44px] md:leading-[1.15]">
-            Invitation-only
-            <br />
-            <span className="bg-[linear-gradient(92deg,#9d7442_0%,#c49a5c_42%,#8b673f_100%)] bg-clip-text text-transparent">
-              link &amp; code
-            </span>
-          </h2>
+            <div className="mx-auto mt-8 grid max-w-3xl gap-4 text-left md:grid-cols-3">
+              <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
+                <p className="text-[11px] font-medium tracking-[0.14em] text-[#8b673f]">혜택</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">조건 그대로 반영</p>
+                <p className="mt-2 text-sm leading-snug text-stone-600 break-keep">
+                  안내된 할인·조건이 주문에 그대로 적용됩니다.
+                </p>
+              </div>
+              <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
+                <p className="text-[11px] font-medium tracking-[0.14em] text-[#8b673f]">진행</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">평소 주문과 동일</p>
+                <p className="mt-2 text-sm leading-snug text-stone-600 break-keep">
+                  일반 주문 화면에서 제품을 담은 뒤, 받으신 코드만 입력하면 됩니다.
+                </p>
+              </div>
+              <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">
+                <p className="text-[11px] font-medium tracking-[0.14em] text-[#8b673f]">안내</p>
+                <p className="mt-3 text-lg font-semibold text-stone-900">배송·상담 동일</p>
+                <p className="mt-2 text-sm leading-snug text-stone-600 break-keep">
+                  배송과 고객센터 안내는 일반 구매와 같은 기준입니다.
+                </p>
+              </div>
+            </div>
 
-          <p className="mx-auto mt-8 max-w-[520px] text-[15px] leading-[1.75] text-stone-600 md:text-[16px] md:leading-[1.8]">
-            Your host partner&apos;s link or code unlocks privileged terms at checkout.
-            <br />
-            Nothing extra required.
-          </p>
+            <div className="pt-10">
+              <Link
+                href="/order"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[rgba(184,145,86,0.35)] bg-[linear-gradient(135deg,#f6e8d4_0%,#d2aa73_52%,#b89156_100%)] px-10 py-4 text-[13px] font-medium tracking-[0.06em] text-stone-900 shadow-[0_14px_36px_rgba(184,145,86,0.22)] transition hover:brightness-[1.03] sm:w-auto"
+              >
+                추천 코드와 함께 주문하기
+                <ArrowAccent />
+              </Link>
+            </div>
 
-          <div className="mx-auto mt-10 max-w-md space-y-2.5 text-[12px] font-medium uppercase tracking-[0.22em] text-stone-500">
-            <p>Privileged pricing · Secure checkout</p>
-            <p>Single code · Seamless journey</p>
-            <p>Fulfillment &amp; care · Unchanged</p>
+            <p className="mt-8 text-[11px] leading-relaxed text-stone-500">
+              * 링크와 코드는 안내를 받은 채널에서만 전달될 수 있습니다.
+            </p>
           </div>
-
-          <div className="mt-12 flex justify-center">
-            <Link
-              href="/order"
-              className="inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full border border-[rgba(184,145,86,0.35)] bg-[linear-gradient(135deg,#f6e8d4_0%,#d2aa73_52%,#b89156_100%)] px-10 py-4 text-[12px] font-semibold uppercase tracking-[0.14em] text-stone-900 shadow-[0_14px_36px_rgba(184,145,86,0.22)] transition hover:brightness-[1.03] sm:w-auto sm:min-w-[280px]"
-            >
-              Continue with referral code
-              <ArrowAccent />
-            </Link>
-          </div>
-
-          <p className="mx-auto mt-10 max-w-md text-[11px] leading-relaxed text-stone-500">
-            * Links and codes are issued privately by your host partner or authorized channel.
-          </p>
         </div>
       </section>
     </div>
