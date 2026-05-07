@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { SunPackStorySlide } from "@/lib/site-assets";
 
@@ -60,6 +60,58 @@ function AutoPlayVideo({ src, mime }: { src: string; mime: string }) {
   );
 }
 
+function StoryGifSlide({ slide, index }: { slide: SunPackStorySlide; index: number }) {
+  const [gifBroken, setGifBroken] = useState(false);
+  const poster = slide.posterSrc;
+
+  if (!poster) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={slide.src}
+        alt={`선팩 상세 ${index + 1}`}
+        width={slide.width}
+        height={slide.height}
+        className="block h-auto w-full max-w-full select-none"
+        loading="eager"
+        decoding="async"
+        fetchPriority={index <= 4 ? "high" : "auto"}
+        draggable={false}
+      />
+    );
+  }
+
+  return (
+    <div className="relative w-full isolate [transform:translateZ(0)]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={poster}
+        alt=""
+        width={slide.width}
+        height={slide.height}
+        className="block h-auto w-full max-w-full select-none"
+        draggable={false}
+        aria-hidden
+      />
+      {!gifBroken ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={slide.src}
+          alt={`선팩 상세 ${index + 1}`}
+          width={slide.width}
+          height={slide.height}
+          className="absolute inset-0 block h-full w-full object-contain select-none"
+          loading="eager"
+          decoding="async"
+          fetchPriority={index <= 4 ? "high" : "auto"}
+          draggable={false}
+          onError={() => setGifBroken(true)}
+        />
+      ) : null}
+    </div>
+  );
+}
+
 export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; index: number }) {
   const ext = mediaExtension(slide.src);
 
@@ -71,20 +123,7 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
   const isGif = ext === "gif";
 
   if (isGif) {
-    return (
-      // GIF는 next/image·최적화 파이프를 타지 않고 원본으로 로드 (애니메이션 유지)
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={slide.src}
-        alt={`선팩 상세 ${index + 1}`}
-        width={slide.width}
-        height={slide.height}
-        className="block h-auto w-full max-w-full"
-        loading="eager"
-        decoding="async"
-        fetchPriority={index <= 4 ? "high" : "auto"}
-      />
-    );
+    return <StoryGifSlide slide={slide} index={index} />;
   }
 
   return (
@@ -95,7 +134,8 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
       height={slide.height}
       className="block h-auto w-full max-w-full"
       sizes="(max-width: 640px) 100vw, (max-width: 1280px) min(960px, 94vw), min(960px, 1200px)"
-      quality={92}
+      quality={100}
+      unoptimized
       loading={index < 2 ? "eager" : "lazy"}
       priority={index < 2}
     />

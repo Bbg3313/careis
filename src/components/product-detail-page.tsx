@@ -13,6 +13,10 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
   const warmTheme = product.theme === "warm";
   const visual = productVisuals[product.slug];
   const isSunPack = product.slug === "sun-pack";
+  const isIlluminator = product.slug === "illuminator";
+  const heroMotionSizes =
+    "(max-width: 1024px) 100vw, min(1920px, min(100vw, 90rem))";
+  const heroCardSizes = "(max-width: 1024px) 100vw, min(1200px, 52vw)";
 
   if (isSunPack) {
     return <SunPackDetailPage product={product} visual={visual} />;
@@ -26,6 +30,8 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
           alt={`${product.name} 히어로 모션`}
           priority
           className="absolute inset-0"
+          frameSizes={isIlluminator ? heroMotionSizes : undefined}
+          quality={isIlluminator ? 92 : undefined}
           overlayClassName={`absolute inset-0 ${
             warmTheme
               ? "bg-[linear-gradient(90deg,rgba(10,10,10,0.8)_0%,rgba(10,10,10,0.32)_46%,rgba(10,10,10,0.64)_100%)]"
@@ -91,7 +97,8 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
                 alt={visual.alt}
                 fill
                 className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                sizes={isIlluminator ? heroCardSizes : "(max-width: 1024px) 100vw, 50vw"}
+                quality={isIlluminator ? 92 : 85}
                 priority
               />
             </div>
@@ -379,13 +386,13 @@ function SunPackDetailPage({
 
           <SunPackDetailTabs />
 
-          <section id="detail" className="scroll-mt-[148px]">
+          <section id="detail" className="scroll-mt-[var(--site-sticky-offset)]">
             <SunPackDetailStory />
           </section>
 
           <section
             id="guide"
-            className="scroll-mt-[148px] space-y-6 rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
+            className="scroll-mt-[var(--site-sticky-offset)] space-y-6 rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
           >
             <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품구매안내</h2>
 
@@ -441,12 +448,12 @@ function SunPackDetailPage({
             </article>
           </section>
 
-          <section id="review" className="scroll-mt-[148px] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
+          <section id="review" className="scroll-mt-[var(--site-sticky-offset)] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
             <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 리뷰</h2>
             <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
           </section>
 
-          <section id="qa" className="scroll-mt-[148px] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
+          <section id="qa" className="scroll-mt-[var(--site-sticky-offset)] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
             <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 Q&amp;A</h2>
             <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
           </section>
@@ -454,7 +461,7 @@ function SunPackDetailPage({
           <ProductExchangeReturnSection />
         </div>
 
-        <aside className="pointer-events-auto hidden max-h-[calc(100vh-6.5rem)] w-[min(380px,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:fixed lg:right-[max(1rem,calc((100vw-1380px)/2+2rem))] lg:top-24 lg:z-40 lg:block lg:space-y-6 xl:top-28">
+        <aside className="pointer-events-auto hidden w-[min(380px,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:fixed lg:right-[max(1rem,calc((100vw-1380px)/2+2rem))] lg:top-[calc(var(--site-sticky-offset)+env(safe-area-inset-top,0px))] lg:z-40 lg:block lg:max-h-[calc(100dvh-var(--site-sticky-offset)-max(1rem,env(safe-area-inset-bottom,0px)))] lg:space-y-6">
           {purchaseAsideBody}
         </aside>
       </div>

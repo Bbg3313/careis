@@ -65,7 +65,8 @@ export function SunPackDetailGallery({
             height={pixelSize.height}
             className="block h-auto w-full max-w-full"
             sizes={MAIN_SIZES}
-            quality={92}
+            quality={100}
+            unoptimized
             priority
           />
         )}
@@ -106,7 +107,8 @@ export function SunPackDetailGallery({
                   fill
                   className="object-cover"
                   sizes={THUMB_SIZES}
-                  quality={90}
+                  quality={100}
+                  unoptimized
                 />
               )}
             </button>

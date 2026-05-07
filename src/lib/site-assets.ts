@@ -57,6 +57,8 @@ export type SunPackStorySlide = {
   src: string;
   width: number;
   height: number;
+  /** GIF 실패·호환 시 뒤에 깔 정지 이미지(동일 프레임 PNG 등) */
+  posterSrc?: string;
 };
 export const sunPackDetailAssets = {
   heroImage: "/images/sunpack-thumb-02.png",
@@ -76,7 +78,7 @@ export const sunPackDetailAssets = {
     { src: "/images/sunpack-detail-gif-01.gif", width: 600, height: 338 },
     { src: "/images/sunpack-priority-03.png", width: 299, height: 1024 },
     { src: "/images/sunpack-priority-04.png", width: 853, height: 1024 },
-    { src: "/images/sunpack-detail-gif-02.gif", width: 600, height: 338 },
+    { src: "/images/sunpack-detail-gif-02.gif", width: 600, height: 338, posterSrc: "/images/sunpack-detail-gif-02.png" },
     { src: "/images/sunpack-priority-06.png", width: 799, height: 1024 },
     { src: "/images/sunpack-priority-07.png", width: 1005, height: 1024 },
   ] satisfies SunPackStorySlide[],
