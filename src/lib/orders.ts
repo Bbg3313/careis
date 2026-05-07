@@ -159,6 +159,47 @@ export async function getOrderByNumber(orderNumber: string) {
   });
 }
 
+const adminOrderUpdateSchema = z.object({
+  carrier: z.string().max(40).optional().nullable(),
+  trackingNumber: z.string().max(80).optional().nullable(),
+  adminNote: z.string().max(2000).optional().nullable(),
+});
+
+export async function updateOrderAdminFields(
+  orderNumber: string,
+  input: z.infer<typeof adminOrderUpdateSchema>,
+) {
+  const parsed = adminOrderUpdateSchema.parse(input);
+  const carrier = parsed.carrier?.trim() || null;
+  const trackingNumber = parsed.trackingNumber?.trim() || null;
+  const adminNote = parsed.adminNote?.trim() || null;
+
+  const existing = await prisma.order.findUnique({ where: { orderNumber }, select: { shippedAt: true } });
+  const shippedAt = trackingNumber ? existing?.shippedAt ?? new Date() : null;
+
+  return prisma.order.update({
+    where: { orderNumber },
+    data: {
+      carrier,
+      trackingNumber,
+      adminNote,
+      shippedAt,
+    },
+    include: { orderItems: true },
+  });
+}
+
+export async function getOrderStats() {
+  const [all, pending, paid, cancelled, refunded] = await Promise.all([
+    prisma.order.count(),
+    prisma.order.count({ where: { paymentStatus: OrderStatus.PENDING } }),
+    prisma.order.count({ where: { paymentStatus: OrderStatus.PAID } }),
+    prisma.order.count({ where: { paymentStatus: OrderStatus.CANCELLED } }),
+    prisma.order.count({ where: { paymentStatus: OrderStatus.REFUNDED } }),
+  ]);
+  return { all, pending, paid, cancelled, refunded };
+}
+
 export async function setOrderPaymentRequested(orderNumber: string, metadata: PaymentRequestMetadata) {
   return prisma.order.update({
     where: { orderNumber },

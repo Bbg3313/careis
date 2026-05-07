@@ -65,6 +65,13 @@ model Order {
   paymentPayload  String?
   referralCode   String?
   couponCode     String?
+  /** 택배사명 (자유 입력) */
+  carrier            String?
+  /** 운송장 번호 */
+  trackingNumber     String?
+  shippedAt          DateTime?
+  /** 관리자 메모 (고객 비노출) */
+  adminNote          String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   orderItems     OrderItem[]

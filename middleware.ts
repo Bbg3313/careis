@@ -2,13 +2,14 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { REFERRAL_COOKIE_AGE, REFERRAL_COOKIE_KEY, sanitizeReferralCode } from "@/lib/referral";
+import { refreshSupabaseSession } from "@/lib/supabase/middleware";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  const { response: supabaseResponse, user } = await refreshSupabaseSession(request);
+
   const ref = sanitizeReferralCode(request.nextUrl.searchParams.get("ref"));
-  const response = NextResponse.next();
-
   if (ref) {
-    response.cookies.set({
+    supabaseResponse.cookies.set({
       name: REFERRAL_COOKIE_KEY,
       value: ref,
       maxAge: REFERRAL_COOKIE_AGE,
@@ -17,12 +18,35 @@ export function middleware(request: NextRequest) {
     });
   }
 
-  return response;
+  const path = request.nextUrl.pathname;
+  const isAdminLogin = path === "/admin/login";
+  const isAdminArea = path.startsWith("/admin");
+
+  if (isAdminArea && !isAdminLogin) {
+    const hasSupabase = Boolean(
+      process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    );
+    if (hasSupabase && !user) {
+      const login = new URL("/admin/login", request.url);
+      login.searchParams.set("next", `${path}${request.nextUrl.search}`);
+      return NextResponse.redirect(login);
+    }
+  }
+
+  if (path.startsWith("/api/admin")) {
+    const hasSupabase = Boolean(
+      process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    );
+    if (hasSupabase && !user) {
+      return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+    }
+  }
+
+  return supabaseResponse;
 }
 
 export const config = {
   matcher: [
-    // 정적 자산·이미지·미디어는 미들웨어 미적용 (_next 전체 포함해 /_next/image 등 확실히 제외)
     "/((?!_next/|favicon.ico|images/|media/|branding/).*)",
   ],
 };

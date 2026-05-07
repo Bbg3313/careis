@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.105.3",
     "@tosspayments/tosspayments-sdk": "^2.7.0",
     "clsx": "^2.1.1",
     "next": "^15.3.2",
