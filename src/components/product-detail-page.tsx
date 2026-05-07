@@ -358,9 +358,9 @@ function SunPackDetailPage({
   );
 
   return (
-    <div className="overflow-x-hidden pb-28 lg:pb-24">
-      <div className="relative mx-auto w-full max-w-[1380px] px-4 sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-10 lg:px-8 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-12">
-        <div className="min-w-0 space-y-10">
+    <div className="pb-28 lg:pb-24">
+      <div className="relative mx-auto w-full max-w-[1380px] px-4 sm:px-6 lg:px-8">
+        <div className="min-w-0 space-y-10 overflow-x-hidden lg:mr-[400px] xl:mr-[420px]">
           <section>
             <div className="mb-6 space-y-2 lg:hidden">
               <p className="text-xs uppercase tracking-[0.16em] text-stone-500">{product.englishName}</p>
@@ -454,7 +454,7 @@ function SunPackDetailPage({
           <ProductExchangeReturnSection />
         </div>
 
-        <aside className="pointer-events-auto sticky top-[148px] z-30 mt-10 hidden max-h-[min(100vh-10rem,900px)] w-full shrink-0 overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:mt-0 lg:block lg:self-start lg:space-y-6 xl:top-[156px]">
+        <aside className="pointer-events-auto hidden max-h-[calc(100vh-6.5rem)] w-[min(380px,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:fixed lg:right-[max(1rem,calc((100vw-1380px)/2+2rem))] lg:top-24 lg:z-40 lg:block lg:space-y-6 xl:top-28">
           {purchaseAsideBody}
         </aside>
       </div>
@@ -491,7 +491,7 @@ function SunPackDetailStory() {
       <div className="mx-auto w-full px-0" style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}>
         <div className="space-y-0">
           {sunPackDetailAssets.storyImages.map((slide, index) => (
-            <div key={`${slide.src}-${index}`} className="w-full overflow-hidden">
+            <div key={`${slide.src}-${index}`} className="w-full min-w-0">
               <SunPackStorySlide slide={slide} index={index} />
             </div>
           ))}

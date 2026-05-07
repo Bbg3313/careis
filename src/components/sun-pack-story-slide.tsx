@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 import type { SunPackStorySlide } from "@/lib/site-assets";
@@ -69,18 +70,34 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
 
   const isGif = ext === "gif";
 
+  if (isGif) {
+    return (
+      // GIF는 next/image·최적화 파이프를 타지 않고 원본으로 로드 (애니메이션 유지)
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={slide.src}
+        alt={`선팩 상세 ${index + 1}`}
+        width={slide.width}
+        height={slide.height}
+        className="block h-auto w-full max-w-full"
+        loading="eager"
+        decoding="async"
+        fetchPriority={index <= 4 ? "high" : "auto"}
+      />
+    );
+  }
+
   return (
-    // GIF는 반드시 네이티브 img — next/image 경로는 브라우저·버전에 따라 애니메이션이 멈출 수 있음
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={slide.src}
       alt={`선팩 상세 ${index + 1}`}
       width={slide.width}
       height={slide.height}
       className="block h-auto w-full max-w-full"
-      loading={isGif || index < 3 ? "eager" : "lazy"}
-      decoding="async"
-      fetchPriority={index === 0 ? "high" : undefined}
+      sizes="(max-width: 640px) 100vw, (max-width: 1280px) min(960px, 94vw), min(960px, 1200px)"
+      quality={92}
+      loading={index < 2 ? "eager" : "lazy"}
+      priority={index < 2}
     />
   );
 }

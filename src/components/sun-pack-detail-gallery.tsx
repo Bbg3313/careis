@@ -17,6 +17,9 @@ type SunPackDetailGalleryProps = {
   productName: string;
 };
 
+const MAIN_SIZES = `(max-width: 768px) 100vw, (max-width: 1280px) min(${SUN_PACK_DETAIL_MAX_WIDTH_PX}px, 90vw), min(${SUN_PACK_DETAIL_MAX_WIDTH_PX}px, 1200px)`;
+const THUMB_SIZES = `(max-width: 640px) 28vw, (max-width: 1024px) 160px, 220px`;
+
 export function SunPackDetailGallery({
   defaultMainSrc,
   thumbnailSrcs,
@@ -52,6 +55,7 @@ export function SunPackDetailGallery({
             className="block h-auto w-full max-w-full"
             loading="eager"
             decoding="async"
+            fetchPriority="high"
           />
         ) : (
           <Image
@@ -60,9 +64,9 @@ export function SunPackDetailGallery({
             width={pixelSize.width}
             height={pixelSize.height}
             className="block h-auto w-full max-w-full"
-            sizes={`(max-width: ${SUN_PACK_DETAIL_MAX_WIDTH_PX}px) 100vw, ${SUN_PACK_DETAIL_MAX_WIDTH_PX}px`}
+            sizes={MAIN_SIZES}
+            quality={92}
             priority
-            unoptimized
           />
         )}
       </div>
@@ -92,7 +96,7 @@ export function SunPackDetailGallery({
                   src={src}
                   alt={`${productName} 썸네일 ${index + 1}`}
                   className="absolute inset-0 h-full w-full object-cover"
-                  loading="lazy"
+                  loading="eager"
                   decoding="async"
                 />
               ) : (
@@ -101,8 +105,8 @@ export function SunPackDetailGallery({
                   alt={`${productName} 썸네일 ${index + 1}`}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 15vw, 140px"
-                  unoptimized
+                  sizes={THUMB_SIZES}
+                  quality={90}
                 />
               )}
             </button>
