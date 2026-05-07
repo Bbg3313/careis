@@ -44,25 +44,25 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
               className={`relative grid min-h-[520px] items-center gap-6 overflow-hidden px-5 py-7 md:min-h-[560px] md:gap-8 md:px-11 md:py-11 lg:grid-cols-[1.04fr_0.96fr] lg:px-14 ${
                 slide.tone === "light"
                   ? "bg-[radial-gradient(circle_at_18%_18%,rgba(211,180,132,0.2)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_32%),linear-gradient(135deg,#fffdf9_0%,#faf2e6_54%,#f1e6d4_100%)] text-stone-900"
-                  : "bg-[radial-gradient(circle_at_18%_18%,rgba(212,184,140,0.18)_0%,rgba(29,34,48,0)_30%),radial-gradient(circle_at_82%_24%,rgba(143,164,191,0.16)_0%,rgba(37,43,61,0)_28%),linear-gradient(135deg,#1a1f2e_0%,#252b3d_58%,#2d3347_100%)] text-white"
+                  : "bg-[radial-gradient(circle_at_18%_18%,rgba(128,147,205,0.18)_0%,rgba(12,18,36,0)_30%),radial-gradient(circle_at_82%_22%,rgba(182,206,255,0.12)_0%,rgba(18,26,48,0)_28%),linear-gradient(135deg,#0b1120_0%,#141c31_46%,#202945_100%)] text-white"
               }`}
             >
               <div className="pointer-events-none absolute inset-0">
                 <div
                   className={`absolute inset-y-8 left-6 w-[42%] rounded-[28px] blur-3xl ${
-                    slide.tone === "light" ? "bg-[#e6cda5]/14" : "bg-[#b98b54]/10"
+                    slide.tone === "light" ? "bg-[#e6cda5]/14" : "bg-[#9eb4ec]/12"
                   }`}
                 />
                 <div
                   className={`absolute right-[-6%] top-1/2 h-[72%] w-[40%] -translate-y-1/2 rounded-full blur-3xl ${
-                    slide.tone === "light" ? "bg-white/26" : "bg-[#aabed8]/10"
+                    slide.tone === "light" ? "bg-white/26" : "bg-[#8ca4df]/14"
                   }`}
                 />
                 <div
                   className={`absolute inset-0 ${
                     slide.tone === "light"
                       ? "bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_24%,rgba(170,132,84,0.04)_100%)]"
-                      : "bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_28%,rgba(0,0,0,0.12)_100%)]"
+                      : "bg-[linear-gradient(180deg,rgba(214,226,255,0.08)_0%,rgba(255,255,255,0)_24%,rgba(4,8,18,0.18)_100%)]"
                   }`}
                 />
               </div>
@@ -70,12 +70,16 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                 <div className="lg:-translate-y-6">
                   <p
                     className={`text-[11px] uppercase tracking-[0.24em] ${
-                      slide.tone === "light" ? "text-[#8b673f]" : "text-white/55"
+                      slide.tone === "light" ? "text-[#8b673f]" : "text-[#b9c8f2]"
                     }`}
                   >
                     {slide.label}
                   </p>
-                  <h2 className="headline-balance mt-3 text-[23px] font-semibold leading-[1.16] tracking-[-0.04em] text-stone-900 md:text-[32px] lg:mt-4 lg:text-[36px] lg:whitespace-nowrap">
+                  <h2
+                    className={`headline-balance mt-3 text-[23px] font-semibold leading-[1.16] tracking-[-0.04em] md:text-[32px] lg:mt-4 lg:text-[36px] lg:whitespace-nowrap ${
+                      slide.tone === "light" ? "text-stone-900" : "text-white"
+                    }`}
+                  >
                     {slide.title}
                   </h2>
                 </div>
@@ -94,12 +98,12 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                       className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[10px] font-medium tracking-[0.12em] shadow-[0_10px_24px_rgba(89,63,28,0.06)] md:px-4 md:text-[11px] md:tracking-[0.14em] ${
                         slide.tone === "light"
                           ? "border-[rgba(184,145,86,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9)_0%,rgba(248,238,224,0.96)_100%)] text-[#8b673f]"
-                          : "border-white/14 bg-white/8 text-white/78"
+                          : "border-[#8ea4d6]/18 bg-[linear-gradient(180deg,rgba(33,43,72,0.82)_0%,rgba(18,24,44,0.86)_100%)] text-[#dbe5ff]"
                       }`}
                     >
                       <span
                         className={`h-1.5 w-1.5 rounded-full ${
-                          slide.tone === "light" ? "bg-[#b89156]" : "bg-[#d4b389]"
+                          slide.tone === "light" ? "bg-[#b89156]" : "bg-[#b7c8ff]"
                         }`}
                       />
                       <span>{highlight}</span>

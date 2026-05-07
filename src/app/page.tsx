@@ -466,10 +466,35 @@ export default function HomePage() {
               <p className="mt-4 text-[12px] text-stone-500">원하는 제품을 고른 뒤 바로 주문할 수 있도록 간편 결제 환경을 준비했습니다.</p>
             </div>
 
-            <div className="mt-12 grid gap-8 border-t border-black/5 pt-12 md:grid-cols-3">
-              <InfoStat title="DAY CARE" description="가볍고 편안한 데일리 프로텍션" />
-              <InfoStat title="NIGHT CARE" description="집중 브라이트닝 나이트 루틴" />
-              <InfoStat title="Easy Checkout" description="비회원 구매와 간편 결제 지원" />
+            <div className="mt-12 border-t border-black/5 pt-12">
+              <div className="mx-auto mb-6 max-w-2xl">
+                <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Order Flow</p>
+                <p className="mt-3 text-sm leading-7 text-stone-600">
+                  원하는 제품을 고르고, 비회원으로 결제를 진행한 뒤, 배송과 교환/반품 안내까지 한 번에
+                  확인할 수 있도록 구성했습니다.
+                </p>
+              </div>
+
+              <div className="grid gap-5 md:grid-cols-3">
+                <InfoStat
+                  step="01"
+                  eyebrow="Choose Your Routine"
+                  title="원하는 제품 선택"
+                  description="DAY CARE 선팩과 NIGHT CARE 일루미네이터 중 필요한 제품만 선택하거나 두 제품을 함께 담아 주문할 수 있습니다."
+                />
+                <InfoStat
+                  step="02"
+                  eyebrow="Guest Checkout"
+                  title="비회원 결제 진행"
+                  description="이름, 연락처, 배송지를 입력하고 결제수단을 선택하면 별도 회원가입 없이 바로 주문을 진행할 수 있습니다."
+                />
+                <InfoStat
+                  step="03"
+                  eyebrow="Delivery & Support"
+                  title="배송 및 상담 확인"
+                  description="결제 후 배송, 교환, 반품, 고객센터 안내까지 이어서 확인할 수 있어 주문 이후 과정도 쉽게 살펴볼 수 있습니다."
+                />
+              </div>
             </div>
 
           </div>
@@ -477,45 +502,90 @@ export default function HomePage() {
       </section>
 
       <section className="bg-[#FAFAF8] px-4 py-16 md:px-6 md:py-24">
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">Referral Purchase</p>
-          <h2 className="display-font headline-balance mt-4 text-3xl font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 md:text-[36px]">
-            추천을 통한 개인 구매
-          </h2>
-          <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.8] text-stone-600">
-            추천 코드가 있다면 레퍼럴 링크를 통해 바로 구매할 수 있습니다. 공구 운영이나 채널별 주문
-            확인이 필요한 경우에도 추천 코드와 결제 정보가 함께 남아 깔끔하게 확인할 수 있습니다.
-          </p>
+        <div className="mx-auto max-w-5xl overflow-hidden rounded-[30px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(135deg,#17171b_0%,#221f26_46%,#2b2522_100%)] px-6 py-10 text-center shadow-[0_28px_80px_rgba(18,14,10,0.24)] md:px-10 md:py-14">
+          <div className="pointer-events-none absolute" />
+          <div className="relative">
+            <p className="text-[12px] uppercase tracking-[0.22em] text-[#d5bc96]">Private Referral Access</p>
+            <h2 className="display-font headline-balance mt-4 text-[32px] font-semibold leading-[1.18] tracking-[-0.02em] text-white md:text-[42px]">
+              혜택이 열리는
+              <span className="block text-[#e1c391]">VIP 전용 구매 입구</span>
+            </h2>
+            <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.9] text-white/72">
+              추천 코드를 통해 입장하면 일반 구매보다 더 가볍게 시작할 수 있는 전용 혜택 구간으로
+              연결됩니다. 초대받은 고객만 들어오는 프라이빗 링크처럼, 혜택 적용 구매 흐름을 간결하게
+              안내합니다.
+            </p>
 
-          <div className="pt-10">
-            <Link
-              href="/order"
-              className="inline-flex w-full items-center justify-center gap-2 border border-black/20 px-10 py-4 text-[13px] tracking-[0.1em] text-stone-900 transition hover:border-black/40 sm:w-auto"
-            >
-              추천 코드로 구매하기
-              <ArrowAccent />
-            </Link>
+            <div className="mx-auto mt-8 grid max-w-3xl gap-3 text-left md:grid-cols-3">
+              <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#d5bc96]">Exclusive Benefit</p>
+                <p className="mt-3 text-lg font-semibold text-white">전용 혜택 적용</p>
+                <p className="mt-2 text-sm leading-7 text-white/68">
+                  추천 코드가 연결된 전용 구매 흐름에서 더 유리한 조건으로 주문을 진행할 수 있습니다.
+                </p>
+              </div>
+              <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#d5bc96]">Private Link</p>
+                <p className="mt-3 text-lg font-semibold text-white">전용 링크 진입</p>
+                <p className="mt-2 text-sm leading-7 text-white/68">
+                  코드가 있는 고객만 빠르게 진입할 수 있도록 구매 단계가 직관적으로 이어집니다.
+                </p>
+              </div>
+              <div className="rounded-[22px] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-[#d5bc96]">Trackable Order</p>
+                <p className="mt-3 text-lg font-semibold text-white">깔끔한 주문 확인</p>
+                <p className="mt-2 text-sm leading-7 text-white/68">
+                  추천 코드와 주문 정보가 함께 남아 운영 측에서도 채널별 흐름을 분명하게 확인할 수 있습니다.
+                </p>
+              </div>
+            </div>
+
+            <div className="pt-10">
+              <Link
+                href="/order"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#d5bc96]/40 bg-[linear-gradient(135deg,#f4e1bf_0%,#d2aa73_100%)] px-10 py-4 text-[13px] font-medium tracking-[0.1em] text-stone-900 transition hover:brightness-105 sm:w-auto"
+              >
+                추천 코드 전용 혜택으로 구매하기
+                <ArrowAccent />
+              </Link>
+            </div>
+
+            <p className="mt-8 text-[11px] text-white/45">
+              * 추천 코드는 인플루언서 또는 제휴 파트너 링크를 통해 전달될 수 있습니다.
+            </p>
           </div>
-
-          <p className="mt-8 text-[11px] text-stone-500">
-            * 추천 코드는 인플루언서 또는 제휴 파트너 링크를 통해 전달될 수 있습니다.
-          </p>
         </div>
       </section>
     </div>
   );
 }
 
-function InfoStat({ title, description }: { title: string; description: string }) {
+function InfoStat({
+  step,
+  eyebrow,
+  title,
+  description,
+}: {
+  step: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+}) {
   return (
-    <div className="relative overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(249,242,232,0.96)_100%)] px-6 py-7 shadow-[0_16px_38px_rgba(89,63,28,0.06)]">
+    <div className="relative overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.14)] bg-[linear-gradient(180deg,rgba(255,255,255,0.94)_0%,rgba(249,242,232,0.98)_100%)] px-6 py-7 text-left shadow-[0_18px_42px_rgba(89,63,28,0.06)]">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.52)_50%,transparent_100%)]" />
-      <div className="pointer-events-none absolute right-0 top-0 h-20 w-20 rounded-full bg-[#d7b27d]/10 blur-2xl" />
+      <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-[#d7b27d]/10 blur-2xl" />
       <div className="relative">
-        <span className="mb-4 inline-flex h-2 w-2 rounded-full bg-[#b89156]" />
-        <p className="text-xl font-medium text-stone-900 md:text-2xl">{title}</p>
-        <p className="mt-3 text-[12px] tracking-[0.1em] text-stone-500">{description}</p>
-        <div className="mt-5 h-px w-14 bg-[linear-gradient(90deg,#b89156_0%,rgba(184,145,86,0.06)_100%)]" />
+        <div className="flex items-start justify-between gap-4">
+          <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#b89156_0%,#9d7442_100%)] text-[12px] font-semibold tracking-[0.08em] text-white">
+            {step}
+          </div>
+          <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#b89156]" />
+        </div>
+        <p className="mt-5 text-[11px] uppercase tracking-[0.18em] text-[#8b673f]">{eyebrow}</p>
+        <p className="mt-3 text-[24px] font-semibold tracking-[-0.03em] text-stone-900">{title}</p>
+        <p className="mt-4 text-sm leading-7 text-stone-600">{description}</p>
+        <div className="mt-6 h-px w-16 bg-[linear-gradient(90deg,#b89156_0%,rgba(184,145,86,0.06)_100%)]" />
       </div>
     </div>
   );
