@@ -393,7 +393,7 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      <section className="overflow-x-clip bg-[#f8f2ea] px-4 py-8 md:px-6 md:py-10">
+      <section className="overflow-x-clip px-4 py-8 md:px-6 md:py-10">
         <div className="mx-auto max-w-6xl">
           <FeatureBannerSlider slides={featureBannerSlides} />
         </div>

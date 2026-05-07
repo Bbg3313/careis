@@ -358,28 +358,106 @@ function SunPackDetailPage({
   );
 
   return (
-    <div className="space-y-10 pb-28 lg:pb-24">
-      <section className="relative">
-        <div className="w-full lg:mr-[400px] xl:mr-[420px]">
-          <div className="mb-6 space-y-2 lg:hidden">
-            <p className="text-xs uppercase tracking-[0.16em] text-stone-500">{product.englishName}</p>
-            <h1 className="text-2xl font-semibold tracking-[-0.03em] text-stone-900">{product.name}</h1>
-            <p className="line-clamp-3 text-sm leading-relaxed text-stone-600">{product.heroDescription}</p>
-          </div>
+    <div className="pb-28 lg:pb-24">
+      <div className="relative mx-auto w-full max-w-[1380px] px-4 sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start lg:gap-10 lg:px-8 xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-12">
+        <div className="min-w-0 space-y-10">
+          <section>
+            <div className="mb-6 space-y-2 lg:hidden">
+              <p className="text-xs uppercase tracking-[0.16em] text-stone-500">{product.englishName}</p>
+              <h1 className="text-2xl font-semibold tracking-[-0.03em] text-stone-900">{product.name}</h1>
+              <p className="line-clamp-3 text-sm leading-relaxed text-stone-600">{product.heroDescription}</p>
+            </div>
 
-          <SunPackDetailGallery
-            defaultMainSrc={sunPackDetailAssets.heroImage}
-            thumbnailSrcs={sunPackDetailAssets.thumbnailImages}
-            alt={visual.alt}
-            pixelSize={sunPackDetailAssets.heroPixelSize}
-            productName={product.name}
-          />
+            <SunPackDetailGallery
+              defaultMainSrc={sunPackDetailAssets.heroImage}
+              thumbnailSrcs={sunPackDetailAssets.thumbnailImages}
+              alt={visual.alt}
+              pixelSize={sunPackDetailAssets.heroPixelSize}
+              productName={product.name}
+            />
+          </section>
+
+          <SunPackDetailTabs />
+
+          <section id="detail" className="scroll-mt-[148px]">
+            <SunPackDetailStory />
+          </section>
+
+          <section
+            id="guide"
+            className="scroll-mt-[148px] space-y-6 rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
+          >
+            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품구매안내</h2>
+
+            <article className="space-y-3 border-t border-stone-100 pt-6">
+              <h3 className="text-lg font-semibold text-stone-900">결제 안내</h3>
+              <p className="text-sm leading-7 text-stone-600">
+                고액 결제의 경우 안전을 위해 카드사 확인 절차가 진행될 수 있습니다. 주문자명과 입금자명이
+                다를 경우 처리가 지연될 수 있으며, 일정 기간 내 입금이 확인되지 않으면 주문은 자동 취소될 수
+                있습니다.
+              </p>
+            </article>
+
+            <article className="space-y-3 border-t border-stone-100 pt-6">
+              <h3 className="text-lg font-semibold text-stone-900">배송 안내</h3>
+              <div className="grid gap-3 text-sm text-stone-700 md:grid-cols-2">
+                <div className="rounded-[16px] bg-[#f8f5ef] p-4">
+                  <p className="font-medium text-stone-900">배송 방법</p>
+                  <p className="mt-2 leading-7">택배 / 전국 지역</p>
+                </div>
+                <div className="rounded-[16px] bg-[#f8f5ef] p-4">
+                  <p className="font-medium text-stone-900">배송 비용</p>
+                  <p className="mt-2 leading-7">3,000원 / 50,000원 이상 구매 시 무료</p>
+                </div>
+                <div className="rounded-[16px] bg-[#f8f5ef] p-4">
+                  <p className="font-medium text-stone-900">배송 기간</p>
+                  <p className="mt-2 leading-7">입금 확인 후 1~3일 이내 순차 출고</p>
+                </div>
+                <div className="rounded-[16px] bg-[#f8f5ef] p-4">
+                  <p className="font-medium text-stone-900">안내 사항</p>
+                  <p className="mt-2 leading-7">도서산간 지역은 추가 배송비가 발생할 수 있습니다.</p>
+                </div>
+              </div>
+            </article>
+
+            <article className="space-y-3 border-t border-stone-100 pt-6">
+              <h3 className="text-lg font-semibold text-stone-900">교환/반품 안내</h3>
+              <p className="text-sm leading-7 text-stone-600">
+                교환 및 반품 관련 상세 기준은 페이지 하단의 안내 내용을 통해 확인할 수 있습니다. 단순 변심에
+                의한 반송 비용은 고객 부담이며, 상품 상태에 따라 교환 및 반품이 제한될 수 있습니다.
+              </p>
+              <p className="text-sm leading-7 text-stone-600">
+                교환 및 반품 주소: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)
+              </p>
+            </article>
+
+            <article className="space-y-3 border-t border-stone-100 pt-6">
+              <h3 className="text-lg font-semibold text-stone-900">서비스문의</h3>
+              <p className="text-sm leading-7 text-stone-600">
+                제품 및 주문 관련 문의는 010-2556-3263 또는 startupscon@gmail.com으로 안내받을 수
+                있습니다. 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은
+                휴무입니다.
+              </p>
+            </article>
+          </section>
+
+          <section id="review" className="scroll-mt-[148px] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
+            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 리뷰</h2>
+            <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
+          </section>
+
+          <section id="qa" className="scroll-mt-[148px] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
+            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 Q&amp;A</h2>
+            <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
+          </section>
+
+          <ProductExchangeReturnSection />
         </div>
 
-        <aside className="pointer-events-auto hidden max-h-[calc(100vh-11rem)] w-[min(380px,calc(100vw-3rem))] overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:fixed lg:top-[152px] lg:right-8 lg:z-40 lg:block lg:space-y-6">
+        <aside className="pointer-events-auto sticky top-[148px] z-30 hidden max-h-[calc(100vh-10rem)] w-full overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:block lg:space-y-6 xl:top-[156px]">
           {purchaseAsideBody}
         </aside>
-      </section>
+      </div>
 
       <div className="pointer-events-auto fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/90 bg-white/95 px-4 pt-3 shadow-[0_-12px_40px_rgba(0,0,0,0.08)] backdrop-blur-md lg:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <div className="mx-auto flex max-w-lg items-center gap-3 py-1">
@@ -403,82 +481,6 @@ function SunPackDetailPage({
           </Link>
         </div>
       </div>
-
-      <SunPackDetailTabs />
-
-      <section id="detail" className="scroll-mt-[148px]">
-        <SunPackDetailStory />
-      </section>
-
-      <section
-        id="guide"
-        className="scroll-mt-[148px] space-y-6 rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
-      >
-        <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품구매안내</h2>
-
-        <article className="space-y-3 border-t border-stone-100 pt-6">
-          <h3 className="text-lg font-semibold text-stone-900">결제 안내</h3>
-          <p className="text-sm leading-7 text-stone-600">
-            고액 결제의 경우 안전을 위해 카드사 확인 절차가 진행될 수 있습니다. 주문자명과 입금자명이
-            다를 경우 처리가 지연될 수 있으며, 일정 기간 내 입금이 확인되지 않으면 주문은 자동 취소될 수
-            있습니다.
-          </p>
-        </article>
-
-        <article className="space-y-3 border-t border-stone-100 pt-6">
-          <h3 className="text-lg font-semibold text-stone-900">배송 안내</h3>
-          <div className="grid gap-3 text-sm text-stone-700 md:grid-cols-2">
-            <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-              <p className="font-medium text-stone-900">배송 방법</p>
-              <p className="mt-2 leading-7">택배 / 전국 지역</p>
-            </div>
-            <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-              <p className="font-medium text-stone-900">배송 비용</p>
-              <p className="mt-2 leading-7">3,000원 / 50,000원 이상 구매 시 무료</p>
-            </div>
-            <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-              <p className="font-medium text-stone-900">배송 기간</p>
-              <p className="mt-2 leading-7">입금 확인 후 1~3일 이내 순차 출고</p>
-            </div>
-            <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-              <p className="font-medium text-stone-900">안내 사항</p>
-              <p className="mt-2 leading-7">도서산간 지역은 추가 배송비가 발생할 수 있습니다.</p>
-            </div>
-          </div>
-        </article>
-
-        <article className="space-y-3 border-t border-stone-100 pt-6">
-          <h3 className="text-lg font-semibold text-stone-900">교환/반품 안내</h3>
-          <p className="text-sm leading-7 text-stone-600">
-            교환 및 반품 관련 상세 기준은 페이지 하단의 안내 내용을 통해 확인할 수 있습니다. 단순 변심에
-            의한 반송 비용은 고객 부담이며, 상품 상태에 따라 교환 및 반품이 제한될 수 있습니다.
-          </p>
-          <p className="text-sm leading-7 text-stone-600">
-            교환 및 반품 주소: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)
-          </p>
-        </article>
-
-        <article className="space-y-3 border-t border-stone-100 pt-6">
-          <h3 className="text-lg font-semibold text-stone-900">서비스문의</h3>
-          <p className="text-sm leading-7 text-stone-600">
-            제품 및 주문 관련 문의는 010-2556-3263 또는 startupscon@gmail.com으로 안내받을 수
-            있습니다. 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은
-            휴무입니다.
-          </p>
-        </article>
-      </section>
-
-      <section id="review" className="scroll-mt-[148px] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
-        <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 리뷰</h2>
-        <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
-      </section>
-
-      <section id="qa" className="scroll-mt-[148px] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
-        <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 Q&amp;A</h2>
-        <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
-      </section>
-
-      <ProductExchangeReturnSection />
     </div>
   );
 }

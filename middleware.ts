@@ -22,6 +22,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|images/|media/|branding/).*)",
+    // 정적 자산·이미지·미디어는 미들웨어 미적용 (_next 전체 포함해 /_next/image 등 확실히 제외)
+    "/((?!_next/|favicon.ico|images/|media/|branding/).*)",
   ],
 };

@@ -1,8 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 import type { SunPackStorySlide } from "@/lib/site-assets";
+
+function mediaExtension(src: string) {
+  return src.split("?")[0].split(".").pop()?.toLowerCase() ?? "";
+}
 
 function AutoPlayVideo({ src, mime }: { src: string; mime: string }) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -56,7 +61,7 @@ function AutoPlayVideo({ src, mime }: { src: string; mime: string }) {
 }
 
 export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; index: number }) {
-  const ext = slide.src.split(".").pop()?.toLowerCase() ?? "";
+  const ext = mediaExtension(slide.src);
 
   if (ext === "mp4" || ext === "webm") {
     const mime = ext === "webm" ? "video/webm" : "video/mp4";
@@ -65,8 +70,22 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
 
   const isGif = ext === "gif";
 
+  if (isGif) {
+    return (
+      <Image
+        src={slide.src}
+        alt={`선팩 상세 ${index + 1}`}
+        width={slide.width}
+        height={slide.height}
+        className="block h-auto w-full max-w-full"
+        sizes="(max-width: 960px) 100vw, 960px"
+        unoptimized
+        priority={index < 4}
+      />
+    );
+  }
+
   return (
-    // GIF는 레이아웃·애니메이션 안정성을 위해 next/image 미사용 (정적 최적화 시 프레임 고정 방지)
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={slide.src}
@@ -74,8 +93,8 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
       width={slide.width}
       height={slide.height}
       className="block h-auto w-full max-w-full"
-      loading={isGif || index === 0 ? "eager" : "lazy"}
-      decoding={isGif ? "sync" : "async"}
+      loading={index === 0 ? "eager" : "lazy"}
+      decoding="async"
       fetchPriority={index === 0 ? "high" : undefined}
     />
   );

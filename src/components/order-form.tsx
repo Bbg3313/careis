@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { paymentMethods, products, type ProductSlug } from "@/lib/product-data";
@@ -22,6 +22,12 @@ type AgreementState = {
   shipping: boolean;
   paymentDelegation: boolean;
 };
+
+const AGREEMENT_KEYS = ["terms", "privacy", "shipping", "paymentDelegation"] as const satisfies readonly (keyof AgreementState)[];
+
+function agreementsAllChecked(state: AgreementState) {
+  return AGREEMENT_KEYS.every((key) => state[key]);
+}
 
 declare global {
   interface Window {
@@ -73,6 +79,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
     shipping: false,
     paymentDelegation: false,
   });
+  const agreementsMasterRef = useRef<HTMLInputElement>(null);
   const [resolvedReferralCode, setResolvedReferralCode] = useState(referralCode);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -116,6 +123,13 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
 
     setResolvedReferralCode(cookieReferral ?? storedReferral ?? null);
   }, [referralCode]);
+
+  useEffect(() => {
+    const el = agreementsMasterRef.current;
+    if (!el) return;
+    const selectedCount = AGREEMENT_KEYS.filter((key) => agreements[key]).length;
+    el.indeterminate = selectedCount > 0 && selectedCount < AGREEMENT_KEYS.length;
+  }, [agreements]);
 
   function openAddressSearch() {
     setErrorMessage(null);
@@ -418,6 +432,27 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           </div>
 
           <div className="space-y-3">
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[rgba(169,125,77,0.28)] bg-white p-4 text-sm font-medium text-stone-900 shadow-[0_8px_22px_rgba(145,104,52,0.06)]">
+              <input
+                ref={agreementsMasterRef}
+                type="checkbox"
+                checked={agreementsAllChecked(agreements)}
+                onChange={(event) => {
+                  const next = event.target.checked;
+                  setAgreements({
+                    terms: next,
+                    privacy: next,
+                    shipping: next,
+                    paymentDelegation: next,
+                  });
+                }}
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-stone-300 text-[#a97d4d] focus:ring-[#a97d4d]"
+              />
+              <span className="leading-6">
+                <strong className="text-stone-900">[필수]</strong> 위 구매·결제·개인정보 관련 항목을 모두 확인했으며, 전체 동의합니다.
+              </span>
+            </label>
+
             <label className="flex items-start gap-3 text-sm text-stone-700">
               <input
                 type="checkbox"
