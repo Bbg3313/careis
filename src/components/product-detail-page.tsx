@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { MotionMedia } from "@/components/motion-media";
+import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
 import type { ProductContent } from "@/lib/product-data";
-import { productVisuals, sunPackDetailAssets } from "@/lib/site-assets";
+import { productVisuals, sunPackDetailAssets, SUN_PACK_DETAIL_MAX_WIDTH_PX, type SunPackStorySlide } from "@/lib/site-assets";
 import { formatCurrency } from "@/lib/utils";
 
 export function ProductDetailPage({ product }: { product: ProductContent }) {
@@ -303,38 +304,13 @@ function SunPackDetailPage({
     <div className="space-y-10 pb-24">
       <section className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_380px] lg:items-start">
         <div className="space-y-5">
-          <div className="overflow-hidden rounded-[20px] border border-stone-200 bg-white">
-            <div className="flex justify-center">
-              <Image
-                src={sunPackDetailAssets.heroImage}
-                alt={visual.alt}
-                width={sunPackDetailAssets.heroPixelSize.width}
-                height={sunPackDetailAssets.heroPixelSize.height}
-                className="h-auto w-auto max-w-full"
-                sizes="(max-width: 1024px) 100vw, min(800px, 64vw)"
-                priority
-                unoptimized
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {sunPackDetailAssets.thumbnailImages.map((image, index) => (
-              <div
-                key={`${image}-${index}`}
-                className="relative overflow-hidden rounded-[16px] border border-stone-200 bg-white"
-              >
-                <Image
-                  src={image}
-                  alt={`${product.name} 썸네일 ${index + 1}`}
-                  width={sunPackDetailAssets.thumbnailPixelSize.width}
-                  height={sunPackDetailAssets.thumbnailPixelSize.height}
-                  className="h-auto w-full object-contain"
-                  sizes="(max-width: 768px) 50vw, 240px"
-                  unoptimized
-                />
-              </div>
-            ))}
-          </div>
+          <SunPackDetailGallery
+            defaultMainSrc={sunPackDetailAssets.heroImage}
+            thumbnailSrcs={sunPackDetailAssets.thumbnailImages}
+            alt={visual.alt}
+            pixelSize={sunPackDetailAssets.heroPixelSize}
+            productName={product.name}
+          />
         </div>
 
         <aside className="top-28 space-y-6 rounded-[20px] border border-stone-200 bg-white p-7 lg:sticky">
@@ -482,24 +458,49 @@ function SunPackDetailPage({
   );
 }
 
+function SunPackStorySlideMedia({ slide, index }: { slide: SunPackStorySlide; index: number }) {
+  const ext = slide.src.split(".").pop()?.toLowerCase() ?? "";
+
+  if (ext === "mp4" || ext === "webm") {
+    const mime = ext === "webm" ? "video/webm" : "video/mp4";
+    return (
+      <video
+        className="block h-auto w-full bg-black object-contain"
+        autoPlay
+        loop
+        muted
+        playsInline
+        controls
+        preload="auto"
+      >
+        <source src={slide.src} type={mime} />
+      </video>
+    );
+  }
+
+  return (
+    <img
+      src={slide.src}
+      alt={`선팩 상세 ${index + 1}`}
+      width={slide.width}
+      height={slide.height}
+      className="block h-auto w-full"
+      loading={index < 2 ? "eager" : "lazy"}
+      decoding="async"
+    />
+  );
+}
+
 function SunPackDetailStory() {
   return (
-    <section className="mx-auto max-w-[960px] space-y-0">
+    <section
+      className="mx-auto w-full bg-[#fafaf9]"
+      style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}
+    >
       <div className="space-y-0">
         {sunPackDetailAssets.storyImages.map((slide, index) => (
-          <div
-            key={slide.src}
-            className="flex justify-center bg-[#fafaf9]"
-          >
-            <Image
-              src={slide.src}
-              alt={`선팩 상세 원본 ${index + 1}`}
-              width={slide.width}
-              height={slide.height}
-              className="h-auto w-auto max-w-full"
-              sizes="(max-width: 960px) 100vw, 960px"
-              unoptimized
-            />
+          <div key={`${slide.src}-${index}`} className="w-full">
+            <SunPackStorySlideMedia slide={slide} index={index} />
           </div>
         ))}
       </div>
