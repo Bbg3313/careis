@@ -6,7 +6,16 @@ import { hasPublicSupabaseEnv } from "@/lib/supabase/env-public";
 import { refreshSupabaseSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
-  const { response: supabaseResponse, user } = await refreshSupabaseSession(request);
+  let supabaseResponse = NextResponse.next({ request });
+  let user: { email?: string | null } | null = null;
+
+  try {
+    const refreshed = await refreshSupabaseSession(request);
+    supabaseResponse = refreshed.response;
+    user = refreshed.user;
+  } catch (error) {
+    console.error("[middleware] Supabase session refresh failed:", error);
+  }
 
   const ref = sanitizeReferralCode(request.nextUrl.searchParams.get("ref"));
   if (ref) {

@@ -4,18 +4,22 @@ import type { SunPackStorySlide } from "@/lib/site-assets";
 import { sunPackDetailAssets } from "@/lib/site-assets";
 
 export async function getMergedStorySlides(slug: ProductSlug): Promise<SunPackStorySlide[]> {
-  const rows = await prisma.productDetailSlide.findMany({
-    where: { productSlug: slug },
-    orderBy: { sortOrder: "asc" },
-  });
+  try {
+    const rows = await prisma.productDetailSlide.findMany({
+      where: { productSlug: slug },
+      orderBy: { sortOrder: "asc" },
+    });
 
-  if (rows.length > 0) {
-    return rows.map((r) => ({
-      src: r.url,
-      width: r.width,
-      height: r.height,
-      posterSrc: r.posterUrl ?? undefined,
-    }));
+    if (rows.length > 0) {
+      return rows.map((r) => ({
+        src: r.url,
+        width: r.width,
+        height: r.height,
+        posterSrc: r.posterUrl ?? undefined,
+      }));
+    }
+  } catch (error) {
+    console.error("[getMergedStorySlides] DB unavailable, using fallback:", error);
   }
 
   if (slug === "sun-pack") {
