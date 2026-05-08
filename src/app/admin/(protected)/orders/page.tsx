@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { getOrders } from "@/lib/orders";
+import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -25,7 +26,8 @@ function statusLabel(status: string | undefined) {
 
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
   const { status } = await searchParams;
-  let orders = await getOrders();
+  const loaded = await loadAdminOrdersList();
+  let orders = loaded.ok ? loaded.orders : [];
 
   if (status === "PAID") {
     orders = orders.filter((o) => o.paymentStatus === "PAID");
@@ -48,6 +50,8 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         <h1 className="text-2xl font-semibold text-stone-900">주문 목록</h1>
         <p className="mt-1 text-sm text-stone-500">{statusLabel(status)} · {orders.length}건</p>
       </div>
+
+      {!loaded.ok ? <AdminDbUnavailableNotice /> : null}
 
       <div className="flex flex-wrap gap-2">
         {tabs.map((tab) => {

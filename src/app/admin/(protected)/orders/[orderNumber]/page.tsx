@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { saveOrderAdminForm } from "./actions";
-import { getOrderByNumber } from "@/lib/orders";
+import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { loadAdminOrderByNumber } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { trackingLookupUrl } from "@/lib/tracking-url";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -12,7 +13,18 @@ export const dynamic = "force-dynamic";
 export default async function AdminOrderDetailPage({ params }: { params: Promise<{ orderNumber: string }> }) {
   const { orderNumber: raw } = await params;
   const orderNumber = decodeURIComponent(raw);
-  const order = await getOrderByNumber(orderNumber);
+  const loaded = await loadAdminOrderByNumber(orderNumber);
+  if (!loaded.ok) {
+    return (
+      <div className="space-y-6">
+        <Link href="/admin/orders" className="text-xs font-medium text-[#8b673f] hover:underline">
+          ← 주문 목록
+        </Link>
+        <AdminDbUnavailableNotice />
+      </div>
+    );
+  }
+  const order = loaded.order;
   if (!order) {
     notFound();
   }

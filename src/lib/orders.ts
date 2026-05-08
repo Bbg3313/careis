@@ -141,6 +141,47 @@ export async function createOrder(input: CreateOrderInput) {
   });
 }
 
+/** 프로덕션 등에서 DB 미구성 시 UI가 500이 되지 않도록 관리자 화면 전용 로더 */
+
+export async function loadAdminOrdersOverview(): Promise<
+  | { ok: true; stats: Awaited<ReturnType<typeof getOrderStats>>; orders: Awaited<ReturnType<typeof getOrders>> }
+  | { ok: false }
+> {
+  try {
+    const [stats, orders] = await Promise.all([getOrderStats(), getOrders()]);
+    return { ok: true, stats, orders };
+  } catch (error) {
+    console.error("[orders] admin overview load failed", error);
+    return { ok: false };
+  }
+}
+
+export async function loadAdminOrdersList(): Promise<
+  | { ok: true; orders: Awaited<ReturnType<typeof getOrders>> }
+  | { ok: false }
+> {
+  try {
+    const orders = await getOrders();
+    return { ok: true, orders };
+  } catch (error) {
+    console.error("[orders] admin orders list load failed", error);
+    return { ok: false };
+  }
+}
+
+export async function loadAdminOrderByNumber(orderNumber: string): Promise<
+  | { ok: true; order: Awaited<ReturnType<typeof getOrderByNumber>> }
+  | { ok: false }
+> {
+  try {
+    const order = await getOrderByNumber(orderNumber);
+    return { ok: true, order };
+  } catch (error) {
+    console.error("[orders] admin order detail load failed", error);
+    return { ok: false };
+  }
+}
+
 export async function getOrders() {
   return prisma.order.findMany({
     orderBy: { createdAt: "desc" },

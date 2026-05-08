@@ -1,3 +1,4 @@
+import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { ProductDetailSlidesAdmin } from "@/components/product-detail-slides-admin";
 import { listDetailSlidesAdmin } from "@/lib/product-detail-slides";
 
@@ -26,10 +27,18 @@ function rowFromSlide(s: {
 }
 
 export default async function AdminProductDetailPage() {
-  const [sunPack, illuminator] = await Promise.all([
-    listDetailSlidesAdmin("sun-pack"),
-    listDetailSlidesAdmin("illuminator"),
-  ]);
+  let sunPack: Awaited<ReturnType<typeof listDetailSlidesAdmin>> = [];
+  let illuminator: Awaited<ReturnType<typeof listDetailSlidesAdmin>> = [];
+  let dbOk = true;
+  try {
+    [sunPack, illuminator] = await Promise.all([
+      listDetailSlidesAdmin("sun-pack"),
+      listDetailSlidesAdmin("illuminator"),
+    ]);
+  } catch (error) {
+    console.error("[admin product-detail] list slides failed", error);
+    dbOk = false;
+  }
 
   return (
     <div className="space-y-6">
@@ -39,6 +48,8 @@ export default async function AdminProductDetailPage() {
           관리자에서 JPG · PNG · GIF 를 올리면 상품 상세 세로 스토리 영역에 반영됩니다.
         </p>
       </div>
+
+      {!dbOk ? <AdminDbUnavailableNotice /> : null}
 
       <ProductDetailSlidesAdmin
         initialBySlug={{

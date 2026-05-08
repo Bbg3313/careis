@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { getOrderStats, getOrders } from "@/lib/orders";
+import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { loadAdminOrdersOverview } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -19,8 +20,9 @@ function StatCard({ label, value, href }: { label: string; value: number; href: 
 }
 
 export default async function AdminDashboardPage() {
-  const stats = await getOrderStats();
-  const orders = await getOrders();
+  const loaded = await loadAdminOrdersOverview();
+  const stats = loaded.ok ? loaded.stats : { all: 0, pending: 0, paid: 0, cancelled: 0, refunded: 0 };
+  const orders = loaded.ok ? loaded.orders : [];
   const recent = orders.slice(0, 8);
 
   return (
@@ -29,6 +31,10 @@ export default async function AdminDashboardPage() {
         <h1 className="text-2xl font-semibold text-stone-900">주문 한눈에 보기</h1>
         <p className="mt-1 text-sm text-stone-500">숫자를 누르면 해당 상태만 주문 목록으로 이동합니다.</p>
       </div>
+
+      {!loaded.ok ? (
+        <AdminDbUnavailableNotice />
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="전체" value={stats.all} href="/admin/orders" />
