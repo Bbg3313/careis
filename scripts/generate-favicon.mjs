@@ -15,12 +15,13 @@ function useSvgSource() {
   return existsSync(svgSunMoon);
 }
 
-/** SVG → 정사각 PNG (타일이 프레임을 꽉 채우도록 cover) */
+/** SVG → PNG (정사각 타일, 배경색 메탈과 동일) */
 async function squareFromSvg(px, filename) {
   const buf = readFileSync(svgSunMoon);
   await sharp(buf)
     .resize(px, px, {
-      fit: "cover",
+      fit: "contain",
+      background: { r: 250, g: 248, b: 245, alpha: 1 },
       position: "centre",
       kernel: sharp.kernel.lanczos3,
     })
