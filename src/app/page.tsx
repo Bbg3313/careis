@@ -14,8 +14,8 @@ const featureBannerSlides = [
     description:
       "시스테아민 5%와 나이아신아마이드, 알부틴을 담아 칙칙한 피부 인상을 더 환하고 정돈된 느낌으로 가꿔주는 브라이트닝 인텐시브 케어입니다.",
     highlights: ["색소 케어", "브라이트닝", "피부 결 정돈"],
-    image: "/images/illum-model-banner.png",
-    imageAlt: "일루미네이터 모델 비주얼",
+    image: "/images/feature-banner-illum-night.png",
+    imageAlt: "일루미네이터 나이트 케어 비주얼",
     tone: "dark" as const,
   },
   {

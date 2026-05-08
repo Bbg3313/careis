@@ -41,7 +41,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
             }`}
           >
             <div
-              className={`relative grid min-h-[520px] items-center gap-6 overflow-hidden px-5 py-7 ring-1 ring-inset md:min-h-[560px] md:gap-8 md:px-11 md:py-11 lg:grid-cols-[1fr_1.06fr] lg:px-14 ${
+              className={`relative grid min-h-[580px] items-stretch gap-6 overflow-hidden px-5 py-7 ring-1 ring-inset md:min-h-[640px] md:gap-8 md:px-11 md:py-11 lg:min-h-[700px] lg:grid-cols-[1fr_1.06fr] lg:px-14 ${
                 slide.tone === "light"
                   ? "bg-[radial-gradient(circle_at_18%_18%,rgba(211,180,132,0.2)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_32%),linear-gradient(135deg,#fffdf9_0%,#faf2e6_54%,#f1e6d4_100%)] text-stone-900 ring-[rgba(184,145,86,0.22)] shadow-[inset_0_1px_0_rgba(255,255,255,0.65),inset_0_-1px_0_rgba(184,145,86,0.07)]"
                   : "bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.1)_0%,rgba(255,255,255,0)_32%),radial-gradient(circle_at_84%_22%,rgba(168,188,212,0.2)_0%,rgba(255,255,255,0)_34%),linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] text-white ring-[rgba(255,255,255,0.22)] shadow-[inset_0_1px_0_rgba(255,255,255,0.26),inset_0_-1px_0_rgba(0,0,0,0.38)]"
@@ -80,8 +80,8 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   }`}
                 />
               </div>
-              <div className="relative z-10 text-center lg:max-w-[640px] lg:text-left">
-                <div className="lg:-translate-y-8">
+              <div className="relative z-10 flex flex-col justify-center text-center lg:max-w-[640px] lg:text-left">
+                <div>
                   <p
                     className={`text-[11px] uppercase tracking-[0.24em] ${
                       slide.tone === "light" ? "text-[#8b673f]" : "text-white/55"
@@ -126,7 +126,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                 </div>
               </div>
 
-              <div className="relative z-10 min-h-[240px] w-full self-stretch md:min-h-[460px] lg:min-h-[560px]">
+              <div className="relative z-10 min-h-[280px] w-full self-stretch md:min-h-[520px] lg:h-full lg:min-h-[620px]">
                 <Image
                   src={slide.image}
                   alt={slide.imageAlt}
@@ -141,7 +141,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
         );
       })}
 
-      <div className="invisible min-h-[520px] md:min-h-[560px]" />
+      <div className="invisible min-h-[580px] md:min-h-[640px] lg:min-h-[700px]" />
 
       <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
         {slides.map((slide, index) => (
