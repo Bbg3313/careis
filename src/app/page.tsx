@@ -89,93 +89,146 @@ export default function HomePage() {
 
       <section
         id="brand"
-        className="relative scroll-mt-32 overflow-hidden bg-[linear-gradient(180deg,#fffdf9_0%,#f8f1e7_100%)] px-4 py-14 md:px-6 md:py-20 md:scroll-mt-36 lg:scroll-mt-32"
+        className="relative scroll-mt-32 overflow-hidden bg-[linear-gradient(165deg,#fffdfb_0%,#faf4ea_42%,#f3ead8_100%)] px-4 py-16 md:px-6 md:py-24 md:scroll-mt-36 lg:scroll-mt-32"
       >
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute right-[10%] top-0 h-40 w-40 rounded-full bg-[#c89f63]/12 blur-3xl md:h-52 md:w-52" />
-          <div className="absolute bottom-0 left-[8%] h-36 w-36 rounded-full bg-[#ecd8bb]/20 blur-3xl md:h-48 md:w-48" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(184,145,86,0.13),transparent_55%)]" />
+          <div className="absolute right-[8%] top-[12%] h-44 w-44 rounded-full bg-[#d4af37]/14 blur-3xl md:h-56 md:w-56" />
+          <div className="absolute bottom-[8%] left-[5%] h-40 w-40 rounded-full bg-[#8ea4c5]/12 blur-3xl md:h-52 md:w-52" />
+          <div
+            className="absolute inset-0 opacity-[0.35]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b89156' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}
+          />
         </div>
 
         <div className="relative mx-auto max-w-6xl">
-          <header className="mx-auto max-w-2xl text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-[#8b673f]">CAREIS</p>
-            <h2 className="display-font mt-3 text-[26px] font-semibold leading-snug tracking-[-0.03em] text-stone-900 md:text-[40px]">
-              병원 채널에서 먼저 알려진 더마 루틴
+          <header className="mx-auto max-w-3xl text-center">
+            <div className="mx-auto flex w-fit items-center gap-2 rounded-full border border-[rgba(184,145,86,0.35)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95)_0%,rgba(252,246,236,0.92)_100%)] px-5 py-2 shadow-[0_12px_32px_rgba(120,85,37,0.08)]">
+              <span className="h-2 w-2 rounded-full bg-[linear-gradient(135deg,#d4af37_0%,#9d7442_100%)] shadow-[0_0_12px_rgba(212,175,55,0.45)]" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7a5a36]">Clinical line</span>
+            </div>
+            <h2 className="display-font mt-5 text-[26px] font-semibold leading-[1.2] tracking-[-0.03em] text-stone-900 md:mt-6 md:text-[42px] md:leading-[1.12]">
+              병원 채널에서 먼저 알려진{" "}
+              <span className="bg-[linear-gradient(135deg,#c49a5c_0%,#8b673f_55%,#6b4f2e_100%)] bg-clip-text text-transparent">
+                더마 루틴
+              </span>
             </h2>
-            <p className="mt-4 text-[14px] leading-relaxed text-stone-600 md:text-[15px]">
-              낮에는 보호, 밤에는 집중. 제품의 장점만 짧게 정리했습니다.
+            <p className="mx-auto mt-5 max-w-xl text-[14px] leading-[1.75] text-stone-600 md:mt-6 md:text-[16px] md:leading-relaxed">
+              클리닉 유통을 통해 검증된 라인업으로, 낮에는 보호·밤에는 집중하는 리듬을 일상에 옮겼습니다.
             </p>
+            <div className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-2 md:gap-3">
+              {["Hospital channel", "2-Step routine", "Premium texture"].map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-[rgba(184,145,86,0.22)] bg-white/80 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.14em] text-[#8b673f] shadow-[0_6px_18px_rgba(120,85,37,0.06)] md:px-4 md:text-[11px]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
           </header>
 
-          <ul className="mx-auto mt-10 max-w-xl space-y-3 md:max-w-2xl">
-            {[
-              "병원·클리닉 유통 채널을 통해 먼저 소개된 라인",
-              "낮·밤 역할을 나눈 2-Step 데일리 루틴",
-              "선팩은 특허 필름 기술과 SPF50+ PA+++ 고보호",
-              "일루미네이터는 시스테아민 5% 중심 야간 브라이트닝",
-            ].map((line) => (
-              <li
-                key={line}
-                className="flex gap-3 rounded-2xl border border-[rgba(184,145,86,0.14)] bg-white/75 px-4 py-3 text-[13px] leading-snug text-stone-800 shadow-[0_8px_24px_rgba(120,85,37,0.04)] md:px-5 md:py-3.5 md:text-[14px]"
-              >
-                <span className="mt-0.5 shrink-0 font-semibold text-[#b89156]" aria-hidden>
-                  ·
-                </span>
-                <span className="[word-break:keep-all]">{line}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="relative mx-auto mt-12 max-w-2xl md:mt-14 md:max-w-3xl">
+            <div className="pointer-events-none absolute -left-3 top-6 hidden h-[calc(100%-3rem)] w-px bg-[linear-gradient(180deg,rgba(184,145,86,0.45)_0%,rgba(184,145,86,0.08)_50%,rgba(142,164,197,0.35)_100%)] md:block lg:-left-4" />
+            <ul className="space-y-3 md:space-y-4">
+              {[
+                "병원·클리닉 유통 채널을 통해 먼저 소개된 라인",
+                "낮·밤 역할을 나눈 2-Step 데일리 루틴",
+                "선팩은 특허 필름 기술과 SPF50+ PA+++ 고보호",
+                "일루미네이터는 시스테아민 5% 중심 야간 브라이트닝",
+              ].map((line, i) => (
+                <li
+                  key={line}
+                  className="group relative flex gap-3 rounded-2xl border border-[rgba(184,145,86,0.12)] bg-[linear-gradient(135deg,rgba(255,255,255,0.92)_0%,rgba(255,252,247,0.88)_100%)] px-4 py-3.5 shadow-[0_10px_36px_rgba(89,63,28,0.06)] ring-1 ring-white/60 transition hover:border-[rgba(184,145,86,0.28)] hover:shadow-[0_14px_40px_rgba(89,63,28,0.09)] md:gap-4 md:px-5 md:py-4"
+                >
+                  <span
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(145deg,#d4af37_0%,#b89156_48%,#8b673f_100%)] text-[12px] font-bold tabular-nums text-white shadow-[0_6px_16px_rgba(184,145,86,0.35)] md:h-10 md:w-10 md:text-[13px]"
+                    aria-hidden
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0 flex-1 pt-1 text-[13px] font-medium leading-snug text-stone-800 [word-break:keep-all] md:pt-1.5 md:text-[15px] md:leading-relaxed">
+                    {line}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          <div className="mx-auto mt-10 grid max-w-4xl gap-4 md:grid-cols-2 md:gap-5">
-            <article className="rounded-[22px] border border-[rgba(184,145,86,0.16)] bg-[linear-gradient(180deg,#fffdfa_0%,#f7efe3_100%)] p-5 md:p-6">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#8b673f]">선팩 · DAY</p>
-                <span className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[#8b673f]">
+          <div className="mx-auto mt-12 grid max-w-4xl gap-5 md:mt-14 md:grid-cols-2 md:gap-6">
+            <article className="relative overflow-hidden rounded-[24px] border border-[rgba(212,175,55,0.28)] bg-[linear-gradient(165deg,#fffefb_0%,#faf3e4_55%,#f5ebda_100%)] p-5 shadow-[0_20px_50px_rgba(184,145,86,0.12)] md:p-7">
+              <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#f4e4bc_0%,#d4af37_38%,#c9a227_100%)]" />
+              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#d4af37]/10 blur-2xl" />
+              <div className="relative flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(145deg,#fff9ef_0%,#f3e4c8_100%)] text-[#b8893a] shadow-inner ring-1 ring-[rgba(212,175,55,0.25)]">
+                    <BrandDayGlyph />
+                  </span>
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#9a7346]">선팩 · DAY</p>
+                    <p className="mt-0.5 text-[15px] font-semibold text-stone-900 md:text-base">가벼운 고보호</p>
+                  </div>
+                </div>
+                <span className="shrink-0 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8b673f] shadow-sm ring-1 ring-[rgba(184,145,86,0.15)]">
                   Sun Pack
                 </span>
               </div>
-              <ul className="mt-4 space-y-2 text-[13px] leading-relaxed text-stone-700 md:text-[14px]">
-                <li className="flex gap-2 [word-break:keep-all]">
-                  <span className="text-[#b89156]">—</span>
+              <ul className="relative mt-5 space-y-2.5 border-t border-[rgba(184,145,86,0.12)] pt-5 text-[13px] leading-relaxed text-stone-700 md:text-[14px]">
+                <li className="flex gap-2.5 [word-break:keep-all]">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#d4af37]" />
                   특허 기반 셀룰로오스 필름 — 밀착·보호
                 </li>
-                <li className="flex gap-2 [word-break:keep-all]">
-                  <span className="text-[#b89156]">—</span>
+                <li className="flex gap-2.5 [word-break:keep-all]">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#d4af37]" />
                   SPF50+ PA+++ 자외선 차단
                 </li>
-                <li className="flex gap-2 [word-break:keep-all]">
-                  <span className="text-[#b89156]">—</span>
+                <li className="flex gap-2.5 [word-break:keep-all]">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#d4af37]" />
                   데일리용 가벼운 사용감
                 </li>
               </ul>
             </article>
 
-            <article className="rounded-[22px] border border-[rgba(184,145,86,0.14)] bg-[linear-gradient(180deg,#fffdfa_0%,#f4eee6_100%)] p-5 md:p-6">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#8b673f]">일루미네이터 · NIGHT</p>
-                <span className="rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-[#8b673f]">
+            <article className="relative overflow-hidden rounded-[24px] border border-[rgba(123,143,168,0.35)] bg-[linear-gradient(165deg,#fafbfd_0%,#eef2f8_52%,#e6ecf5_100%)] p-5 shadow-[0_20px_50px_rgba(65,85,115,0.1)] md:p-7">
+              <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#c5d2e3_0%,#8ea4c5_45%,#6b7f9c_100%)]" />
+              <div className="absolute -right-10 top-12 h-32 w-32 rounded-full bg-[#8ea4c5]/14 blur-2xl" />
+              <div className="relative flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(145deg,#ffffff_0%,#e8eef6_100%)] text-[#6b7f9c] shadow-inner ring-1 ring-[rgba(123,143,168,0.28)]">
+                    <BrandNightGlyph />
+                  </span>
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#5c6d84]">일루미네이터 · NIGHT</p>
+                    <p className="mt-0.5 text-[15px] font-semibold text-stone-900 md:text-base">야간 집중 케어</p>
+                  </div>
+                </div>
+                <span className="shrink-0 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5c6d84] shadow-sm ring-1 ring-[rgba(123,143,168,0.22)]">
                   Illuminator
                 </span>
               </div>
-              <ul className="mt-4 space-y-2 text-[13px] leading-relaxed text-stone-700 md:text-[14px]">
-                <li className="flex gap-2 [word-break:keep-all]">
-                  <span className="text-[#b89156]">—</span>
+              <ul className="relative mt-5 space-y-2.5 border-t border-[rgba(123,143,168,0.15)] pt-5 text-[13px] leading-relaxed text-stone-700 md:text-[14px]">
+                <li className="flex gap-2.5 [word-break:keep-all]">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#8ea4c5]" />
                   시스테아민 5% 집중 케어
                 </li>
-                <li className="flex gap-2 [word-break:keep-all]">
-                  <span className="text-[#b89156]">—</span>
+                <li className="flex gap-2.5 [word-break:keep-all]">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#8ea4c5]" />
                   야간 브라이트닝 · 색소 고민 보조
                 </li>
-                <li className="flex gap-2 [word-break:keep-all]">
-                  <span className="text-[#b89156]">—</span>
+                <li className="flex gap-2.5 [word-break:keep-all]">
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#8ea4c5]" />
                   밤 루틴으로 피부 결 정돈
                 </li>
               </ul>
             </article>
           </div>
 
-          <p className="mx-auto mt-10 max-w-md text-center text-[13px] text-stone-500 md:text-[14px]">
-            상세 제품 정보는 아래 PRODUCT에서 확인할 수 있습니다.
+          <p className="mx-auto mt-12 flex items-center justify-center gap-2 text-center text-[13px] text-stone-500 md:mt-14 md:text-[14px]">
+            <span className="inline-block h-px w-8 bg-[linear-gradient(90deg,transparent,#c9b08b,transparent)] md:w-12" aria-hidden />
+            상세 제품 정보는 아래 <span className="font-semibold text-[#8b673f]">PRODUCT</span>에서 확인할 수 있습니다.
+            <span className="inline-block h-px w-8 bg-[linear-gradient(90deg,transparent,#c9b08b,transparent)] md:w-12" aria-hidden />
           </p>
         </div>
       </section>
@@ -520,6 +573,33 @@ function BuildingIcon() {
       <path d="M4 17V5.5L10 3L16 5.5V17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M8 17V12H12V17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M7 8.5H7.01M10 8.5H10.01M13 8.5H13.01" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BrandDayGlyph() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.4" />
+      <path
+        d="M12 4v2M12 18v2M4 12h2M18 12h2"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function BrandNightGlyph() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M13.8 3.5c-4.8 1.4-8 5.8-8 10.7 0 5 3.4 9.2 8 10.7a9 9 0 001.9.3 8.5 8.5 0 01-1.2-17z"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

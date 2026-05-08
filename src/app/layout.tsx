@@ -24,8 +24,12 @@ export const metadata: Metadata = {
   title: "CAREIS",
   description: "낮과 밤을 위한 2-step 더마코스메틱 루틴 브랜드",
   icons: {
-    icon: [{ url: "/icon", type: "image/png", sizes: "512x512" }],
-    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-48.png", type: "image/png", sizes: "48x48" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
 };
 
