@@ -15,13 +15,12 @@ function useSvgSource() {
   return existsSync(svgSunMoon);
 }
 
-/** SVG: 벡터 그대로 목표 픽셀에 맞춤 (해·달 아이콘 전용) */
+/** SVG → 정사각 PNG (타일이 프레임을 꽉 채우도록 cover) */
 async function squareFromSvg(px, filename) {
   const buf = readFileSync(svgSunMoon);
   await sharp(buf)
     .resize(px, px, {
-      fit: "contain",
-      background: { r: 250, g: 250, b: 248, alpha: 1 },
+      fit: "cover",
       position: "centre",
       kernel: sharp.kernel.lanczos3,
     })
