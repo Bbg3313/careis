@@ -23,6 +23,10 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   title: "CAREIS",
   description: "낮과 밤을 위한 2-step 더마코스메틱 루틴 브랜드",
+  icons: {
+    icon: [{ url: "/icon", type: "image/png", sizes: "512x512" }],
+    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({

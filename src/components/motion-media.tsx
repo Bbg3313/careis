@@ -12,6 +12,8 @@ type MotionMediaProps = {
   frameSizes?: string;
   /** 기본 85. 히어로 정지컷 선명도 우선 시 92 등 */
   quality?: number;
+  /** cover는 영역 채움(잘림), contain은 이미지 전체 표시 */
+  objectFit?: "cover" | "contain";
 };
 
 const defaultFrameSizes =
@@ -25,7 +27,10 @@ export function MotionMedia({
   overlayClassName,
   frameSizes = defaultFrameSizes,
   quality = 85,
+  objectFit = "cover",
 }: MotionMediaProps) {
+  const fitClass = objectFit === "contain" ? "object-contain object-center" : "object-cover object-center";
+
   return (
     <div className={className}>
       {frames.map((frame, index) => (
@@ -38,7 +43,7 @@ export function MotionMedia({
             src={frame}
             alt={`${alt} ${index + 1}`}
             fill
-            className="object-cover object-center"
+            className={fitClass}
             sizes={frameSizes}
             quality={quality}
             priority={priority && index === 0}

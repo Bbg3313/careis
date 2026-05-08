@@ -21,16 +21,18 @@ export default async function OrderPage({
 
   return (
     <div className="space-y-8 pb-24">
-      <section className="space-y-3 rounded-[40px] bg-[linear-gradient(145deg,#fbf3eb_0%,#eef3fa_100%)] p-8 shadow-[0_24px_80px_rgba(73,53,26,0.05)] md:p-12">
-        <p className="text-xs uppercase tracking-[0.3em] text-stone-500">Checkout</p>
-        <h1 className="display-font headline-balance text-5xl font-semibold text-stone-900">주문서 작성</h1>
-        <p className="copy-pretty max-w-2xl text-sm leading-8 text-stone-600">
-          원하는 제품을 한 개만 고르거나, 두 제품을 함께 담아 바로 결제를 이어갈 수 있습니다. 추천
-          코드가 있는 경우에는 함께 반영됩니다.
+      <section className="space-y-2.5 rounded-[40px] bg-[linear-gradient(145deg,#fbf3eb_0%,#eef3fa_100%)] p-6 shadow-[0_24px_80px_rgba(73,53,26,0.05)] sm:space-y-3 sm:p-8 md:p-12">
+        <p className="text-[11px] uppercase tracking-[0.28em] text-stone-500 sm:text-xs sm:tracking-[0.3em]">
+          Checkout
         </p>
-        <p className="copy-pretty max-w-2xl text-sm leading-8 text-stone-500">
-          비회원 주문이 가능하며, 이용약관, 개인정보처리방침, 배송/교환/반품 정책은 주문 단계에서
-          다시 확인할 수 있습니다.
+        <h1 className="display-font headline-balance text-[2rem] font-semibold leading-tight text-stone-900 sm:text-5xl">
+          주문서 작성
+        </h1>
+        <p className="copy-pretty w-full max-w-full text-[13px] leading-[1.72] text-stone-600 [word-break:keep-all] sm:text-sm sm:leading-8 lg:max-w-none lg:text-[15px] lg:leading-normal xl:whitespace-nowrap">
+          원하는 제품을 한 개만 고르거나, 두 제품을 함께 담아 바로 결제를 이어갈 수 있습니다. 추천 코드가 있는 경우에는 함께 반영됩니다.
+        </p>
+        <p className="copy-pretty w-full max-w-full text-[13px] leading-[1.72] text-stone-500 [word-break:keep-all] sm:text-sm sm:leading-8 lg:max-w-none lg:text-[15px] lg:leading-normal xl:whitespace-nowrap">
+          비회원 주문이 가능하며, 이용약관, 개인정보처리방침, 배송/교환/반품 정책은 주문 단계에서 다시 확인할 수 있습니다.
         </p>
       </section>
 

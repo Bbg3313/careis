@@ -12,47 +12,31 @@ const navItems = [
 export function SiteHeader() {
   return (
     <header className="sticky inset-x-0 top-0 z-50 border-b border-[rgba(116,88,59,0.08)] bg-[rgba(250,248,244,0.86)] backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-5 py-3 md:px-6 lg:px-8 lg:py-4">
-        <div className="flex items-center justify-between gap-4">
-          <SiteLogo compact />
+      <div className="mx-auto max-w-7xl px-4 py-2.5 md:px-6 lg:px-8 lg:py-4">
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
+          <SiteLogo
+            compact
+            className="w-[72px] shrink-0 sm:w-[84px] md:w-[100px] lg:w-[132px]"
+          />
 
-          <Link
-            href="/order"
-            className="btn-luxe-primary inline-flex shrink-0 items-center px-4 py-2.5 text-[11px] tracking-[0.1em] sm:px-5 lg:hidden"
-          >
-            구매하기
-          </Link>
-
-          <nav className="hidden items-center gap-6 text-[12px] tracking-[0.05em] text-stone-600 xl:gap-8 xl:text-[13px] lg:flex">
+          <nav className="flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto text-[10px] tracking-[0.06em] text-stone-600 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-3 sm:text-[11px] md:gap-4 md:text-[12px] lg:flex-initial lg:gap-8 lg:text-[13px] lg:tracking-[0.05em] [&::-webkit-scrollbar]:hidden">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="whitespace-nowrap transition hover:text-stone-900"
+                className="shrink-0 whitespace-nowrap transition hover:text-stone-900"
               >
                 {item.label}
               </Link>
             ))}
             <Link
               href="/order"
-              className="btn-luxe-primary whitespace-nowrap px-6 py-2.5 text-[12px] tracking-[0.1em]"
+              className="btn-luxe-primary hidden shrink-0 whitespace-nowrap px-5 py-2.5 text-[12px] tracking-[0.1em] lg:inline-flex"
             >
               구매하기
             </Link>
           </nav>
         </div>
-
-        <nav className="nav-strip mt-3 flex items-center gap-5 overflow-x-auto border-t border-black/5 pt-3 text-[12px] tracking-[0.08em] text-stone-600 lg:hidden">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="shrink-0 whitespace-nowrap transition hover:text-stone-900"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
       </div>
     </header>
   );

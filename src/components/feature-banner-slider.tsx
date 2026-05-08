@@ -41,7 +41,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
             }`}
           >
             <div
-              className={`relative grid min-h-[520px] items-center gap-6 overflow-hidden px-5 py-7 md:min-h-[560px] md:gap-8 md:px-11 md:py-11 lg:grid-cols-[1.04fr_0.96fr] lg:px-14 ${
+              className={`relative grid min-h-[520px] items-start gap-6 overflow-hidden px-5 pb-7 pt-5 md:min-h-[560px] md:gap-8 md:px-11 md:pb-11 md:pt-7 lg:grid-cols-[1.04fr_0.96fr] lg:px-14 lg:pb-11 lg:pt-5 ${
                 slide.tone === "light"
                   ? "bg-[radial-gradient(circle_at_18%_18%,rgba(211,180,132,0.2)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_32%),linear-gradient(135deg,#fffdf9_0%,#faf2e6_54%,#f1e6d4_100%)] text-stone-900"
                   : "bg-[linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] text-white"
@@ -66,17 +66,17 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   }`}
                 />
               </div>
-              <div className="relative z-10 text-center lg:max-w-[640px] lg:text-left">
-                <div className="lg:-translate-y-6">
+              <div className="relative z-10 w-full max-w-[640px] text-left">
+                <div className="-translate-y-1 lg:-translate-y-10">
                   <p
-                    className={`text-[11px] uppercase tracking-[0.24em] ${
+                    className={`text-left text-[11px] uppercase tracking-[0.24em] ${
                       slide.tone === "light" ? "text-[#8b673f]" : "text-white/55"
                     }`}
                   >
                     {slide.label}
                   </p>
                   <h2
-                    className={`headline-balance mt-3 text-[23px] font-semibold leading-[1.16] tracking-[-0.04em] md:text-[32px] lg:mt-4 lg:text-[36px] lg:whitespace-nowrap ${
+                    className={`headline-balance mt-2 text-left text-[23px] font-semibold leading-[1.16] tracking-[-0.04em] md:mt-2.5 md:text-[32px] lg:mt-3 lg:text-[36px] lg:whitespace-nowrap ${
                       slide.tone === "light" ? "text-stone-900" : "text-white"
                     }`}
                   >
@@ -91,7 +91,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   {slide.description}
                 </p>
 
-                <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5 md:mt-8 md:gap-3 lg:justify-start">
+                <div className="mt-7 flex flex-wrap items-center justify-start gap-2.5 md:mt-8 md:gap-3">
                   {slide.highlights.map((highlight) => (
                     <div
                       key={highlight}

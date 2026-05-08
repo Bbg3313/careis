@@ -8,17 +8,22 @@ type ProductVisualSet = {
 };
 
 export const homeVisuals = {
-  sunHero: "/images/sun-hero.png",
-  illuminatorHero: "/images/illum-hero.png",
+  sunHero: "/images/sun-model-banner.png",
+  illuminatorHero: "/images/illum-model.png",
+  /** public 폴더에 실제 존재하는 이미지만 사용 */
   heroMotion: [
-    "/images/sun-hero.png",
-    "/images/sun-lifestyle.png",
-    "/images/sun-texture.png",
-    "/images/sun-model-warm.png",
+    "/images/sun-model-banner.png",
+    "/images/sunpack-thumb-02.png",
+    "/images/sunpack-thumb-04.png",
     "/images/illum-model-banner.png",
-    "/images/illum-hero.png",
+    "/images/illum-model.png",
   ],
-  brandFilm: ["/images/sun-object.png", "/images/illum-hero.png", "/images/sun-texture.png", "/images/illum-model.png"],
+  brandFilm: [
+    "/images/sun-model-banner.png",
+    "/images/illum-model.png",
+    "/images/sunpack-thumb-03.png",
+    "/images/illum-model-banner.png",
+  ],
 };
 
 export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet> = {
@@ -37,14 +42,14 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
     ],
   },
   illuminator: {
-    hero: "/images/illum-hero.png",
+    hero: "/images/illum-model.png",
     card: "/images/illum-model.png",
     alt: "일루미네이터 시스테아민 5% 제품 이미지",
     gallery: [
       "/images/illum-model.png",
-      "/images/illum-hero.png",
+      "/images/illum-model-banner.png",
       "/images/illum-model.png",
-      "/images/illum-hero.png",
+      "/images/illum-model-banner.png",
       "/images/illum-model.png",
     ],
   },

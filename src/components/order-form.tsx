@@ -148,7 +148,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             : "";
         const resolvedAddress = extras ? `${baseAddress} (${extras})` : baseAddress;
 
-        setPostalCode(data.zonecode);
+        setPostalCode(data.zonecode.trim());
         setAddress(resolvedAddress);
       },
     }).open();
@@ -344,21 +344,30 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             <span>
               배송지 주소 <strong className="text-[#a97d4d]">*</strong>
             </span>
-            <div className="grid gap-3 md:grid-cols-[1fr_auto]">
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-stretch gap-2 sm:items-center">
+                <input
+                  readOnly
+                  value={postalCode}
+                  placeholder="우편번호"
+                  aria-label="우편번호"
+                  className="w-full min-w-[7rem] max-w-[10rem] rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-stone-900 outline-none placeholder:text-stone-400 sm:w-36"
+                />
+                <button
+                  type="button"
+                  onClick={openAddressSearch}
+                  className="btn-luxe-secondary shrink-0 rounded-full px-5 py-3 text-sm font-semibold"
+                >
+                  주소찾기
+                </button>
+              </div>
               <input
                 required
                 readOnly
                 value={address}
-                placeholder="주소 찾기 버튼을 눌러 배송지를 선택해주세요."
+                placeholder="주소찾기로 검색한 도로명·지번 주소가 여기에 표시됩니다."
                 className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 outline-none"
               />
-              <button
-                type="button"
-                onClick={openAddressSearch}
-                className="btn-luxe-secondary w-full rounded-full px-5 py-3 text-sm font-semibold md:w-auto"
-              >
-                주소찾기
-              </button>
             </div>
           </label>
 
