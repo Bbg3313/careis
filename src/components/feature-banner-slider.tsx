@@ -41,16 +41,18 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
             }`}
           >
             <div
-              className={`relative grid min-h-[520px] items-center gap-6 overflow-hidden px-5 py-7 md:min-h-[560px] md:gap-8 md:px-11 md:py-11 lg:grid-cols-[1.04fr_0.96fr] lg:px-14 ${
+              className={`relative grid min-h-[520px] items-center gap-6 overflow-hidden px-5 py-7 ring-1 ring-inset md:min-h-[560px] md:gap-8 md:px-11 md:py-11 lg:grid-cols-[1fr_1.06fr] lg:px-14 ${
                 slide.tone === "light"
-                  ? "bg-[radial-gradient(circle_at_18%_18%,rgba(211,180,132,0.2)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_32%),linear-gradient(135deg,#fffdf9_0%,#faf2e6_54%,#f1e6d4_100%)] text-stone-900"
-                  : "bg-[linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] text-white"
+                  ? "bg-[radial-gradient(circle_at_18%_18%,rgba(211,180,132,0.2)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_32%),linear-gradient(135deg,#fffdf9_0%,#faf2e6_54%,#f1e6d4_100%)] text-stone-900 ring-[rgba(184,145,86,0.22)] shadow-[inset_0_1px_0_rgba(255,255,255,0.65),inset_0_-1px_0_rgba(184,145,86,0.07)]"
+                  : "bg-[radial-gradient(circle_at_18%_18%,rgba(212,175,55,0.14)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(168,188,212,0.22)_0%,rgba(255,255,255,0)_32%),linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] text-white ring-[rgba(184,145,86,0.26)] shadow-[inset_0_1px_0_rgba(255,255,255,0.14),inset_0_-1px_0_rgba(0,0,0,0.28)]"
               }`}
             >
+              <div className="pointer-events-none absolute inset-x-6 top-0 z-[6] h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.55)_50%,transparent_100%)] md:inset-x-10 lg:inset-x-12" />
+              <div className="pointer-events-none absolute inset-x-6 bottom-0 z-[6] h-px bg-[linear-gradient(90deg,transparent_0%,rgba(184,145,86,0.38)_50%,transparent_100%)] md:inset-x-10 lg:inset-x-12" />
               <div className="pointer-events-none absolute inset-0">
                 <div
                   className={`absolute inset-y-8 left-6 w-[42%] rounded-[28px] blur-3xl ${
-                    slide.tone === "light" ? "bg-[#e6cda5]/14" : "bg-[#7B8FA8]/18"
+                    slide.tone === "light" ? "bg-[#e6cda5]/14" : "bg-[#d4af37]/11"
                   }`}
                 />
                 <div
@@ -62,7 +64,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   className={`absolute inset-0 ${
                     slide.tone === "light"
                       ? "bg-[linear-gradient(180deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_24%,rgba(170,132,84,0.04)_100%)]"
-                      : "bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_28%,rgba(0,0,0,0.12)_100%)]"
+                      : "bg-[linear-gradient(180deg,rgba(255,255,255,0.1)_0%,rgba(255,255,255,0)_26%,rgba(212,175,55,0.04)_55%,rgba(0,0,0,0.14)_100%)]"
                   }`}
                 />
               </div>
@@ -98,7 +100,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                       className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[10px] font-medium tracking-[0.12em] shadow-[0_10px_24px_rgba(89,63,28,0.06)] md:px-4 md:text-[11px] md:tracking-[0.14em] ${
                         slide.tone === "light"
                           ? "border-[rgba(184,145,86,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9)_0%,rgba(248,238,224,0.96)_100%)] text-[#8b673f]"
-                          : "border-white/14 bg-white/8 text-white/78"
+                          : "border-[rgba(184,145,86,0.28)] bg-[linear-gradient(180deg,rgba(255,255,255,0.1)_0%,rgba(255,255,255,0.05)_100%)] text-white/82 shadow-[0_10px_28px_rgba(0,0,0,0.18)]"
                       }`}
                     >
                       <span
@@ -112,14 +114,13 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                 </div>
               </div>
 
-              <div className="relative z-10 flex min-h-[260px] self-stretch items-end justify-center md:min-h-[480px] lg:min-h-[560px]">
+              <div className="relative z-10 min-h-[240px] w-full self-stretch md:min-h-[460px] lg:min-h-[560px]">
                 <Image
                   src={slide.image}
                   alt={slide.imageAlt}
-                  width={1400}
-                  height={1800}
-                  className="h-[260px] w-auto max-w-full object-contain object-center sm:h-[320px] md:h-[480px] lg:h-[560px]"
-                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  fill
+                  className="object-cover object-center max-lg:object-bottom lg:object-center"
+                  sizes="(max-width: 1024px) 100vw, 46vw"
                   priority={index === 0}
                 />
               </div>
@@ -138,7 +139,9 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
             aria-label={`${slide.title} 슬라이드 보기`}
             onClick={() => setActiveIndex(index)}
             className={`h-2.5 rounded-full transition-all ${
-              index === activeIndex ? "w-8 bg-stone-900/85 shadow-[0_4px_12px_rgba(0,0,0,0.12)]" : "w-2.5 bg-stone-400/60"
+              index === activeIndex
+                ? "w-8 bg-[linear-gradient(90deg,#c49a5c_0%,#8b673f_100%)] shadow-[0_4px_14px_rgba(184,145,86,0.32)]"
+                : "w-2.5 bg-stone-400/45"
             }`}
           />
         ))}

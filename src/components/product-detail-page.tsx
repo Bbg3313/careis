@@ -32,7 +32,7 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
           className="absolute inset-0"
           frameSizes={isIlluminator ? heroMotionSizes : undefined}
           quality={isIlluminator ? 92 : undefined}
-          objectFit={isIlluminator ? "contain" : "cover"}
+          objectFit="cover"
           overlayClassName={`absolute inset-0 ${
             warmTheme
               ? "bg-[linear-gradient(90deg,rgba(10,10,10,0.8)_0%,rgba(10,10,10,0.32)_46%,rgba(10,10,10,0.64)_100%)]"

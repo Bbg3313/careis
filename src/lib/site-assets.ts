@@ -28,9 +28,9 @@ export const homeVisuals = {
 
 export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet> = {
   "sun-pack": {
-    hero: "/images/sunpack-thumb-02.png",
-    card: "/images/sunpack-thumb-02.png",
-    alt: "심플스틱 선팩 모델 썸네일 이미지",
+    hero: "/images/sun-model-banner.png",
+    card: "/images/sun-model-banner.png",
+    alt: "심플스틱 선팩 모델 비주얼",
     gallery: [
       "/images/sunpack-thumb-01.png",
       "/images/sunpack-thumb-02.png",

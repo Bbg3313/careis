@@ -306,10 +306,10 @@ export default function HomePage() {
                 <div className="group mt-8 overflow-hidden border border-black/8 bg-white/50 p-4 transition duration-500 hover:border-black/12 hover:bg-white/60 hover:shadow-[0_18px_40px_rgba(104,78,41,0.12)] md:mt-10 md:p-6 backdrop-blur-sm">
                   <div className="relative h-[18rem] w-[14rem] md:h-[28rem] md:w-[21rem]">
                     <Image
-                      src="/images/sunpack-thumb-02.png"
+                      src={productVisuals["sun-pack"].card}
                       alt={productVisuals["sun-pack"].alt}
                       fill
-                      className="cursor-zoom-in object-contain drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)] transition-transform duration-500 ease-out group-hover:scale-[1.12]"
+                      className="cursor-zoom-in object-cover object-center drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)] transition-transform duration-500 ease-out group-hover:scale-[1.12]"
                       sizes="(max-width: 768px) 272px, 336px"
                     />
                   </div>
@@ -369,7 +369,7 @@ export default function HomePage() {
                       src={productVisuals["illuminator"].card}
                       alt={productVisuals["illuminator"].alt}
                       fill
-                      className="cursor-zoom-in object-contain drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-out group-hover:scale-[1.12]"
+                      className="cursor-zoom-in object-cover object-center drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-out group-hover:scale-[1.12]"
                       sizes="(max-width: 768px) 272px, 336px"
                     />
                   </div>
