@@ -89,3 +89,19 @@ model OrderItem {
   order               Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product             Product  @relation(fields: [productId], references: [id])
 }
+
+/** 관리자 업로드 상품 상세 스토리 컷 (선팩 등 세로 스크롤 영역) */
+model ProductDetailSlide {
+  id          String   @id @default(cuid())
+  productSlug String
+  sortOrder   Int
+  url         String
+  width       Int
+  height      Int
+  mimeType    String
+  posterUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([productSlug, sortOrder])
+}

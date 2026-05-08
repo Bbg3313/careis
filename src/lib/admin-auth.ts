@@ -1,4 +1,5 @@
 import type { User } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
 
 import { createSupabaseServer } from "@/lib/supabase/server";
 
@@ -43,4 +44,27 @@ export async function requireAdminUser(): Promise<User | null> {
   }
   assertAllowedAdminEmail(user);
   return user;
+}
+
+/** Supabase 인증이 켜진 환경에서 관리자 API 보호. 허용 시 `null`, 차단 시 `NextResponse` */
+export async function guardAdminApi(): Promise<NextResponse | null> {
+  const hasSupabase = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim(),
+  );
+  if (!hasSupabase) {
+    return null;
+  }
+
+  const user = await getAdminSessionUser();
+  if (!user) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    assertAllowedAdminEmail(user);
+  } catch {
+    return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
+  }
+
+  return null;
 }

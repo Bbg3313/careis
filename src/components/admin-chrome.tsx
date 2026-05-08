@@ -28,6 +28,9 @@ export function AdminChrome({ email }: { email: string | null }) {
         <Link href="/admin/orders" className="text-stone-600 hover:text-stone-900">
           주문 목록
         </Link>
+        <Link href="/admin/product-detail" className="text-stone-600 hover:text-stone-900">
+          상세 이미지
+        </Link>
         <a
           href="/api/admin/orders/export"
           className="text-stone-600 hover:text-stone-900"

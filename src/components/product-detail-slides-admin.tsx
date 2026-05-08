@@ -1,0 +1,217 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+
+import type { ProductSlug } from "@/lib/product-data";
+
+export type AdminDetailSlideRow = {
+  id: string;
+  productSlug: string;
+  sortOrder: number;
+  url: string;
+  width: number;
+  height: number;
+  mimeType: string;
+  posterUrl: string | null;
+};
+
+export function ProductDetailSlidesAdmin({
+  initialBySlug,
+}: {
+  initialBySlug: Record<ProductSlug, AdminDetailSlideRow[]>;
+}) {
+  const router = useRouter();
+  const [slug, setSlug] = useState<ProductSlug>("sun-pack");
+  const slides = initialBySlug[slug];
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  async function upload(files: FileList | null) {
+    if (!files?.length) return;
+    setBusy(true);
+    setMsg(null);
+    const fd = new FormData();
+    fd.append("slug", slug);
+    for (let i = 0; i < files.length; i++) {
+      fd.append("files", files[i]);
+    }
+    const res = await fetch("/api/admin/product-detail/upload", { method: "POST", body: fd });
+    const data = (await res.json().catch(() => ({}))) as { error?: string; slides?: unknown[] };
+    setBusy(false);
+    if (!res.ok) {
+      setMsg(data.error ?? "업로드 실패");
+      return;
+    }
+    setMsg(`${data.slides?.length ?? 0}개 업로드되었습니다.`);
+    router.refresh();
+  }
+
+  async function remove(id: string) {
+    if (!confirm("이 이미지를 삭제할까요? 스토리지 파일도 함께 삭제됩니다.")) return;
+    setBusy(true);
+    setMsg(null);
+    const res = await fetch(`/api/admin/product-detail/slide/${encodeURIComponent(id)}`, {
+      method: "DELETE",
+    });
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
+    setBusy(false);
+    if (!res.ok) {
+      setMsg(data.error ?? "삭제 실패");
+      return;
+    }
+    router.refresh();
+  }
+
+  async function move(id: string, dir: -1 | 1) {
+    const idx = slides.findIndex((s) => s.id === id);
+    const j = idx + dir;
+    if (idx < 0 || j < 0 || j >= slides.length) return;
+    const orderedIds = slides.map((s) => s.id);
+    const t = orderedIds[idx];
+    orderedIds[idx] = orderedIds[j];
+    orderedIds[j] = t;
+    setBusy(true);
+    setMsg(null);
+    const res = await fetch("/api/admin/product-detail/reorder", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug, orderedIds }),
+    });
+    const data = (await res.json().catch(() => ({}))) as { error?: string };
+    setBusy(false);
+    if (!res.ok) {
+      setMsg(data.error ?? "순서 변경 실패");
+      return;
+    }
+    router.refresh();
+  }
+
+  return (
+    <div className="space-y-8">
+      <div className="flex flex-wrap gap-2 rounded-2xl border border-stone-200 bg-white p-2 shadow-sm">
+        {(["sun-pack", "illuminator"] as const).map((s) => (
+          <button
+            key={s}
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              setSlug(s);
+              setMsg(null);
+            }}
+            className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+              slug === s ? "bg-[#b89156] text-white" : "text-stone-600 hover:bg-stone-50"
+            }`}
+          >
+            {s === "sun-pack" ? "선팩" : "일루미네이터"}
+          </button>
+        ))}
+      </div>
+
+      <div className="rounded-2xl border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-sm text-amber-950">
+        <p>
+          이 목록에 이미지가 <strong>하나라도</strong> 있으면 쇼핑몰 상세는 <strong>업로드한 순서대로만</strong> 표시합니다.
+          비어 있으면 선팩은 코드에 넣어 둔 기본 컷을 사용합니다.
+        </p>
+        <p className="mt-2 text-xs text-amber-900/80">
+          Supabase 배포 시 공개 버킷 <code className="rounded bg-white/70 px-1">product-detail</code> 와 환경변수{" "}
+          <code className="rounded bg-white/70 px-1">SUPABASE_SERVICE_ROLE_KEY</code> 가 필요합니다. 없으면 파일은{" "}
+          <code className="rounded bg-white/70 px-1">public/uploads/product-detail/</code> 에 저장됩니다 (로컬 위주).
+        </p>
+      </div>
+
+      {msg ? (
+        <p className={`text-sm ${msg.includes("실패") ? "text-red-600" : "text-emerald-700"}`}>{msg}</p>
+      ) : null}
+
+      <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+        <h2 className="text-sm font-semibold text-stone-900">업로드</h2>
+        <p className="mt-1 text-xs text-stone-500">JPG, PNG, GIF · 여러 장 선택 가능 · 파일당 최대 15MB</p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/gif,.jpg,.jpeg,.png,.gif"
+            multiple
+            className="hidden"
+            disabled={busy}
+            onChange={(e) => {
+              void upload(e.target.files);
+              e.target.value = "";
+            }}
+          />
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => inputRef.current?.click()}
+            className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-50"
+          >
+            파일 선택
+          </button>
+          {busy ? <span className="text-sm text-stone-500">처리 중…</span> : null}
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-stone-200 bg-white shadow-sm">
+        <div className="border-b border-stone-100 px-5 py-4">
+          <h2 className="text-sm font-semibold text-stone-900">현재 순서 ({slides.length}장)</h2>
+        </div>
+        {slides.length === 0 ? (
+          <p className="px-5 py-10 text-center text-sm text-stone-500">등록된 이미지가 없습니다.</p>
+        ) : (
+          <ul className="divide-y divide-stone-100">
+            {slides.map((slide, index) => (
+              <li key={slide.id} className="flex flex-col gap-4 px-5 py-4 sm:flex-row sm:items-center">
+                <div className="relative h-28 w-44 shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-stone-50">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={slide.url} alt="" className="h-full w-full object-contain" />
+                </div>
+                <div className="min-w-0 flex-1 space-y-1 text-sm">
+                  <div className="flex flex-wrap gap-2">
+                    <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-700">
+                      #{index + 1}
+                    </span>
+                    <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">
+                      {slide.mimeType.includes("gif") ? "GIF" : slide.mimeType.includes("png") ? "PNG" : "JPG"}
+                    </span>
+                    <span className="text-xs text-stone-400">
+                      {slide.width}×{slide.height}px
+                    </span>
+                  </div>
+                  <p className="truncate font-mono text-xs text-stone-500">{slide.url}</p>
+                </div>
+                <div className="flex shrink-0 flex-wrap gap-2">
+                  <button
+                    type="button"
+                    disabled={busy || index === 0}
+                    onClick={() => void move(slide.id, -1)}
+                    className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium hover:bg-stone-50 disabled:opacity-40"
+                  >
+                    위로
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy || index === slides.length - 1}
+                    onClick={() => void move(slide.id, 1)}
+                    className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium hover:bg-stone-50 disabled:opacity-40"
+                  >
+                    아래로
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => void remove(slide.id)}
+                    className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-800 hover:bg-red-100"
+                  >
+                    삭제
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}

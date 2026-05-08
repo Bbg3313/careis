@@ -76,7 +76,7 @@ export function AdminLoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="btn-luxe-primary w-full rounded-full py-3 text-sm font-semibold disabled:opacity-60"
+        className="btn-luxe-primary inline-flex min-h-[48px] w-full items-center justify-center rounded-full px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
       >
         {loading ? "확인 중…" : "로그인"}
       </button>

@@ -86,6 +86,9 @@ export function SiteFooter() {
             <Link href="/products/illuminator" className="transition hover:text-white">
               일루미네이터
             </Link>
+            <Link href="/admin/login" className="transition hover:text-white">
+              관리자 로그인
+            </Link>
           </div>
         </div>
       </div>

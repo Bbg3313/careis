@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 
 import { ProductDetailPage } from "@/components/product-detail-page";
+import { getMergedStorySlides } from "@/lib/product-detail-slides";
 import { getProductBySlug, products } from "@/lib/product-data";
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return products.map((product) => ({ slug: product.slug }));
@@ -19,5 +22,7 @@ export default async function ProductPage({
     notFound();
   }
 
-  return <ProductDetailPage product={product} />;
+  const sunPackStorySlides = await getMergedStorySlides(product.slug);
+
+  return <ProductDetailPage product={product} sunPackStorySlides={sunPackStorySlides} />;
 }

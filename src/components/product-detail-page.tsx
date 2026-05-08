@@ -3,13 +3,24 @@ import Link from "next/link";
 
 import { MotionMedia } from "@/components/motion-media";
 import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
-import { SunPackStorySlide } from "@/components/sun-pack-story-slide";
+import { SunPackStorySlide as SunPackStorySlideView } from "@/components/sun-pack-story-slide";
 import { SunPackDetailTabs } from "@/components/sun-pack-detail-tabs";
 import type { ProductContent } from "@/lib/product-data";
-import { productVisuals, sunPackDetailAssets, SUN_PACK_DETAIL_MAX_WIDTH_PX } from "@/lib/site-assets";
+import {
+  productVisuals,
+  sunPackDetailAssets,
+  SUN_PACK_DETAIL_MAX_WIDTH_PX,
+  type SunPackStorySlide,
+} from "@/lib/site-assets";
 import { formatCurrency } from "@/lib/utils";
 
-export function ProductDetailPage({ product }: { product: ProductContent }) {
+export function ProductDetailPage({
+  product,
+  sunPackStorySlides,
+}: {
+  product: ProductContent;
+  sunPackStorySlides?: SunPackStorySlide[];
+}) {
   const warmTheme = product.theme === "warm";
   const visual = productVisuals[product.slug];
   const isSunPack = product.slug === "sun-pack";
@@ -19,7 +30,13 @@ export function ProductDetailPage({ product }: { product: ProductContent }) {
   const heroCardSizes = "(max-width: 1024px) 100vw, min(1200px, 52vw)";
 
   if (isSunPack) {
-    return <SunPackDetailPage product={product} visual={visual} />;
+    return (
+      <SunPackDetailPage
+        product={product}
+        visual={visual}
+        storySlides={sunPackStorySlides ?? sunPackDetailAssets.storyImages}
+      />
+    );
   }
 
   return (
@@ -306,9 +323,11 @@ function ProductExchangeReturnSection() {
 function SunPackDetailPage({
   product,
   visual,
+  storySlides,
 }: {
   product: ProductContent;
   visual: (typeof productVisuals)["sun-pack"];
+  storySlides: SunPackStorySlide[];
 }) {
   const purchaseAsideBody = (
     <>
@@ -388,7 +407,7 @@ function SunPackDetailPage({
           <SunPackDetailTabs />
 
           <section id="detail" className="scroll-mt-[var(--site-sticky-offset)]">
-            <SunPackDetailStory />
+            <SunPackDetailStory slides={storySlides} />
           </section>
 
           <section
@@ -493,12 +512,12 @@ function SunPackDetailPage({
   );
 }
 
-function SunPackDetailStory() {
+function SunPackDetailStory({ slides }: { slides: SunPackStorySlide[] }) {
   return (
     <section className="w-full bg-[#f7f3f0] py-1">
       <div className="mx-auto w-full px-0" style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}>
         <div className="space-y-0">
-          {sunPackDetailAssets.storyImages.map((slide, index) => (
+          {slides.map((slide, index) => (
             <div
               key={`${slide.src}-${index}`}
               className="mx-auto w-full min-w-0"
@@ -506,7 +525,7 @@ function SunPackDetailStory() {
                 maxWidth: Math.min(slide.width, SUN_PACK_DETAIL_MAX_WIDTH_PX),
               }}
             >
-              <SunPackStorySlide slide={slide} index={index} />
+              <SunPackStorySlideView slide={slide} index={index} />
             </div>
           ))}
         </div>
