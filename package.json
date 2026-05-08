@@ -7,10 +7,12 @@
     "dev:local": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/dev-local.ps1",
     "build:favicon": "node scripts/generate-favicon.mjs",
     "export-psd": "node scripts/export-psd.cjs",
-    "build": "node scripts/generate-favicon.mjs && prisma generate && next build",
+    "build": "node scripts/build.mjs",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
     "db:push": "prisma db push",
+    "db:migrate": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
@@ -24,6 +26,9 @@
     "react-dom": "^19.1.0",
     "xlsx": "^0.18.5",
     "zod": "^3.24.4"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
