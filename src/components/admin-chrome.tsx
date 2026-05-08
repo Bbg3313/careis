@@ -5,12 +5,20 @@ import { useRouter } from "next/navigation";
 
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 
-export function AdminChrome({ email }: { email: string | null }) {
+export function AdminChrome({
+  email,
+  supabaseUrl,
+  supabaseAnonKey,
+}: {
+  email: string | null;
+  supabaseUrl?: string;
+  supabaseAnonKey?: string;
+}) {
   const router = useRouter();
 
   async function logout() {
     try {
-      const sb = createSupabaseBrowser();
+      const sb = createSupabaseBrowser(supabaseUrl, supabaseAnonKey);
       await sb.auth.signOut();
     } catch {
       /* Supabase 미설정 시 */

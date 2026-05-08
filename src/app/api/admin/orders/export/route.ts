@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 import { assertAllowedAdminEmail, getAdminSessionUser } from "@/lib/admin-auth";
 import { buildOrdersWorkbook } from "@/lib/export-orders";
 
+import { hasPublicSupabaseEnv } from "@/lib/supabase/env-public";
+
 export async function GET() {
-  const hasSupabase = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim(),
-  );
+  const hasSupabase = hasPublicSupabaseEnv();
   if (hasSupabase) {
     const user = await getAdminSessionUser();
     if (!user) {

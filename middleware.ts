@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { REFERRAL_COOKIE_AGE, REFERRAL_COOKIE_KEY, sanitizeReferralCode } from "@/lib/referral";
+import { hasPublicSupabaseEnv } from "@/lib/supabase/env-public";
 import { refreshSupabaseSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
@@ -23,9 +24,7 @@ export async function middleware(request: NextRequest) {
   const isAdminArea = path.startsWith("/admin");
 
   if (isAdminArea && !isAdminLogin) {
-    const hasSupabase = Boolean(
-      process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    );
+    const hasSupabase = hasPublicSupabaseEnv();
     if (hasSupabase && !user) {
       const login = new URL("/admin/login", request.url);
       login.searchParams.set("next", `${path}${request.nextUrl.search}`);
@@ -34,9 +33,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (path.startsWith("/api/admin")) {
-    const hasSupabase = Boolean(
-      process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    );
+    const hasSupabase = hasPublicSupabaseEnv();
     if (hasSupabase && !user) {
       return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
     }

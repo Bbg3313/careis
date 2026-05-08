@@ -2,11 +2,10 @@ import type { User } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
 import { createSupabaseServer } from "@/lib/supabase/server";
+import { hasPublicSupabaseEnv } from "@/lib/supabase/env-public";
 
 export async function getAdminSessionUser() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anon) {
+  if (!hasPublicSupabaseEnv()) {
     return null;
   }
 
@@ -33,8 +32,7 @@ export function assertAllowedAdminEmail(user: User) {
 }
 
 export async function requireAdminUser(): Promise<User | null> {
-  const has = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim());
-  if (!has) {
+  if (!hasPublicSupabaseEnv()) {
     return null;
   }
 
@@ -48,10 +46,7 @@ export async function requireAdminUser(): Promise<User | null> {
 
 /** Supabase 인증이 켜진 환경에서 관리자 API 보호. 허용 시 `null`, 차단 시 `NextResponse` */
 export async function guardAdminApi(): Promise<NextResponse | null> {
-  const hasSupabase = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim(),
-  );
-  if (!hasSupabase) {
+  if (!hasPublicSupabaseEnv()) {
     return null;
   }
 

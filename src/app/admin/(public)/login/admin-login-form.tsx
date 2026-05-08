@@ -5,7 +5,13 @@ import { useState } from "react";
 
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 
-export function AdminLoginForm() {
+export function AdminLoginForm({
+  supabaseUrl,
+  supabaseAnonKey,
+}: {
+  supabaseUrl: string;
+  supabaseAnonKey: string;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get("next") || "/admin";
@@ -22,9 +28,15 @@ export function AdminLoginForm() {
     try {
       let supabase;
       try {
-        supabase = createSupabaseBrowser();
-      } catch {
-        throw new Error("Supabase URL/Anon Key가 설정되지 않았습니다.");
+        supabase = createSupabaseBrowser(supabaseUrl, supabaseAnonKey);
+      } catch (err) {
+        const hint =
+          supabaseUrl && supabaseAnonKey
+            ? err instanceof Error
+              ? err.message
+              : "Supabase 클라이언트를 만들 수 없습니다."
+            : "서버에 Supabase URL/Anon 키가 없습니다. 로컬은 .env 후 개발 서버 재시작, 배포는 호스트 환경변수 설정 후 재배포하세요.";
+        throw new Error(hint);
       }
       const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
       if (error) {
