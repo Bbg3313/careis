@@ -81,7 +81,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                 />
               </div>
               <div className="relative z-10 flex flex-col justify-center text-center lg:max-w-[640px] lg:text-left">
-                <div className="-translate-y-1 md:-translate-y-1.5 lg:-translate-y-2">
+                <div className="-translate-y-1.5 md:-translate-y-2 lg:-translate-y-2.5">
                   <p
                     className={`text-[11px] uppercase tracking-[0.24em] ${
                       slide.tone === "light" ? "text-[#8b673f]" : "text-white/55"
@@ -98,7 +98,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   </h2>
                 </div>
                 <p
-                  className={`copy-pretty mt-8 translate-y-1 text-[15px] leading-[1.9] md:mt-11 md:translate-y-1.5 md:text-[17px] lg:mt-12 lg:translate-y-2 ${
+                  className={`copy-pretty mt-10 translate-y-1.5 text-[15px] leading-[1.9] md:mt-14 md:translate-y-2 md:text-[17px] lg:mt-16 lg:translate-y-2.5 ${
                     slide.tone === "light" ? "text-stone-600" : "text-white/72"
                   }`}
                 >

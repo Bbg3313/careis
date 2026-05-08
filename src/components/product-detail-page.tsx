@@ -499,7 +499,13 @@ function SunPackDetailStory() {
       <div className="mx-auto w-full px-0" style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}>
         <div className="space-y-0">
           {sunPackDetailAssets.storyImages.map((slide, index) => (
-            <div key={`${slide.src}-${index}`} className="w-full min-w-0">
+            <div
+              key={`${slide.src}-${index}`}
+              className="mx-auto w-full min-w-0"
+              style={{
+                maxWidth: Math.min(slide.width, SUN_PACK_DETAIL_MAX_WIDTH_PX),
+              }}
+            >
               <SunPackStorySlide slide={slide} index={index} />
             </div>
           ))}

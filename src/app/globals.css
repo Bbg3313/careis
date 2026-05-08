@@ -141,12 +141,10 @@ button {
   will-change: transform, opacity;
 }
 
-/* 홈 히어로: 모바일은 스케일 없이 페이드만 — 짤림 방지, 프레임 동일 */
-@media (max-width: 767px) {
-  .hero-motion-root .motion-frame {
-    transform: scale(1);
-    animation: heroCrossfadeMobile 14s ease-in-out infinite;
-  }
+/* 홈 히어로: 줌 제거 + 페이드만 — object-contain과 맞물려 일루미네이터 등 가로·세로 컷이 프레임 밖으로 잘리지 않음 */
+.hero-motion-root .motion-frame {
+  transform: scale(1);
+  animation: heroCrossfadeMobile 14s ease-in-out infinite;
 }
 
 @keyframes heroCrossfadeMobile {

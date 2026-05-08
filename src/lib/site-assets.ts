@@ -16,7 +16,7 @@ export const homeVisuals = {
     "/images/sunpack-thumb-02.png",
     "/images/sunpack-thumb-04.png",
     "/images/illum-model-banner.png",
-    "/images/illum-model.png",
+    "/images/illum-hero.png",
   ],
   brandFilm: [
     "/images/sun-model-banner.png",
@@ -78,12 +78,25 @@ export const sunPackDetailAssets = {
     "/images/sunpack-thumb-06.png",
     "/images/sunpack-thumb-07.png",
   ],
+  /**
+   * 예전 7장 스토리와 동일한 순서: GIF는 2번째·5번째 슬롯(인덱스 1·4) 고정.
+   */
   storyImages: [
     { src: "/images/sunpack-detail-scroll-01.png", width: 526, height: 1024 },
-    { src: "/images/sunpack-detail-gif-01.gif", width: 600, height: 338 },
+    {
+      src: "/images/sunpack-detail-gif-01.gif",
+      width: 600,
+      height: 338,
+      posterSrc: "/images/sunpack-detail-gif-01.png",
+    },
     { src: "/images/sunpack-priority-03.png", width: 299, height: 1024 },
     { src: "/images/sunpack-priority-04.png", width: 853, height: 1024 },
-    { src: "/images/sunpack-detail-gif-02.gif", width: 600, height: 338, posterSrc: "/images/sunpack-detail-gif-02.png" },
+    {
+      src: "/images/sunpack-detail-gif-02.gif",
+      width: 600,
+      height: 338,
+      posterSrc: "/images/sunpack-detail-gif-02.png",
+    },
     { src: "/images/sunpack-priority-06.png", width: 799, height: 1024 },
     { src: "/images/sunpack-priority-07.png", width: 1005, height: 1024 },
   ] satisfies SunPackStorySlide[],

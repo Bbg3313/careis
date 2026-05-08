@@ -63,6 +63,8 @@ function AutoPlayVideo({ src, mime }: { src: string; mime: string }) {
 function StoryGifSlide({ slide, index }: { slide: SunPackStorySlide; index: number }) {
   const [gifBroken, setGifBroken] = useState(false);
   const poster = slide.posterSrc;
+  const eager = index < 2;
+  const loading = eager ? "eager" : "lazy";
 
   if (!poster) {
     return (
@@ -73,7 +75,7 @@ function StoryGifSlide({ slide, index }: { slide: SunPackStorySlide; index: numb
         width={slide.width}
         height={slide.height}
         className="block h-auto w-full max-w-full select-none"
-        loading="eager"
+        loading={loading}
         decoding="async"
         fetchPriority={index <= 4 ? "high" : "auto"}
         draggable={false}
@@ -90,6 +92,7 @@ function StoryGifSlide({ slide, index }: { slide: SunPackStorySlide; index: numb
         width={slide.width}
         height={slide.height}
         className="block h-auto w-full max-w-full select-none"
+        loading={loading}
         draggable={false}
         aria-hidden
       />
@@ -100,8 +103,8 @@ function StoryGifSlide({ slide, index }: { slide: SunPackStorySlide; index: numb
           alt={`선팩 상세 ${index + 1}`}
           width={slide.width}
           height={slide.height}
-          className="absolute inset-0 block h-full w-full object-contain select-none"
-          loading="eager"
+          className="pointer-events-none absolute inset-0 block h-full w-full object-contain select-none"
+          loading={loading}
           decoding="async"
           fetchPriority={index <= 4 ? "high" : "auto"}
           draggable={false}
