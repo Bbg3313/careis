@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { getOrderStats, getOrders } from "@/lib/orders";
+import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -77,7 +78,7 @@ export default async function AdminDashboardPage() {
                     <td className="px-5 py-3 text-stone-600">{formatDate(order.createdAt)}</td>
                     <td className="px-5 py-3 text-stone-600">
                       <div>{order.customerName}</div>
-                      <div className="text-xs text-stone-400">{order.phone}</div>
+                      <div className="text-xs text-stone-400">{formatKoreanMobileDisplay(order.phone)}</div>
                     </td>
                     <td className="px-5 py-3 text-stone-700">{order.paymentStatus}</td>
                     <td className="px-5 py-3 text-stone-600">

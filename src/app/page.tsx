@@ -526,7 +526,7 @@ export default function HomePage() {
                 <p className="text-[11px] font-medium tracking-[0.14em] text-[#8b673f]">진행</p>
                 <p className="mt-3 text-lg font-semibold text-stone-900">평소 주문과 동일</p>
                 <p className="mt-2 text-sm leading-snug text-stone-600 break-keep">
-                  일반 주문 화면에서 제품을 담은 뒤, 받으신 코드만 입력하면 됩니다.
+                  제품 담기 후 주문 화면에서 코드만 입력하세요.
                 </p>
               </div>
               <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 import { paymentMethods, products, type ProductSlug } from "@/lib/product-data";
 import { productVisuals } from "@/lib/site-assets";
+import { formatKoreanMobileInput } from "@/lib/phone-format";
 import { formatCurrency } from "@/lib/utils";
 
 type OrderFormProps = {
@@ -332,8 +333,12 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             </span>
             <input
               required
+              type="tel"
+              inputMode="numeric"
+              autoComplete="tel"
+              placeholder="010-0000-0000"
               value={phone}
-              onChange={(event) => setPhone(event.target.value)}
+              onChange={(event) => setPhone(formatKoreanMobileInput(event.target.value))}
               className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 outline-none"
             />
           </label>

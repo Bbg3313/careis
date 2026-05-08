@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { saveOrderAdminForm } from "./actions";
 import { getOrderByNumber } from "@/lib/orders";
+import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { trackingLookupUrl } from "@/lib/tracking-url";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -44,7 +45,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
             </div>
             <div>
               <dt className="text-stone-500">연락처</dt>
-              <dd className="text-stone-800">{order.phone}</dd>
+              <dd className="text-stone-800">{formatKoreanMobileDisplay(order.phone)}</dd>
             </div>
             <div>
               <dt className="text-stone-500">주소</dt>

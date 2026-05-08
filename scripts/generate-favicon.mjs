@@ -1,27 +1,31 @@
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from "fs";
+import { copyFileSync, existsSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 import { join } from "path";
 import pngToIco from "png-to-ico";
 import sharp from "sharp";
 
 const root = process.cwd();
-const svgSunMoon = join(root, "public/branding/favicon-sun-moon.svg");
+const svgMark = join(root, "public/branding/favicon-sun-moon.svg");
 const pngPreferred = join(root, "public/branding/favicon-source.png");
 const pngFallback = join(root, "public/branding/sunlumi-logo-transparent.png");
 
-/** 탭 배경 — 메인 바디 톤과 맞춤 (PNG 폴백용) */
+/** 탭/타일 배경 — 사이트 바디 톤 */
 const bg = { r: 250, g: 250, b: 248, alpha: 1 };
 
 function useSvgSource() {
-  return existsSync(svgSunMoon);
+  return existsSync(svgMark);
 }
 
-/** SVG → PNG (정사각 타일, 배경색 메탈과 동일) */
+function usePngSource() {
+  return existsSync(pngPreferred);
+}
+
+/** SVG → PNG (SVG 마크가 있을 때만) */
 async function squareFromSvg(px, filename) {
-  const buf = readFileSync(svgSunMoon);
+  const buf = readFileSync(svgMark);
   await sharp(buf)
     .resize(px, px, {
       fit: "contain",
-      background: { r: 250, g: 248, b: 245, alpha: 1 },
+      background: { r: 26, g: 33, b: 48, alpha: 1 },
       position: "centre",
       kernel: sharp.kernel.lanczos3,
     })
@@ -29,9 +33,9 @@ async function squareFromSvg(px, filename) {
     .toFile(join(root, "public", filename));
 }
 
-/** 투명 여백 제거 후 정사각 안에 가운데 맞춤(contain) — 레거시 PNG 소스 */
+/** 마스터 PNG: 트림 후 정사각 contain */
 async function preparedPngPipeline() {
-  const src = existsSync(pngPreferred) ? pngPreferred : pngFallback;
+  const src = usePngSource() ? pngPreferred : pngFallback;
   let img = sharp(src);
   try {
     img = img.trim({
@@ -59,7 +63,8 @@ async function squareFromPng(px, filename) {
 }
 
 async function square(px, filename) {
-  if (useSvgSource()) await squareFromSvg(px, filename);
+  if (usePngSource()) await squareFromPng(px, filename);
+  else if (useSvgSource()) await squareFromSvg(px, filename);
   else await squareFromPng(px, filename);
 }
 
@@ -69,8 +74,11 @@ await square(48, "favicon-48.png");
 await square(64, "favicon-64.png");
 await square(180, "apple-touch-icon.png");
 
-if (useSvgSource()) {
-  copyFileSync(svgSunMoon, join(root, "public/icon.svg"));
+const iconSvgPublic = join(root, "public/icon.svg");
+if (useSvgSource() && !usePngSource()) {
+  copyFileSync(svgMark, iconSvgPublic);
+} else if (existsSync(iconSvgPublic)) {
+  unlinkSync(iconSvgPublic);
 }
 
 const icoBuf = await pngToIco([

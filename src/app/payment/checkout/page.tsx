@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { TossCheckoutButton } from "@/components/toss-checkout-button";
 import { getOrderByNumber } from "@/lib/orders";
+import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency } from "@/lib/utils";
 
 export default async function PaymentCheckoutPage({
@@ -63,7 +64,7 @@ export default async function PaymentCheckoutPage({
           <div className="mt-6 space-y-4 text-sm text-stone-600">
             <InfoRow label="주문번호" value={order.orderNumber} />
             <InfoRow label="구매자" value={order.customerName} />
-            <InfoRow label="연락처" value={order.phone} />
+            <InfoRow label="연락처" value={formatKoreanMobileDisplay(order.phone)} />
             <InfoRow label="결제수단" value={formatPaymentMethod(order.paymentMethod)} />
             <InfoRow label="결제채널" value={paymentChannel} />
             <InfoRow label="결제상태" value={formatPaymentStatus(order.paymentStatus)} />
