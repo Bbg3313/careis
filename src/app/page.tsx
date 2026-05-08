@@ -24,8 +24,8 @@ const featureBannerSlides = [
     description:
       "가볍게 밀착되는 사용감과 자연스러운 피부 표현으로 자외선이 강한 날에도 부담 없이 손이 가는 프리미엄 선케어입니다.",
     highlights: ["자외선 보호", "데일리 선케어", "가벼운 밀착감"],
-    image: "/images/sun-model-banner.png",
-    imageAlt: "선팩 모델 비주얼",
+    image: "/images/feature-banner-sun-day.png",
+    imageAlt: "선팩 선크림 스틱 데이 케어 비주얼",
     tone: "light" as const,
   },
 ];

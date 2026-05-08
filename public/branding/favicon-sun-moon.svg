@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="118" fill="#faf8f5"/>
+  <!-- Sun: flat fills, thick outline so it survives 16px -->
+  <g fill="#f2b93a" stroke="#a56d18" stroke-width="18" stroke-linejoin="round">
+    <circle cx="214" cy="256" r="114"/>
+    <!-- Four chunky rays only -->
+    <circle cx="214" cy="88" r="34"/>
+    <circle cx="214" cy="424" r="34"/>
+    <circle cx="62" cy="256" r="32"/>
+    <circle cx="108" cy="124" r="28"/>
+    <circle cx="108" cy="388" r="28"/>
+  </g>
+  <!-- Moon: no thin stroke; high contrast fill -->
+  <mask id="bite">
+    <rect width="512" height="512" fill="#ffffff"/>
+    <circle cx="398" cy="232" r="102" fill="#000000"/>
+  </mask>
+  <circle cx="322" cy="260" r="100" fill="#1a2f52" mask="url(#bite)"/>
+</svg>

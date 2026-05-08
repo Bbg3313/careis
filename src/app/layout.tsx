@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   description: "낮과 밤을 위한 2-step 더마코스메틱 루틴 브랜드",
   icons: {
     icon: [
+      { url: "/icon.svg", type: "image/svg+xml", sizes: "any" },
       { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon-64.png", type: "image/png", sizes: "64x64" },
       { url: "/favicon-48.png", type: "image/png", sizes: "48x48" },
