@@ -299,19 +299,11 @@ function DetailAccordionItem({
   );
 }
 
-function ExchangeReturnAccordionList({ embedded = false }: { embedded?: boolean }) {
-  const panel =
-    embedded === true
-      ? "rounded-[16px] bg-[#f8f5ef] p-4 md:p-5"
-      : "rounded-[22px] bg-white/80 p-5 md:p-6";
+function ExchangeReturnAccordionList() {
+  const panel = "rounded-[22px] bg-white/80 p-5 md:p-6";
   const notePanel =
-    embedded === true
-      ? "rounded-[16px] border border-[rgba(184,145,86,0.22)] bg-[#faf6ef] p-4 md:p-5"
-      : "rounded-[22px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(250,244,235,0.96)_100%)] p-5 md:p-6";
-  const shipCell =
-    embedded === true
-      ? "rounded-[14px] bg-white/80 p-4 shadow-sm"
-      : "rounded-[16px] bg-[#f8f5ef] p-4";
+    "rounded-[22px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(250,244,235,0.96)_100%)] p-5 md:p-6";
+  const shipCell = "rounded-[16px] bg-[#f8f5ef] p-4";
 
   return (
     <>
@@ -536,8 +528,13 @@ function SunPackDetailPage({
             <p className="mt-2 max-w-3xl text-sm leading-7 text-stone-600">
               상품 수령 후 교환 및 반품이 필요한 경우 아래를 확인해 주세요.
             </p>
-            <div id="exchange-return" className="mt-4">
-              <ExchangeReturnAccordionList embedded />
+            <div
+              id="exchange-return"
+              className="mt-4 overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1e7_100%)] shadow-[0_24px_60px_rgba(89,63,28,0.06)]"
+            >
+              <div className="px-4 py-2 md:px-6 md:py-4">
+                <ExchangeReturnAccordionList />
+              </div>
             </div>
           </section>
 
