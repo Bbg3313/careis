@@ -38,10 +38,24 @@ export function ProductDetailSlidesAdmin({
       fd.append("files", files[i]);
     }
     const res = await fetch("/api/admin/product-detail/upload", { method: "POST", body: fd });
-    const data = (await res.json().catch(() => ({}))) as { error?: string; slides?: unknown[] };
+    let data: { error?: string; slides?: unknown[] } = {};
+    try {
+      const text = await res.text();
+      if (text) {
+        data = JSON.parse(text) as { error?: string; slides?: unknown[] };
+      }
+    } catch {
+      data = {};
+    }
     setBusy(false);
     if (!res.ok) {
-      setMsg(data.error ?? "업로드 실패");
+      if (res.status === 413) {
+        setMsg(
+          "업로드 용량 제한(약 4.5MB)에 걸렸습니다. 이미지를 줄이거나, Vercel 유료 플랜·직접 스토리지 업로드 방식을 검토해 주세요.",
+        );
+        return;
+      }
+      setMsg(data.error ?? `업로드 실패 (HTTP ${res.status})`);
       return;
     }
     setMsg(`${data.slides?.length ?? 0}개 업로드되었습니다.`);
@@ -122,7 +136,15 @@ export function ProductDetailSlidesAdmin({
       </div>
 
       {msg ? (
-        <p className={`text-sm ${msg.includes("실패") ? "text-red-600" : "text-emerald-700"}`}>{msg}</p>
+        <p
+          className={`text-sm ${
+            msg.includes("실패") || msg.includes("제한") || msg.includes("HTTP") || msg.includes("오류")
+              ? "text-red-600"
+              : "text-emerald-700"
+          }`}
+        >
+          {msg}
+        </p>
       ) : null}
 
       <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">

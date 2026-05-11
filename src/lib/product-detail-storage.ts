@@ -14,15 +14,6 @@ export function assertAllowedImageMime(mime: string): asserts mime is "image/jpe
   }
 }
 
-/** 브라우저가 type 을 안 주거나 octet-stream 일 때 파일 확장자로 보정 */
-export function inferImageMimeFromFileName(fileName: string): "image/jpeg" | "image/png" | "image/gif" | null {
-  const ext = path.extname(fileName).toLowerCase();
-  if (ext === ".jpg" || ext === ".jpeg") return "image/jpeg";
-  if (ext === ".png") return "image/png";
-  if (ext === ".gif") return "image/gif";
-  return null;
-}
-
 export function mimeToExtension(mime: string): string {
   switch (mime) {
     case "image/jpeg":
@@ -62,7 +53,9 @@ export async function uploadProductDetailImage(
       upsert: false,
     });
     if (error) {
-      throw new Error(`스토리지 업로드 실패: ${error.message}`);
+      const err = error as { message?: string; error?: string; statusCode?: string };
+      const parts = [err.message, err.error, err.statusCode].filter(Boolean);
+      throw new Error(`스토리지 업로드 실패: ${parts.join(" · ") || "알 수 없는 오류"}`);
     }
     const { data } = sb.storage.from(PRODUCT_DETAIL_STORAGE_BUCKET).getPublicUrl(objectPath);
     return { url: data.publicUrl };

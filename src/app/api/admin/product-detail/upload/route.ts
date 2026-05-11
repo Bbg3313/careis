@@ -6,9 +6,9 @@ import type { ProductSlug } from "@/lib/product-data";
 import { prisma } from "@/lib/db";
 import {
   assertAllowedImageMime,
-  inferImageMimeFromFileName,
   uploadProductDetailImage,
 } from "@/lib/product-detail-storage";
+import { resolveUploadImageMime } from "@/lib/image-mime-sniff";
 
 export const runtime = "nodejs";
 
@@ -31,16 +31,6 @@ function readGifLogicalScreen(buf: Buffer): { width: number; height: number } | 
   const height = buf.readUInt16LE(8);
   if (width < 1 || height < 1 || width > 16384 || height > 16384) return null;
   return { width, height };
-}
-
-function resolveMimeType(file: File): string {
-  const fromBrowser = (file.type || "").toLowerCase().trim();
-  if (fromBrowser && fromBrowser !== "application/octet-stream") {
-    return fromBrowser;
-  }
-  const inferred = inferImageMimeFromFileName(file.name);
-  if (inferred) return inferred;
-  return fromBrowser || "application/octet-stream";
 }
 
 async function readPixelSize(buffer: Buffer, mimeType: string): Promise<{ width: number; height: number }> {
@@ -95,6 +85,16 @@ export async function POST(request: Request) {
     const created: { id: string; url: string; sortOrder: number }[] = [];
 
     for (const file of files) {
+      if (process.env.VERCEL === "1" && file.size > 4.4 * 1024 * 1024) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error:
+              "Vercel 서버리스는 요청 본문이 약 4.5MB를 넘기면 업로드가 막히는 경우가 많습니다. 파일을 4MB 이하로 줄이거나(특히 GIF), 나눠서 올려 주세요.",
+          },
+          { status: 400 },
+        );
+      }
       if (file.size > MAX_BYTES) {
         return NextResponse.json(
           { ok: false, error: `파일당 최대 ${MAX_BYTES / 1024 / 1024}MB 입니다: ${file.name}` },
@@ -102,16 +102,16 @@ export async function POST(request: Request) {
         );
       }
 
-      const mimeType = resolveMimeType(file);
+      const ab = await file.arrayBuffer();
+      const buffer = Buffer.from(ab);
+
+      const mimeType = resolveUploadImageMime(file, buffer);
       try {
         assertAllowedImageMime(mimeType);
       } catch (e) {
         const msg = e instanceof Error ? e.message : "형식 오류";
         return NextResponse.json({ ok: false, error: msg }, { status: 400 });
       }
-
-      const ab = await file.arrayBuffer();
-      const buffer = Buffer.from(ab);
 
       let width = 1;
       let height = 1;
