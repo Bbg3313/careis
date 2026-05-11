@@ -3,7 +3,20 @@
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
+import { createSupabaseBrowser } from "@/lib/supabase/client";
+import { readImageNaturalSize, resolveUploadMimeFromFile } from "@/lib/image-mime-web";
 import type { ProductSlug } from "@/lib/product-data";
+
+const STORAGE_BUCKET = "product-detail";
+
+async function parseResponseJson(res: Response): Promise<Record<string, unknown>> {
+  try {
+    const text = await res.text();
+    return text ? (JSON.parse(text) as Record<string, unknown>) : {};
+  } catch {
+    return {};
+  }
+}
 
 export type AdminDetailSlideRow = {
   id: string;
@@ -18,8 +31,12 @@ export type AdminDetailSlideRow = {
 
 export function ProductDetailSlidesAdmin({
   initialBySlug,
+  supabaseUrl = null,
+  supabaseAnonKey = null,
 }: {
   initialBySlug: Record<ProductSlug, AdminDetailSlideRow[]>;
+  supabaseUrl?: string | null;
+  supabaseAnonKey?: string | null;
 }) {
   const router = useRouter();
   const [slug, setSlug] = useState<ProductSlug>("sun-pack");
@@ -32,33 +49,114 @@ export function ProductDetailSlidesAdmin({
     if (!files?.length) return;
     setBusy(true);
     setMsg(null);
+
+    const list = Array.from(files);
+    const useDirectUpload = Boolean(supabaseUrl?.trim() && supabaseAnonKey?.trim());
+
+    if (useDirectUpload) {
+      let okCount = 0;
+      try {
+        const sb = createSupabaseBrowser(supabaseUrl!.trim(), supabaseAnonKey!.trim());
+        for (const file of list) {
+          const mimeType = await resolveUploadMimeFromFile(file);
+          if (mimeType !== "image/jpeg" && mimeType !== "image/png" && mimeType !== "image/gif") {
+            setMsg("허용되는 형식은 JPG, PNG, GIF 입니다.");
+            setBusy(false);
+            return;
+          }
+
+          const signRes = await fetch("/api/admin/product-detail/sign-upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ slug, mimeType }),
+          });
+          const signData = (await parseResponseJson(signRes)) as {
+            ok?: boolean;
+            error?: string;
+            signedUrl?: string;
+            token?: string;
+            path?: string;
+          };
+          if (!signRes.ok || !signData.ok || !signData.token || !signData.path) {
+            setMsg(
+              typeof signData.error === "string"
+                ? signData.error
+                : `서명 URL 실패 (HTTP ${signRes.status})`,
+            );
+            setBusy(false);
+            return;
+          }
+
+          const { error: upErr } = await sb.storage.from(STORAGE_BUCKET).uploadToSignedUrl(signData.path, signData.token, file, {
+            contentType: mimeType,
+            upsert: false,
+          });
+          if (upErr) {
+            setMsg(`스토리지 업로드 실패: ${upErr.message}`);
+            setBusy(false);
+            return;
+          }
+
+          let width = 1;
+          let height = 1;
+          try {
+            const dims = await readImageNaturalSize(file);
+            width = dims.width;
+            height = dims.height;
+          } catch {
+            setMsg("이미지 가로·세로를 읽지 못했습니다. 다른 파일로 시도해 주세요.");
+            setBusy(false);
+            return;
+          }
+
+          const finRes = await fetch("/api/admin/product-detail/finalize-upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              slug,
+              path: signData.path,
+              mimeType,
+              width,
+              height,
+            }),
+          });
+          const finData = (await parseResponseJson(finRes)) as { ok?: boolean; error?: string };
+          if (!finRes.ok || !finData.ok) {
+            setMsg(typeof finData.error === "string" ? finData.error : `DB 반영 실패 (HTTP ${finRes.status})`);
+            setBusy(false);
+            return;
+          }
+          okCount += 1;
+        }
+        setMsg(`${okCount}개 업로드되었습니다.`);
+        router.refresh();
+      } catch (e) {
+        setMsg(e instanceof Error ? e.message : "업로드 처리 중 오류가 났습니다.");
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
+
     const fd = new FormData();
     fd.append("slug", slug);
-    for (let i = 0; i < files.length; i++) {
-      fd.append("files", files[i]);
+    for (let i = 0; i < list.length; i++) {
+      fd.append("files", list[i]!);
     }
     const res = await fetch("/api/admin/product-detail/upload", { method: "POST", body: fd });
-    let data: { error?: string; slides?: unknown[] } = {};
-    try {
-      const text = await res.text();
-      if (text) {
-        data = JSON.parse(text) as { error?: string; slides?: unknown[] };
-      }
-    } catch {
-      data = {};
-    }
+    const data = (await parseResponseJson(res)) as { error?: string; slides?: unknown[] };
     setBusy(false);
     if (!res.ok) {
       if (res.status === 413) {
         setMsg(
-          "업로드 용량 제한(약 4.5MB)에 걸렸습니다. 이미지를 줄이거나, Vercel 유료 플랜·직접 스토리지 업로드 방식을 검토해 주세요.",
+          "업로드 용량 제한(약 4.5MB)에 걸렸습니다. Supabase URL/Anon 키가 페이지에 전달되면 대용량은 브라우저→스토리지 직접 업로드로 우회합니다.",
         );
         return;
       }
-      setMsg(data.error ?? `업로드 실패 (HTTP ${res.status})`);
+      setMsg(typeof data.error === "string" ? data.error : `업로드 실패 (HTTP ${res.status})`);
       return;
     }
-    setMsg(`${data.slides?.length ?? 0}개 업로드되었습니다.`);
+    setMsg(`${(data.slides as unknown[] | undefined)?.length ?? 0}개 업로드되었습니다.`);
     router.refresh();
   }
 
@@ -129,9 +227,10 @@ export function ProductDetailSlidesAdmin({
           비어 있으면 선팩은 코드에 넣어 둔 기본 컷을 사용합니다.
         </p>
         <p className="mt-2 text-xs text-amber-900/80">
-          Supabase 배포 시 공개 버킷 <code className="rounded bg-white/70 px-1">product-detail</code> 와 환경변수{" "}
-          <code className="rounded bg-white/70 px-1">SUPABASE_SERVICE_ROLE_KEY</code> 가 필요합니다. 없으면 파일은{" "}
-          <code className="rounded bg-white/70 px-1">public/uploads/product-detail/</code> 에 저장됩니다 (로컬 위주).
+          Supabase 배포 시 공개 버킷 <code className="rounded bg-white/70 px-1">product-detail</code> ·{" "}
+          <code className="rounded bg-white/70 px-1">SUPABASE_SERVICE_ROLE_KEY</code> · 브라우저용{" "}
+          <code className="rounded bg-white/70 px-1">NEXT_PUBLIC_SUPABASE_*</code> 가 있으면, 큰 GIF도 Vercel 용량 제한 없이
+          스토리지로 직접 올라갑니다. (키가 없으면 서버 경유 업로드, 로컬 폴더 저장은 개발용)
         </p>
       </div>
 

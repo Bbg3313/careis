@@ -1,6 +1,7 @@
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { ProductDetailSlidesAdmin } from "@/components/product-detail-slides-admin";
 import { listDetailSlidesAdmin } from "@/lib/product-detail-slides";
+import { getPublicSupabaseEnv } from "@/lib/supabase/env-public";
 
 export const dynamic = "force-dynamic";
 
@@ -40,6 +41,8 @@ export default async function AdminProductDetailPage() {
     dbOk = false;
   }
 
+  const { url: supabaseUrl, anon: supabaseAnonKey } = getPublicSupabaseEnv();
+
   return (
     <div className="space-y-6">
       <div>
@@ -52,6 +55,8 @@ export default async function AdminProductDetailPage() {
       {!dbOk ? <AdminDbUnavailableNotice /> : null}
 
       <ProductDetailSlidesAdmin
+        supabaseUrl={supabaseUrl || null}
+        supabaseAnonKey={supabaseAnonKey || null}
         initialBySlug={{
           "sun-pack": sunPack.map(rowFromSlide),
           illuminator: illuminator.map(rowFromSlide),
