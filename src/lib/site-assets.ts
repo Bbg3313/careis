@@ -42,21 +42,22 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
     ],
   },
   illuminator: {
-    hero: "/images/illum-model.png",
+    hero: "/images/illum-hero.png",
     card: "/images/illum-model.png",
     alt: "일루미네이터 시스테아민 5% 제품 이미지",
     gallery: [
-      "/images/illum-model.png",
+      "/images/illum-hero.png",
       "/images/illum-model-banner.png",
       "/images/illum-model.png",
       "/images/illum-model-banner.png",
-      "/images/illum-model.png",
+      "/images/illum-hero.png",
     ],
   },
 };
 
-/** 선팩 상세 본문·상단 갤러리 공통 가로 기준(px) */
+/** 상세 상단 갤러리 등 공통 가로 기준(px) */
 export const SUN_PACK_DETAIL_MAX_WIDTH_PX = 960;
+export const ILLUMINATOR_DETAIL_MAX_WIDTH_PX = 960;
 
 export type SunPackStorySlide = {
   src: string;
@@ -103,3 +104,14 @@ export const sunPackDetailAssets = {
     { src: "/images/sunpack-priority-07.png", width: 1005, height: 1024 },
   ] satisfies SunPackStorySlide[],
 };
+
+/** 일루미네이터 상세 상단 썸네일(중복 없이 3장 순환) */
+export const illuminatorDetailAssets = {
+  heroImage: "/images/illum-model-banner.png",
+  heroPixelSize: { width: 1200, height: 750 },
+  thumbnailImages: [
+    "/images/illum-model-banner.png",
+    "/images/illum-hero.png",
+    "/images/illum-model.png",
+  ],
+} as const;

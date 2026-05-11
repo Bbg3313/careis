@@ -15,9 +15,12 @@ type SunPackDetailGalleryProps = {
   alt: string;
   pixelSize: { width: number; height: number };
   productName: string;
+  /** 기본 960. 일루미네이터 등 다른 상세 폭에 맞출 때 사용 */
+  maxWidthPx?: number;
+  /** 썸네일 선택 링 색 — cool 은 슬레이트 톤 */
+  accent?: "warm" | "cool";
 };
 
-const MAIN_SIZES = `(max-width: 768px) 100vw, (max-width: 1280px) min(${SUN_PACK_DETAIL_MAX_WIDTH_PX}px, 90vw), min(${SUN_PACK_DETAIL_MAX_WIDTH_PX}px, 1200px)`;
 const THUMB_SIZES = `(max-width: 640px) 28vw, (max-width: 1024px) 160px, 220px`;
 
 export function SunPackDetailGallery({
@@ -26,7 +29,16 @@ export function SunPackDetailGallery({
   alt,
   pixelSize,
   productName,
+  maxWidthPx = SUN_PACK_DETAIL_MAX_WIDTH_PX,
+  accent = "warm",
 }: SunPackDetailGalleryProps) {
+  const MAIN_SIZES = `(max-width: 768px) 100vw, (max-width: 1280px) min(${maxWidthPx}px, 90vw), min(${maxWidthPx}px, 1200px)`;
+  const thumbRing =
+    accent === "cool"
+      ? "border-slate-600 ring-2 ring-slate-500/45"
+      : "border-[#b89156] ring-2 ring-[#b89156]/40";
+  const thumbRingIdle =
+    accent === "cool" ? "border-slate-200 hover:border-slate-300" : "border-stone-200 hover:border-stone-300";
   const [mainSrc, setMainSrc] = useState(defaultMainSrc);
   const thumbBtnRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -42,7 +54,7 @@ export function SunPackDetailGallery({
   return (
     <div
       className="w-full space-y-4"
-      style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}
+      style={{ maxWidth: maxWidthPx }}
     >
       <div className="overflow-hidden rounded-[20px] border border-stone-200 bg-white">
         {isGifPath(mainSrc) ? (
@@ -84,9 +96,7 @@ export function SunPackDetailGallery({
               type="button"
               onClick={() => selectThumb(src, index)}
               className={`relative aspect-[2/3] min-h-0 min-w-0 flex-1 basis-0 overflow-hidden rounded-[8px] border bg-white text-left shadow-sm transition ${
-                selected
-                  ? "border-[#b89156] ring-2 ring-[#b89156]/40"
-                  : "border-stone-200 hover:border-stone-300"
+                selected ? thumbRing : thumbRingIdle
               }`}
               aria-label={`${productName} 썸네일 ${index + 1}번 보기`}
               aria-pressed={selected}
