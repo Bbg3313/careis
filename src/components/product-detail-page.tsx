@@ -299,6 +299,83 @@ function DetailAccordionItem({
   );
 }
 
+function ExchangeReturnAccordionList({ embedded = false }: { embedded?: boolean }) {
+  const panel =
+    embedded === true
+      ? "rounded-[16px] bg-[#f8f5ef] p-4 md:p-5"
+      : "rounded-[22px] bg-white/80 p-5 md:p-6";
+  const notePanel =
+    embedded === true
+      ? "rounded-[16px] border border-[rgba(184,145,86,0.22)] bg-[#faf6ef] p-4 md:p-5"
+      : "rounded-[22px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(250,244,235,0.96)_100%)] p-5 md:p-6";
+
+  return (
+    <>
+      <DetailAccordionItem title="교환 및 반품 주소" summaryClassName="text-base font-semibold text-stone-900">
+        <div className={panel}>
+          <p className="text-sm leading-7 text-stone-600">
+            서울특별시 강남구 테헤란로43길 14 청수빌딩 13층 케어이즈
+          </p>
+        </div>
+      </DetailAccordionItem>
+
+      <DetailAccordionItem
+        title="교환 및 반품이 가능한 경우"
+        summaryClassName="text-base font-semibold text-stone-900"
+      >
+        <div className={panel}>
+          <ul className="space-y-3 text-sm leading-7 text-stone-600">
+            <li>
+              - 계약내용에 관한 서면을 받은 날부터 7일 이내. 단, 그 서면을 받은 때보다 재화 등의 공급이 늦게
+              이루어진 경우에는 재화 등을 공급받거나 재화 등의 공급이 시작된 날부터 7일 이내
+            </li>
+            <li>
+              - 공급받으신 상품 및 용역의 내용이 표시, 광고 내용과 다르거나 계약내용과 다르게 이행된 때에는
+              당해 재화 등을 공급받은 날부터 3개월 이내, 그 사실을 알게 된 날 또는 알 수 있었던 날부터 30일
+              이내
+            </li>
+          </ul>
+        </div>
+      </DetailAccordionItem>
+
+      <DetailAccordionItem
+        title="교환 및 반품이 불가능한 경우"
+        summaryClassName="text-base font-semibold text-stone-900"
+      >
+        <div className={panel}>
+          <ul className="space-y-3 text-sm leading-7 text-stone-600">
+            <li>
+              - 이용자에게 책임 있는 사유로 재화 등이 멸실 또는 훼손된 경우(다만, 재화 등의 내용을 확인하기
+              위하여 포장 등을 훼손한 경우에는 청약철회를 할 수 있습니다)
+            </li>
+            <li>- 이용자의 사용 또는 일부 소비에 의하여 재화 등의 가치가 현저히 감소한 경우</li>
+            <li>- 시간의 경과에 의하여 재판매가 곤란할 정도로 재화 등의 가치가 현저히 감소한 경우</li>
+            <li>- 복제가 가능한 재화 등의 포장을 훼손한 경우</li>
+            <li>
+              - 개별 주문 생산되는 재화 등 청약철회 시 판매자에게 회복할 수 없는 피해가 예상되어 소비자의 사전
+              동의를 얻은 경우
+            </li>
+            <li>
+              - 디지털 콘텐츠의 제공이 개시된 경우(다만, 가분적 용역 또는 가분적 디지털콘텐츠로 구성된 계약의
+              경우 제공이 개시되지 아니한 부분은 청약철회를 할 수 있습니다.)
+            </li>
+          </ul>
+        </div>
+      </DetailAccordionItem>
+
+      <DetailAccordionItem title="반송 비용 안내" summaryClassName="text-base font-semibold text-stone-900">
+        <div className={notePanel}>
+          <p className="text-sm leading-7 text-stone-700">
+            ※ 고객님의 마음이 바뀌어 교환, 반품을 하실 경우 상품반송 비용은 고객님께서 부담하셔야 합니다.
+            <br />
+            (색상 교환, 사이즈 교환 등 포함)
+          </p>
+        </div>
+      </DetailAccordionItem>
+    </>
+  );
+}
+
 function ProductExchangeReturnSection() {
   return (
     <section
@@ -317,67 +394,7 @@ function ProductExchangeReturnSection() {
       </div>
 
       <div className="px-4 py-2 md:px-6 md:py-4">
-        <DetailAccordionItem title="교환 및 반품 주소" summaryClassName="text-base font-semibold text-stone-900">
-          <div className="rounded-[22px] bg-white/80 p-5 md:p-6">
-            <p className="text-sm leading-7 text-stone-600">
-              서울특별시 강남구 테헤란로43길 14 청수빌딩 13층 케어이즈
-            </p>
-          </div>
-        </DetailAccordionItem>
-
-        <DetailAccordionItem
-          title="교환 및 반품이 가능한 경우"
-          summaryClassName="text-base font-semibold text-stone-900"
-        >
-          <div className="rounded-[22px] bg-white/80 p-5 md:p-6">
-            <ul className="space-y-3 text-sm leading-7 text-stone-600">
-              <li>
-                - 계약내용에 관한 서면을 받은 날부터 7일 이내. 단, 그 서면을 받은 때보다 재화 등의 공급이 늦게
-                이루어진 경우에는 재화 등을 공급받거나 재화 등의 공급이 시작된 날부터 7일 이내
-              </li>
-              <li>
-                - 공급받으신 상품 및 용역의 내용이 표시, 광고 내용과 다르거나 계약내용과 다르게 이행된 때에는
-                당해 재화 등을 공급받은 날부터 3개월 이내, 그 사실을 알게 된 날 또는 알 수 있었던 날부터 30일
-                이내
-              </li>
-            </ul>
-          </div>
-        </DetailAccordionItem>
-
-        <DetailAccordionItem
-          title="교환 및 반품이 불가능한 경우"
-          summaryClassName="text-base font-semibold text-stone-900"
-        >
-          <div className="rounded-[22px] bg-white/80 p-5 md:p-6">
-            <ul className="space-y-3 text-sm leading-7 text-stone-600">
-              <li>
-                - 이용자에게 책임 있는 사유로 재화 등이 멸실 또는 훼손된 경우(다만, 재화 등의 내용을 확인하기
-                위하여 포장 등을 훼손한 경우에는 청약철회를 할 수 있습니다)
-              </li>
-              <li>- 이용자의 사용 또는 일부 소비에 의하여 재화 등의 가치가 현저히 감소한 경우</li>
-              <li>- 시간의 경과에 의하여 재판매가 곤란할 정도로 재화 등의 가치가 현저히 감소한 경우</li>
-              <li>- 복제가 가능한 재화 등의 포장을 훼손한 경우</li>
-              <li>
-                - 개별 주문 생산되는 재화 등 청약철회 시 판매자에게 회복할 수 없는 피해가 예상되어 소비자의 사전
-                동의를 얻은 경우
-              </li>
-              <li>
-                - 디지털 콘텐츠의 제공이 개시된 경우(다만, 가분적 용역 또는 가분적 디지털콘텐츠로 구성된 계약의
-                경우 제공이 개시되지 아니한 부분은 청약철회를 할 수 있습니다.)
-              </li>
-            </ul>
-          </div>
-        </DetailAccordionItem>
-
-        <DetailAccordionItem title="반송 비용 안내" summaryClassName="text-base font-semibold text-stone-900">
-          <div className="rounded-[22px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(250,244,235,0.96)_100%)] p-5 md:p-6">
-            <p className="text-sm leading-7 text-stone-700">
-              ※ 고객님의 마음이 바뀌어 교환, 반품을 하실 경우 상품반송 비용은 고객님께서 부담하셔야 합니다.
-              <br />
-              (색상 교환, 사이즈 교환 등 포함)
-            </p>
-          </div>
-        </DetailAccordionItem>
+        <ExchangeReturnAccordionList />
       </div>
     </section>
   );
@@ -483,7 +500,9 @@ function SunPackDetailPage({
             id="guide"
             className="scroll-mt-[var(--site-sticky-offset)] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
           >
-            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품구매안내</h2>
+            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">
+              상품 구매·교환/반품 안내
+            </h2>
 
             <div className="mt-2">
               <DetailAccordionItem title="결제 안내">
@@ -515,16 +534,6 @@ function SunPackDetailPage({
                 </div>
               </DetailAccordionItem>
 
-              <DetailAccordionItem title="교환/반품 요약">
-                <div className="space-y-3 text-sm leading-7 text-stone-600">
-                  <p>
-                    교환 및 반품 관련 상세 기준은 페이지 하단의 안내 내용을 통해 확인할 수 있습니다. 단순 변심에
-                    의한 반송 비용은 고객 부담이며, 상품 상태에 따라 교환 및 반품이 제한될 수 있습니다.
-                  </p>
-                  <p>교환 및 반품 주소: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)</p>
-                </div>
-              </DetailAccordionItem>
-
               <DetailAccordionItem title="서비스문의">
                 <p className="text-sm leading-7 text-stone-600">
                   제품 및 주문 관련 문의는 010-2556-3263 또는 startupscon@gmail.com으로 안내받을 수
@@ -532,6 +541,18 @@ function SunPackDetailPage({
                   휴무입니다.
                 </p>
               </DetailAccordionItem>
+            </div>
+
+            <div id="exchange-return" className="mt-8 border-t border-stone-200 pt-6">
+              <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Exchange &amp; Return Guide</p>
+              <h3 className="mt-2 text-xl font-semibold tracking-[-0.02em] text-stone-900">교환 / 반품</h3>
+              <p className="mt-2 max-w-3xl text-sm leading-7 text-stone-600">
+                상품 수령 후 교환 및 반품이 필요한 경우 아래 기준에 따라 접수할 수 있습니다. 접수 전 상품 상태와
+                가능 여부를 먼저 확인해주세요.
+              </p>
+              <div className="mt-2">
+                <ExchangeReturnAccordionList embedded />
+              </div>
             </div>
           </section>
 
@@ -544,8 +565,6 @@ function SunPackDetailPage({
             <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품 Q&amp;A</h2>
             <p className="mt-4 text-sm leading-7 text-stone-500">게시물이 없습니다.</p>
           </section>
-
-          <ProductExchangeReturnSection />
         </div>
 
         <aside className="pointer-events-auto hidden min-h-0 w-full lg:block">
