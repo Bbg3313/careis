@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { createPortal } from "react-dom";
+import { useLayoutEffect, useState } from "react";
 
 import type { ProductContent } from "@/lib/product-data";
 import { formatCurrency } from "@/lib/utils";
@@ -18,7 +22,17 @@ function primaryCtaClasses(theme: ProductContent["theme"]) {
   ].join(" ");
 }
 
+/**
+ * viewport 기준 하단 고정. `main` 안에 두면 부모 transform/overflow에 묶일 수 있어
+ * `document.body`로 포털해 모바일에서도 항상 최상단 레이어에 붙습니다.
+ */
 export function MobileProductStickyCta({ product }: { product: ProductContent }) {
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+
+  useLayoutEffect(() => {
+    setPortalTarget(document.body);
+  }, []);
+
   const orderHref = `/order?product=${product.slug}`;
   const cartHref = `/cart?product=${product.slug}`;
   const pct = product.promoMaxDiscountPercent;
@@ -27,9 +41,9 @@ export function MobileProductStickyCta({ product }: { product: ProductContent })
       ? `최대 ${pct}% 할인받고 구매하기`
       : "지금 바로 구매하기";
 
-  return (
+  const bar = (
     <div
-      className="pointer-events-auto fixed inset-x-0 bottom-0 z-[45] border-t border-stone-200/95 bg-[#faf8f4]/[0.97] px-4 pt-3 shadow-[0_-16px_48px_rgba(30,24,18,0.12)] backdrop-blur-lg lg:hidden"
+      className="pointer-events-auto fixed inset-x-0 bottom-0 z-[100] border-t border-stone-200/95 bg-[#faf8f4]/[0.98] px-4 pt-3 shadow-[0_-16px_48px_rgba(30,24,18,0.14)] backdrop-blur-md supports-[backdrop-filter]:backdrop-blur-lg lg:hidden"
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
       role="region"
       aria-label="모바일 구매"
@@ -63,4 +77,10 @@ export function MobileProductStickyCta({ product }: { product: ProductContent })
       </div>
     </div>
   );
+
+  if (!portalTarget) {
+    return null;
+  }
+
+  return createPortal(bar, portalTarget);
 }
