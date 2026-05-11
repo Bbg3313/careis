@@ -405,8 +405,8 @@ function SunPackDetailPage({
 
   return (
     <div className="pb-28 lg:pb-24">
-      <div className="relative mx-auto w-full max-w-[1380px] px-4 sm:px-6 lg:px-8">
-        <div className="min-w-0 space-y-10 overflow-x-hidden lg:mr-[400px] xl:mr-[420px]">
+      <div className="relative mx-auto grid w-full max-w-[1380px] grid-cols-1 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-x-8 lg:px-8 xl:grid-cols-[minmax(0,1fr)_420px]">
+        <div className="min-w-0 space-y-10 overflow-x-hidden">
           <section>
             <div className="mb-6 space-y-2 lg:hidden">
               <p className="text-xs uppercase tracking-[0.16em] text-stone-500">{product.englishName}</p>
@@ -502,8 +502,10 @@ function SunPackDetailPage({
           <ProductExchangeReturnSection />
         </div>
 
-        <aside className="pointer-events-auto hidden w-[min(380px,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)] lg:fixed lg:right-[max(1rem,calc((100vw-1380px)/2+2rem))] lg:top-[calc(var(--site-sticky-offset)+env(safe-area-inset-top,0px))] lg:z-40 lg:block lg:max-h-[calc(100dvh-var(--site-sticky-offset)-max(1rem,env(safe-area-inset-bottom,0px)))] lg:space-y-6">
-          {purchaseAsideBody}
+        <aside className="pointer-events-auto hidden min-h-0 w-full lg:block">
+          <div className="sticky top-[calc(var(--site-sticky-offset)+env(safe-area-inset-top,0px))] z-40 max-h-[calc(100dvh-var(--site-sticky-offset)-max(1rem,env(safe-area-inset-bottom,0px)))] space-y-6 overflow-y-auto overscroll-contain rounded-[22px] border border-stone-200 bg-white p-7 shadow-[0_24px_70px_rgba(15,15,15,0.14)]">
+            {purchaseAsideBody}
+          </div>
         </aside>
       </div>
 
