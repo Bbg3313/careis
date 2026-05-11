@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -265,9 +266,45 @@ export function ProductDetailPage({
   );
 }
 
+function DetailAccordionItem({
+  title,
+  summaryClassName = "text-lg font-semibold text-stone-900",
+  children,
+}: {
+  title: string;
+  summaryClassName?: string;
+  children: ReactNode;
+}) {
+  return (
+    <details className="group border-t border-stone-100 first:border-t-0 [&_summary::-webkit-details-marker]:hidden">
+      <summary
+        className={`flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg py-4 outline-none transition hover:text-stone-700 focus-visible:ring-2 focus-visible:ring-stone-400/50 focus-visible:ring-offset-2 ${summaryClassName}`}
+      >
+        <span>{title}</span>
+        <span
+          className="shrink-0 text-stone-400 transition-transform duration-200 group-open:rotate-180"
+          aria-hidden
+        >
+          <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
+            <path
+              fillRule="evenodd"
+              d="M5.23 7.21a.75.75 0 011.06.02L10 11.17l3.71-3.94a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </span>
+      </summary>
+      <div className="border-t border-stone-100/80 pb-6 pt-2">{children}</div>
+    </details>
+  );
+}
+
 function ProductExchangeReturnSection() {
   return (
-    <section className="overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1e7_100%)] shadow-[0_24px_60px_rgba(89,63,28,0.06)]">
+    <section
+      id="exchange-return"
+      className="overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1e7_100%)] shadow-[0_24px_60px_rgba(89,63,28,0.06)]"
+    >
       <div className="border-b border-[rgba(184,145,86,0.16)] px-6 py-6 md:px-8">
         <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Exchange &amp; Return Guide</p>
         <h2 className="mt-3 text-2xl font-semibold tracking-[-0.02em] text-stone-900 md:text-3xl">
@@ -279,57 +316,68 @@ function ProductExchangeReturnSection() {
         </p>
       </div>
 
-      <div className="grid gap-4 px-6 py-6 md:px-8 md:py-8">
-        <article className="rounded-[22px] bg-white/80 p-5">
-          <h3 className="text-base font-semibold text-stone-900">교환 및 반품 주소</h3>
-          <p className="mt-3 text-sm leading-7 text-stone-600">
-            서울특별시 강남구 테헤란로43길 14 청수빌딩 13층 케어이즈
-          </p>
-        </article>
+      <div className="px-4 py-2 md:px-6 md:py-4">
+        <DetailAccordionItem title="교환 및 반품 주소" summaryClassName="text-base font-semibold text-stone-900">
+          <div className="rounded-[22px] bg-white/80 p-5 md:p-6">
+            <p className="text-sm leading-7 text-stone-600">
+              서울특별시 강남구 테헤란로43길 14 청수빌딩 13층 케어이즈
+            </p>
+          </div>
+        </DetailAccordionItem>
 
-        <article className="rounded-[22px] bg-white/80 p-5">
-          <h3 className="text-base font-semibold text-stone-900">교환 및 반품이 가능한 경우</h3>
-          <ul className="mt-3 space-y-3 text-sm leading-7 text-stone-600">
-            <li>
-              - 계약내용에 관한 서면을 받은 날부터 7일 이내. 단, 그 서면을 받은 때보다 재화 등의 공급이 늦게
-              이루어진 경우에는 재화 등을 공급받거나 재화 등의 공급이 시작된 날부터 7일 이내
-            </li>
-            <li>
-              - 공급받으신 상품 및 용역의 내용이 표시, 광고 내용과 다르거나 계약내용과 다르게 이행된 때에는
-              당해 재화 등을 공급받은 날부터 3개월 이내, 그 사실을 알게 된 날 또는 알 수 있었던 날부터 30일
-              이내
-            </li>
-          </ul>
-        </article>
+        <DetailAccordionItem
+          title="교환 및 반품이 가능한 경우"
+          summaryClassName="text-base font-semibold text-stone-900"
+        >
+          <div className="rounded-[22px] bg-white/80 p-5 md:p-6">
+            <ul className="space-y-3 text-sm leading-7 text-stone-600">
+              <li>
+                - 계약내용에 관한 서면을 받은 날부터 7일 이내. 단, 그 서면을 받은 때보다 재화 등의 공급이 늦게
+                이루어진 경우에는 재화 등을 공급받거나 재화 등의 공급이 시작된 날부터 7일 이내
+              </li>
+              <li>
+                - 공급받으신 상품 및 용역의 내용이 표시, 광고 내용과 다르거나 계약내용과 다르게 이행된 때에는
+                당해 재화 등을 공급받은 날부터 3개월 이내, 그 사실을 알게 된 날 또는 알 수 있었던 날부터 30일
+                이내
+              </li>
+            </ul>
+          </div>
+        </DetailAccordionItem>
 
-        <article className="rounded-[22px] bg-white/80 p-5">
-          <h3 className="text-base font-semibold text-stone-900">교환 및 반품이 불가능한 경우</h3>
-          <ul className="mt-3 space-y-3 text-sm leading-7 text-stone-600">
-            <li>
-              - 이용자에게 책임 있는 사유로 재화 등이 멸실 또는 훼손된 경우(다만, 재화 등의 내용을 확인하기
-              위하여 포장 등을 훼손한 경우에는 청약철회를 할 수 있습니다)
-            </li>
-            <li>- 이용자의 사용 또는 일부 소비에 의하여 재화 등의 가치가 현저히 감소한 경우</li>
-            <li>- 시간의 경과에 의하여 재판매가 곤란할 정도로 재화 등의 가치가 현저히 감소한 경우</li>
-            <li>- 복제가 가능한 재화 등의 포장을 훼손한 경우</li>
-            <li>
-              - 개별 주문 생산되는 재화 등 청약철회 시 판매자에게 회복할 수 없는 피해가 예상되어 소비자의 사전
-              동의를 얻은 경우
-            </li>
-            <li>
-              - 디지털 콘텐츠의 제공이 개시된 경우(다만, 가분적 용역 또는 가분적 디지털콘텐츠로 구성된 계약의
-              경우 제공이 개시되지 아니한 부분은 청약철회를 할 수 있습니다.)
-            </li>
-          </ul>
-        </article>
+        <DetailAccordionItem
+          title="교환 및 반품이 불가능한 경우"
+          summaryClassName="text-base font-semibold text-stone-900"
+        >
+          <div className="rounded-[22px] bg-white/80 p-5 md:p-6">
+            <ul className="space-y-3 text-sm leading-7 text-stone-600">
+              <li>
+                - 이용자에게 책임 있는 사유로 재화 등이 멸실 또는 훼손된 경우(다만, 재화 등의 내용을 확인하기
+                위하여 포장 등을 훼손한 경우에는 청약철회를 할 수 있습니다)
+              </li>
+              <li>- 이용자의 사용 또는 일부 소비에 의하여 재화 등의 가치가 현저히 감소한 경우</li>
+              <li>- 시간의 경과에 의하여 재판매가 곤란할 정도로 재화 등의 가치가 현저히 감소한 경우</li>
+              <li>- 복제가 가능한 재화 등의 포장을 훼손한 경우</li>
+              <li>
+                - 개별 주문 생산되는 재화 등 청약철회 시 판매자에게 회복할 수 없는 피해가 예상되어 소비자의 사전
+                동의를 얻은 경우
+              </li>
+              <li>
+                - 디지털 콘텐츠의 제공이 개시된 경우(다만, 가분적 용역 또는 가분적 디지털콘텐츠로 구성된 계약의
+                경우 제공이 개시되지 아니한 부분은 청약철회를 할 수 있습니다.)
+              </li>
+            </ul>
+          </div>
+        </DetailAccordionItem>
 
-        <article className="rounded-[22px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(250,244,235,0.96)_100%)] p-5">
-          <p className="text-sm leading-7 text-stone-700">
-            ※ 고객님의 마음이 바뀌어 교환, 반품을 하실 경우 상품반송 비용은 고객님께서 부담하셔야 합니다.
-            <br />
-            (색상 교환, 사이즈 교환 등 포함)
-          </p>
-        </article>
+        <DetailAccordionItem title="반송 비용 안내" summaryClassName="text-base font-semibold text-stone-900">
+          <div className="rounded-[22px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(250,244,235,0.96)_100%)] p-5 md:p-6">
+            <p className="text-sm leading-7 text-stone-700">
+              ※ 고객님의 마음이 바뀌어 교환, 반품을 하실 경우 상품반송 비용은 고객님께서 부담하셔야 합니다.
+              <br />
+              (색상 교환, 사이즈 교환 등 포함)
+            </p>
+          </div>
+        </DetailAccordionItem>
       </div>
     </section>
   );
@@ -433,60 +481,58 @@ function SunPackDetailPage({
 
           <section
             id="guide"
-            className="scroll-mt-[var(--site-sticky-offset)] space-y-6 rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
+            className="scroll-mt-[var(--site-sticky-offset)] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
           >
             <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품구매안내</h2>
 
-            <article className="space-y-3 border-t border-stone-100 pt-6">
-              <h3 className="text-lg font-semibold text-stone-900">결제 안내</h3>
-              <p className="text-sm leading-7 text-stone-600">
-                고액 결제의 경우 안전을 위해 카드사 확인 절차가 진행될 수 있습니다. 주문자명과 입금자명이
-                다를 경우 처리가 지연될 수 있으며, 일정 기간 내 입금이 확인되지 않으면 주문은 자동 취소될 수
-                있습니다.
-              </p>
-            </article>
+            <div className="mt-2">
+              <DetailAccordionItem title="결제 안내">
+                <p className="text-sm leading-7 text-stone-600">
+                  고액 결제의 경우 안전을 위해 카드사 확인 절차가 진행될 수 있습니다. 주문자명과 입금자명이
+                  다를 경우 처리가 지연될 수 있으며, 일정 기간 내 입금이 확인되지 않으면 주문은 자동 취소될 수
+                  있습니다.
+                </p>
+              </DetailAccordionItem>
 
-            <article className="space-y-3 border-t border-stone-100 pt-6">
-              <h3 className="text-lg font-semibold text-stone-900">배송 안내</h3>
-              <div className="grid gap-3 text-sm text-stone-700 md:grid-cols-2">
-                <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-                  <p className="font-medium text-stone-900">배송 방법</p>
-                  <p className="mt-2 leading-7">택배 / 전국 지역</p>
+              <DetailAccordionItem title="배송 안내">
+                <div className="grid gap-3 text-sm text-stone-700 md:grid-cols-2">
+                  <div className="rounded-[16px] bg-[#f8f5ef] p-4">
+                    <p className="font-medium text-stone-900">배송 방법</p>
+                    <p className="mt-2 leading-7">택배 / 전국 지역</p>
+                  </div>
+                  <div className="rounded-[16px] bg-[#f8f5ef] p-4">
+                    <p className="font-medium text-stone-900">배송 비용</p>
+                    <p className="mt-2 leading-7">3,000원 / 50,000원 이상 구매 시 무료</p>
+                  </div>
+                  <div className="rounded-[16px] bg-[#f8f5ef] p-4">
+                    <p className="font-medium text-stone-900">배송 기간</p>
+                    <p className="mt-2 leading-7">입금 확인 후 1~3일 이내 순차 출고</p>
+                  </div>
+                  <div className="rounded-[16px] bg-[#f8f5ef] p-4">
+                    <p className="font-medium text-stone-900">안내 사항</p>
+                    <p className="mt-2 leading-7">도서산간 지역은 추가 배송비가 발생할 수 있습니다.</p>
+                  </div>
                 </div>
-                <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-                  <p className="font-medium text-stone-900">배송 비용</p>
-                  <p className="mt-2 leading-7">3,000원 / 50,000원 이상 구매 시 무료</p>
-                </div>
-                <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-                  <p className="font-medium text-stone-900">배송 기간</p>
-                  <p className="mt-2 leading-7">입금 확인 후 1~3일 이내 순차 출고</p>
-                </div>
-                <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-                  <p className="font-medium text-stone-900">안내 사항</p>
-                  <p className="mt-2 leading-7">도서산간 지역은 추가 배송비가 발생할 수 있습니다.</p>
-                </div>
-              </div>
-            </article>
+              </DetailAccordionItem>
 
-            <article className="space-y-3 border-t border-stone-100 pt-6">
-              <h3 className="text-lg font-semibold text-stone-900">교환/반품 안내</h3>
-              <p className="text-sm leading-7 text-stone-600">
-                교환 및 반품 관련 상세 기준은 페이지 하단의 안내 내용을 통해 확인할 수 있습니다. 단순 변심에
-                의한 반송 비용은 고객 부담이며, 상품 상태에 따라 교환 및 반품이 제한될 수 있습니다.
-              </p>
-              <p className="text-sm leading-7 text-stone-600">
-                교환 및 반품 주소: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)
-              </p>
-            </article>
+              <DetailAccordionItem title="교환/반품 요약">
+                <div className="space-y-3 text-sm leading-7 text-stone-600">
+                  <p>
+                    교환 및 반품 관련 상세 기준은 페이지 하단의 안내 내용을 통해 확인할 수 있습니다. 단순 변심에
+                    의한 반송 비용은 고객 부담이며, 상품 상태에 따라 교환 및 반품이 제한될 수 있습니다.
+                  </p>
+                  <p>교환 및 반품 주소: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)</p>
+                </div>
+              </DetailAccordionItem>
 
-            <article className="space-y-3 border-t border-stone-100 pt-6">
-              <h3 className="text-lg font-semibold text-stone-900">서비스문의</h3>
-              <p className="text-sm leading-7 text-stone-600">
-                제품 및 주문 관련 문의는 010-2556-3263 또는 startupscon@gmail.com으로 안내받을 수
-                있습니다. 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은
-                휴무입니다.
-              </p>
-            </article>
+              <DetailAccordionItem title="서비스문의">
+                <p className="text-sm leading-7 text-stone-600">
+                  제품 및 주문 관련 문의는 010-2556-3263 또는 startupscon@gmail.com으로 안내받을 수
+                  있습니다. 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은
+                  휴무입니다.
+                </p>
+              </DetailAccordionItem>
+            </div>
           </section>
 
           <section id="review" className="scroll-mt-[var(--site-sticky-offset)] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8">
