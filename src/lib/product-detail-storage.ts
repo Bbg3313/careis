@@ -14,6 +14,15 @@ export function assertAllowedImageMime(mime: string): asserts mime is "image/jpe
   }
 }
 
+/** 브라우저가 type 을 안 주거나 octet-stream 일 때 파일 확장자로 보정 */
+export function inferImageMimeFromFileName(fileName: string): "image/jpeg" | "image/png" | "image/gif" | null {
+  const ext = path.extname(fileName).toLowerCase();
+  if (ext === ".jpg" || ext === ".jpeg") return "image/jpeg";
+  if (ext === ".png") return "image/png";
+  if (ext === ".gif") return "image/gif";
+  return null;
+}
+
 export function mimeToExtension(mime: string): string {
   switch (mime) {
     case "image/jpeg":

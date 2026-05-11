@@ -4,7 +4,11 @@ import sharp from "sharp";
 import { guardAdminApi } from "@/lib/admin-auth";
 import type { ProductSlug } from "@/lib/product-data";
 import { prisma } from "@/lib/db";
-import { assertAllowedImageMime, uploadProductDetailImage } from "@/lib/product-detail-storage";
+import {
+  assertAllowedImageMime,
+  inferImageMimeFromFileName,
+  uploadProductDetailImage,
+} from "@/lib/product-detail-storage";
 
 export const runtime = "nodejs";
 
@@ -16,6 +20,36 @@ function parseSlug(raw: string): ProductSlug | null {
     return raw;
   }
   return null;
+}
+
+/** GIF 논리 화면 크기 (애니 GIF 첫 프레임 기준, Sharp 없이 읽음) */
+function readGifLogicalScreen(buf: Buffer): { width: number; height: number } | null {
+  if (buf.length < 10) return null;
+  const sig = buf.subarray(0, 6).toString("ascii");
+  if (sig !== "GIF87a" && sig !== "GIF89a") return null;
+  const width = buf.readUInt16LE(6);
+  const height = buf.readUInt16LE(8);
+  if (width < 1 || height < 1 || width > 16384 || height > 16384) return null;
+  return { width, height };
+}
+
+function resolveMimeType(file: File): string {
+  const fromBrowser = (file.type || "").toLowerCase().trim();
+  if (fromBrowser && fromBrowser !== "application/octet-stream") {
+    return fromBrowser;
+  }
+  const inferred = inferImageMimeFromFileName(file.name);
+  if (inferred) return inferred;
+  return fromBrowser || "application/octet-stream";
+}
+
+async function readPixelSize(buffer: Buffer, mimeType: string): Promise<{ width: number; height: number }> {
+  if (mimeType === "image/gif") {
+    const gif = readGifLogicalScreen(buffer);
+    if (gif) return gif;
+  }
+  const meta = await sharp(buffer, { failOn: "none", pages: 1 }).metadata();
+  return { width: meta.width ?? 1, height: meta.height ?? 1 };
 }
 
 export async function POST(request: Request) {
@@ -68,7 +102,7 @@ export async function POST(request: Request) {
         );
       }
 
-      const mimeType = (file.type || "application/octet-stream").toLowerCase();
+      const mimeType = resolveMimeType(file);
       try {
         assertAllowedImageMime(mimeType);
       } catch (e) {
@@ -79,9 +113,17 @@ export async function POST(request: Request) {
       const ab = await file.arrayBuffer();
       const buffer = Buffer.from(ab);
 
-      const meta = await sharp(buffer, { failOn: "none" }).metadata();
-      const width = meta.width ?? 1;
-      const height = meta.height ?? 1;
+      let width = 1;
+      let height = 1;
+      try {
+        const dims = await readPixelSize(buffer, mimeType);
+        width = dims.width;
+        height = dims.height;
+      } catch (e) {
+        const hint = mimeType === "image/gif" ? " GIF 파일이 손상되었거나 지원되지 않는 형식일 수 있습니다." : "";
+        const msg = e instanceof Error ? e.message : "이미지 크기를 읽지 못했습니다.";
+        return NextResponse.json({ ok: false, error: `${msg}${hint}` }, { status: 400 });
+      }
 
       const { url } = await uploadProductDetailImage(slug, buffer, mimeType);
 
