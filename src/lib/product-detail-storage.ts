@@ -59,6 +59,12 @@ export async function uploadProductDetailImage(
     return { url: data.publicUrl };
   }
 
+  if (process.env.VERCEL) {
+    throw new Error(
+      "Vercel에서는 Supabase Storage가 필요합니다. Vercel·로컬 .env에 SUPABASE_SERVICE_ROLE_KEY를 넣고, Supabase Storage에 공개 버킷 product-detail을 만드세요.",
+    );
+  }
+
   const dir = path.join(process.cwd(), "public", "uploads", "product-detail", productSlug);
   await mkdir(dir, { recursive: true });
   const diskPath = path.join(dir, fileBase);
