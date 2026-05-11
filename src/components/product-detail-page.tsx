@@ -308,13 +308,46 @@ function ExchangeReturnAccordionList({ embedded = false }: { embedded?: boolean 
     embedded === true
       ? "rounded-[16px] border border-[rgba(184,145,86,0.22)] bg-[#faf6ef] p-4 md:p-5"
       : "rounded-[22px] border border-[rgba(184,145,86,0.22)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(250,244,235,0.96)_100%)] p-5 md:p-6";
+  const shipCell =
+    embedded === true
+      ? "rounded-[14px] bg-white/80 p-4 shadow-sm"
+      : "rounded-[16px] bg-[#f8f5ef] p-4";
 
   return (
     <>
+      <DetailAccordionItem title="배송 안내" summaryClassName="text-base font-semibold text-stone-900">
+        <div className={panel}>
+          <div className="grid gap-3 text-sm text-stone-700 md:grid-cols-2">
+            <div className={shipCell}>
+              <p className="font-medium text-stone-900">배송 방법</p>
+              <p className="mt-2 leading-7">택배 / 전국 지역</p>
+            </div>
+            <div className={shipCell}>
+              <p className="font-medium text-stone-900">배송 비용</p>
+              <p className="mt-2 leading-7">3,000원 / 50,000원 이상 구매 시 무료</p>
+            </div>
+            <div className={shipCell}>
+              <p className="font-medium text-stone-900">배송 기간</p>
+              <p className="mt-2 leading-7">입금 확인 후 1~3일 이내 순차 출고</p>
+            </div>
+            <div className={shipCell}>
+              <p className="font-medium text-stone-900">안내 사항</p>
+              <p className="mt-2 leading-7">도서산간 지역은 추가 배송비가 발생할 수 있습니다.</p>
+            </div>
+          </div>
+        </div>
+      </DetailAccordionItem>
+
       <DetailAccordionItem title="교환 및 반품 주소" summaryClassName="text-base font-semibold text-stone-900">
         <div className={panel}>
           <p className="text-sm leading-7 text-stone-600">
             서울특별시 강남구 테헤란로43길 14 청수빌딩 13층 케어이즈
+          </p>
+          <p className="mt-5 text-sm font-medium text-stone-900">문의</p>
+          <p className="mt-1 text-sm leading-7 text-stone-600">010-2556-3263</p>
+          <p className="mt-4 text-sm font-medium text-stone-900">고객센터 운영시간</p>
+          <p className="mt-1 text-sm leading-7 text-stone-600">
+            평일 10:00~17:00 (점심 12:00~13:00), 주말·공휴일 휴무
           </p>
         </div>
       </DetailAccordionItem>
@@ -383,13 +416,12 @@ function ProductExchangeReturnSection() {
       className="overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1e7_100%)] shadow-[0_24px_60px_rgba(89,63,28,0.06)]"
     >
       <div className="border-b border-[rgba(184,145,86,0.16)] px-6 py-6 md:px-8">
-        <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Exchange &amp; Return Guide</p>
+        <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Purchase · Exchange &amp; Return</p>
         <h2 className="mt-3 text-2xl font-semibold tracking-[-0.02em] text-stone-900 md:text-3xl">
-          교환 / 반품 안내
+          상품구매 교환/반품
         </h2>
         <p className="mt-3 max-w-3xl text-sm leading-7 text-stone-600">
-          상품 수령 후 교환 및 반품이 필요한 경우 아래 기준에 따라 접수할 수 있습니다. 접수 전 상품 상태와
-          가능 여부를 먼저 확인해주세요.
+          상품 수령 후 교환 및 반품이 필요한 경우 아래를 확인해 주세요.
         </p>
       </div>
 
@@ -500,59 +532,12 @@ function SunPackDetailPage({
             id="guide"
             className="scroll-mt-[var(--site-sticky-offset)] rounded-[24px] border border-stone-200 bg-white p-6 md:p-8"
           >
-            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">
-              상품 구매·교환/반품 안내
-            </h2>
-
-            <div className="mt-2">
-              <DetailAccordionItem title="결제 안내">
-                <p className="text-sm leading-7 text-stone-600">
-                  고액 결제의 경우 안전을 위해 카드사 확인 절차가 진행될 수 있습니다. 주문자명과 입금자명이
-                  다를 경우 처리가 지연될 수 있으며, 일정 기간 내 입금이 확인되지 않으면 주문은 자동 취소될 수
-                  있습니다.
-                </p>
-              </DetailAccordionItem>
-
-              <DetailAccordionItem title="배송 안내">
-                <div className="grid gap-3 text-sm text-stone-700 md:grid-cols-2">
-                  <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-                    <p className="font-medium text-stone-900">배송 방법</p>
-                    <p className="mt-2 leading-7">택배 / 전국 지역</p>
-                  </div>
-                  <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-                    <p className="font-medium text-stone-900">배송 비용</p>
-                    <p className="mt-2 leading-7">3,000원 / 50,000원 이상 구매 시 무료</p>
-                  </div>
-                  <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-                    <p className="font-medium text-stone-900">배송 기간</p>
-                    <p className="mt-2 leading-7">입금 확인 후 1~3일 이내 순차 출고</p>
-                  </div>
-                  <div className="rounded-[16px] bg-[#f8f5ef] p-4">
-                    <p className="font-medium text-stone-900">안내 사항</p>
-                    <p className="mt-2 leading-7">도서산간 지역은 추가 배송비가 발생할 수 있습니다.</p>
-                  </div>
-                </div>
-              </DetailAccordionItem>
-
-              <DetailAccordionItem title="서비스문의">
-                <p className="text-sm leading-7 text-stone-600">
-                  제품 및 주문 관련 문의는 010-2556-3263 또는 startupscon@gmail.com으로 안내받을 수
-                  있습니다. 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은
-                  휴무입니다.
-                </p>
-              </DetailAccordionItem>
-            </div>
-
-            <div id="exchange-return" className="mt-8 border-t border-stone-200 pt-6">
-              <p className="text-[12px] uppercase tracking-[0.18em] text-[#8b673f]">Exchange &amp; Return Guide</p>
-              <h3 className="mt-2 text-xl font-semibold tracking-[-0.02em] text-stone-900">교환 / 반품</h3>
-              <p className="mt-2 max-w-3xl text-sm leading-7 text-stone-600">
-                상품 수령 후 교환 및 반품이 필요한 경우 아래 기준에 따라 접수할 수 있습니다. 접수 전 상품 상태와
-                가능 여부를 먼저 확인해주세요.
-              </p>
-              <div className="mt-2">
-                <ExchangeReturnAccordionList embedded />
-              </div>
+            <h2 className="text-2xl font-semibold tracking-[-0.02em] text-stone-900">상품구매 교환/반품</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-7 text-stone-600">
+              상품 수령 후 교환 및 반품이 필요한 경우 아래를 확인해 주세요.
+            </p>
+            <div id="exchange-return" className="mt-4">
+              <ExchangeReturnAccordionList embedded />
             </div>
           </section>
 
