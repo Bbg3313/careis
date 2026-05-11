@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { DetailAccordionItem } from "@/components/detail-accordion-item";
 import { IlluminatorDetailStory } from "@/components/illuminator-detail-story";
+import { MobileProductStickyCta } from "@/components/mobile-product-sticky-cta";
 import { MotionMedia } from "@/components/motion-media";
 import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
 import { SunPackStorySlide as SunPackStorySlideView } from "@/components/sun-pack-story-slide";
@@ -121,7 +122,7 @@ function IlluminatorDetailPage({
   );
 
   return (
-    <div className="pb-28 lg:pb-24">
+    <div className="pb-[calc(9.5rem+env(safe-area-inset-bottom,0px))] lg:pb-24">
       <div className="relative mx-auto grid w-full max-w-[1380px] grid-cols-1 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-x-8 lg:px-8 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="min-w-0 space-y-10 overflow-x-hidden">
           <section className="space-y-8">
@@ -317,28 +318,7 @@ function IlluminatorDetailPage({
         </aside>
       </div>
 
-      <div className="pointer-events-auto fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/90 bg-white/95 px-4 pt-3 shadow-[0_-12px_40px_rgba(0,0,0,0.08)] backdrop-blur-md lg:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <div className="mx-auto flex max-w-lg items-center gap-3 py-1">
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-semibold text-stone-900">{product.name}</p>
-            <p className="text-lg font-bold tabular-nums tracking-tight text-stone-900">
-              {formatCurrency(product.price)}
-            </p>
-          </div>
-          <Link
-            href={`/cart?product=${product.slug}`}
-            className="btn-luxe-secondary shrink-0 rounded-full px-4 py-2.5 text-xs font-semibold"
-          >
-            장바구니
-          </Link>
-          <Link
-            href={`/order?product=${product.slug}`}
-            className="btn-luxe-primary shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold"
-          >
-            바로 구매
-          </Link>
-        </div>
-      </div>
+      <MobileProductStickyCta product={product} />
     </div>
   );
 }
@@ -543,7 +523,7 @@ function SunPackDetailPage({
   );
 
   return (
-    <div className="pb-28 lg:pb-24">
+    <div className="pb-[calc(9.5rem+env(safe-area-inset-bottom,0px))] lg:pb-24">
       <div className="relative mx-auto grid w-full max-w-[1380px] grid-cols-1 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-x-8 lg:px-8 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="min-w-0 space-y-10 overflow-x-hidden">
           <section>
@@ -598,28 +578,7 @@ function SunPackDetailPage({
         </aside>
       </div>
 
-      <div className="pointer-events-auto fixed inset-x-0 bottom-0 z-40 border-t border-stone-200/90 bg-white/95 px-4 pt-3 shadow-[0_-12px_40px_rgba(0,0,0,0.08)] backdrop-blur-md lg:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <div className="mx-auto flex max-w-lg items-center gap-3 py-1">
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-semibold text-stone-900">{product.name}</p>
-            <p className="text-lg font-bold tabular-nums tracking-tight text-stone-900">
-              {formatCurrency(product.price)}
-            </p>
-          </div>
-          <Link
-            href={`/cart?product=${product.slug}`}
-            className="btn-luxe-secondary shrink-0 rounded-full px-4 py-2.5 text-xs font-semibold"
-          >
-            장바구니
-          </Link>
-          <Link
-            href={`/order?product=${product.slug}`}
-            className="btn-luxe-primary shrink-0 rounded-full px-5 py-2.5 text-xs font-semibold"
-          >
-            바로 구매
-          </Link>
-        </div>
-      </div>
+      <MobileProductStickyCta product={product} />
     </div>
   );
 }
