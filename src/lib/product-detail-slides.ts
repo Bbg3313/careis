@@ -16,6 +16,7 @@ export async function getMergedStorySlides(slug: ProductSlug): Promise<SunPackSt
         width: r.width,
         height: r.height,
         posterSrc: r.posterUrl ?? undefined,
+        body: r.body?.trim() ? r.body : undefined,
       }));
     }
   } catch (error) {

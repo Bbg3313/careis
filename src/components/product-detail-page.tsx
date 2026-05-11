@@ -6,6 +6,7 @@ import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
 import { SunPackStorySlide as SunPackStorySlideView } from "@/components/sun-pack-story-slide";
 import { SunPackDetailTabs } from "@/components/sun-pack-detail-tabs";
 import type { ProductContent } from "@/lib/product-data";
+import { splitParagraphs } from "@/lib/text-paragraphs";
 import {
   productVisuals,
   sunPackDetailAssets,
@@ -67,9 +68,13 @@ export function ProductDetailPage({
               <h1 className="display-font headline-balance text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl md:text-6xl lg:text-7xl">
                 {product.heroTitle}
               </h1>
-              <p className="copy-pretty max-w-2xl text-base leading-8 text-white/72 md:text-lg">
-                {product.heroDescription}
-              </p>
+              <div className="max-w-2xl space-y-4 text-base leading-8 text-white/72 md:text-lg">
+                {splitParagraphs(product.heroDescription).map((para, i) => (
+                  <p key={i} className="copy-pretty">
+                    {para}
+                  </p>
+                ))}
+              </div>
             </div>
             <div className="flex flex-wrap gap-2">
               {product.keywords.map((keyword) => (
@@ -169,7 +174,13 @@ export function ProductDetailPage({
               <h3 className="display-font headline-balance mt-4 text-4xl font-semibold tracking-[-0.03em] text-stone-900">
                 {section.title}
               </h3>
-              <p className="copy-pretty mt-4 text-sm leading-8 text-stone-600 md:text-base">{section.description}</p>
+              <div className="mt-4 space-y-4 text-sm leading-8 text-stone-600 md:text-base">
+                {splitParagraphs(section.description).map((para, i) => (
+                  <p key={i} className="copy-pretty">
+                    {para}
+                  </p>
+                ))}
+              </div>
               {section.bullets?.length ? (
                 <ul className="mt-6 space-y-2 text-sm leading-8 text-stone-700">
                   {section.bullets.map((bullet) => (
@@ -226,7 +237,11 @@ export function ProductDetailPage({
             {product.faq.map((item) => (
               <div key={item.question} className="border-b border-stone-100 pb-6 last:border-b-0">
                 <p className="text-lg font-semibold text-stone-900">{item.question}</p>
-                <p className="mt-3 text-sm leading-7 text-stone-600">{item.answer}</p>
+                <div className="mt-3 space-y-3 text-sm leading-7 text-stone-600">
+                  {splitParagraphs(item.answer).map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
@@ -334,7 +349,11 @@ function SunPackDetailPage({
       <div className="space-y-3 border-b border-stone-100 pb-6">
         <p className="text-sm text-stone-500">{product.englishName}</p>
         <h1 className="text-3xl font-semibold tracking-[-0.03em] text-stone-900">{product.name}</h1>
-        <p className="text-base leading-7 text-stone-600">{product.heroDescription}</p>
+        <div className="space-y-3 text-base leading-7 text-stone-600">
+          {splitParagraphs(product.heroDescription).map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
+        </div>
       </div>
 
       <dl className="space-y-4 text-sm">
@@ -392,7 +411,9 @@ function SunPackDetailPage({
             <div className="mb-6 space-y-2 lg:hidden">
               <p className="text-xs uppercase tracking-[0.16em] text-stone-500">{product.englishName}</p>
               <h1 className="text-2xl font-semibold tracking-[-0.03em] text-stone-900">{product.name}</h1>
-              <p className="line-clamp-3 text-sm leading-relaxed text-stone-600">{product.heroDescription}</p>
+              <p className="line-clamp-3 whitespace-pre-line text-sm leading-relaxed text-stone-600">
+                {product.heroDescription}
+              </p>
             </div>
 
             <SunPackDetailGallery
@@ -517,17 +538,31 @@ function SunPackDetailStory({ slides }: { slides: SunPackStorySlide[] }) {
     <section className="w-full bg-[#f7f3f0] py-1">
       <div className="mx-auto w-full px-0" style={{ maxWidth: SUN_PACK_DETAIL_MAX_WIDTH_PX }}>
         <div className="space-y-0">
-          {slides.map((slide, index) => (
-            <div
-              key={`${slide.src}-${index}`}
-              className="mx-auto w-full min-w-0"
-              style={{
-                maxWidth: Math.min(slide.width, SUN_PACK_DETAIL_MAX_WIDTH_PX),
-              }}
-            >
-              <SunPackStorySlideView slide={slide} index={index} />
-            </div>
-          ))}
+          {slides.map((slide, index) => {
+            const paras = slide.body ? splitParagraphs(slide.body) : [];
+            return (
+              <div
+                key={`${slide.src}-${index}`}
+                className="mx-auto w-full min-w-0"
+                style={{
+                  maxWidth: Math.min(slide.width, SUN_PACK_DETAIL_MAX_WIDTH_PX),
+                }}
+              >
+                <SunPackStorySlideView slide={slide} index={index} />
+                {paras.length > 0 ? (
+                  <div className="border-t border-[rgba(116,88,59,0.12)] bg-[#faf7f3] px-4 py-8 sm:px-8 md:py-10">
+                    <div className="mx-auto max-w-[min(42rem,100%)] space-y-4 text-center text-sm leading-8 text-stone-700 md:text-base">
+                      {paras.map((para, i) => (
+                        <p key={i} className="copy-pretty">
+                          {para}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

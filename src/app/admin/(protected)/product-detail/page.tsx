@@ -14,6 +14,7 @@ function rowFromSlide(s: {
   height: number;
   mimeType: string;
   posterUrl: string | null;
+  body: string | null;
 }) {
   return {
     id: s.id,
@@ -24,6 +25,7 @@ function rowFromSlide(s: {
     height: s.height,
     mimeType: s.mimeType,
     posterUrl: s.posterUrl,
+    body: s.body,
   };
 }
 
@@ -48,7 +50,8 @@ export default async function AdminProductDetailPage() {
       <div>
         <h1 className="text-2xl font-semibold text-stone-900">상품 상세 이미지</h1>
         <p className="mt-1 text-sm text-stone-500">
-          관리자에서 JPG · PNG · GIF 를 올리면 상품 상세 세로 스토리 영역에 반영됩니다.
+          관리자에서 JPG · PNG · GIF 를 올리면 제품상세 탭의 세로 스토리에 반영됩니다. 각 컷마다 아래 문단을 넣을 수
+          있습니다.
         </p>
       </div>
 

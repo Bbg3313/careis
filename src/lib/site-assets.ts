@@ -64,6 +64,8 @@ export type SunPackStorySlide = {
   height: number;
   /** GIF 실패·호환 시 뒤에 깔 정지 이미지(동일 프레임 PNG 등) */
   posterSrc?: string;
+  /** DB·관리자: 제품상세 스토리에서 이미지 아래 본문(빈 줄로 문단 구분) */
+  body?: string;
 };
 export const sunPackDetailAssets = {
   heroImage: "/images/sunpack-thumb-02.png",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { createSupabaseBrowser } from "@/lib/supabase/client";
 import { readImageNaturalSize, resolveUploadMimeFromFile } from "@/lib/image-mime-web";
@@ -27,7 +27,49 @@ export type AdminDetailSlideRow = {
   height: number;
   mimeType: string;
   posterUrl: string | null;
+  body: string | null;
 };
+
+function DetailSlideBodyEditor({
+  slide,
+  disabled,
+  saving,
+  onSave,
+}: {
+  slide: AdminDetailSlideRow;
+  disabled: boolean;
+  saving: boolean;
+  onSave: (body: string | null) => Promise<void>;
+}) {
+  const [value, setValue] = useState(slide.body ?? "");
+  useEffect(() => {
+    setValue(slide.body ?? "");
+  }, [slide.id, slide.body]);
+
+  return (
+    <div className="space-y-2 border-t border-stone-100 pt-3">
+      <label className="block text-xs font-medium text-stone-600">
+        제품상세 스토리에서 이 컷 바로 아래에 붙는 문단 (빈 줄 한 번 = 문단 구분, 비우면 표시 안 함)
+      </label>
+      <textarea
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        rows={5}
+        disabled={disabled || saving}
+        className="min-h-[5.5rem] w-full rounded-lg border border-stone-200 bg-white px-3 py-2 font-sans text-sm leading-relaxed text-stone-800 placeholder:text-stone-400 disabled:opacity-50"
+        placeholder={"첫 문단\n\n둘째 문단"}
+      />
+      <button
+        type="button"
+        disabled={disabled || saving}
+        onClick={() => void onSave(value.trim() === "" ? null : value)}
+        className="rounded-lg border border-stone-900 bg-stone-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-stone-800 disabled:opacity-40"
+      >
+        {saving ? "저장 중…" : "본문 저장"}
+      </button>
+    </div>
+  );
+}
 
 export function ProductDetailSlidesAdmin({
   initialBySlug,
@@ -43,6 +85,7 @@ export function ProductDetailSlidesAdmin({
   const slides = initialBySlug[slug];
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [savingBodyId, setSavingBodyId] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
   async function upload(files: FileList | null) {
@@ -176,6 +219,24 @@ export function ProductDetailSlidesAdmin({
     router.refresh();
   }
 
+  async function saveSlideBody(id: string, body: string | null) {
+    setSavingBodyId(id);
+    setMsg(null);
+    const res = await fetch(`/api/admin/product-detail/slide/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ body }),
+    });
+    const data = (await parseResponseJson(res)) as { ok?: boolean; error?: string };
+    setSavingBodyId(null);
+    if (!res.ok || !data.ok) {
+      setMsg(typeof data.error === "string" ? data.error : `저장 실패 (HTTP ${res.status})`);
+      return;
+    }
+    setMsg("본문이 저장되었습니다.");
+    router.refresh();
+  }
+
   async function move(id: string, dir: -1 | 1) {
     const idx = slides.findIndex((s) => s.id === id);
     const j = idx + dir;
@@ -283,51 +344,59 @@ export function ProductDetailSlidesAdmin({
         ) : (
           <ul className="divide-y divide-stone-100">
             {slides.map((slide, index) => (
-              <li key={slide.id} className="flex flex-col gap-4 px-5 py-4 sm:flex-row sm:items-center">
-                <div className="relative h-28 w-44 shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-stone-50">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={slide.url} alt="" className="h-full w-full object-contain" />
-                </div>
-                <div className="min-w-0 flex-1 space-y-1 text-sm">
-                  <div className="flex flex-wrap gap-2">
-                    <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-700">
-                      #{index + 1}
-                    </span>
-                    <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">
-                      {slide.mimeType.includes("gif") ? "GIF" : slide.mimeType.includes("png") ? "PNG" : "JPG"}
-                    </span>
-                    <span className="text-xs text-stone-400">
-                      {slide.width}×{slide.height}px
-                    </span>
+              <li key={slide.id} className="flex flex-col gap-4 px-5 py-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <div className="relative h-28 w-44 shrink-0 overflow-hidden rounded-xl border border-stone-200 bg-stone-50">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={slide.url} alt="" className="h-full w-full object-contain" />
                   </div>
-                  <p className="truncate font-mono text-xs text-stone-500">{slide.url}</p>
+                  <div className="min-w-0 flex-1 space-y-1 text-sm">
+                    <div className="flex flex-wrap gap-2">
+                      <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-700">
+                        #{index + 1}
+                      </span>
+                      <span className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">
+                        {slide.mimeType.includes("gif") ? "GIF" : slide.mimeType.includes("png") ? "PNG" : "JPG"}
+                      </span>
+                      <span className="text-xs text-stone-400">
+                        {slide.width}×{slide.height}px
+                      </span>
+                    </div>
+                    <p className="truncate font-mono text-xs text-stone-500">{slide.url}</p>
+                  </div>
+                  <div className="flex shrink-0 flex-wrap gap-2">
+                    <button
+                      type="button"
+                      disabled={busy || index === 0}
+                      onClick={() => void move(slide.id, -1)}
+                      className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium hover:bg-stone-50 disabled:opacity-40"
+                    >
+                      위로
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy || index === slides.length - 1}
+                      onClick={() => void move(slide.id, 1)}
+                      className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium hover:bg-stone-50 disabled:opacity-40"
+                    >
+                      아래로
+                    </button>
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void remove(slide.id)}
+                      className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-800 hover:bg-red-100"
+                    >
+                      삭제
+                    </button>
+                  </div>
                 </div>
-                <div className="flex shrink-0 flex-wrap gap-2">
-                  <button
-                    type="button"
-                    disabled={busy || index === 0}
-                    onClick={() => void move(slide.id, -1)}
-                    className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium hover:bg-stone-50 disabled:opacity-40"
-                  >
-                    위로
-                  </button>
-                  <button
-                    type="button"
-                    disabled={busy || index === slides.length - 1}
-                    onClick={() => void move(slide.id, 1)}
-                    className="rounded-lg border border-stone-200 px-3 py-1.5 text-xs font-medium hover:bg-stone-50 disabled:opacity-40"
-                  >
-                    아래로
-                  </button>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => void remove(slide.id)}
-                    className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-medium text-red-800 hover:bg-red-100"
-                  >
-                    삭제
-                  </button>
-                </div>
+                <DetailSlideBodyEditor
+                  slide={slide}
+                  disabled={busy}
+                  saving={savingBodyId === slide.id}
+                  onSave={(body) => saveSlideBody(slide.id, body)}
+                />
               </li>
             ))}
           </ul>
