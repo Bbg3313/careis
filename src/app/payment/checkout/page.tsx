@@ -33,10 +33,10 @@ export default async function PaymentCheckoutPage({
   const tossSecretConfigured = Boolean(
     process.env.TOSS_SECRET_KEY?.trim() || process.env.TOSS_PAYMENTS_SECRET_KEY?.trim(),
   );
+  /** 결제창(토스 SDK)은 클라이언트 키 + success/fail URL이면 열 수 있음. 시크릿은 리턴 후 승인에만 필요 */
   const canUseTossCheckout =
     order.paymentStatus === OrderStatus.PENDING &&
     Boolean(tossClientKey) &&
-    tossSecretConfigured &&
     Boolean(successUrl && failUrl);
   const orderName =
     order.orderItems.length > 0
@@ -137,29 +137,44 @@ export default async function PaymentCheckoutPage({
                 결제창으로 이동
               </a>
             ) : canUseTossCheckout && successUrl && failUrl ? (
-              <TossCheckoutButton
-                clientKey={tossClientKey}
-                orderId={order.orderNumber}
-                orderName={orderName}
-                amount={order.totalAmount}
-                customerName={order.customerName}
-                successUrl={successUrl}
-                failUrl={failUrl}
-              />
+              <div className="space-y-3">
+                <TossCheckoutButton
+                  clientKey={tossClientKey}
+                  orderId={order.orderNumber}
+                  orderName={orderName}
+                  amount={order.totalAmount}
+                  customerName={order.customerName}
+                  successUrl={successUrl}
+                  failUrl={failUrl}
+                />
+                {!tossSecretConfigured ? (
+                  <p className="rounded-[16px] border border-amber-200/80 bg-amber-50/90 px-4 py-3 text-xs leading-6 text-amber-950">
+                    <strong className="font-semibold">운영 참고:</strong> 결제창은 열리지만, 결제 완료 후 자동
+                    승인을 하려면 배포 환경에 <code className="text-[11px]">TOSS_SECRET_KEY</code>(또는{" "}
+                    <code className="text-[11px]">TOSS_PAYMENTS_SECRET_KEY</code>) 테스트 시크릿 키도 반드시
+                    설정해주세요. 토스 개발자센터 &gt; API 키 &gt; 시크릿 키(
+                    <code className="text-[11px]">test_sk_</code>)와 클라이언트 키는 같은 결제위젯 연동
+                    쌍이어야 합니다.
+                  </p>
+                ) : null}
+              </div>
             ) : (
               <div className="rounded-[24px] border border-[rgba(169,125,77,0.16)] bg-[#fcf8f2] p-5 text-sm leading-7 text-stone-600">
-                {tossClientKey && !tossSecretConfigured ? (
+                {!tossClientKey ? (
                   <>
-                    클라이언트 키는 있으나 서버 시크릿 키(<code className="text-xs">TOSS_SECRET_KEY</code>)가 없어
-                    결제 승인을 할 수 없습니다. <code className="text-xs">.env</code>에 테스트/라이브 시크릿 키를
-                    함께 넣어주세요.
+                    토스 결제창을 열려면 배포 환경 변수에{" "}
+                    <code className="text-xs">NEXT_PUBLIC_TOSS_CLIENT_KEY</code>(<code className="text-xs">test_ck_</code>
+                    …)를 넣은 뒤 <strong className="text-stone-800">주문을 다시</strong> 진행해주세요. 성공/실패
+                    주소는 주문 시 서버가 자동으로 붙이며, 토스 콘솔에 등록된 도메인과{" "}
+                    <code className="text-xs">NEXT_PUBLIC_SITE_URL</code>·실제 접속 URL이 같아야 합니다.
+                  </>
+                ) : !successUrl || !failUrl ? (
+                  <>
+                    이 주문에 결제 리턴 URL이 없습니다. <code className="text-xs">NEXT_PUBLIC_SITE_URL</code>이
+                    배포 도메인과 일치하는지 확인한 뒤 주문을 다시 생성해주세요.
                   </>
                 ) : (
-                  <>
-                    토스페이먼츠 연동을 위해{" "}
-                    <code className="text-xs">NEXT_PUBLIC_TOSS_CLIENT_KEY</code>와{" "}
-                    <code className="text-xs">TOSS_SECRET_KEY</code>를 설정하고 주문을 다시 진행해주세요.
-                  </>
+                  <>결제를 진행할 수 없는 상태입니다. 주문 상태를 확인하거나 고객센터로 문의해주세요.</>
                 )}
               </div>
             )}

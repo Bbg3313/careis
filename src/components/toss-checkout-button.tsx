@@ -72,7 +72,9 @@ export function TossCheckoutButton({
         {loading ? "결제창 여는 중…" : "토스페이먼츠로 결제하기"}
       </button>
       <p className="text-xs leading-6 text-stone-500">
-        카드·간편결제가 포함된 토스 통합 결제창으로 이동합니다. 라이브 전 개발자센터에서 성공/실패 URL을 등록해야 합니다.
+        테스트·라이브 모두 토스 개발자센터에서 발급한 <strong className="font-medium text-stone-700">클라이언트 키</strong>와
+        같은 결제위젯 연동 쌍의 시크릿 키를 쓰세요. 배포 URL은 콘솔 &gt; 개발 정보 &gt; 리다이렉트 URL에 등록해야
+        결제창이 열립니다.
       </p>
     </div>
   );

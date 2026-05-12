@@ -42,7 +42,10 @@ export function getRequestOrigin(request: Request) {
   const host = forwardedHost ?? request.headers.get("host");
 
   if (host) {
-    return `${forwardedProto ?? "https"}://${host}`;
+    const proto =
+      forwardedProto ??
+      (/^(localhost|127\.0\.0\.1)(:|$)/i.test(host) ? "http" : "https");
+    return `${proto}://${host}`;
   }
 
   return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -52,10 +55,11 @@ function resolvePaymentProvider(): string {
   if (process.env.PG_PROVIDER?.trim()) {
     return process.env.PG_PROVIDER.trim();
   }
-  const tossReady =
-    Boolean(process.env.TOSS_SECRET_KEY?.trim() || process.env.TOSS_PAYMENTS_SECRET_KEY?.trim()) &&
-    Boolean(process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY?.trim());
-  return tossReady ? "TOSS_PAYMENTS" : "EXTERNAL_PG";
+  /** 클라이언트 키만 있어도 결제창(위젯) 연동 대상으로 본다. 시크릿은 승인 API에만 필요 */
+  if (process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY?.trim()) {
+    return "TOSS_PAYMENTS";
+  }
+  return "EXTERNAL_PG";
 }
 
 export function buildPaymentSession(input: PaymentSessionInput): PaymentSession {
