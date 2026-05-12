@@ -1,5 +1,7 @@
 import type { PaymentMethod } from "@prisma/client";
 
+import { getTossClientKey } from "@/lib/toss-payments";
+
 type GatewayChannel = "CARD" | "NAVER_PAY" | "TOSS_PAY" | "KAKAO_PAY";
 
 type PaymentSessionInput = {
@@ -56,7 +58,7 @@ function resolvePaymentProvider(): string {
     return process.env.PG_PROVIDER.trim();
   }
   /** 클라이언트 키만 있어도 결제창(위젯) 연동 대상으로 본다. 시크릿은 승인 API에만 필요 */
-  if (process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY?.trim()) {
+  if (getTossClientKey()) {
     return "TOSS_PAYMENTS";
   }
   return "EXTERNAL_PG";

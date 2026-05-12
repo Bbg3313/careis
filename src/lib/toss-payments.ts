@@ -5,8 +5,17 @@ export function getTossSecretKey(): string | null {
   return process.env.TOSS_SECRET_KEY?.trim() || process.env.TOSS_PAYMENTS_SECRET_KEY?.trim() || null;
 }
 
+/**
+ * 브라우저·서버 공통 클라이언트 키(test_ck_… / live_ck_…).
+ * Vercel 등에서 NEXT_PUBLIC_가 빌드에 비어 박히는 경우를 피하려면 TOSS_CLIENT_KEY에 동일 값을 넣으면
+ * 서버(결제 페이지·prepare)가 런타임에 확실히 읽을 수 있습니다.
+ */
 export function getTossClientKey(): string | null {
-  return process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY?.trim() || null;
+  return (
+    process.env.TOSS_CLIENT_KEY?.trim() ||
+    process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY?.trim() ||
+    null
+  );
 }
 
 export function isTossPaymentsConfigured(): boolean {

@@ -6,6 +6,7 @@ import { TossCheckoutButton } from "@/components/toss-checkout-button";
 import { BUSINESS_INFO, BUSINESS_ORDER_FALLBACK_NAME } from "@/lib/business-info";
 import { getOrderByNumber } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
+import { getTossClientKey } from "@/lib/toss-payments";
 import { formatCurrency } from "@/lib/utils";
 
 export default async function PaymentCheckoutPage({
@@ -29,7 +30,7 @@ export default async function PaymentCheckoutPage({
     typeof payload.successUrl === "string" ? payload.successUrl : null;
   const failUrl = typeof payload.failUrl === "string" ? payload.failUrl : null;
 
-  const tossClientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY?.trim() ?? "";
+  const tossClientKey = getTossClientKey() ?? "";
   const tossSecretConfigured = Boolean(
     process.env.TOSS_SECRET_KEY?.trim() || process.env.TOSS_PAYMENTS_SECRET_KEY?.trim(),
   );
@@ -163,9 +164,12 @@ export default async function PaymentCheckoutPage({
                 {!tossClientKey ? (
                   <>
                     토스 결제창을 열려면 배포 환경 변수에{" "}
+                    <code className="text-xs">TOSS_CLIENT_KEY</code> 또는{" "}
                     <code className="text-xs">NEXT_PUBLIC_TOSS_CLIENT_KEY</code>(<code className="text-xs">test_ck_</code>
-                    …)를 넣은 뒤 <strong className="text-stone-800">주문을 다시</strong> 진행해주세요. 성공/실패
-                    주소는 주문 시 서버가 자동으로 붙이며, 토스 콘솔에 등록된 도메인과{" "}
+                    …, 동일 값)을 넣은 뒤 <strong className="text-stone-800">재배포</strong>하고{" "}
+                    <strong className="text-stone-800">새로 주문</strong>해주세요. Vercel에서는{" "}
+                    <code className="text-xs">TOSS_CLIENT_KEY</code>만 추가해도 서버가 키를 읽기 쉽습니다. 성공/실패
+                    주소는 주문 시 서버가 자동으로 붙이며, 토스 콘솔 도메인과{" "}
                     <code className="text-xs">NEXT_PUBLIC_SITE_URL</code>·실제 접속 URL이 같아야 합니다.
                   </>
                 ) : !successUrl || !failUrl ? (
