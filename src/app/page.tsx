@@ -343,15 +343,6 @@ export default function HomePage() {
             </article>
 
             <article className="relative overflow-hidden bg-[linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] px-5 py-14 text-white md:px-8 md:py-20">
-              <div className="absolute inset-0 opacity-[0.1]">
-                <Image
-                  src={productVisuals["illuminator"].hero}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="50vw"
-                />
-              </div>
               <div className="absolute left-12 top-12 h-72 w-72 rounded-full bg-[#7B8FA8]/20 blur-3xl" />
 
               <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">

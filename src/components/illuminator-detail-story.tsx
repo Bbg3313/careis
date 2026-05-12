@@ -6,7 +6,8 @@ import { ILLUMINATOR_DETAIL_MAX_WIDTH_PX } from "@/lib/site-assets";
 import { splitParagraphs } from "@/lib/text-paragraphs";
 
 const BANNER = "/images/illum-hero-marble.png";
-const HERO = "/images/illum-hero-hands.png";
+/** 합성 이슈로 lifestyle·hands 에셋 제거 — 마블 정지컷으로 대체 */
+const HERO = "/images/illum-hero-marble.png";
 const MODEL = "/images/illum-hero-apply.png";
 
 export function IlluminatorDetailStory({ product }: { product: ProductContent }) {
@@ -115,7 +116,7 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
             <div className="grid gap-4 sm:grid-cols-3">
               {[BANNER, HERO, MODEL].map((src, i) => (
                 <div
-                  key={src}
+                  key={`${src}-${i}`}
                   className="flex flex-col items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 text-center"
                 >
                   <div className="relative h-24 w-24 overflow-hidden rounded-full ring-2 ring-indigo-200/60">

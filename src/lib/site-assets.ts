@@ -9,20 +9,17 @@ type ProductVisualSet = {
 
 export const homeVisuals = {
   sunHero: "/images/sun-model-banner.png",
-  illuminatorHero: "/images/illum-hero-lifestyle.png",
+  illuminatorHero: "/images/illum-hero-marble.png",
   /** public 폴더에 실제 존재하는 이미지만 사용 */
   heroMotion: [
     "/images/sun-model-banner.png",
     "/images/sunpack-thumb-02.png",
     "/images/sunpack-thumb-04.png",
-    "/images/illum-hero-lifestyle.png",
-    "/images/illum-hero-hands.png",
     "/images/illum-hero-marble.png",
     "/images/illum-hero-apply.png",
   ],
   brandFilm: [
     "/images/sun-model-banner.png",
-    "/images/illum-hero-lifestyle.png",
     "/images/illum-hero-apply.png",
     "/images/illum-hero-marble.png",
   ],
@@ -44,16 +41,10 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
     ],
   },
   illuminator: {
-    hero: "/images/illum-hero-lifestyle.png",
-    card: "/images/illum-hero-hands.png",
+    hero: "/images/illum-hero-marble.png",
+    card: "/images/illum-hero-marble.png",
     alt: "일루미네이터 시스테아민 5% 제품 이미지",
-    gallery: [
-      "/images/illum-hero-hands.png",
-      "/images/illum-hero-marble.png",
-      "/images/illum-hero-lifestyle.png",
-      "/images/illum-hero-apply.png",
-      "/images/illum-hero-hands.png",
-    ],
+    gallery: ["/images/illum-hero-marble.png", "/images/illum-hero-apply.png"],
   },
 };
 
@@ -109,13 +100,8 @@ export const sunPackDetailAssets = {
 
 /** 일루미네이터 상세 상단 썸네일(정사각 스트립) */
 export const illuminatorDetailAssets = {
-  heroImage: "/images/illum-hero-lifestyle.png",
+  heroImage: "/images/illum-hero-marble.png",
   /** 정사각 프레임 + cover 기준(실파일과 무관하게 레이아웃만 맞춤) */
   heroPixelSize: { width: 1024, height: 1024 },
-  thumbnailImages: [
-    "/images/illum-hero-lifestyle.png",
-    "/images/illum-hero-hands.png",
-    "/images/illum-hero-marble.png",
-    "/images/illum-hero-apply.png",
-  ],
+  thumbnailImages: ["/images/illum-hero-marble.png", "/images/illum-hero-apply.png"],
 } as const;
