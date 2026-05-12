@@ -161,87 +161,84 @@ export default function HomePage() {
             </ul>
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-4xl gap-5 md:mt-14 md:grid-cols-2 md:gap-6">
-            <article className="relative overflow-hidden rounded-[24px] border border-[rgba(212,175,55,0.28)] bg-[linear-gradient(165deg,#fffefb_0%,#faf3e4_55%,#f5ebda_100%)] p-5 shadow-[0_20px_50px_rgba(184,145,86,0.12)] md:p-7">
-              <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#f4e4bc_0%,#d4af37_38%,#c9a227_100%)]" />
-              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#d4af37]/10 blur-2xl" />
-              <div className="relative flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(145deg,#fff9ef_0%,#f3e4c8_100%)] text-[#b8893a] shadow-inner ring-1 ring-[rgba(212,175,55,0.25)]">
+          <div className="mx-auto mt-12 grid max-w-5xl gap-4 md:mt-14 md:grid-cols-2 md:gap-5">
+            <article className="relative overflow-hidden rounded-2xl border border-[rgba(184,145,86,0.22)] bg-white/95 p-6 shadow-[0_4px_28px_rgba(62,44,18,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-7">
+              <div
+                className="pointer-events-none absolute inset-y-5 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#e8c96b_0%,#b8893a_55%,#9a7346_100%)]"
+                aria-hidden
+              />
+              <div className="relative pl-5 md:pl-6">
+                <div className="flex gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fffaf0] text-[#a67c2e] ring-1 ring-[rgba(212,175,55,0.28)]">
                     <BrandDayGlyph />
                   </span>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#9a7346]">선팩 · DAY</p>
-                    <p className="mt-0.5 text-[15px] font-semibold text-stone-900 md:text-base">가벼운 고보호</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7346]">Sun Pack</p>
+                    <p className="mt-1.5 text-[13px] text-stone-600">
+                      선팩 · <span className="font-medium text-stone-900">DAY</span>
+                    </p>
+                    <h3 className="mt-2 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:text-lg">
+                      가벼운 고보호
+                    </h3>
                   </div>
                 </div>
-                <span className="shrink-0 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8b673f] shadow-sm ring-1 ring-[rgba(184,145,86,0.15)]">
-                  Sun Pack
-                </span>
+                <ul className="mt-6 space-y-3 border-t border-stone-100 pt-6 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
+                  <li className="flex gap-3 [word-break:keep-all]">
+                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
+                    특허 기반 셀룰로오스 필름 — 밀착·보호
+                  </li>
+                  <li className="flex gap-3 [word-break:keep-all]">
+                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
+                    SPF50+ PA+++ 자외선 차단
+                  </li>
+                  <li className="flex gap-3 [word-break:keep-all]">
+                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
+                    데일리용 가벼운 사용감
+                  </li>
+                </ul>
               </div>
-              <ul className="relative mt-5 space-y-2.5 border-t border-[rgba(184,145,86,0.12)] pt-5 text-[13px] leading-relaxed text-stone-700 md:text-[14px]">
-                <li className="flex gap-2.5 [word-break:keep-all]">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#d4af37]" />
-                  특허 기반 셀룰로오스 필름 — 밀착·보호
-                </li>
-                <li className="flex gap-2.5 [word-break:keep-all]">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#d4af37]" />
-                  SPF50+ PA+++ 자외선 차단
-                </li>
-                <li className="flex gap-2.5 [word-break:keep-all]">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#d4af37]" />
-                  데일리용 가벼운 사용감
-                </li>
-              </ul>
             </article>
 
-            <article className="relative overflow-hidden rounded-[24px] border border-[rgba(123,143,168,0.35)] bg-[linear-gradient(165deg,#fafbfd_0%,#eef2f8_52%,#e6ecf5_100%)] p-5 shadow-[0_20px_50px_rgba(65,85,115,0.1)] md:p-7">
-              <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#c5d2e3_0%,#8ea4c5_45%,#6b7f9c_100%)]" />
-              <div className="absolute -right-10 top-12 h-32 w-32 rounded-full bg-[#8ea4c5]/14 blur-2xl" />
-              <div className="relative flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(145deg,#ffffff_0%,#e8eef6_100%)] text-[#6b7f9c] shadow-inner ring-1 ring-[rgba(123,143,168,0.28)]">
+            <article className="relative overflow-hidden rounded-2xl border border-[rgba(123,143,168,0.28)] bg-white/95 p-6 shadow-[0_4px_28px_rgba(45,58,78,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-7">
+              <div
+                className="pointer-events-none absolute inset-y-5 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#b8c8dc_0%,#6b7f9c_55%,#5c6d84_100%)]"
+                aria-hidden
+              />
+              <div className="relative pl-5 md:pl-6">
+                <div className="flex gap-4">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#f4f7fb] text-[#5c6d84] ring-1 ring-[rgba(123,143,168,0.3)]">
                     <BrandNightGlyph />
                   </span>
-                  <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#5c6d84]">일루미네이터 · NIGHT</p>
-                    <p className="mt-0.5 text-[15px] font-semibold text-stone-900 md:text-base">야간 집중 케어</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#5c6d84]">Illuminator</p>
+                    <p className="mt-1.5 text-[13px] text-stone-600">
+                      일루미네이터 · <span className="font-medium text-stone-900">NIGHT</span>
+                    </p>
+                    <h3 className="mt-2 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:text-lg">
+                      야간 집중 케어
+                    </h3>
                   </div>
                 </div>
-                <span className="shrink-0 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5c6d84] shadow-sm ring-1 ring-[rgba(123,143,168,0.22)]">
-                  Illuminator
-                </span>
+                <ul className="mt-6 space-y-3 border-t border-stone-100 pt-6 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
+                  <li className="flex gap-3 [word-break:keep-all]">
+                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
+                    시스테아민 5% 집중 케어
+                  </li>
+                  <li className="flex gap-3 [word-break:keep-all]">
+                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
+                    야간 브라이트닝 · 색소 고민 보조
+                  </li>
+                  <li className="flex gap-3 [word-break:keep-all]">
+                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
+                    밤 루틴으로 피부 결 정돈
+                  </li>
+                </ul>
               </div>
-              <ul className="relative mt-5 space-y-2.5 border-t border-[rgba(123,143,168,0.15)] pt-5 text-[13px] leading-relaxed text-stone-700 md:text-[14px]">
-                <li className="flex gap-2.5 [word-break:keep-all]">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#8ea4c5]" />
-                  시스테아민 5% 집중 케어
-                </li>
-                <li className="flex gap-2.5 [word-break:keep-all]">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#8ea4c5]" />
-                  야간 브라이트닝 · 색소 고민 보조
-                </li>
-                <li className="flex gap-2.5 [word-break:keep-all]">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#8ea4c5]" />
-                  밤 루틴으로 피부 결 정돈
-                </li>
-              </ul>
             </article>
           </div>
 
-          <p className="mx-auto mt-12 max-w-md px-2 text-center text-[13px] leading-relaxed text-stone-500 md:mt-14 md:flex md:max-w-2xl md:items-center md:justify-center md:gap-3 md:px-0 md:text-[14px]">
-            <span
-              className="hidden h-px w-10 shrink-0 bg-[linear-gradient(90deg,transparent,#c9b08b,transparent)] md:inline-block md:w-12"
-              aria-hidden
-            />
-            <span className="copy-pretty md:max-w-none">
-              상세 제품 정보는 아래 <span className="font-semibold text-[#8b673f]">PRODUCT</span>에서 확인할 수
-              있습니다.
-            </span>
-            <span
-              className="hidden h-px w-10 shrink-0 bg-[linear-gradient(90deg,transparent,#c9b08b,transparent)] md:inline-block md:w-12"
-              aria-hidden
-            />
+          <p className="copy-pretty mx-auto mt-10 max-w-lg px-2 text-center text-[13px] leading-relaxed text-stone-500 md:mt-12 md:max-w-2xl md:text-sm">
+            상세 제품 정보는 아래 <span className="font-semibold text-[#8b673f]">PRODUCT</span>에서 확인할 수 있습니다.
           </p>
         </div>
       </section>
