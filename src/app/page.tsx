@@ -159,25 +159,25 @@ export default function HomePage() {
               ))}
             </ul>
 
-            <div className="mt-6 grid gap-2.5 md:mt-10 md:grid-cols-2 md:gap-4">
-            <article className="relative overflow-hidden rounded-2xl border border-[rgba(184,145,86,0.22)] bg-white/95 p-4 shadow-[0_4px_28px_rgba(62,44,18,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-5">
+            <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 pl-0.5 pr-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:mt-10 md:grid md:grid-cols-2 md:gap-4 md:overflow-visible md:pb-0 md:pl-0 md:pr-0">
+            <article className="relative w-[min(82vw,16.75rem)] shrink-0 snap-center snap-always overflow-hidden rounded-2xl border border-[rgba(184,145,86,0.22)] bg-white/95 p-3 shadow-[0_4px_28px_rgba(62,44,18,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:w-auto md:max-w-none md:shrink md:snap-none md:p-5">
               <div
-                className="pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#e8c96b_0%,#b8893a_55%,#9a7346_100%)]"
+                className="pointer-events-none absolute inset-y-3 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#e8c96b_0%,#b8893a_55%,#9a7346_100%)] md:inset-y-4"
                 aria-hidden
               />
-              <div className="relative pl-4 md:pl-5">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffaf0] text-[#a67c2e] ring-1 ring-[rgba(212,175,55,0.28)]">
+              <div className="relative pl-3 md:pl-5">
+                <div className="flex items-start gap-2.5 md:gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#fffaf0] text-[#a67c2e] ring-1 ring-[rgba(212,175,55,0.28)] md:h-10 md:w-10 md:rounded-xl">
                     <BrandDayGlyph />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7346]">Sun Pack</p>
-                    <h3 className="mt-1.5 text-[16px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:mt-2 md:text-[17px]">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#9a7346] md:text-[10px] md:tracking-[0.2em]">Sun Pack</p>
+                    <h3 className="mt-1 text-[15px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:mt-2 md:text-[17px]">
                       가벼운 고보호
                     </h3>
                   </div>
                 </div>
-                <ul className="mt-4 space-y-2 border-t border-stone-100 pt-4 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
+                <ul className="mt-3 space-y-1.5 border-t border-stone-100 pt-3 text-[12px] leading-relaxed text-stone-600 md:mt-4 md:space-y-2 md:pt-4 md:text-[14px]">
                   <li className="flex gap-2.5 [word-break:keep-all]">
                     <span className="mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
                     특허 기반 셀룰로오스 필름 — 밀착·보호
@@ -194,24 +194,24 @@ export default function HomePage() {
               </div>
             </article>
 
-            <article className="relative overflow-hidden rounded-2xl border border-[rgba(123,143,168,0.28)] bg-white/95 p-4 shadow-[0_4px_28px_rgba(45,58,78,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-5">
+            <article className="relative w-[min(82vw,16.75rem)] shrink-0 snap-center snap-always overflow-hidden rounded-2xl border border-[rgba(123,143,168,0.28)] bg-white/95 p-3 shadow-[0_4px_28px_rgba(45,58,78,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:w-auto md:max-w-none md:shrink md:snap-none md:p-5">
               <div
-                className="pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#b8c8dc_0%,#6b7f9c_55%,#5c6d84_100%)]"
+                className="pointer-events-none absolute inset-y-3 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#b8c8dc_0%,#6b7f9c_55%,#5c6d84_100%)] md:inset-y-4"
                 aria-hidden
               />
-              <div className="relative pl-4 md:pl-5">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f4f7fb] text-[#5c6d84] ring-1 ring-[rgba(123,143,168,0.3)]">
+              <div className="relative pl-3 md:pl-5">
+                <div className="flex items-start gap-2.5 md:gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f4f7fb] text-[#5c6d84] ring-1 ring-[rgba(123,143,168,0.3)] md:h-10 md:w-10 md:rounded-xl">
                     <BrandNightGlyph />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#5c6d84]">Illuminator</p>
-                    <h3 className="mt-1.5 text-[16px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:mt-2 md:text-[17px]">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#5c6d84] md:text-[10px] md:tracking-[0.2em]">Illuminator</p>
+                    <h3 className="mt-1 text-[15px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:mt-2 md:text-[17px]">
                       야간 집중 케어
                     </h3>
                   </div>
                 </div>
-                <ul className="mt-4 space-y-2 border-t border-stone-100 pt-4 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
+                <ul className="mt-3 space-y-1.5 border-t border-stone-100 pt-3 text-[12px] leading-relaxed text-stone-600 md:mt-4 md:space-y-2 md:pt-4 md:text-[14px]">
                   <li className="flex gap-2.5 [word-break:keep-all]">
                     <span className="mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
                     시스테아민 5% 집중 케어
@@ -244,13 +244,13 @@ export default function HomePage() {
               <div className="absolute bottom-6 right-10 h-32 w-32 rounded-full bg-[#8ea4c5]/12 blur-3xl" />
 
               <div className="relative border-b border-[rgba(184,145,86,0.12)] px-4 pb-4 pt-4 text-center md:px-10 md:pb-6 md:pt-8">
-                <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-stone-500 md:px-4 md:py-2 md:text-[11px]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
+                <div className="mx-auto flex max-w-[19.5rem] flex-nowrap items-center justify-center gap-1.5 sm:max-w-none sm:gap-2 md:gap-3">
+                  <span className="inline-flex min-w-0 flex-1 items-center justify-center gap-1 rounded-full bg-white/72 px-2 py-1.5 text-[8px] font-medium uppercase leading-tight tracking-[0.08em] text-stone-500 sm:flex-none sm:gap-2 sm:px-3 sm:text-[10px] sm:tracking-[0.14em] md:px-4 md:py-2 md:text-[11px] md:tracking-[0.2em]">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#d4af37]" />
                     Day Signature
                   </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-stone-500 md:px-4 md:py-2 md:text-[11px]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#8ea4c5]" />
+                  <span className="inline-flex min-w-0 flex-1 items-center justify-center gap-1 rounded-full bg-white/72 px-2 py-1.5 text-[8px] font-medium uppercase leading-tight tracking-[0.08em] text-stone-500 sm:flex-none sm:gap-2 sm:px-3 sm:text-[10px] sm:tracking-[0.14em] md:px-4 md:py-2 md:text-[11px] md:tracking-[0.2em]">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#8ea4c5]" />
                     Night Signature
                   </span>
                 </div>
@@ -268,9 +268,9 @@ export default function HomePage() {
                   햇빛 아래에서는 더 맑고 가볍게, 밤이 깊어질수록 더 차분하고 깊게.
                 </p>
 
-                <div className="relative mt-4 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.2em] text-stone-400 md:mt-5 md:gap-5 md:text-[12px]">
-                  <span className="text-[#8b673f]">Light Protection</span>
-                  <span className="text-stone-400">Intensive Brightening</span>
+                <div className="relative mx-auto mt-4 flex w-full max-w-[19.5rem] flex-nowrap items-center justify-center gap-x-4 gap-y-0 px-0.5 text-[9px] font-medium uppercase leading-tight tracking-[0.12em] text-stone-400 sm:max-w-none sm:gap-x-7 sm:text-[10px] sm:tracking-[0.16em] md:mt-5 md:gap-x-8 md:text-[12px] md:tracking-[0.2em]">
+                  <span className="shrink-0 whitespace-nowrap text-[#8b673f]">Light Protection</span>
+                  <span className="shrink-0 whitespace-nowrap text-stone-400">Intensive Brightening</span>
                 </div>
               </div>
 
