@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { SiteLogo } from "@/components/site-logo";
+import { BUSINESS_INFO } from "@/lib/business-info";
 
 const footerGoldLabel =
   "bg-[linear-gradient(92deg,#f5ead4_0%,#e8cf8f_38%,#d4af37_62%,#b8893a_100%)] bg-clip-text font-semibold text-transparent";
@@ -13,11 +14,13 @@ export function SiteFooter() {
           <div className="space-y-3 md:space-y-5">
             <SiteLogo dark footer />
             <div className="max-w-md space-y-1 text-[11px] leading-snug text-white/55 [word-break:keep-all] md:space-y-1.5 md:text-[13px] md:leading-[1.75] md:text-white/60">
-              <p>상호: 케어이즈 | 대표: 이명규</p>
+              <p>
+                상호: {BUSINESS_INFO.tradeName} | 대표자: {BUSINESS_INFO.representativeName}
+              </p>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <span>사업자: 215-86-78967</span>
+                <span>사업자등록번호: {BUSINESS_INFO.registrationNumber}</span>
                 <a
-                  href="https://teht.hometax.go.kr/websquare/websquare.wq?w2xPath=/ui/ca/a/b/UTECAABA12.xml"
+                  href={BUSINESS_INFO.ntsBusinessNoConfirmUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex shrink-0 items-center rounded border border-white/18 px-2 py-0.5 text-[10px] font-medium text-white/75 transition hover:border-white/35 hover:text-white md:rounded-full md:px-3 md:py-1 md:text-[11px]"
@@ -25,10 +28,11 @@ export function SiteFooter() {
                   번호확인
                 </a>
               </div>
-              <p>통신판매업: 제2012-서울강남-01016호</p>
-              <p className="md:hidden">서울 강남구 테헤란로43길 14 청수빌딩 13층</p>
-              <p className="hidden md:block">소재지: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)</p>
-              <p>개인정보 책임자: 정재문</p>
+              <p>통신판매업 신고번호: {BUSINESS_INFO.mailOrderReportNumber}</p>
+              <p className="md:hidden">소재지: {BUSINESS_INFO.addressMobile}</p>
+              <p className="hidden md:block">소재지: {BUSINESS_INFO.addressDesktop}</p>
+              <p>고객센터(상점 전화): {BUSINESS_INFO.customerServicePhone}</p>
+              <p>개인정보 책임자: {BUSINESS_INFO.privacyOfficerName}</p>
             </div>
           </div>
 
@@ -40,14 +44,14 @@ export function SiteFooter() {
                 Contact
               </p>
               <div className="space-y-1.5 text-[12px] text-white/60 md:space-y-3 md:text-[13px]">
-                <a href="tel:01025563263" className="block transition hover:text-white">
-                  010-2556-3263
+                <a href={BUSINESS_INFO.customerServiceTelHref} className="block transition hover:text-white">
+                  {BUSINESS_INFO.customerServicePhone}
                 </a>
                 <a
-                  href="mailto:startupscon@gmail.com"
+                  href={`mailto:${BUSINESS_INFO.email}`}
                   className="block break-all transition hover:text-white md:break-normal"
                 >
-                  startupscon@gmail.com
+                  {BUSINESS_INFO.email}
                 </a>
                 <a
                   href="https://www.instagram.com/sunlumi_labs/"

@@ -9,6 +9,7 @@ import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
 import { SunPackStorySlide as SunPackStorySlideView } from "@/components/sun-pack-story-slide";
 import { SunPackDetailTabs } from "@/components/sun-pack-detail-tabs";
 import type { ProductContent } from "@/lib/product-data";
+import { BUSINESS_INFO, exchangeReturnAddressWithTrade } from "@/lib/business-info";
 import { splitParagraphs } from "@/lib/text-paragraphs";
 import {
   illuminatorDetailAssets,
@@ -360,11 +361,9 @@ function ExchangeReturnAccordionList() {
 
       <DetailAccordionItem title="교환 및 반품 주소" summaryClassName="text-base font-semibold text-stone-900">
         <div className={panel}>
-          <p className="text-sm leading-7 text-stone-600">
-            서울특별시 강남구 테헤란로43길 14 청수빌딩 13층 케어이즈
-          </p>
+          <p className="text-sm leading-7 text-stone-600">{exchangeReturnAddressWithTrade()}</p>
           <p className="mt-5 text-sm font-medium text-stone-900">문의</p>
-          <p className="mt-1 text-sm leading-7 text-stone-600">010-2556-3263</p>
+          <p className="mt-1 text-sm leading-7 text-stone-600">{BUSINESS_INFO.customerServicePhone}</p>
           <p className="mt-4 text-sm font-medium text-stone-900">고객센터 운영시간</p>
           <p className="mt-1 text-sm leading-7 text-stone-600">
             평일 10:00~17:00 (점심 12:00~13:00), 주말·공휴일 휴무

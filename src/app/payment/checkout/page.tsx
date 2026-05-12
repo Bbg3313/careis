@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { TossCheckoutButton } from "@/components/toss-checkout-button";
+import { BUSINESS_INFO, BUSINESS_ORDER_FALLBACK_NAME } from "@/lib/business-info";
 import { getOrderByNumber } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency } from "@/lib/utils";
@@ -43,7 +44,7 @@ export default async function PaymentCheckoutPage({
           .map((item) => `${item.productNameSnapshot} ×${item.quantity}`)
           .join(", ")
           .slice(0, 100)
-      : "케어이즈 주문";
+      : BUSINESS_ORDER_FALLBACK_NAME;
 
   return (
     <div className="space-y-8 pb-24">
@@ -78,7 +79,10 @@ export default async function PaymentCheckoutPage({
             <ul className="mt-4 space-y-2 text-sm leading-7 text-stone-600">
               <li>- 선택한 결제수단에 따라 안전한 외부 결제창 또는 간편결제 화면으로 이동합니다.</li>
               <li>- 결제 완료 후 주문 상태가 자동 반영되며, 결제 실패 시 다시 주문 단계로 돌아갈 수 있습니다.</li>
-              <li>- 주문·결제·배송 문의는 고객센터 010-2556-3263 또는 startupscon@gmail.com으로 접수할 수 있습니다.</li>
+              <li>
+                - 주문·결제·배송 문의는 고객센터 {BUSINESS_INFO.customerServicePhone} 또는 {BUSINESS_INFO.email}으로
+                접수할 수 있습니다.
+              </li>
               <li>- 고객센터 운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은 휴무입니다.</li>
               <li>- 구매 전 이용약관, 개인정보처리방침, 배송/교환/반품 정책을 다시 확인해주세요.</li>
             </ul>
@@ -110,13 +114,17 @@ export default async function PaymentCheckoutPage({
 
           <div className="rounded-[24px] bg-[#f8f3ec] p-6 text-sm leading-7 text-stone-600">
             <p>
-              상호: 케어이즈
+              상호: {BUSINESS_INFO.tradeName}
               <br />
-              대표자: 이명규
+              대표자: {BUSINESS_INFO.representativeName}
               <br />
-              사업자번호: 215-86-78967
+              사업자등록번호: {BUSINESS_INFO.registrationNumber}
               <br />
-              통신판매업: 제2012-서울강남-01016호
+              사업장 주소: {BUSINESS_INFO.addressDesktop}
+              <br />
+              고객센터(상점 전화): {BUSINESS_INFO.customerServicePhone}
+              <br />
+              통신판매업 신고번호: {BUSINESS_INFO.mailOrderReportNumber}
             </p>
           </div>
 

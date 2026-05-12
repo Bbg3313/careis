@@ -1,3 +1,5 @@
+import { BUSINESS_INFO } from "@/lib/business-info";
+
 export default function ShippingPage() {
   return (
     <div className="space-y-8 pb-20">
@@ -21,7 +23,10 @@ export default function ShippingPage() {
             <h2 className="text-lg font-semibold text-stone-900">2. 교환 및 반품 접수</h2>
             <p>단순 변심에 의한 교환 및 반품은 상품 수령일로부터 7일 이내 고객센터를 통해 접수할 수 있습니다.</p>
             <p>제품 하자, 오배송, 배송 중 파손의 경우 확인 후 교환 또는 반품 절차를 별도로 안내합니다.</p>
-            <p>교환/반품 접수 전 고객센터 010-2556-3263 또는 startupscon@gmail.com으로 먼저 문의해주세요.</p>
+            <p>
+              교환/반품 접수 전 고객센터 {BUSINESS_INFO.customerServicePhone} 또는 {BUSINESS_INFO.email}으로 먼저
+              문의해주세요.
+            </p>
           </section>
 
           <section className="space-y-3">
@@ -40,10 +45,10 @@ export default function ShippingPage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">5. 반품 주소 및 문의처</h2>
-            <p>고객센터: 010-2556-3263</p>
-            <p>이메일: startupscon@gmail.com</p>
+            <p>고객센터: {BUSINESS_INFO.customerServicePhone}</p>
+            <p>이메일: {BUSINESS_INFO.email}</p>
             <p>운영시간: 평일 10:00~17:00 / 점심 12:00~13:00 / 주말·공휴일 휴무</p>
-            <p>사업장 주소: 서울특별시 강남구 테헤란로43길 14, 13층(역삼동, 청수빌딩 13층)</p>
+            <p>사업장 주소: {BUSINESS_INFO.addressDesktop}</p>
             <p>반품 주소 및 회수 방법은 상품과 사유에 따라 달라질 수 있으므로 접수 후 별도 안내드립니다.</p>
           </section>
         </div>

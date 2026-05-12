@@ -1,4 +1,4 @@
-import { OrderStatus, PaymentMethod } from "@prisma/client";
+import { OrderStatus, PaymentMethod, ProductStatus } from "@prisma/client";
 import { z } from "zod";
 
 import { prisma } from "@/lib/db";
@@ -91,7 +91,10 @@ export async function createOrder(input: CreateOrderInput) {
   }
 
   const products = await prisma.product.findMany({
-    where: { slug: { in: normalizedItems.map((item) => item.productSlug) } },
+    where: {
+      slug: { in: normalizedItems.map((item) => item.productSlug) },
+      status: ProductStatus.ACTIVE,
+    },
   });
 
   if (products.length !== normalizedItems.length) {

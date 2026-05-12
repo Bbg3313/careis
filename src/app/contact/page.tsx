@@ -1,4 +1,5 @@
 import { SiteLogo } from "@/components/site-logo";
+import { BUSINESS_INFO } from "@/lib/business-info";
 
 export default function ContactPage() {
   return (
@@ -22,7 +23,7 @@ export default function ContactPage() {
           <p className="text-sm font-semibold text-stone-900">문의 채널</p>
           <div className="mt-5 space-y-4 text-sm leading-8 text-stone-600">
             <p>
-              <strong className="text-stone-900">전화</strong>: 010-2556-3263
+              <strong className="text-stone-900">전화</strong>: {BUSINESS_INFO.customerServicePhone}
             </p>
             <p>
               <strong className="text-stone-900">운영시간</strong>: 평일 10:00~17:00 · 점심 12:00~13:00 · 주말·공휴일 휴무
@@ -31,17 +32,16 @@ export default function ContactPage() {
               <strong className="text-stone-900">인스타그램</strong>: @careis.official
             </p>
             <p>
-              <strong className="text-stone-900">이메일</strong>: startupscon@gmail.com
+              <strong className="text-stone-900">이메일</strong>: {BUSINESS_INFO.email}
             </p>
             <p className="copy-pretty">
-              <strong className="text-stone-900">주소</strong>: 서울 강남구 역삼동 테헤란로 43길 14,
-              청수빌딩 13층
+              <strong className="text-stone-900">사업장 주소</strong>: {BUSINESS_INFO.addressDesktop}
             </p>
             <p>
-              <strong className="text-stone-900">사업자번호</strong>: 215-86-78967
+              <strong className="text-stone-900">사업자등록번호</strong>: {BUSINESS_INFO.registrationNumber}
             </p>
             <p>
-              <strong className="text-stone-900">통신판매업</strong>: 제2012-서울강남-01016호
+              <strong className="text-stone-900">통신판매업 신고번호</strong>: {BUSINESS_INFO.mailOrderReportNumber}
             </p>
           </div>
         </article>

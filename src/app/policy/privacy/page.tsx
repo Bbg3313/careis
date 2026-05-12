@@ -1,3 +1,5 @@
+import { privacyCompanyNoticeLine } from "@/lib/business-info";
+
 export default function PrivacyPage() {
   return (
     <div className="space-y-8 pb-20">
@@ -11,7 +13,7 @@ export default function PrivacyPage() {
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">0. 개인정보처리방침 적용 대상</h2>
             <p>본 방침은 CAREIS가 운영하는 웹사이트 및 비회원 주문, 고객 문의, 결제 및 배송 관련 서비스 전반에 적용됩니다.</p>
-            <p>상호: 케어이즈 / 대표자: 이명규 / 연락처: 010-2556-3263 / 이메일: startupscon@gmail.com</p>
+            <p>{privacyCompanyNoticeLine()}</p>
           </section>
 
           <section className="space-y-3">
