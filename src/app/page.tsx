@@ -75,13 +75,13 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="hero-motion-root relative mx-auto w-full max-w-[440px] overflow-hidden rounded-[22px] bg-[linear-gradient(135deg,#f5f1ea_0%,#ffffff_100%)] aspect-[4/5] md:max-w-none md:aspect-auto md:h-[560px] md:rounded-none lg:h-[640px]">
+          <div className="hero-motion-root relative mx-auto aspect-square w-full max-w-[min(100vw-2.5rem,440px)] overflow-hidden rounded-[22px] bg-[linear-gradient(135deg,#f5f1ea_0%,#ffffff_100%)] sm:max-w-[460px] md:max-w-[min(560px,48vw)] md:rounded-[28px] lg:max-w-[min(640px,44vw)]">
             <MotionMedia
               frames={homeVisuals.heroMotion}
               alt="CAREIS hero visual"
               priority
               className="absolute inset-0"
-              objectFit="contain"
+              objectFit="cover"
               quality={92}
               overlayClassName="absolute inset-0 bg-[linear-gradient(135deg,rgba(245,241,234,0.16)_0%,rgba(255,255,255,0.22)_100%)]"
             />

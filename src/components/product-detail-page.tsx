@@ -202,7 +202,7 @@ function IlluminatorDetailPage({
                 </div>
 
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-                  <div className="relative min-h-[300px] overflow-hidden rounded-[26px] bg-white/10 shadow-[0_34px_90px_rgba(0,0,0,0.35)] sm:min-h-[400px] md:rounded-[34px] lg:min-h-[520px]">
+                  <div className="relative mx-auto aspect-square w-full max-w-[min(100%,440px)] overflow-hidden rounded-[26px] bg-white/10 shadow-[0_34px_90px_rgba(0,0,0,0.35)] md:max-w-[min(100%,520px)] md:rounded-[34px] lg:mx-0 lg:max-w-none">
                     <Image
                       src={visual.hero}
                       alt={visual.alt}
@@ -215,7 +215,10 @@ function IlluminatorDetailPage({
                   </div>
                   <div className="hidden gap-4 lg:grid">
                     {visual.gallery.slice(1, 3).map((image, index) => (
-                      <div key={image + index} className="relative min-h-[248px] overflow-hidden rounded-[26px] bg-white/10">
+                      <div
+                        key={image + index}
+                        className="relative aspect-square w-full min-h-0 overflow-hidden rounded-[26px] bg-white/10"
+                      >
                         <Image
                           src={image}
                           alt={`${product.name} 서브 이미지 ${index + 1}`}
@@ -275,6 +278,7 @@ function IlluminatorDetailPage({
           <section>
             <SunPackDetailGallery
               accent="cool"
+              mainFrame="square"
               maxWidthPx={ILLUMINATOR_DETAIL_MAX_WIDTH_PX}
               defaultMainSrc={illuminatorDetailAssets.heroImage}
               thumbnailSrcs={[...illuminatorDetailAssets.thumbnailImages]}

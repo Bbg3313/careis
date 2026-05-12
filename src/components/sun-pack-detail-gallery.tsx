@@ -19,6 +19,11 @@ type SunPackDetailGalleryProps = {
   maxWidthPx?: number;
   /** 썸네일 선택 링 색 — cool 은 슬레이트 톤 */
   accent?: "warm" | "cool";
+  /**
+   * intrinsic: 원본 비율(선팩 800² 등).
+   * square: 선팩 상단과 동일한 정사각 프레임 + object-cover (세로 원본도 통일).
+   */
+  mainFrame?: "intrinsic" | "square";
 };
 
 const THUMB_SIZES = `(max-width: 640px) 28vw, (max-width: 1024px) 160px, 220px`;
@@ -31,6 +36,7 @@ export function SunPackDetailGallery({
   productName,
   maxWidthPx = SUN_PACK_DETAIL_MAX_WIDTH_PX,
   accent = "warm",
+  mainFrame = "intrinsic",
 }: SunPackDetailGalleryProps) {
   const MAIN_SIZES = `(max-width: 768px) 100vw, (max-width: 1280px) min(${maxWidthPx}px, 90vw), min(${maxWidthPx}px, 1200px)`;
   const thumbRing =
@@ -56,8 +62,35 @@ export function SunPackDetailGallery({
       className="w-full space-y-4"
       style={{ maxWidth: maxWidthPx }}
     >
-      <div className="overflow-hidden rounded-[20px] border border-stone-200 bg-white">
-        {isGifPath(mainSrc) ? (
+      <div
+        className={`overflow-hidden rounded-[20px] border border-stone-200 bg-white ${
+          mainFrame === "square" ? "relative aspect-square w-full" : ""
+        }`}
+      >
+        {mainFrame === "square" ? (
+          isGifPath(mainSrc) ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={mainSrc}
+              alt={alt}
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
+          ) : (
+            <Image
+              src={mainSrc}
+              alt={alt}
+              fill
+              className="object-cover"
+              sizes={MAIN_SIZES}
+              quality={100}
+              unoptimized
+              priority
+            />
+          )
+        ) : isGifPath(mainSrc) ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={mainSrc}
@@ -95,7 +128,7 @@ export function SunPackDetailGallery({
               }}
               type="button"
               onClick={() => selectThumb(src, index)}
-              className={`relative aspect-[2/3] min-h-0 min-w-0 flex-1 basis-0 overflow-hidden rounded-[8px] border bg-white text-left shadow-sm transition ${
+              className={`relative aspect-square min-h-0 min-w-0 flex-1 basis-0 overflow-hidden rounded-[8px] border bg-white text-left shadow-sm transition ${
                 selected ? thumbRing : thumbRingIdle
               }`}
               aria-label={`${productName} 썸네일 ${index + 1}번 보기`}

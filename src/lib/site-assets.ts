@@ -109,7 +109,8 @@ export const sunPackDetailAssets = {
 /** 일루미네이터 상세 상단 썸네일(중복 없이 3장 순환) */
 export const illuminatorDetailAssets = {
   heroImage: "/images/illum-hero-lifestyle.png",
-  heroPixelSize: { width: 780, height: 1024 },
+  /** 정사각 프레임 + cover 기준(실파일과 무관하게 레이아웃만 맞춤) */
+  heroPixelSize: { width: 1024, height: 1024 },
   thumbnailImages: [
     "/images/illum-hero-lifestyle.png",
     "/images/illum-hero-hands.png",
