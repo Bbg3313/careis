@@ -28,7 +28,7 @@ export function TossCheckoutButton({
   const onPay = useCallback(async () => {
     setErrorMessage(null);
     if (!clientKey) {
-      setErrorMessage("클라이언트 키가 없습니다. NEXT_PUBLIC_TOSS_CLIENT_KEY를 확인해주세요.");
+      setErrorMessage("클라이언트 키를 확인해주세요. (TOSS_CLIENT_KEY 또는 NEXT_PUBLIC_TOSS_CLIENT_KEY)");
       return;
     }
 
@@ -71,11 +71,7 @@ export function TossCheckoutButton({
       >
         {loading ? "결제창 여는 중…" : "토스페이먼츠로 결제하기"}
       </button>
-      <p className="text-xs leading-6 text-stone-500">
-        테스트·라이브 모두 토스 개발자센터에서 발급한 <strong className="font-medium text-stone-700">클라이언트 키</strong>와
-        같은 결제위젯 연동 쌍의 시크릿 키를 쓰세요. 배포 URL은 콘솔 &gt; 개발 정보 &gt; 리다이렉트 URL에 등록해야
-        결제창이 열립니다.
-      </p>
+      <p className="text-center text-[11px] leading-5 text-stone-400">외부 결제창으로 이동합니다.</p>
     </div>
   );
 }
