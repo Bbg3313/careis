@@ -7,7 +7,7 @@ import { splitParagraphs } from "@/lib/text-paragraphs";
 
 const BANNER = "/images/illum-hero-marble.png";
 const HERO = "/images/illum-hero-hands.png";
-const MODEL = "/images/illum-hero-lifestyle.png";
+const MODEL = "/images/illum-hero-apply.png";
 
 export function IlluminatorDetailStory({ product }: { product: ProductContent }) {
   const [s0, s1, s2, s3] = product.sections;

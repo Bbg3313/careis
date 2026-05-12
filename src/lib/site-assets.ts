@@ -18,12 +18,13 @@ export const homeVisuals = {
     "/images/illum-hero-lifestyle.png",
     "/images/illum-hero-hands.png",
     "/images/illum-hero-marble.png",
+    "/images/illum-hero-apply.png",
   ],
   brandFilm: [
     "/images/sun-model-banner.png",
     "/images/illum-hero-lifestyle.png",
+    "/images/illum-hero-apply.png",
     "/images/illum-hero-marble.png",
-    "/images/illum-hero-hands.png",
   ],
 };
 
@@ -50,7 +51,7 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
       "/images/illum-hero-hands.png",
       "/images/illum-hero-marble.png",
       "/images/illum-hero-lifestyle.png",
-      "/images/illum-hero-marble.png",
+      "/images/illum-hero-apply.png",
       "/images/illum-hero-hands.png",
     ],
   },
@@ -106,7 +107,7 @@ export const sunPackDetailAssets = {
   ] satisfies SunPackStorySlide[],
 };
 
-/** 일루미네이터 상세 상단 썸네일(중복 없이 3장 순환) */
+/** 일루미네이터 상세 상단 썸네일(정사각 스트립) */
 export const illuminatorDetailAssets = {
   heroImage: "/images/illum-hero-lifestyle.png",
   /** 정사각 프레임 + cover 기준(실파일과 무관하게 레이아웃만 맞춤) */
@@ -115,5 +116,6 @@ export const illuminatorDetailAssets = {
     "/images/illum-hero-lifestyle.png",
     "/images/illum-hero-hands.png",
     "/images/illum-hero-marble.png",
+    "/images/illum-hero-apply.png",
   ],
 } as const;
