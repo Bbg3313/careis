@@ -5,9 +5,9 @@ import type { ProductContent } from "@/lib/product-data";
 import { ILLUMINATOR_DETAIL_MAX_WIDTH_PX } from "@/lib/site-assets";
 import { splitParagraphs } from "@/lib/text-paragraphs";
 
-const BANNER = "/images/illum-model-banner.png";
-const HERO = "/images/illum-hero.png";
-const MODEL = "/images/illum-model.png";
+const BANNER = "/images/illum-hero-lifestyle.png";
+const HERO = "/images/illum-hero-hands.png";
+const MODEL = "/images/illum-hero-lifestyle.png";
 
 export function IlluminatorDetailStory({ product }: { product: ProductContent }) {
   const [s0, s1, s2, s3] = product.sections;

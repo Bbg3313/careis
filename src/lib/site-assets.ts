@@ -9,20 +9,20 @@ type ProductVisualSet = {
 
 export const homeVisuals = {
   sunHero: "/images/sun-model-banner.png",
-  illuminatorHero: "/images/illum-model.png",
+  illuminatorHero: "/images/illum-hero-lifestyle.png",
   /** public 폴더에 실제 존재하는 이미지만 사용 */
   heroMotion: [
     "/images/sun-model-banner.png",
     "/images/sunpack-thumb-02.png",
     "/images/sunpack-thumb-04.png",
-    "/images/illum-model-banner.png",
-    "/images/illum-hero.png",
+    "/images/illum-hero-lifestyle.png",
+    "/images/illum-hero-hands.png",
   ],
   brandFilm: [
     "/images/sun-model-banner.png",
-    "/images/illum-model.png",
+    "/images/illum-hero-hands.png",
     "/images/sunpack-thumb-03.png",
-    "/images/illum-model-banner.png",
+    "/images/illum-hero-lifestyle.png",
   ],
 };
 
@@ -42,15 +42,15 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
     ],
   },
   illuminator: {
-    hero: "/images/illum-hero.png",
-    card: "/images/illum-model.png",
+    hero: "/images/illum-hero-lifestyle.png",
+    card: "/images/illum-hero-hands.png",
     alt: "일루미네이터 시스테아민 5% 제품 이미지",
     gallery: [
-      "/images/illum-hero.png",
-      "/images/illum-model-banner.png",
-      "/images/illum-model.png",
-      "/images/illum-model-banner.png",
-      "/images/illum-hero.png",
+      "/images/illum-hero-lifestyle.png",
+      "/images/illum-hero-hands.png",
+      "/images/illum-hero-lifestyle.png",
+      "/images/illum-hero-hands.png",
+      "/images/illum-hero-lifestyle.png",
     ],
   },
 };
@@ -107,11 +107,11 @@ export const sunPackDetailAssets = {
 
 /** 일루미네이터 상세 상단 썸네일(중복 없이 3장 순환) */
 export const illuminatorDetailAssets = {
-  heroImage: "/images/illum-model-banner.png",
-  heroPixelSize: { width: 1200, height: 750 },
+  heroImage: "/images/illum-hero-lifestyle.png",
+  heroPixelSize: { width: 780, height: 1024 },
   thumbnailImages: [
-    "/images/illum-model-banner.png",
-    "/images/illum-hero.png",
-    "/images/illum-model.png",
+    "/images/illum-hero-lifestyle.png",
+    "/images/illum-hero-hands.png",
+    "/images/illum-hero-lifestyle.png",
   ],
 } as const;

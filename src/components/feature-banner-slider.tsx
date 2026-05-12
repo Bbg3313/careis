@@ -41,7 +41,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
             }`}
           >
             <div
-              className={`relative grid min-h-[580px] items-stretch gap-6 overflow-hidden px-5 py-7 ring-1 ring-inset md:min-h-[640px] md:gap-8 md:px-11 md:py-11 lg:min-h-[700px] lg:grid-cols-[1fr_1.06fr] lg:px-14 ${
+              className={`relative grid h-full min-h-0 items-stretch gap-6 overflow-hidden px-5 py-7 ring-1 ring-inset md:gap-8 md:px-11 md:py-11 lg:min-h-[700px] lg:grid-cols-[1fr_1.06fr] lg:px-14 ${
                 slide.tone === "light"
                   ? "bg-[radial-gradient(circle_at_18%_18%,rgba(211,180,132,0.2)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_32%),linear-gradient(135deg,#fffdf9_0%,#faf2e6_54%,#f1e6d4_100%)] text-stone-900 ring-[rgba(184,145,86,0.22)] shadow-[inset_0_1px_0_rgba(255,255,255,0.65),inset_0_-1px_0_rgba(184,145,86,0.07)]"
                   : "bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.1)_0%,rgba(255,255,255,0)_32%),radial-gradient(circle_at_84%_22%,rgba(168,188,212,0.2)_0%,rgba(255,255,255,0)_34%),linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] text-white ring-[rgba(255,255,255,0.22)] shadow-[inset_0_1px_0_rgba(255,255,255,0.26),inset_0_-1px_0_rgba(0,0,0,0.38)]"
@@ -90,7 +90,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                     {slide.label}
                   </p>
                   <h2
-                    className={`headline-balance mt-3 text-[23px] font-semibold leading-[1.16] tracking-[-0.04em] md:text-[32px] lg:mt-4 lg:text-[36px] lg:whitespace-nowrap ${
+                    className={`headline-balance mt-3 break-keep text-pretty text-[23px] font-semibold leading-[1.2] tracking-[-0.04em] md:text-[32px] lg:mt-4 lg:text-[36px] lg:whitespace-nowrap ${
                       slide.tone === "light" ? "text-stone-900" : "text-white"
                     }`}
                   >
@@ -120,18 +120,18 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                           slide.tone === "light" ? "bg-[#b89156]" : "bg-white/55"
                         }`}
                       />
-                      <span>{highlight}</span>
+                      <span className="break-keep">{highlight}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="relative z-10 min-h-[280px] w-full self-stretch md:min-h-[520px] lg:h-full lg:min-h-[620px]">
+              <div className="relative z-10 w-full max-lg:min-h-[min(92vw,480px)] md:min-h-[520px] lg:h-full lg:min-h-[620px]">
                 <Image
                   src={slide.image}
                   alt={slide.imageAlt}
                   fill
-                  className="object-cover object-center max-lg:object-bottom lg:object-center"
+                  className="object-contain object-center px-0.5 pb-0.5 lg:object-cover lg:px-0 lg:pb-0"
                   sizes="(max-width: 1024px) 100vw, 46vw"
                   priority={index === 0}
                 />
@@ -141,7 +141,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
         );
       })}
 
-      <div className="invisible min-h-[580px] md:min-h-[640px] lg:min-h-[700px]" />
+      <div className="invisible min-h-[840px] lg:min-h-[700px]" />
 
       <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
         {slides.map((slide, index) => (

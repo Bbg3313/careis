@@ -23,7 +23,7 @@ export function SiteLogo({
   const sizeClass = compact
     ? cn("h-auto", className ?? "w-[108px] md:w-[132px]")
     : footer
-      ? "h-auto w-[124px] md:w-[152px]"
+      ? "h-auto w-[100px] sm:w-[112px] md:w-[152px]"
       : "h-auto w-[188px] md:w-[232px]";
 
   return (

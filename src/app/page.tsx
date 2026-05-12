@@ -35,7 +35,7 @@ export default function HomePage() {
   const illuminator = products.find((product) => product.slug === "illuminator");
 
   return (
-    <div className="space-y-16 pb-20 md:space-y-24 md:pb-24">
+    <div className="space-y-16 pb-20 text-pretty break-keep md:space-y-24 md:pb-24">
       <section className="relative overflow-hidden px-0 pb-6 pt-2 sm:px-2 md:pb-8 md:pt-4">
         <div className="absolute right-[-2rem] top-8 h-48 w-48 rounded-full bg-[#d4af37]/10 blur-3xl" />
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10">
@@ -44,13 +44,17 @@ export default function HomePage() {
               <p className="text-[13px] uppercase tracking-[0.15em] text-stone-500">
                 Day To Night Dermacosmetic
               </p>
-              <h1 className="display-font headline-balance text-[40px] font-semibold leading-[1.08] tracking-[-0.03em] text-stone-900 sm:text-5xl md:text-[64px]">
-                낮과 밤을 채우는 2-Step Dermacosmetic
+              <h1 className="display-font headline-balance text-[clamp(1.65rem,5.2vw+0.6rem,2.5rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-stone-900 sm:text-5xl sm:leading-[1.08] md:text-[64px]">
+                낮과 밤을 채우는
+                <span className="mt-1 block sm:mt-0 sm:inline sm:whitespace-normal">
+                  {" "}
+                  <span className="whitespace-nowrap sm:whitespace-normal">2-Step</span> Dermacosmetic
+                </span>
               </h1>
               <p className="copy-pretty max-w-xl pt-2 text-[15px] leading-[1.85] text-stone-600 md:pt-3 md:text-[17px]">
-                CAREIS는 낮에는 가볍게 보호하고 밤에는 집중적으로 정돈하는 2-Step 루틴을 선보입니다.
-                일상 속에서 매일 손이 가는 사용감과 프리미엄 무드를 담아, 하루의 피부 리듬을
-                우아하게 채웁니다.
+                CAREIS는 낮에는 가볍게 보호하고, 밤에는 집중적으로 정돈하는 2-Step 루틴을 선보입니다.
+                일상 속에서 매일 손이 가는 사용감과 프리미엄 무드를 담아 하루의 피부 리듬을 우아하게
+                채웁니다.
               </p>
             </div>
 
@@ -109,13 +113,13 @@ export default function HomePage() {
               <span className="h-2 w-2 rounded-full bg-[linear-gradient(135deg,#d4af37_0%,#9d7442_100%)] shadow-[0_0_12px_rgba(212,175,55,0.45)]" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7a5a36]">Clinical line</span>
             </div>
-            <h2 className="display-font mt-5 text-[26px] font-semibold leading-[1.2] tracking-[-0.03em] text-stone-900 md:mt-6 md:text-[42px] md:leading-[1.12]">
+            <h2 className="display-font headline-balance mt-5 text-[26px] font-semibold leading-[1.22] tracking-[-0.03em] text-stone-900 md:mt-6 md:text-[42px] md:leading-[1.12]">
               병원 채널에서 먼저 알려진{" "}
               <span className="bg-[linear-gradient(135deg,#c49a5c_0%,#8b673f_55%,#6b4f2e_100%)] bg-clip-text text-transparent">
                 더마 루틴
               </span>
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-[14px] leading-[1.75] text-stone-600 md:mt-6 md:text-[16px] md:leading-relaxed">
+            <p className="copy-pretty mx-auto mt-5 max-w-xl text-[14px] leading-[1.8] text-stone-600 md:mt-6 md:text-[16px] md:leading-relaxed">
               클리닉 유통을 통해 검증된 라인업으로, 낮에는 보호·밤에는 집중하는 리듬을 일상에 옮겼습니다.
             </p>
             <div className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-2 md:gap-3">
@@ -225,10 +229,19 @@ export default function HomePage() {
             </article>
           </div>
 
-          <p className="mx-auto mt-12 flex items-center justify-center gap-2 text-center text-[13px] text-stone-500 md:mt-14 md:text-[14px]">
-            <span className="inline-block h-px w-8 bg-[linear-gradient(90deg,transparent,#c9b08b,transparent)] md:w-12" aria-hidden />
-            상세 제품 정보는 아래 <span className="font-semibold text-[#8b673f]">PRODUCT</span>에서 확인할 수 있습니다.
-            <span className="inline-block h-px w-8 bg-[linear-gradient(90deg,transparent,#c9b08b,transparent)] md:w-12" aria-hidden />
+          <p className="mx-auto mt-12 max-w-md px-2 text-center text-[13px] leading-relaxed text-stone-500 md:mt-14 md:flex md:max-w-2xl md:items-center md:justify-center md:gap-3 md:px-0 md:text-[14px]">
+            <span
+              className="hidden h-px w-10 shrink-0 bg-[linear-gradient(90deg,transparent,#c9b08b,transparent)] md:inline-block md:w-12"
+              aria-hidden
+            />
+            <span className="copy-pretty md:max-w-none">
+              상세 제품 정보는 아래 <span className="font-semibold text-[#8b673f]">PRODUCT</span>에서 확인할 수
+              있습니다.
+            </span>
+            <span
+              className="hidden h-px w-10 shrink-0 bg-[linear-gradient(90deg,transparent,#c9b08b,transparent)] md:inline-block md:w-12"
+              aria-hidden
+            />
           </p>
         </div>
       </section>
@@ -253,9 +266,9 @@ export default function HomePage() {
                 </div>
 
                 <p className="mt-8 text-[12px] uppercase tracking-[0.26em] text-stone-500">Two Essential Solutions</p>
-                <h2 className="display-font headline-balance mt-5 text-[32px] font-semibold leading-[1.08] tracking-[-0.04em] text-stone-900 md:text-[64px]">
+                <h2 className="display-font headline-balance mt-5 text-[30px] font-semibold leading-[1.14] tracking-[-0.04em] text-stone-900 sm:text-[32px] md:text-[64px] md:leading-[1.08]">
                   낮과 밤을 나누는
-                  <span className="block text-[36px] italic tracking-[-0.03em] text-[#8b673f] md:text-[76px]">
+                  <span className="mt-1 block text-[34px] italic tracking-[-0.03em] text-[#8b673f] sm:text-[36px] md:mt-0 md:inline md:text-[76px]">
                     2-Step Solution
                   </span>
                 </h2>
@@ -294,12 +307,9 @@ export default function HomePage() {
                 <h2 className="display-font headline-balance mt-4 text-[40px] font-semibold tracking-[-0.02em] text-stone-900 md:text-[56px]">
                   DAY CARE
                 </h2>
-                <div className="mt-5 space-y-2 text-center text-stone-700">
-                  <p className="text-[18px] leading-[1.75] md:text-[20px]">
-                    자외선으로부터 피부를 보호하는
-                  </p>
-                  <p className="text-[18px] leading-[1.75] md:text-[20px]">
-                    프리미엄 선케어 솔루션
+                <div className="mt-5 text-center text-[18px] font-medium leading-[1.75] text-stone-700 md:text-[20px]">
+                  <p className="copy-pretty">
+                    자외선으로부터 피부를 보호하는 프리미엄 선케어 솔루션
                   </p>
                 </div>
 
@@ -354,12 +364,9 @@ export default function HomePage() {
                 <h2 className="display-font headline-balance mt-4 text-[40px] font-semibold tracking-[-0.02em] text-white md:text-[56px]">
                   NIGHT CARE
                 </h2>
-                <div className="mt-5 space-y-2 text-center text-white/82">
-                  <p className="text-[18px] leading-[1.75] md:text-[20px]">
-                    밤사이 집중 관리하는
-                  </p>
-                  <p className="text-[18px] leading-[1.75] md:text-[20px]">
-                    브라이트닝 인텐시브 케어
+                <div className="mt-5 text-center text-[18px] font-medium leading-[1.75] text-white/82 md:text-[20px]">
+                  <p className="copy-pretty">
+                    밤사이 집중 관리하는 브라이트닝 인텐시브 케어
                   </p>
                 </div>
 
@@ -412,12 +419,12 @@ export default function HomePage() {
             <p className="mt-8 text-[13px] uppercase tracking-[0.15em] text-stone-500">
               Purchase Guide
             </p>
-            <h2 className="display-font headline-balance mt-4 text-[28px] font-semibold leading-[1.15] tracking-[-0.02em] text-stone-900 sm:text-4xl md:text-[48px]">
+            <h2 className="display-font headline-balance mt-4 text-[28px] font-semibold leading-[1.2] tracking-[-0.02em] text-stone-900 sm:text-4xl md:text-[48px] md:leading-[1.15]">
               지금 바로 루틴을 시작하세요
             </h2>
             <p className="copy-pretty mx-auto mt-5 max-w-xl text-[15px] leading-[1.85] text-stone-600 sm:mt-6 sm:text-[16px] sm:leading-[1.9]">
-              DAY CARE와 NIGHT CARE 중 필요한 루틴부터 선택해 바로 구매할 수 있습니다. 두 제품의
-              분위기와 역할을 비교한 뒤, 나에게 더 잘 맞는 케어부터 가볍게 시작해보세요.
+              DAY CARE와 NIGHT CARE 중 필요한 루틴부터 선택해 바로 구매할 수 있습니다. 두 제품의 분위기와
+              역할을 비교한 뒤, 나에게 더 잘 맞는 케어부터 가볍게 시작해 보세요.
             </p>
 
             <div className="pt-10">
@@ -504,14 +511,15 @@ export default function HomePage() {
 
           <div className="relative">
             <p className="text-[12px] font-medium tracking-[0.18em] text-[#8b673f]">레퍼럴 안내</p>
-            <h2 className="display-font headline-balance mt-4 text-[32px] font-semibold leading-[1.18] tracking-[-0.02em] text-stone-900 md:text-[42px]">
+            <h2 className="display-font headline-balance mt-4 text-[30px] font-semibold leading-[1.22] tracking-[-0.02em] text-stone-900 md:text-[42px] md:leading-[1.18]">
               안내된 링크와 코드로
-              <span className="mt-1 block bg-[linear-gradient(92deg,#9d7442_0%,#c49a5c_42%,#8b673f_100%)] bg-clip-text text-transparent">
+              <span className="mt-1 block bg-[linear-gradient(92deg,#9d7442_0%,#c49a5c_42%,#8b673f_100%)] bg-clip-text text-transparent md:mt-0 md:inline">
                 주문하기
               </span>
             </h2>
             <p className="copy-pretty mx-auto mt-6 max-w-2xl text-[15px] leading-[1.85] text-stone-600">
-              인플루언서 등으로 받은 링크로 들어오거나, 주문 시 추천 코드를 입력하면 안내된 조건 그대로 결제할 수 있습니다.
+              인플루언서 등으로 받은 링크로 들어오거나, 주문 시 추천 코드를 입력하면 안내된 조건 그대로
+              결제할 수 있습니다.
             </p>
 
             <div className="mx-auto mt-8 grid max-w-3xl gap-4 text-left md:grid-cols-3">
