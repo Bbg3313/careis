@@ -49,7 +49,7 @@ export default function RootLayout({
           </Suspense>
           <ScrollToTopButton />
           <SiteHeader />
-          <main className="mx-auto max-w-7xl px-6 pb-10 pt-8 md:px-8 md:pb-14 md:pt-10 lg:pt-8">{children}</main>
+          <main className="mx-auto max-w-7xl px-4 pb-6 pt-5 md:px-8 md:pb-14 md:pt-10 lg:pt-8">{children}</main>
           <SiteFooter />
         </div>
       </body>

@@ -110,7 +110,7 @@ export function HomeVideoBanner() {
 
   return (
     <section className="relative left-1/2 w-[100vw] max-w-[100vw] -translate-x-1/2 overflow-x-clip bg-[linear-gradient(165deg,#f2f6fc_0%,#e4ecf7_42%,#d8e4f2_100%)] [-webkit-overflow-scrolling:touch]">
-      <div className="relative mx-auto w-full max-w-[1800px] px-3 pb-7 pt-5 sm:px-4 sm:pb-8 sm:pt-6 md:px-6 md:pb-12 md:pt-10 lg:px-8">
+      <div className="relative mx-auto w-full max-w-[1800px] px-3 pb-4 pt-3 sm:px-4 sm:pb-6 sm:pt-5 md:px-6 md:pb-12 md:pt-10 lg:px-8">
         <div className="pointer-events-none absolute inset-0 hidden md:block" aria-hidden>
           <video
             ref={ambientRef}

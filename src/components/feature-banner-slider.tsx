@@ -41,7 +41,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
             }`}
           >
             <div
-              className={`relative grid h-full min-h-0 items-stretch gap-6 overflow-hidden px-5 py-7 ring-1 ring-inset md:gap-8 md:px-11 md:py-11 lg:min-h-[700px] lg:grid-cols-[1fr_1.06fr] lg:px-14 ${
+              className={`relative grid h-full min-h-0 items-stretch gap-4 overflow-hidden px-4 py-5 ring-1 ring-inset md:gap-8 md:px-11 md:py-11 lg:min-h-[700px] lg:grid-cols-[1fr_1.06fr] lg:px-14 ${
                 slide.tone === "light"
                   ? "bg-[radial-gradient(circle_at_18%_18%,rgba(211,180,132,0.2)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_84%_22%,rgba(255,255,255,0.42)_0%,rgba(255,255,255,0)_32%),linear-gradient(135deg,#fffdf9_0%,#faf2e6_54%,#f1e6d4_100%)] text-stone-900 ring-[rgba(184,145,86,0.22)] shadow-[inset_0_1px_0_rgba(255,255,255,0.65),inset_0_-1px_0_rgba(184,145,86,0.07)]"
                   : "bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.1)_0%,rgba(255,255,255,0)_32%),radial-gradient(circle_at_84%_22%,rgba(168,188,212,0.2)_0%,rgba(255,255,255,0)_34%),linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] text-white ring-[rgba(255,255,255,0.22)] shadow-[inset_0_1px_0_rgba(255,255,255,0.26),inset_0_-1px_0_rgba(0,0,0,0.38)]"
@@ -98,14 +98,14 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   </h2>
                 </div>
                 <p
-                  className={`copy-pretty mt-10 translate-y-1.5 text-[15px] leading-[1.9] md:mt-14 md:translate-y-2 md:text-[17px] lg:mt-16 lg:translate-y-2.5 ${
+                  className={`copy-pretty mt-6 translate-y-1.5 text-[15px] leading-[1.9] md:mt-14 md:translate-y-2 md:text-[17px] lg:mt-16 lg:translate-y-2.5 ${
                     slide.tone === "light" ? "text-stone-600" : "text-white/72"
                   }`}
                 >
                   {slide.description}
                 </p>
 
-                <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5 md:mt-8 md:gap-3 lg:justify-start">
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 md:mt-8 md:gap-3 lg:justify-start">
                   {slide.highlights.map((highlight) => (
                     <div
                       key={highlight}
@@ -141,7 +141,7 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
         );
       })}
 
-      <div className="invisible min-h-[840px] lg:min-h-[700px]" />
+      <div className="invisible min-h-[min(88vw,440px)] sm:min-h-[500px] md:min-h-[580px] lg:min-h-[700px]" />
 
       <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
         {slides.map((slide, index) => (
