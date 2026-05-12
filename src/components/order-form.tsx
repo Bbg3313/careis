@@ -403,8 +403,8 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           <textarea
             value={memo}
             onChange={(event) => setMemo(event.target.value)}
-            rows={4}
-            className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 outline-none"
+            rows={2}
+            className="min-h-0 w-full resize-y rounded-2xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm leading-6 outline-none"
           />
         </label>
 
@@ -436,8 +436,55 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             네이버페이, 신용카드, 토스페이, 카카오페이 중 원하는 방식으로 결제를 진행할 수 있습니다.
           </p>
         </div>
+      </section>
 
-        <div className="space-y-4 rounded-[24px] border border-[rgba(169,125,77,0.16)] bg-[#fcf8f2] p-5">
+      <aside className="space-y-6 rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-[#f8f3ec] p-5 md:rounded-[32px] md:p-8">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[0.28em] text-stone-500">Order Summary</p>
+          <h2 className="headline-balance text-2xl font-semibold text-stone-900">선택한 상품 확인</h2>
+          <p className="copy-pretty text-sm leading-6 text-stone-600">한 개만 선택하거나 두 제품을 함께 담아 결제를 진행할 수 있습니다.</p>
+        </div>
+
+        <div className="rounded-[24px] bg-white p-5 md:rounded-[28px] md:p-6">
+          {orderItems.length === 0 ? (
+            <p className="text-sm leading-7 text-stone-500">아직 선택한 상품이 없습니다. 왼쪽에서 상품을 선택해주세요.</p>
+          ) : (
+            <div className="space-y-4">
+              {orderItems.map((item) => (
+                <div key={item.productSlug} className="border-b border-stone-100 pb-4 last:border-b-0 last:pb-0">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-sm font-semibold text-stone-900">{item.name}</p>
+                      <p className="mt-1 text-xs uppercase tracking-[0.14em] text-stone-500">{item.englishName}</p>
+                    </div>
+                    <div className="text-right text-sm text-stone-600">
+                      <p>{item.quantity}개</p>
+                      <p className="mt-1 font-medium text-stone-900">{formatCurrency(item.amount)}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between pt-4 text-base font-semibold text-stone-900">
+            <span>총 결제 예정 금액</span>
+            <span>{formatCurrency(totalAmount)}</span>
+          </div>
+        </div>
+
+        <div className="space-y-2 rounded-[24px] bg-white p-5 text-sm text-stone-600 md:rounded-[28px] md:p-6">
+          <div className="flex items-center justify-between">
+            <span>레퍼럴 코드</span>
+            <strong className="text-stone-900">{resolvedReferralCode ?? "직접 유입"}</strong>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>결제 상태</span>
+            <strong className="text-amber-700">결제 진행 전</strong>
+          </div>
+        </div>
+
+        <div className="space-y-4 rounded-[24px] border border-[rgba(169,125,77,0.16)] bg-[#fcf8f2] p-5 md:rounded-[28px] md:p-6">
           <div>
             <p className="text-sm font-semibold text-stone-900">구매 동의</p>
             <p className="mt-2 text-xs leading-6 text-stone-500">
@@ -551,60 +598,6 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
               </span>
             </label>
           </div>
-        </div>
-      </section>
-
-      <aside className="space-y-6 rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-[#f8f3ec] p-5 md:rounded-[32px] md:p-8">
-        <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.28em] text-stone-500">Order Summary</p>
-          <h2 className="headline-balance text-2xl font-semibold text-stone-900">선택한 상품 확인</h2>
-          <p className="copy-pretty text-sm leading-6 text-stone-600">한 개만 선택하거나 두 제품을 함께 담아 결제를 진행할 수 있습니다.</p>
-        </div>
-
-        <div className="rounded-[24px] bg-white p-5 md:rounded-[28px] md:p-6">
-          {orderItems.length === 0 ? (
-            <p className="text-sm leading-7 text-stone-500">아직 선택한 상품이 없습니다. 왼쪽에서 상품을 선택해주세요.</p>
-          ) : (
-            <div className="space-y-4">
-              {orderItems.map((item) => (
-                <div key={item.productSlug} className="border-b border-stone-100 pb-4 last:border-b-0 last:pb-0">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-sm font-semibold text-stone-900">{item.name}</p>
-                      <p className="mt-1 text-xs uppercase tracking-[0.14em] text-stone-500">{item.englishName}</p>
-                    </div>
-                    <div className="text-right text-sm text-stone-600">
-                      <p>{item.quantity}개</p>
-                      <p className="mt-1 font-medium text-stone-900">{formatCurrency(item.amount)}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="flex items-center justify-between pt-4 text-base font-semibold text-stone-900">
-            <span>총 결제 예정 금액</span>
-            <span>{formatCurrency(totalAmount)}</span>
-          </div>
-        </div>
-
-        <div className="space-y-2 rounded-[24px] bg-white p-5 text-sm text-stone-600 md:rounded-[28px] md:p-6">
-          <div className="flex items-center justify-between">
-            <span>레퍼럴 코드</span>
-            <strong className="text-stone-900">{resolvedReferralCode ?? "직접 유입"}</strong>
-          </div>
-          <div className="flex items-center justify-between">
-            <span>결제 상태</span>
-            <strong className="text-amber-700">결제 진행 전</strong>
-          </div>
-        </div>
-
-        <div className="space-y-3 rounded-[24px] bg-white p-5 text-sm leading-6 text-stone-600 md:rounded-[28px] md:p-6">
-          <p className="font-semibold text-stone-900">주문 전 확인사항</p>
-          <p>비회원 주문이 가능하며, 주문 완료 후 선택한 결제수단으로 안전하게 결제가 진행됩니다.</p>
-          <p>주문 및 결제 문의는 고객센터 010-2556-3263 또는 startupscon@gmail.com으로 접수할 수 있습니다.</p>
-          <p>운영시간은 평일 10:00~17:00이며, 점심시간은 12:00~13:00, 주말·공휴일은 휴무입니다.</p>
         </div>
 
         {errorMessage ? <p className="text-sm text-red-600">{errorMessage}</p> : null}
