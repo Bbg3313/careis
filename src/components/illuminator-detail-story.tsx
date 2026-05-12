@@ -5,7 +5,7 @@ import type { ProductContent } from "@/lib/product-data";
 import { ILLUMINATOR_DETAIL_MAX_WIDTH_PX } from "@/lib/site-assets";
 import { splitParagraphs } from "@/lib/text-paragraphs";
 
-const BANNER = "/images/illum-hero-lifestyle.png";
+const BANNER = "/images/illum-hero-marble.png";
 const HERO = "/images/illum-hero-hands.png";
 const MODEL = "/images/illum-hero-lifestyle.png";
 

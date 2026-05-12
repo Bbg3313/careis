@@ -17,12 +17,13 @@ export const homeVisuals = {
     "/images/sunpack-thumb-04.png",
     "/images/illum-hero-lifestyle.png",
     "/images/illum-hero-hands.png",
+    "/images/illum-hero-marble.png",
   ],
   brandFilm: [
     "/images/sun-model-banner.png",
-    "/images/illum-hero-hands.png",
-    "/images/sunpack-thumb-03.png",
     "/images/illum-hero-lifestyle.png",
+    "/images/illum-hero-marble.png",
+    "/images/illum-hero-hands.png",
   ],
 };
 
@@ -46,11 +47,11 @@ export const productVisuals: Record<"sun-pack" | "illuminator", ProductVisualSet
     card: "/images/illum-hero-hands.png",
     alt: "일루미네이터 시스테아민 5% 제품 이미지",
     gallery: [
-      "/images/illum-hero-lifestyle.png",
       "/images/illum-hero-hands.png",
+      "/images/illum-hero-marble.png",
       "/images/illum-hero-lifestyle.png",
+      "/images/illum-hero-marble.png",
       "/images/illum-hero-hands.png",
-      "/images/illum-hero-lifestyle.png",
     ],
   },
 };
@@ -112,6 +113,6 @@ export const illuminatorDetailAssets = {
   thumbnailImages: [
     "/images/illum-hero-lifestyle.png",
     "/images/illum-hero-hands.png",
-    "/images/illum-hero-lifestyle.png",
+    "/images/illum-hero-marble.png",
   ],
 } as const;
