@@ -8,7 +8,7 @@ import { splitParagraphs } from "@/lib/text-paragraphs";
 const BANNER = "/images/illum-hero-marble.png";
 /** 합성 이슈로 lifestyle·hands 에셋 제거 — 마블 정지컷으로 대체 */
 const HERO = "/images/illum-hero-marble.png";
-const MODEL = "/images/illum-hero-apply.png";
+const MODEL = "/images/illum-hero-glam-02.png";
 
 export function IlluminatorDetailStory({ product }: { product: ProductContent }) {
   const [s0, s1, s2, s3] = product.sections;
