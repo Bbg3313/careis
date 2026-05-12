@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { FeatureBannerSlider } from "@/components/feature-banner-slider";
-import { HomeHeroStripBanner } from "@/components/home-hero-strip-banner";
 import { HomeVideoBanner } from "@/components/home-video-banner";
 import { MotionMedia } from "@/components/motion-media";
 import { products } from "@/lib/product-data";
@@ -90,11 +89,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="flex flex-col gap-7 md:gap-9">
-        <HomeHeroStripBanner />
-
-        <HomeVideoBanner />
-      </div>
+      <HomeVideoBanner />
 
       <section
         id="brand"
@@ -149,7 +144,7 @@ export default function HomePage() {
               ].map((line, i) => (
                 <li
                   key={line}
-                  className="group relative flex gap-2 rounded-lg border border-[rgba(184,145,86,0.12)] bg-[linear-gradient(135deg,rgba(255,255,255,0.92)_0%,rgba(255,252,247,0.88)_100%)] px-2.5 py-2 shadow-[0_6px_22px_rgba(89,63,28,0.05)] ring-1 ring-white/60 transition hover:border-[rgba(184,145,86,0.26)] hover:shadow-[0_10px_28px_rgba(89,63,28,0.07)] sm:gap-2.5 sm:rounded-xl sm:px-3 sm:py-2.5 md:gap-3 md:px-4 md:py-3"
+                  className="group relative flex items-center gap-2 rounded-lg border border-[rgba(184,145,86,0.12)] bg-[linear-gradient(135deg,rgba(255,255,255,0.92)_0%,rgba(255,252,247,0.88)_100%)] px-2.5 py-2 shadow-[0_6px_22px_rgba(89,63,28,0.05)] ring-1 ring-white/60 transition hover:border-[rgba(184,145,86,0.26)] hover:shadow-[0_10px_28px_rgba(89,63,28,0.07)] sm:gap-2.5 sm:rounded-xl sm:px-3 sm:py-2.5 md:gap-3 md:px-4 md:py-3"
                 >
                   <span
                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(145deg,#d4af37_0%,#b89156_48%,#8b673f_100%)] text-[10px] font-bold tabular-nums text-white shadow-[0_4px_12px_rgba(184,145,86,0.3)] sm:h-8 sm:w-8 sm:rounded-lg sm:text-[11px] md:h-9 md:w-9 md:rounded-xl md:text-[12px]"
@@ -163,22 +158,24 @@ export default function HomePage() {
                 </li>
               ))}
             </ul>
-          </div>
 
-          <div className="mx-auto mt-10 grid max-w-5xl gap-3 md:mt-12 md:grid-cols-2 md:gap-4">
+            <div className="mt-8 grid gap-3 md:mt-10 md:grid-cols-2 md:gap-4">
             <article className="relative overflow-hidden rounded-2xl border border-[rgba(184,145,86,0.22)] bg-white/95 p-4 shadow-[0_4px_28px_rgba(62,44,18,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-5">
               <div
                 className="pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#e8c96b_0%,#b8893a_55%,#9a7346_100%)]"
                 aria-hidden
               />
               <div className="relative pl-4 md:pl-5">
-                <div className="flex items-center gap-3">
+                <div className="flex items-start gap-3">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffaf0] text-[#a67c2e] ring-1 ring-[rgba(212,175,55,0.28)]">
                     <BrandDayGlyph />
                   </span>
-                  <h3 className="min-w-0 text-[16px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:text-[17px]">
-                    가벼운 고보호
-                  </h3>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7346]">Sun Pack</p>
+                    <h3 className="mt-1.5 text-[16px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:mt-2 md:text-[17px]">
+                      가벼운 고보호
+                    </h3>
+                  </div>
                 </div>
                 <ul className="mt-4 space-y-2 border-t border-stone-100 pt-4 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
                   <li className="flex gap-2.5 [word-break:keep-all]">
@@ -203,13 +200,16 @@ export default function HomePage() {
                 aria-hidden
               />
               <div className="relative pl-4 md:pl-5">
-                <div className="flex items-center gap-3">
+                <div className="flex items-start gap-3">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f4f7fb] text-[#5c6d84] ring-1 ring-[rgba(123,143,168,0.3)]">
                     <BrandNightGlyph />
                   </span>
-                  <h3 className="min-w-0 text-[16px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:text-[17px]">
-                    야간 집중 케어
-                  </h3>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#5c6d84]">Illuminator</p>
+                    <h3 className="mt-1.5 text-[16px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:mt-2 md:text-[17px]">
+                      야간 집중 케어
+                    </h3>
+                  </div>
                 </div>
                 <ul className="mt-4 space-y-2 border-t border-stone-100 pt-4 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
                   <li className="flex gap-2.5 [word-break:keep-all]">
@@ -227,6 +227,7 @@ export default function HomePage() {
                 </ul>
               </div>
             </article>
+            </div>
           </div>
 
           <p className="copy-pretty mx-auto mt-10 max-w-lg px-2 text-center text-[13px] leading-relaxed text-stone-500 md:mt-12 md:max-w-2xl md:text-sm">
