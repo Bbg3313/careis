@@ -89,7 +89,33 @@ export default function HomePage() {
         </div>
       </section>
 
-      <HomeVideoBanner />
+      <div className="flex flex-col gap-7 md:gap-9">
+        <section
+          aria-label="제품 비주얼"
+          className="relative left-1/2 w-[100vw] max-w-[100vw] -translate-x-1/2 overflow-x-clip"
+        >
+          <Image
+            src="/images/home-hero-strip-sun.png"
+            alt="심플스틱 선팩 SIMPLE STICK SUN PACK 제품 이미지"
+            width={1024}
+            height={426}
+            className="block h-auto w-full"
+            sizes="100vw"
+            quality={90}
+          />
+          <Image
+            src="/images/home-hero-strip-night.png"
+            alt="심플스틱 일루미네이터 SIMPLE STICK 야간 케어 제품 이미지"
+            width={1024}
+            height={426}
+            className="block h-auto w-full"
+            sizes="100vw"
+            quality={90}
+          />
+        </section>
+
+        <HomeVideoBanner />
+      </div>
 
       <section
         id="brand"
@@ -575,26 +601,26 @@ function BuildingIcon() {
 
 function BrandDayGlyph() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.4" />
-      <path
-        d="M12 4v2M12 18v2M4 12h2M18 12h2"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
+      <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round" />
+      <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+      <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+      <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+      <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" />
     </svg>
   );
 }
 
 function BrandNightGlyph() {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
       <path
-        d="M13.8 3.5c-4.8 1.4-8 5.8-8 10.7 0 5 3.4 9.2 8 10.7a9 9 0 001.9.3 8.5 8.5 0 01-1.2-17z"
-        stroke="currentColor"
-        strokeWidth="1.35"
-        strokeLinejoin="round"
+        fill="currentColor"
+        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
       />
     </svg>
   );
