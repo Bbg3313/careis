@@ -34,9 +34,9 @@ export function HomeHeroStripBanner() {
   }, [len]);
 
   return (
-    <section aria-label="제품 비주얼" className="w-full">
-      <div className="mx-auto w-full max-w-[min(92vw,680px)] px-4 sm:max-w-[min(92vw,720px)] md:px-6 lg:max-w-[min(92vw,800px)]">
-        <div className="relative overflow-hidden rounded-2xl border border-black/[0.06] bg-stone-900 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/60 md:rounded-[28px]">
+    <section aria-label="제품 비주얼" className="w-full px-0 sm:px-2">
+      <div className="mx-auto w-full max-w-7xl">
+        <div className="relative overflow-hidden rounded-[22px] border border-black/[0.06] bg-stone-900 shadow-[0_18px_50px_rgba(0,0,0,0.12)] ring-1 ring-white/60 md:rounded-[28px]">
           <div
             className="relative w-full"
             style={{ aspectRatio: `${IMG_W} / ${IMG_H}` }}
@@ -56,7 +56,7 @@ export function HomeHeroStripBanner() {
                     alt={slide.alt}
                     fill
                     className="object-cover object-center"
-                    sizes="(max-width: 640px) min(92vw, 680px), (max-width: 1024px) 720px, 800px"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) min(100vw, 1280px), 1280px"
                     quality={100}
                     priority={index === 0}
                     draggable={false}

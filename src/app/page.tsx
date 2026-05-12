@@ -139,9 +139,8 @@ export default function HomePage() {
             </div>
           </header>
 
-          <div className="relative mx-auto mt-12 max-w-2xl md:mt-14 md:max-w-3xl">
-            <div className="pointer-events-none absolute -left-3 top-6 hidden h-[calc(100%-3rem)] w-px bg-[linear-gradient(180deg,rgba(184,145,86,0.45)_0%,rgba(184,145,86,0.08)_50%,rgba(142,164,197,0.35)_100%)] md:block lg:-left-4" />
-            <ul className="space-y-3 md:space-y-4">
+          <div className="relative mx-auto mt-10 max-w-2xl md:mt-12 md:max-w-4xl">
+            <ul className="grid grid-cols-2 gap-2 sm:gap-2.5 md:gap-3">
               {[
                 "병원·클리닉 유통 채널을 통해 먼저 소개된 라인",
                 "낮·밤 역할을 나눈 2-Step 데일리 루틴",
@@ -150,15 +149,15 @@ export default function HomePage() {
               ].map((line, i) => (
                 <li
                   key={line}
-                  className="group relative flex gap-3 rounded-2xl border border-[rgba(184,145,86,0.12)] bg-[linear-gradient(135deg,rgba(255,255,255,0.92)_0%,rgba(255,252,247,0.88)_100%)] px-4 py-3.5 shadow-[0_10px_36px_rgba(89,63,28,0.06)] ring-1 ring-white/60 transition hover:border-[rgba(184,145,86,0.28)] hover:shadow-[0_14px_40px_rgba(89,63,28,0.09)] md:gap-4 md:px-5 md:py-4"
+                  className="group relative flex gap-2 rounded-lg border border-[rgba(184,145,86,0.12)] bg-[linear-gradient(135deg,rgba(255,255,255,0.92)_0%,rgba(255,252,247,0.88)_100%)] px-2.5 py-2 shadow-[0_6px_22px_rgba(89,63,28,0.05)] ring-1 ring-white/60 transition hover:border-[rgba(184,145,86,0.26)] hover:shadow-[0_10px_28px_rgba(89,63,28,0.07)] sm:gap-2.5 sm:rounded-xl sm:px-3 sm:py-2.5 md:gap-3 md:px-4 md:py-3"
                 >
                   <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(145deg,#d4af37_0%,#b89156_48%,#8b673f_100%)] text-[12px] font-bold tabular-nums text-white shadow-[0_6px_16px_rgba(184,145,86,0.35)] md:h-10 md:w-10 md:text-[13px]"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[linear-gradient(145deg,#d4af37_0%,#b89156_48%,#8b673f_100%)] text-[10px] font-bold tabular-nums text-white shadow-[0_4px_12px_rgba(184,145,86,0.3)] sm:h-8 sm:w-8 sm:rounded-lg sm:text-[11px] md:h-9 md:w-9 md:rounded-xl md:text-[12px]"
                     aria-hidden
                   >
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="min-w-0 flex-1 pt-1 text-[13px] font-medium leading-snug text-stone-800 [word-break:keep-all] md:pt-1.5 md:text-[15px] md:leading-relaxed">
+                  <span className="min-w-0 flex-1 text-[11px] font-medium leading-[1.45] text-stone-800 [word-break:keep-all] sm:text-[13px] sm:leading-snug md:text-[14px]">
                     {line}
                   </span>
                 </li>
@@ -166,75 +165,63 @@ export default function HomePage() {
             </ul>
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-5xl gap-4 md:mt-14 md:grid-cols-2 md:gap-5">
-            <article className="relative overflow-hidden rounded-2xl border border-[rgba(184,145,86,0.22)] bg-white/95 p-6 shadow-[0_4px_28px_rgba(62,44,18,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-7">
+          <div className="mx-auto mt-10 grid max-w-5xl gap-3 md:mt-12 md:grid-cols-2 md:gap-4">
+            <article className="relative overflow-hidden rounded-2xl border border-[rgba(184,145,86,0.22)] bg-white/95 p-4 shadow-[0_4px_28px_rgba(62,44,18,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-5">
               <div
-                className="pointer-events-none absolute inset-y-5 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#e8c96b_0%,#b8893a_55%,#9a7346_100%)]"
+                className="pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#e8c96b_0%,#b8893a_55%,#9a7346_100%)]"
                 aria-hidden
               />
-              <div className="relative pl-5 md:pl-6">
-                <div className="flex gap-4">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#fffaf0] text-[#a67c2e] ring-1 ring-[rgba(212,175,55,0.28)]">
+              <div className="relative pl-4 md:pl-5">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffaf0] text-[#a67c2e] ring-1 ring-[rgba(212,175,55,0.28)]">
                     <BrandDayGlyph />
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7346]">Sun Pack</p>
-                    <p className="mt-1.5 text-[13px] text-stone-600">
-                      선팩 · <span className="font-medium text-stone-900">DAY</span>
-                    </p>
-                    <h3 className="mt-2 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:text-lg">
-                      가벼운 고보호
-                    </h3>
-                  </div>
+                  <h3 className="min-w-0 text-[16px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:text-[17px]">
+                    가벼운 고보호
+                  </h3>
                 </div>
-                <ul className="mt-6 space-y-3 border-t border-stone-100 pt-6 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
-                  <li className="flex gap-3 [word-break:keep-all]">
-                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
+                <ul className="mt-4 space-y-2 border-t border-stone-100 pt-4 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
+                  <li className="flex gap-2.5 [word-break:keep-all]">
+                    <span className="mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
                     특허 기반 셀룰로오스 필름 — 밀착·보호
                   </li>
-                  <li className="flex gap-3 [word-break:keep-all]">
-                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
+                  <li className="flex gap-2.5 [word-break:keep-all]">
+                    <span className="mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
                     SPF50+ PA+++ 자외선 차단
                   </li>
-                  <li className="flex gap-3 [word-break:keep-all]">
-                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
+                  <li className="flex gap-2.5 [word-break:keep-all]">
+                    <span className="mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#c9a227]" aria-hidden />
                     데일리용 가벼운 사용감
                   </li>
                 </ul>
               </div>
             </article>
 
-            <article className="relative overflow-hidden rounded-2xl border border-[rgba(123,143,168,0.28)] bg-white/95 p-6 shadow-[0_4px_28px_rgba(45,58,78,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-7">
+            <article className="relative overflow-hidden rounded-2xl border border-[rgba(123,143,168,0.28)] bg-white/95 p-4 shadow-[0_4px_28px_rgba(45,58,78,0.06)] ring-1 ring-black/[0.02] backdrop-blur-sm md:p-5">
               <div
-                className="pointer-events-none absolute inset-y-5 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#b8c8dc_0%,#6b7f9c_55%,#5c6d84_100%)]"
+                className="pointer-events-none absolute inset-y-4 left-0 w-[3px] rounded-full bg-[linear-gradient(180deg,#b8c8dc_0%,#6b7f9c_55%,#5c6d84_100%)]"
                 aria-hidden
               />
-              <div className="relative pl-5 md:pl-6">
-                <div className="flex gap-4">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#f4f7fb] text-[#5c6d84] ring-1 ring-[rgba(123,143,168,0.3)]">
+              <div className="relative pl-4 md:pl-5">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#f4f7fb] text-[#5c6d84] ring-1 ring-[rgba(123,143,168,0.3)]">
                     <BrandNightGlyph />
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#5c6d84]">Illuminator</p>
-                    <p className="mt-1.5 text-[13px] text-stone-600">
-                      일루미네이터 · <span className="font-medium text-stone-900">NIGHT</span>
-                    </p>
-                    <h3 className="mt-2 text-[17px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:text-lg">
-                      야간 집중 케어
-                    </h3>
-                  </div>
+                  <h3 className="min-w-0 text-[16px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:text-[17px]">
+                    야간 집중 케어
+                  </h3>
                 </div>
-                <ul className="mt-6 space-y-3 border-t border-stone-100 pt-6 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
-                  <li className="flex gap-3 [word-break:keep-all]">
-                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
+                <ul className="mt-4 space-y-2 border-t border-stone-100 pt-4 text-[13px] leading-relaxed text-stone-600 md:text-[14px]">
+                  <li className="flex gap-2.5 [word-break:keep-all]">
+                    <span className="mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
                     시스테아민 5% 집중 케어
                   </li>
-                  <li className="flex gap-3 [word-break:keep-all]">
-                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
+                  <li className="flex gap-2.5 [word-break:keep-all]">
+                    <span className="mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
                     야간 브라이트닝 · 색소 고민 보조
                   </li>
-                  <li className="flex gap-3 [word-break:keep-all]">
-                    <span className="mt-[0.45rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
+                  <li className="flex gap-2.5 [word-break:keep-all]">
+                    <span className="mt-[0.4rem] h-1.5 w-1.5 shrink-0 rounded-sm bg-[#6b7f9c]" aria-hidden />
                     밤 루틴으로 피부 결 정돈
                   </li>
                 </ul>
@@ -250,44 +237,44 @@ export default function HomePage() {
 
       {sunPack && illuminator ? (
         <section className="relative overflow-hidden scroll-mt-32 md:scroll-mt-36 lg:scroll-mt-32" id="product">
-          <div className="bg-white px-4 pb-10 pt-6 md:px-6 md:pb-14 md:pt-8">
-            <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[28px] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_54%,#f7f1e8_100%)] px-5 py-8 md:rounded-[34px] md:px-10 md:py-14">
+          <div className="bg-white px-4 pb-8 pt-6 md:px-6 md:pb-10 md:pt-8">
+            <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.1)] bg-[linear-gradient(145deg,#fbf7f0_0%,#ffffff_54%,#f7f1e8_100%)] shadow-[0_20px_50px_rgba(89,63,28,0.06)] md:rounded-[34px] md:shadow-[0_24px_60px_rgba(89,63,28,0.07)]">
               <div className="absolute left-10 top-8 h-28 w-28 rounded-full bg-[#d4af37]/12 blur-3xl" />
               <div className="absolute bottom-6 right-10 h-32 w-32 rounded-full bg-[#8ea4c5]/12 blur-3xl" />
 
-              <div className="relative text-center">
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
+              <div className="relative border-b border-[rgba(184,145,86,0.12)] px-5 pb-5 pt-6 text-center md:px-10 md:pb-6 md:pt-8">
+                <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-stone-500 md:px-4 md:py-2 md:text-[11px]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#d4af37]" />
                     Day Signature
                   </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-4 py-2 text-[11px] uppercase tracking-[0.2em] text-stone-500">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/72 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-stone-500 md:px-4 md:py-2 md:text-[11px]">
                     <span className="h-1.5 w-1.5 rounded-full bg-[#8ea4c5]" />
                     Night Signature
                   </span>
                 </div>
 
-                <p className="mt-8 text-[12px] uppercase tracking-[0.26em] text-stone-500">Two Essential Solutions</p>
-                <h2 className="display-font headline-balance mt-5 text-[30px] font-semibold leading-[1.14] tracking-[-0.04em] text-stone-900 sm:text-[32px] md:text-[64px] md:leading-[1.08]">
-                  낮과 밤을 나누는
-                  <span className="mt-1 block text-[34px] italic tracking-[-0.03em] text-[#8b673f] sm:text-[36px] md:mt-0 md:inline md:text-[76px]">
+                <p className="mt-4 text-[11px] uppercase tracking-[0.26em] text-stone-500 md:mt-5 md:text-[12px]">
+                  Two Essential Solutions
+                </p>
+                <h2 className="display-font headline-balance mt-3 text-[28px] font-semibold leading-[1.12] tracking-[-0.04em] text-stone-900 sm:text-[30px] md:mt-4 md:text-[52px] md:leading-[1.08] lg:text-[56px]">
+                  <span className="block">낮과 밤을 나누는</span>
+                  <span className="mt-2 block text-[32px] italic leading-[1.1] tracking-[-0.03em] text-[#8b673f] sm:text-[34px] md:mt-3 md:text-[56px] lg:text-[68px]">
                     2-Step Solution
                   </span>
                 </h2>
-                <p className="copy-pretty mx-auto mt-6 max-w-xl text-[15px] leading-[1.85] text-stone-600 md:text-[16px]">
+                <p className="copy-pretty mx-auto mt-4 max-w-xl text-[14px] leading-[1.75] text-stone-600 md:mt-5 md:text-[16px] md:leading-relaxed">
                   햇빛 아래에서는 더 맑고 가볍게, 밤이 깊어질수록 더 차분하고 깊게.
                 </p>
+
+                <div className="relative mt-4 flex flex-wrap items-center justify-center gap-3 text-[11px] uppercase tracking-[0.2em] text-stone-400 md:mt-5 md:gap-5 md:text-[12px]">
+                  <span className="text-[#8b673f]">Light Protection</span>
+                  <span className="text-stone-400">Intensive Brightening</span>
+                </div>
               </div>
 
-              <div className="relative mt-8 flex flex-wrap items-center justify-center gap-4 text-[12px] uppercase tracking-[0.22em] md:gap-6">
-                <span className="text-[#8b673f]">Light Protection</span>
-                <span className="text-stone-400">Intensive Brightening</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-px overflow-hidden bg-[rgba(184,145,86,0.1)] lg:min-h-[100vh] lg:grid-cols-2">
-            <article className="relative overflow-hidden bg-[linear-gradient(145deg,#FBF8F1_0%,#F5F1EA_55%,#EDE8DD_100%)] px-5 py-14 md:px-8 md:py-20">
+              <div className="grid gap-px overflow-hidden bg-[rgba(184,145,86,0.1)] lg:min-h-[100vh] lg:grid-cols-2">
+                <article className="relative overflow-hidden bg-[linear-gradient(145deg,#FBF8F1_0%,#F5F1EA_55%,#EDE8DD_100%)] px-5 py-14 md:px-8 md:py-20">
               <div className="absolute inset-0 opacity-[0.12]">
                 <Image
                   src={productVisuals["sun-pack"].gallery[4]}
@@ -344,7 +331,7 @@ export default function HomePage() {
               </div>
             </article>
 
-            <article className="relative overflow-hidden bg-[linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] px-5 py-14 text-white md:px-8 md:py-20">
+                <article className="relative overflow-hidden bg-[linear-gradient(145deg,#1A1F2E_0%,#252B3D_55%,#2A3247_100%)] px-5 py-14 text-white md:px-8 md:py-20">
               <div className="absolute left-12 top-12 h-72 w-72 rounded-full bg-[#7B8FA8]/20 blur-3xl" />
 
               <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
@@ -391,6 +378,8 @@ export default function HomePage() {
                 </Link>
               </div>
             </article>
+              </div>
+            </div>
           </div>
         </section>
       ) : null}
