@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { FeatureBannerSlider } from "@/components/feature-banner-slider";
+import { HomeHeroStripBanner } from "@/components/home-hero-strip-banner";
 import { HomeVideoBanner } from "@/components/home-video-banner";
 import { MotionMedia } from "@/components/motion-media";
 import { products } from "@/lib/product-data";
@@ -90,29 +91,7 @@ export default function HomePage() {
       </section>
 
       <div className="flex flex-col gap-7 md:gap-9">
-        <section
-          aria-label="제품 비주얼"
-          className="relative left-1/2 w-[100vw] max-w-[100vw] -translate-x-1/2 overflow-x-clip"
-        >
-          <Image
-            src="/images/home-hero-strip-sun.png"
-            alt="심플스틱 선팩 SIMPLE STICK SUN PACK 제품 이미지"
-            width={1024}
-            height={426}
-            className="block h-auto w-full"
-            sizes="100vw"
-            quality={90}
-          />
-          <Image
-            src="/images/home-hero-strip-night.png"
-            alt="심플스틱 일루미네이터 SIMPLE STICK 야간 케어 제품 이미지"
-            width={1024}
-            height={426}
-            className="block h-auto w-full"
-            sizes="100vw"
-            quality={90}
-          />
-        </section>
+        <HomeHeroStripBanner />
 
         <HomeVideoBanner />
       </div>
