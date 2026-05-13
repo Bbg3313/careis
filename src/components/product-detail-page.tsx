@@ -61,7 +61,7 @@ function IlluminatorDetailPage({
 }) {
   const heroMotionSizes = "(max-width: 1024px) 100vw, min(1920px, min(100vw, 90rem))";
   const heroCardSizes = "(max-width: 1024px) 100vw, min(1200px, 52vw)";
-  const motionFrames = [visual.hero, ...visual.gallery.slice(0, 4)];
+  const motionFrames = [...illuminatorDetailAssets.thumbnailImages];
 
   const purchaseAsideBody = (
     <>
@@ -205,7 +205,7 @@ function IlluminatorDetailPage({
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
                   <div className="relative mx-auto aspect-square w-full max-w-[min(100%,440px)] overflow-hidden rounded-[26px] bg-white/10 shadow-[0_34px_90px_rgba(0,0,0,0.35)] md:max-w-[min(100%,520px)] md:rounded-[34px] lg:mx-0 lg:max-w-none">
                     <Image
-                      src={visual.hero}
+                      src={illuminatorDetailAssets.heroImage}
                       alt={visual.alt}
                       fill
                       className="object-cover"
@@ -215,7 +215,7 @@ function IlluminatorDetailPage({
                     />
                   </div>
                   <div className="hidden gap-4 lg:grid">
-                    {visual.gallery.slice(1, 3).map((image, index) => (
+                    {illuminatorDetailAssets.thumbnailImages.slice(1, 3).map((image, index) => (
                       <div
                         key={image + index}
                         className="relative aspect-square w-full min-h-0 overflow-hidden rounded-[26px] bg-white/10"
@@ -288,6 +288,18 @@ function IlluminatorDetailPage({
               productName={product.name}
             />
           </section>
+
+          <div className="flex justify-center px-2">
+            <a
+              href="#detail"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-400/35 bg-white/90 px-6 py-3 text-sm font-semibold tracking-wide text-slate-800 shadow-[0_12px_32px_rgba(15,23,42,0.08)] transition hover:border-slate-500 hover:bg-white"
+            >
+              상세 스토리 보기
+              <span className="text-base leading-none text-slate-500" aria-hidden>
+                ↓
+              </span>
+            </a>
+          </div>
 
           <SunPackDetailTabs />
 

@@ -110,14 +110,14 @@ export const sunPackDetailAssets = {
   ] satisfies SunPackStorySlide[],
 };
 
-/** 일루미네이터 상세 상단 썸네일(정사각 스트립) */
+/** 일루미네이터 상세: 제공 4장 썸네일(780×1024) */
 export const illuminatorDetailAssets = {
-  heroImage: "/images/illum-hero-glam-01.png",
-  /** 정사각 프레임 + cover 기준(실파일과 무관하게 레이아웃만 맞춤) */
-  heroPixelSize: { width: 1024, height: 1024 },
+  heroImage: "/images/illum-thumb-01.png",
+  heroPixelSize: { width: 780, height: 1024 },
   thumbnailImages: [
-    "/images/illum-hero-glam-01.png",
-    "/images/illum-hero-glam-02.png",
-    "/images/illum-hero-marble.png",
+    "/images/illum-thumb-01.png",
+    "/images/illum-thumb-02.png",
+    "/images/illum-thumb-03.png",
+    "/images/illum-thumb-04.png",
   ],
 } as const;

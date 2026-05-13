@@ -191,18 +191,86 @@ async function rasterMasterToSharp(srcPath) {
   return sharp(srcPath).ensureAlpha();
 }
 
-/** 투명 여백 제거 후 정사각 안에 최대 크기(contain)로 맞춤 */
+/**
+ * 일부보내기에서 검은 글자가 알파만 깨져 반투명으로 들어오는 경우 복구
+ * (배경은 여전히 a=0 유지)
+ */
+async function solidifyDarkInkAlpha(imageSharp) {
+  const { data, info } = await imageSharp.clone().ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const w = info.width;
+  const h = info.height;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    let a = data[i + 3];
+    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+    if (a === 0) continue;
+    if (lum < 210 && a > 0 && a < 252) {
+      data[i + 3] = 255;
+    }
+    if (lum > 248 && a < 48) {
+      data[i] = 0;
+      data[i + 1] = 0;
+      data[i + 2] = 0;
+      data[i + 3] = 0;
+    }
+  }
+  return sharp(data, { raw: { width: w, height: h, channels: 4 } }).ensureAlpha();
+}
+
+/**
+ * 알파가 거의 0인 여백만 제거 (sharp 기본 trim은 좌상단 RGB까지 비교해
+ * 검은 글자·골드가 투명처럼 잘리는 경우가 있음)
+ */
+async function trimTransparentMargins(imageSharp, alphaThreshold = 12) {
+  const { data, info } = await imageSharp.clone().ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const w = info.width;
+  const h = info.height;
+  let minX = w;
+  let minY = h;
+  let maxX = -1;
+  let maxY = -1;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const a = data[(y * w + x) * 4 + 3];
+      if (a > alphaThreshold) {
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      }
+    }
+  }
+  if (maxX < minX) {
+    return imageSharp.clone().ensureAlpha();
+  }
+  return imageSharp.clone().extract({
+    left: minX,
+    top: minY,
+    width: maxX - minX + 1,
+    height: maxY - minY + 1,
+  });
+}
+
+/** 마스터 PNG 준비: SL은 원본 그대로(배경만 투명 유지), 그 외는 알파 기준 여백 제거 */
 async function preparedPngPipeline() {
   const path = faviconPngMasterPath();
+  if (useSlLogo()) {
+    const fixed = await solidifyDarkInkAlpha(sharp(path).ensureAlpha());
+    return trimTransparentMargins(fixed);
+  }
   const raw = await rasterMasterToSharp(path);
-  let trimmed = raw;
+  const meta = await sharp(path).metadata();
+  if (meta.hasAlpha && meta.format === "png") {
+    return trimTransparentMargins(raw);
+  }
   try {
     const buf = await raw.clone().ensureAlpha().trim().png().toBuffer();
-    trimmed = sharp(buf).ensureAlpha();
+    return sharp(buf).ensureAlpha();
   } catch {
-    trimmed = raw.clone().ensureAlpha();
+    return raw.clone().ensureAlpha();
   }
-  return trimmed;
 }
 
 async function squareFromSvg(px, filename) {
