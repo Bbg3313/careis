@@ -147,6 +147,49 @@ button {
   animation: heroCrossfadeMobile 14s ease-in-out infinite;
 }
 
+/* 2프레임만 쓸 때: stagger 없이 상보 키프레임으로 빈 화면 구간 제거 */
+.hero-motion-root .motion-frame.motion-frame--pair:nth-child(1) {
+  animation: motionPairCrossfadeA 12s ease-in-out infinite;
+}
+
+.hero-motion-root .motion-frame.motion-frame--pair:nth-child(2) {
+  animation: motionPairCrossfadeB 12s ease-in-out infinite;
+}
+
+@keyframes motionPairCrossfadeA {
+  0%,
+  42% {
+    opacity: 1;
+  }
+
+  48%,
+  90% {
+    opacity: 0;
+  }
+
+  96%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes motionPairCrossfadeB {
+  0%,
+  42% {
+    opacity: 0;
+  }
+
+  48%,
+  90% {
+    opacity: 1;
+  }
+
+  96%,
+  100% {
+    opacity: 0;
+  }
+}
+
 @keyframes heroCrossfadeMobile {
   0% {
     opacity: 0;

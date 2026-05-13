@@ -20,20 +20,20 @@ export function SiteHeader() {
               className="w-[52px] shrink-0 sm:w-[60px] md:w-[72px] lg:w-[84px]"
             />
             <span
-              className="hidden h-9 w-px shrink-0 self-center rounded-full bg-[linear-gradient(180deg,#f0d78c_0%,#c49a5c_42%,#8b673f_88%,#6b4f2e_100%)] shadow-[0_0_12px_rgba(196,154,92,0.35)] sm:block sm:h-10 md:h-11"
+              className="hidden h-9 w-[1.5px] shrink-0 self-center rounded-full bg-[linear-gradient(180deg,#e6c66a_0%,#c49a5c_38%,#9a7346_72%,#7a5a36_100%)] sm:block sm:h-10 md:h-11"
               aria-hidden
             />
-            <span className="display-font hidden min-w-0 text-[11px] font-medium italic leading-none tracking-[0.28em] text-[#5c4a38] sm:inline sm:text-[12px] md:text-[13px] lg:text-[14px]">
+            <span className="display-font hidden min-w-0 select-none text-[12px] font-semibold italic leading-snug tracking-[0.08em] text-[#7a5a32] antialiased sm:inline sm:text-[13px] md:text-[14px] lg:text-[15px] [text-rendering:geometricPrecision]">
               Dermacosmetic
             </span>
           </div>
 
-          <nav className="flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto text-[10px] tracking-[0.06em] text-stone-600 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-3 sm:text-[11px] md:gap-4 md:text-[12px] lg:flex-initial lg:gap-8 lg:text-[13px] lg:tracking-[0.05em] [&::-webkit-scrollbar]:hidden">
+          <nav className="flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto text-[10px] font-medium tracking-[0.08em] text-[#6e5a3d] antialiased [-ms-overflow-style:none] [scrollbar-width:none] [text-rendering:geometricPrecision] sm:gap-3 sm:text-[11px] md:gap-4 md:text-[12px] md:tracking-[0.06em] lg:flex-initial lg:gap-8 lg:text-[13px] lg:tracking-[0.07em] [&::-webkit-scrollbar]:hidden">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="shrink-0 whitespace-nowrap transition hover:text-stone-900"
+                className="shrink-0 whitespace-nowrap transition hover:text-[#4a361f]"
               >
                 {item.label}
               </Link>

@@ -30,14 +30,16 @@ export function MotionMedia({
   objectFit = "cover",
 }: MotionMediaProps) {
   const fitClass = objectFit === "contain" ? "object-contain object-center" : "object-cover object-center";
+  /** 2장일 때 히어로용 stagger(3.5s)×6장 전제 주기와 맞지 않아 둘 다 opacity 0인 구간이 생김 → 전용 페어 크로스페이드 */
+  const pairCrossfade = frames.length === 2;
 
   return (
     <div className={className}>
       {frames.map((frame, index) => (
         <div
           key={`${alt}-${index}`}
-          className="motion-frame"
-          style={{ animationDelay: `${index * 3.5}s` }}
+          className={pairCrossfade ? "motion-frame motion-frame--pair" : "motion-frame"}
+          style={pairCrossfade ? undefined : { animationDelay: `${index * 3.5}s` }}
         >
           <Image
             src={frame}
