@@ -304,13 +304,15 @@ export default function HomePage() {
                 </div>
 
                 <div className="group mt-5 overflow-hidden border border-black/8 bg-white/50 p-4 transition duration-500 hover:border-black/12 hover:bg-white/60 hover:shadow-[0_18px_40px_rgba(104,78,41,0.12)] md:mt-10 md:p-6 backdrop-blur-sm">
-                  <div className="relative h-[18rem] w-[14rem] md:h-[28rem] md:w-[21rem]">
-                    <Image
-                      src={productVisuals["sun-pack"].card}
+                  <div className="hero-motion-root relative h-[18rem] w-[14rem] overflow-hidden rounded-[20px] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)] md:h-[28rem] md:w-[21rem] md:rounded-[24px]">
+                    <MotionMedia
+                      frames={homeVisuals.productDayNightSunPackMotion}
                       alt={productVisuals["sun-pack"].alt}
-                      fill
-                      className="cursor-zoom-in object-cover object-center drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)] transition-transform duration-500 ease-out group-hover:scale-[1.12]"
-                      sizes="(max-width: 768px) 272px, 336px"
+                      objectFit="contain"
+                      quality={92}
+                      frameSizes="(max-width: 768px) 272px, 336px"
+                      className="absolute inset-0 drop-shadow-[0_24px_36px_rgba(104,78,41,0.22)]"
+                      overlayClassName="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,250,242,0.22)_0%,transparent_42%,rgba(104,78,41,0.05)_100%)]"
                     />
                   </div>
                 </div>
@@ -352,13 +354,15 @@ export default function HomePage() {
                 </div>
 
                 <div className="group mt-5 overflow-hidden border border-white/10 bg-white/5 p-4 transition duration-500 hover:border-white/16 hover:bg-white/8 hover:shadow-[0_18px_40px_rgba(0,0,0,0.18)] md:mt-10 md:p-6 backdrop-blur-sm">
-                  <div className="relative h-[18rem] w-[14rem] md:h-[28rem] md:w-[21rem]">
-                    <Image
-                      src={productVisuals["illuminator"].card}
+                  <div className="hero-motion-root relative h-[18rem] w-[14rem] overflow-hidden rounded-[20px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] md:h-[28rem] md:w-[21rem] md:rounded-[24px]">
+                    <MotionMedia
+                      frames={homeVisuals.productDayNightIlluminatorMotion}
                       alt={productVisuals["illuminator"].alt}
-                      fill
-                      className="cursor-zoom-in object-cover object-center drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-out group-hover:scale-[1.12]"
-                      sizes="(max-width: 768px) 272px, 336px"
+                      objectFit="contain"
+                      quality={92}
+                      frameSizes="(max-width: 768px) 272px, 336px"
+                      className="absolute inset-0 drop-shadow-[0_24px_36px_rgba(0,0,0,0.28)]"
+                      overlayClassName="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(26,31,46,0.12)_0%,transparent_38%,rgba(0,0,0,0.15)_100%)]"
                     />
                   </div>
                 </div>
