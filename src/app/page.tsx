@@ -166,11 +166,11 @@ export default function HomePage() {
                 aria-hidden
               />
               <div className="relative pl-3 md:pl-5">
-                <div className="flex items-start gap-2.5 md:gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#fffaf0] text-[#a67c2e] ring-1 ring-[rgba(212,175,55,0.28)] md:h-10 md:w-10 md:rounded-xl">
+                <div className="flex flex-col items-center gap-2.5 text-center md:gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#fffaf0] text-[#a67c2e] ring-1 ring-[rgba(212,175,55,0.28)] md:h-11 md:w-11 md:rounded-xl">
                     <BrandDayGlyph />
                   </span>
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0">
                     <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#9a7346] md:text-[10px] md:tracking-[0.2em]">Sun Pack</p>
                     <h3 className="mt-1 text-[15px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:mt-2 md:text-[17px]">
                       가벼운 고보호
@@ -200,11 +200,11 @@ export default function HomePage() {
                 aria-hidden
               />
               <div className="relative pl-3 md:pl-5">
-                <div className="flex items-start gap-2.5 md:gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#f4f7fb] text-[#5c6d84] ring-1 ring-[rgba(123,143,168,0.3)] md:h-10 md:w-10 md:rounded-xl">
+                <div className="flex flex-col items-center gap-2.5 text-center md:gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#f4f7fb] text-[#5c6d84] ring-1 ring-[rgba(123,143,168,0.3)] md:h-11 md:w-11 md:rounded-xl">
                     <BrandNightGlyph />
                   </span>
-                  <div className="min-w-0 flex-1">
+                  <div className="min-w-0">
                     <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#5c6d84] md:text-[10px] md:tracking-[0.2em]">Illuminator</p>
                     <h3 className="mt-1 text-[15px] font-semibold leading-snug tracking-[-0.02em] text-stone-900 md:mt-2 md:text-[17px]">
                       야간 집중 케어
