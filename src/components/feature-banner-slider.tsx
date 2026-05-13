@@ -105,11 +105,11 @@ export function FeatureBannerSlider({ slides }: { slides: FeatureBannerSlide[] }
                   {slide.description}
                 </p>
 
-                <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5 md:mt-8 md:gap-3 lg:justify-start">
+                <div className="mt-7 flex w-full flex-col items-stretch gap-2.5 md:mt-8 md:flex-row md:flex-wrap md:items-center md:justify-center md:gap-3 lg:justify-start">
                   {slide.highlights.map((highlight) => (
                     <div
                       key={highlight}
-                      className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[10px] font-medium tracking-[0.12em] shadow-[0_10px_24px_rgba(89,63,28,0.06)] md:px-4 md:text-[11px] md:tracking-[0.14em] ${
+                      className={`flex w-full items-center justify-center gap-2 rounded-full border px-3.5 py-2 text-[10px] font-medium tracking-[0.12em] shadow-[0_10px_24px_rgba(89,63,28,0.06)] md:inline-flex md:w-auto md:justify-start md:px-4 md:text-[11px] md:tracking-[0.14em] ${
                         slide.tone === "light"
                           ? "border-[rgba(184,145,86,0.16)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9)_0%,rgba(248,238,224,0.96)_100%)] text-[#8b673f]"
                           : "border-white/20 bg-[linear-gradient(180deg,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0.04)_100%)] text-white/85 shadow-[0_10px_28px_rgba(0,0,0,0.22),inset_0_1px_0_rgba(255,255,255,0.12)]"
