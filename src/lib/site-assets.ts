@@ -25,19 +25,15 @@ export const homeVisuals = {
     "/images/illum-hero-glam-02.png",
     "/images/illum-hero-marble.png",
   ],
-  /** 홈 PRODUCT — 낮·밤 블록 일루미네이터 컷(히어로와 동일 크로스페이드) */
+  /** 홈 PRODUCT 낮·밤 블록 — 일루미네이터: 기존 카드 + 신규 컷(2장만 크로스페이드) */
   productDayNightIlluminatorMotion: [
-    "/images/illum-product-night-splash.png",
     "/images/illum-hero-glam-01.png",
-    "/images/illum-hero-glam-02.png",
-    "/images/illum-hero-marble.png",
+    "/images/illum-product-night-splash.png",
   ],
-  /** 홈 PRODUCT — 낮·밤 블록 선팩 컷(동일 크로스페이드) */
+  /** 홈 PRODUCT 낮·밤 블록 — 선팩: 기존 카드 + 신규 컷(2장만 크로스페이드) */
   productDayNightSunPackMotion: [
-    "/images/sun-pack-product-day-lifestyle.png",
     "/images/sun-model-banner.png",
-    "/images/sunpack-thumb-02.png",
-    "/images/sunpack-thumb-04.png",
+    "/images/sun-pack-product-day-lifestyle.png",
   ],
 };
 

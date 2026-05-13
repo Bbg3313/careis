@@ -14,10 +14,19 @@ export function SiteHeader() {
     <header className="sticky inset-x-0 top-0 z-50 border-b border-[rgba(116,88,59,0.08)] bg-[rgba(250,248,244,0.86)] backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 py-2.5 md:px-6 lg:px-8 lg:py-4">
         <div className="flex items-center justify-between gap-2 sm:gap-3">
-          <SiteLogo
-            compact
-            className="w-[72px] shrink-0 sm:w-[84px] md:w-[100px] lg:w-[132px]"
-          />
+          <div className="flex min-w-0 shrink items-center gap-2.5 sm:gap-3 md:gap-3.5">
+            <SiteLogo
+              compact
+              className="w-[52px] shrink-0 sm:w-[60px] md:w-[72px] lg:w-[84px]"
+            />
+            <span
+              className="hidden h-9 w-px shrink-0 self-center rounded-full bg-[linear-gradient(180deg,#f0d78c_0%,#c49a5c_42%,#8b673f_88%,#6b4f2e_100%)] shadow-[0_0_12px_rgba(196,154,92,0.35)] sm:block sm:h-10 md:h-11"
+              aria-hidden
+            />
+            <span className="display-font hidden min-w-0 text-[11px] font-medium italic leading-none tracking-[0.28em] text-[#5c4a38] sm:inline sm:text-[12px] md:text-[13px] lg:text-[14px]">
+              Dermacosmetic
+            </span>
+          </div>
 
           <nav className="flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto text-[10px] tracking-[0.06em] text-stone-600 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-3 sm:text-[11px] md:gap-4 md:text-[12px] lg:flex-initial lg:gap-8 lg:text-[13px] lg:tracking-[0.05em] [&::-webkit-scrollbar]:hidden">
             {navItems.map((item) => (
