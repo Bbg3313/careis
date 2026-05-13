@@ -242,7 +242,7 @@ await square(48, "favicon-48.png");
 await square(64, "favicon-64.png");
 await square(180, "apple-touch-icon.png");
 
-copyFileSync(join(root, "public/favicon-48.png"), join(root, "src/app/icon.png"));
+copyFileSync(join(root, "public/favicon-64.png"), join(root, "src/app/icon.png"));
 
 const iconSvgPublic = join(root, "public/icon.svg");
 if (useSvgSource()) {
