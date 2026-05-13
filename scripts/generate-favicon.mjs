@@ -231,8 +231,8 @@ async function squareFromPng(px, filename) {
 }
 
 async function square(px, filename) {
-  if (usePngSource()) await squareFromPng(px, filename);
-  else if (useSvgSource()) await squareFromSvg(px, filename);
+  if (useSvgSource()) await squareFromSvg(px, filename);
+  else if (usePngSource()) await squareFromPng(px, filename);
   else await squareFromPng(px, filename);
 }
 
@@ -245,7 +245,7 @@ await square(180, "apple-touch-icon.png");
 copyFileSync(join(root, "public/favicon-48.png"), join(root, "src/app/icon.png"));
 
 const iconSvgPublic = join(root, "public/icon.svg");
-if (useSvgSource() && !usePngSource()) {
+if (useSvgSource()) {
   copyFileSync(svgMark, iconSvgPublic);
 } else if (existsSync(iconSvgPublic)) {
   unlinkSync(iconSvgPublic);

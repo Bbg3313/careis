@@ -16,7 +16,7 @@ const notoSansKr = Noto_Sans_KR({
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   style: ["normal", "italic"],
   variable: "--font-display",
 });
@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   description: "낮과 밤을 위한 2-step 더마코스메틱 루틴 브랜드",
   icons: {
     icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/favicon-48.png", type: "image/png", sizes: "48x48" },
       { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
       { url: "/favicon-16.png", type: "image/png", sizes: "16x16" },

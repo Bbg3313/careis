@@ -20,24 +20,26 @@ export function SiteHeader() {
               className="w-[52px] shrink-0 sm:w-[60px] md:w-[72px] lg:w-[84px]"
             />
             <span
-              className="hidden h-9 w-px shrink-0 self-center rounded-full bg-[linear-gradient(180deg,#f2e0b8_0%,#d4b87a_40%,#c4a86a_100%)] sm:block sm:h-10 md:h-11"
+              className="hidden h-9 w-px shrink-0 self-center rounded-full bg-[linear-gradient(180deg,#efe4d4_0%,#d4c4a8_50%,#c5b391_100%)] sm:block sm:h-10 md:h-11"
               aria-hidden
             />
-            <span className="display-font hidden min-w-0 select-none text-[12px] font-normal italic leading-snug tracking-[0.08em] text-[#a69062] antialiased sm:inline sm:text-[13px] md:text-[14px] lg:text-[15px] [text-rendering:geometricPrecision]">
+            <span className="display-font hidden min-w-0 select-none text-[10px] font-light not-italic uppercase leading-normal tracking-[0.26em] text-[#c5b391] antialiased sm:inline sm:text-[11px] sm:tracking-[0.28em] md:text-[12px] md:tracking-[0.3em] lg:text-[13px] [text-rendering:geometricPrecision]">
               Dermacosmetic
             </span>
           </div>
 
-          <nav className="flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto text-[10px] font-normal tracking-[0.08em] text-[#9c8f78] antialiased [-ms-overflow-style:none] [scrollbar-width:none] [text-rendering:geometricPrecision] sm:gap-3 sm:text-[11px] md:gap-4 md:text-[12px] md:tracking-[0.06em] lg:flex-initial lg:gap-8 lg:text-[13px] lg:tracking-[0.07em] [&::-webkit-scrollbar]:hidden">
+          <nav className="flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-3 md:gap-4 lg:flex-initial lg:gap-8 [&::-webkit-scrollbar]:hidden">
+            <div className="display-font flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto text-[9px] font-light uppercase tracking-[0.22em] text-[#c5b391] antialiased [text-rendering:geometricPrecision] sm:gap-3 sm:text-[10px] sm:tracking-[0.24em] md:gap-5 md:text-[11px] md:tracking-[0.26em] lg:gap-8 lg:text-[12px] lg:tracking-[0.28em]">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="shrink-0 whitespace-nowrap transition hover:text-[#7d6e58]"
+                className="shrink-0 whitespace-nowrap transition hover:text-[#a69678]"
               >
                 {item.label}
               </Link>
             ))}
+            </div>
             <Link
               href="/order"
               className="btn-luxe-primary hidden shrink-0 whitespace-nowrap px-5 py-2.5 text-[12px] tracking-[0.1em] lg:inline-flex"
