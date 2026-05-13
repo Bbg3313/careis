@@ -4,7 +4,6 @@ import Link from "next/link";
 import { DetailAccordionItem } from "@/components/detail-accordion-item";
 import { IlluminatorDetailStory } from "@/components/illuminator-detail-story";
 import { MobileProductStickyCta } from "@/components/mobile-product-sticky-cta";
-import { MotionMedia } from "@/components/motion-media";
 import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
 import { SunPackStorySlide as SunPackStorySlideView } from "@/components/sun-pack-story-slide";
 import { SunPackDetailTabs } from "@/components/sun-pack-detail-tabs";
@@ -59,10 +58,6 @@ function IlluminatorDetailPage({
   product: ProductContent;
   visual: (typeof productVisuals)["illuminator"];
 }) {
-  const heroMotionSizes = "(max-width: 1024px) 100vw, min(1920px, min(100vw, 90rem))";
-  const heroCardSizes = "(max-width: 1024px) 100vw, min(1200px, 52vw)";
-  const motionFrames = [...illuminatorDetailAssets.thumbnailImages];
-
   const purchaseAsideBody = (
     <>
       <div className="space-y-3 border-b border-stone-100 pb-6">
@@ -126,168 +121,25 @@ function IlluminatorDetailPage({
     <div className="pb-[calc(9.5rem+env(safe-area-inset-bottom,0px))] lg:pb-24">
       <div className="relative mx-auto grid w-full max-w-[1380px] grid-cols-1 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-x-8 lg:px-8 xl:grid-cols-[minmax(0,1fr)_420px]">
         <div className="min-w-0 space-y-10 overflow-x-hidden">
-          <section className="space-y-8">
-            <div className="mb-2 space-y-2 lg:hidden">
+          <div className="space-y-5">
+            <header className="space-y-1">
               <p className="text-xs uppercase tracking-[0.16em] text-slate-500">{product.englishName}</p>
-              <h1 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900">{product.name}</h1>
-              <p className="line-clamp-3 whitespace-pre-line text-sm leading-relaxed text-slate-600">
-                {product.heroDescription}
-              </p>
-            </div>
+              <h1 className="text-2xl font-semibold tracking-[-0.03em] text-slate-900 sm:text-3xl">{product.name}</h1>
+            </header>
 
-            <div className="relative overflow-hidden rounded-[28px] border border-slate-800/50 bg-[#070b14] p-6 shadow-[0_40px_120px_rgba(15,23,42,0.5)] md:rounded-[40px] md:p-10 lg:p-12">
-              <MotionMedia
-                frames={motionFrames}
-                alt={`${product.name} 히어로 모션`}
-                priority
-                className="absolute inset-0"
-                frameSizes={heroMotionSizes}
-                quality={92}
-                objectFit="cover"
-                overlayClassName="absolute inset-0 bg-[linear-gradient(100deg,rgba(8,12,24,0.92)_0%,rgba(15,23,42,0.45)_48%,rgba(30,27,75,0.55)_100%)]"
+            <section>
+              <SunPackDetailGallery
+                accent="cool"
+                mainFrame="square"
+                maxWidthPx={ILLUMINATOR_DETAIL_MAX_WIDTH_PX}
+                defaultMainSrc={illuminatorDetailAssets.heroImage}
+                thumbnailSrcs={[...illuminatorDetailAssets.thumbnailImages]}
+                alt={visual.alt}
+                pixelSize={illuminatorDetailAssets.heroPixelSize}
+                productName={product.name}
               />
-
-              <div className="relative z-10 grid items-start gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:gap-12">
-                <div className="space-y-6">
-                  <p className="text-xs uppercase tracking-[0.32em] text-indigo-200/75">{product.englishName}</p>
-                  <div className="space-y-4">
-                    <p className="inline-flex rounded-full border border-white/12 bg-white/10 px-4 py-2 text-xs tracking-[0.18em] text-indigo-100/90 backdrop-blur">
-                      Night Ritual Essential
-                    </p>
-                    <h2 className="display-font headline-balance text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl md:text-6xl lg:text-7xl">
-                      {product.heroTitle}
-                    </h2>
-                    <div className="max-w-2xl space-y-4 text-base leading-8 text-slate-200/90 md:text-lg">
-                      {splitParagraphs(product.heroDescription).map((para, i) => (
-                        <p key={i} className="copy-pretty">
-                          {para}
-                        </p>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {product.keywords.map((keyword) => (
-                      <span
-                        key={keyword}
-                        className="rounded-full border border-white/14 bg-white/10 px-4 py-2 text-sm text-indigo-50/95 backdrop-blur"
-                      >
-                        {keyword}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap items-center gap-4 pt-2">
-                    <p className="text-2xl font-semibold text-white">{formatCurrency(product.price)}</p>
-                    <Link
-                      href={`/order?product=${product.slug}`}
-                      className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900"
-                    >
-                      바로 구매
-                    </Link>
-                    <Link
-                      href={`/cart?product=${product.slug}`}
-                      className="rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur"
-                    >
-                      장바구니
-                    </Link>
-                  </div>
-                  <div className="grid gap-3 pt-2 sm:grid-cols-2 xl:grid-cols-3">
-                    {product.introPoints.map((point) => (
-                      <div
-                        key={point}
-                        className="rounded-[20px] border border-white/12 bg-white/8 p-4 text-sm leading-7 text-indigo-50/90 backdrop-blur"
-                      >
-                        {point}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-                  <div className="relative mx-auto aspect-square w-full max-w-[min(100%,440px)] overflow-hidden rounded-[26px] bg-white/10 shadow-[0_34px_90px_rgba(0,0,0,0.35)] md:max-w-[min(100%,520px)] md:rounded-[34px] lg:mx-0 lg:max-w-none">
-                    <Image
-                      src={illuminatorDetailAssets.heroImage}
-                      alt={visual.alt}
-                      fill
-                      className="object-cover"
-                      sizes={heroCardSizes}
-                      quality={92}
-                      priority
-                    />
-                  </div>
-                  <div className="hidden gap-4 lg:grid">
-                    {illuminatorDetailAssets.thumbnailImages.slice(1, 3).map((image, index) => (
-                      <div
-                        key={image + index}
-                        className="relative aspect-square w-full min-h-0 overflow-hidden rounded-[26px] bg-white/10"
-                      >
-                        <Image
-                          src={image}
-                          alt={`${product.name} 서브 이미지 ${index + 1}`}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 1024px) 100vw, 18vw"
-                          quality={90}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {product.problemPoints?.length ? (
-            <section className="rounded-[28px] border border-slate-200/90 bg-white p-6 shadow-[0_24px_70px_rgba(30,41,59,0.06)] md:p-10">
-              <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-start">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.28em] text-indigo-600/90">Night insight</p>
-                  <h3 className="display-font mt-3 text-3xl font-semibold tracking-[-0.03em] text-slate-900 md:text-4xl">
-                    루틴이 끊기지 않게 만드는 이유
-                  </h3>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-3">
-                  {product.problemPoints.map((problem, i) => (
-                    <article
-                      key={problem}
-                      className="rounded-2xl border border-slate-100 bg-slate-50/90 p-5 text-sm leading-7 text-slate-700"
-                    >
-                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">
-                        {i + 1}
-                      </span>
-                      <p className="mt-3">{problem}</p>
-                    </article>
-                  ))}
-                </div>
-              </div>
             </section>
-          ) : null}
-
-          <section className="rounded-[24px] border border-indigo-100/80 bg-gradient-to-r from-indigo-50/90 via-white to-slate-50 px-4 py-4 md:px-6">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-indigo-700/80">Core benefits</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {product.benefits.map((benefit) => (
-                <span
-                  key={benefit}
-                  className="rounded-full border border-indigo-100 bg-white/95 px-4 py-2 text-xs font-medium leading-snug text-slate-800 shadow-sm"
-                >
-                  {benefit}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          <section>
-            <SunPackDetailGallery
-              accent="cool"
-              mainFrame="square"
-              maxWidthPx={ILLUMINATOR_DETAIL_MAX_WIDTH_PX}
-              defaultMainSrc={illuminatorDetailAssets.heroImage}
-              thumbnailSrcs={[...illuminatorDetailAssets.thumbnailImages]}
-              alt={visual.alt}
-              pixelSize={illuminatorDetailAssets.heroPixelSize}
-              productName={product.name}
-            />
-          </section>
+          </div>
 
           <div className="flex justify-center px-2">
             <a
