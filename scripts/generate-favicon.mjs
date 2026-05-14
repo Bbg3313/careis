@@ -262,12 +262,66 @@ async function trimTransparentMargins(imageSharp, alphaThreshold = 12) {
   });
 }
 
+/**
+ * SL 래스터: 가장자리 잡음 때문에 알파 trim이 캔버스 전체로 남는 경우가 있어,
+ * 행·열당 불투명 픽셀 수가 일정 이상인 구간만 로고로 보고 타이트하게 자름.
+ */
+async function trimSlOpaqueByLineDensity(imageSharp) {
+  const meta = await imageSharp.metadata();
+  const w = meta.width ?? 0;
+  const h = meta.height ?? 0;
+  if (!w || !h) return imageSharp.clone().ensureAlpha();
+
+  const minRun = Math.max(8, Math.floor(w * 0.001));
+  const { data, info } = await imageSharp.clone().ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const iw = info.width;
+  const ih = info.height;
+  const rowC = new Uint32Array(ih);
+  const colC = new Uint32Array(iw);
+  for (let y = 0; y < ih; y++) {
+    for (let x = 0; x < iw; x++) {
+      if (data[(y * iw + x) * 4 + 3] > 127) {
+        rowC[y]++;
+        colC[x]++;
+      }
+    }
+  }
+
+  let minY = ih;
+  let maxY = -1;
+  let minX = iw;
+  let maxX = -1;
+  for (let y = 0; y < ih; y++) {
+    if (rowC[y] >= minRun) {
+      minY = Math.min(minY, y);
+      maxY = Math.max(maxY, y);
+    }
+  }
+  for (let x = 0; x < iw; x++) {
+    if (colC[x] >= minRun) {
+      minX = Math.min(minX, x);
+      maxX = Math.max(maxX, x);
+    }
+  }
+
+  if (maxX < minX || maxY < minY) {
+    return trimTransparentMargins(imageSharp);
+  }
+
+  return imageSharp.clone().extract({
+    left: minX,
+    top: minY,
+    width: maxX - minX + 1,
+    height: maxY - minY + 1,
+  });
+}
+
 /** 마스터 PNG 준비: SL은 원본 색 유지·배경만 투명, 투명 여백만 잘라 최대 크기로 맞춤 */
 async function preparedPngPipeline() {
   const path = faviconPngMasterPath();
   if (useSlLogo()) {
     const base = await slOpaqueMasterToPngAlpha(path);
-    return trimTransparentMargins(base);
+    return trimSlOpaqueByLineDensity(base);
   }
   const raw = await rasterMasterToSharp(path);
   const meta = await sharp(path).metadata();
