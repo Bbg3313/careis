@@ -5,7 +5,7 @@ import { SITE_NAME } from "@/lib/site-seo";
 
 export const metadata: Metadata = {
   title: "배송·교환·반품",
-  description: "CAREIS 배송 안내, 교환·반품 절차, 환불 기준을 정리했습니다.",
+  description: "CAREIS 배송 안내, 교환·반품 절차, 환불 기준을 안내합니다.",
   alternates: { canonical: "/policy/shipping" },
   openGraph: {
     url: "/policy/shipping",

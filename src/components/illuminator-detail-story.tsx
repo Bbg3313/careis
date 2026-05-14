@@ -121,7 +121,10 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
                   </span>
                 </h2>
                 <p className="copy-pretty mt-4 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
-                  {product.tagline} — 아래는 핵심만 요약했습니다.
+                  {product.tagline}
+                </p>
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-500">
+                  성분·제형·임상 근거·사용 순서를 사진과 함께 확인할 수 있습니다.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2 lg:justify-end">
@@ -289,9 +292,11 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
             <div className="flex flex-wrap items-end justify-between gap-4 border-b border-slate-200/80 pb-5">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-600/90">Spec sheet</p>
-                <h3 className="display-font mt-2 text-xl font-semibold text-slate-900 sm:text-2xl">한눈에 보는 스펙</h3>
+                <h3 className="display-font mt-2 text-xl font-semibold text-slate-900 sm:text-2xl">제품 정보</h3>
               </div>
-              <p className="max-w-xs text-right text-xs leading-relaxed text-slate-500">핵심 스펙만.</p>
+              <p className="max-w-xs text-right text-xs leading-relaxed text-slate-500">
+                성분, 용량, 권장 루틴과 주의사항입니다.
+              </p>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
               {product.info.map((entry, i) => (

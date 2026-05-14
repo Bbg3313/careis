@@ -199,7 +199,7 @@ export const products: ProductContent[] = [
         title: "문헌에서 확인되는 효능·내약성 방향",
         description:
           "시스테아민 5% 크림의 무작위 대조 연구(Mansouri 2015)와 TA 메조 비교 연구(Karrabi 2021) 등에서 기미 지표 개선·내약성 방향이 보고됩니다. 개인차가 큽니다.",
-        bullets: ["전문지 보고 요약", "효과·반응은 사람마다 다름"],
+        bullets: ["임상·연구에서 보고된 개선 경향 참고", "효과·반응은 사람마다 다름"],
         accent: "Evidence",
       },
       {
