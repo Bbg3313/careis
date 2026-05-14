@@ -5,8 +5,8 @@ import type { ProductContent } from "@/lib/product-data";
 import { ILLUMINATOR_DETAIL_MAX_WIDTH_PX, illuminatorDetailAssets } from "@/lib/site-assets";
 import { splitParagraphs } from "@/lib/text-paragraphs";
 
-/** product.sections(4개)와 맞추기 — 갤러리 썸네일만 7장일 때 앞 4장만 스토리에 사용 */
-const cuts = illuminatorDetailAssets.thumbnailImages.slice(0, 4);
+/** 갤러리 썸네일과 동일 7장 순서 — product.sections(일루미 7개)와 1:1 대응 */
+const cuts = illuminatorDetailAssets.thumbnailImages;
 const STORY_ASPECT = "aspect-[780/1024]";
 
 export function IlluminatorDetailStory({ product }: { product: ProductContent }) {
@@ -21,7 +21,8 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
             일루미네이터 스토리
           </h2>
           <p className="copy-pretty mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-            갤러리 앞쪽 네 가지 컷을 순서대로 펼칩니다. 각 장면에 맞춰 제품의 포지션과 루틴을 정리했습니다.
+            갤러리와 동일한 일곱 가지 컷을 순서대로 펼칩니다. 앞선 비주얼에 이어 실제 용기·라벨·야간 루틴
+            무드까지 연결해, 제품을 고를 때 확인하면 좋은 요약과 케어 포지션을 정리했습니다.
           </p>
         </header>
 
@@ -39,7 +40,7 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
                 >
                   <Image
                     src={src}
-                    alt={`${product.name} 에디토리얼 ${index + 1}`}
+                    alt={`${product.name} — ${block.title}`}
                     fill
                     className="object-cover"
                     sizes={`(max-width: 768px) 100vw, min(${ILLUMINATOR_DETAIL_MAX_WIDTH_PX}px, 96vw)`}

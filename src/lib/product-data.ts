@@ -210,8 +210,44 @@ export const products: ProductContent[] = [
         ],
         accent: "Evidence",
       },
+      {
+        title: "용기 라벨로 확인하는 핵심 표기",
+        description:
+          "실제 제품 용기에는 일루미네이터 네이밍과 함께 Cysteamine 5%, ODT 타입 크림 팩임을 알리는 문구, 사용 후 별도 세안이 필요 없다는 사용 안내, 순중량 50g(약 1.76 oz) 등이 함께 표기되어 있습니다. 구매 전·사용 전 라벨을 통해 제형과 용량을 직접 확인할 수 있습니다.",
+        bullets: [
+          "Cysteamine 5% · ODT TYPE CREAM PACK",
+          "NO WASH OFF AFTER USE(세안 없이 이어지는 사용 흐름 안내)",
+          "NET WT. 1.76 oz / 50g · SIMFLE STICK",
+        ],
+        accent: "Label",
+      },
+      {
+        title: "성분 메시지와 프리미엄 인상",
+        description:
+          "화이트 용기 위에 정돈된 타이포와 홀로그램 포인트로 핵심 성분과 제품명이 한눈에 들어오도록 구성했습니다. 야간 집중 케어 제품답게, 케어 단계에서 무엇을 바르는지 분명히 인지할 수 있도록 시각 계층을 맞췄습니다.",
+        bullets: [
+          "브랜드·제품명·핵심 성분이 동심원형 그래픽으로 연결",
+          "미니멀 베이스에 포인트 컬러로 나이트 무드만 살린 패키지 톤",
+        ],
+        accent: "Design",
+      },
+      {
+        title: "야간 루틴에 어울리는 사용 무드",
+        description:
+          "자연광이 스며드는 테이블 위 한 컷처럼, 일루미네이터는 ‘잠들기 전 짧게 몰입하는 케어’에 어울리는 무드를 지향합니다. 물 한 잔과 함께 두는 장면은 세안 이후 스킨케어 말미에 제품을 올리는 일상 리듬을 상기시키기 위한 연출입니다.",
+        bullets: [
+          "스킨케어 후 말미 단계에 얹기 좋은 포지셔닝",
+          "집중 케어 4개월 이후에도 주 2회 유지 루틴으로 이어지는 흐름",
+        ],
+        accent: "Routine",
+      },
     ],
     faq: [
+      {
+        question: "용기에 적힌 ODT·‘세안 없이’ 문구는 어떻게 이해하면 되나요?",
+        answer:
+          "ODT 타입 크림 팩은 도포 후 막이 형성되는 제형 흐름을 가리킵니다. 라벨의 안내는 제품이 제안하는 사용 순서를 설명하는 표현이며, 피부 상태에 따라 이어지는 스킨케어 단계는 조절할 수 있습니다.",
+      },
       {
         question: "언제 사용하는 제품인가요?",
         answer:
@@ -230,7 +266,8 @@ export const products: ProductContent[] = [
     ],
     info: [
       { label: "핵심 성분", value: "Cysteamine 5% / Niacinamide / Arbutin" },
-      { label: "용량", value: "50g" },
+      { label: "용량", value: "50g (용기 표기 NET WT. 약 1.76 oz)" },
+      { label: "제형·유형", value: "ODT TYPE CREAM PACK (도포 후 막 형성·대기·제거 흐름의 크림 팩 타입)" },
       { label: "권장 시간", value: "야간 사용 권장" },
       { label: "루틴", value: "집중 관리 4개월 후 주 2회 유지" },
     ],
