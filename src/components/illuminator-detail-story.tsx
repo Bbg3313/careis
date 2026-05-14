@@ -21,8 +21,8 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
             일루미네이터 스토리
           </h2>
           <p className="copy-pretty mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-            갤러리와 동일한 일곱 가지 컷을 순서대로 펼칩니다. 앞선 비주얼에 이어 실제 용기·라벨·야간 루틴
-            무드까지 연결해, 제품을 고를 때 확인하면 좋은 요약과 케어 포지션을 정리했습니다.
+            갤러리 일곱 컷 순서대로, 시스테아민·ODT·임상 근거·사용 프로토콜까지 한 흐름으로 정리했습니다. 제품
+            자료에 기반한 소구점만 압축해 담았습니다.
           </p>
         </header>
 
