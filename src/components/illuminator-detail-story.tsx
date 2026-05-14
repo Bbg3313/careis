@@ -5,7 +5,8 @@ import type { ProductContent } from "@/lib/product-data";
 import { ILLUMINATOR_DETAIL_MAX_WIDTH_PX, illuminatorDetailAssets } from "@/lib/site-assets";
 import { splitParagraphs } from "@/lib/text-paragraphs";
 
-const cuts = illuminatorDetailAssets.thumbnailImages;
+/** product.sections(4개)와 맞추기 — 갤러리 썸네일만 7장일 때 앞 4장만 스토리에 사용 */
+const cuts = illuminatorDetailAssets.thumbnailImages.slice(0, 4);
 const STORY_ASPECT = "aspect-[780/1024]";
 
 export function IlluminatorDetailStory({ product }: { product: ProductContent }) {
@@ -20,7 +21,7 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
             일루미네이터 스토리
           </h2>
           <p className="copy-pretty mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-slate-600 sm:text-base">
-            위 갤러리에서 본 네 가지 컷을 순서대로 펼칩니다. 각 장면에 맞춰 제품의 포지션과 루틴을 정리했습니다.
+            갤러리 앞쪽 네 가지 컷을 순서대로 펼칩니다. 각 장면에 맞춰 제품의 포지션과 루틴을 정리했습니다.
           </p>
         </header>
 

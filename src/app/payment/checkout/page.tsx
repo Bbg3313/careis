@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { OrderStatus } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,7 +8,14 @@ import { BUSINESS_INFO, BUSINESS_ORDER_FALLBACK_NAME } from "@/lib/business-info
 import { getOrderByNumber } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { getTossClientKey } from "@/lib/toss-payments";
+import { noIndexPageMetadata } from "@/lib/site-seo";
 import { formatCurrency } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  ...noIndexPageMetadata,
+  title: "결제",
+  description: "토스페이먼츠 결제창으로 이동하기 전 확인 화면입니다.",
+};
 
 export default async function PaymentCheckoutPage({
   searchParams,

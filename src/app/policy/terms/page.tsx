@@ -1,3 +1,17 @@
+import type { Metadata } from "next";
+
+import { SITE_NAME } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  title: "이용약관",
+  description: "CAREIS 웹사이트 및 관련 서비스 이용에 관한 기본 약관입니다.",
+  alternates: { canonical: "/policy/terms" },
+  openGraph: {
+    url: "/policy/terms",
+    title: `이용약관 · ${SITE_NAME}`,
+  },
+};
+
 export default function TermsPage() {
   return (
     <div className="space-y-8 pb-20">

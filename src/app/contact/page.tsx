@@ -1,5 +1,20 @@
+import type { Metadata } from "next";
+
 import { SiteLogo } from "@/components/site-logo";
 import { BUSINESS_INFO } from "@/lib/business-info";
+import { SITE_NAME } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  title: "제휴·파트너십 문의",
+  description:
+    "CAREIS 입점 제안, 제휴 협업, 파트너십 문의 채널 안내. 일반 구매는 공식 몰 제품 페이지를 이용해 주세요.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    url: "/contact",
+    title: `제휴 문의 · ${SITE_NAME}`,
+    description: "입점·제휴·파트너십 관련 문의를 위한 연락처입니다.",
+  },
+};
 
 export default function ContactPage() {
   return (

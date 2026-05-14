@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,6 +7,25 @@ import { HomeVideoBanner } from "@/components/home-video-banner";
 import { MotionMedia } from "@/components/motion-media";
 import { products } from "@/lib/product-data";
 import { homeVisuals, productVisuals } from "@/lib/site-assets";
+import { DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE_PATH, SITE_NAME, SITE_TAGLINE } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  title: "공식 몰",
+  description: DEFAULT_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: DEFAULT_DESCRIPTION,
+    images: [{ url: DEFAULT_OG_IMAGE_PATH, alt: `${SITE_NAME} 선팩 제품 비주얼` }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: DEFAULT_DESCRIPTION,
+    images: [DEFAULT_OG_IMAGE_PATH],
+  },
+};
 
 const featureBannerSlides = [
   {

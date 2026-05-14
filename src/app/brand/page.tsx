@@ -1,8 +1,23 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 import { SiteLogo } from "@/components/site-logo";
 import { homeVisuals } from "@/lib/site-assets";
+import { SITE_NAME } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  title: "브랜드",
+  description:
+    "CAREIS(케어이즈)는 낮과 밤을 위한 2-step 더마코스메틱 루틴 브랜드입니다. 사용감과 무드, 두 제품이 주는 인상을 선명하게 전합니다.",
+  alternates: { canonical: "/brand" },
+  openGraph: {
+    url: "/brand",
+    title: `브랜드 스토리 · ${SITE_NAME}`,
+    description: "낮에는 가볍게 보호하고 밤에는 깊이 있게 정돈하는 루틴을 소개합니다.",
+    images: [{ url: homeVisuals.sunHero, alt: `${SITE_NAME} 브랜드 비주얼` }],
+  },
+};
 
 export default function BrandPage() {
   return (

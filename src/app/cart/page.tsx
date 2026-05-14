@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
 import { getProductBySlug } from "@/lib/product-data";
 import { productVisuals } from "@/lib/site-assets";
+import { noIndexPageMetadata } from "@/lib/site-seo";
 import { formatCurrency } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  ...noIndexPageMetadata,
+  title: "장바구니",
+  description: "선택한 제품을 확인하고 주문 단계로 이동합니다.",
+};
 
 export default async function CartPage({
   searchParams,

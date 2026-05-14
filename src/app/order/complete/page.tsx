@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+import { noIndexPageMetadata } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  ...noIndexPageMetadata,
+  title: "주문 완료",
+  description: "주문 접수 및 결제 처리 결과를 확인합니다.",
+};
 
 export default async function OrderCompletePage({
   searchParams,

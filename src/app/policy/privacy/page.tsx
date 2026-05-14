@@ -1,4 +1,17 @@
+import type { Metadata } from "next";
+
 import { privacyCompanyNoticeLine } from "@/lib/business-info";
+import { SITE_NAME } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  title: "개인정보처리방침",
+  description: `CAREIS 개인정보처리방침. ${privacyCompanyNoticeLine()}`.slice(0, 160),
+  alternates: { canonical: "/policy/privacy" },
+  openGraph: {
+    url: "/policy/privacy",
+    title: `개인정보처리방침 · ${SITE_NAME}`,
+  },
+};
 
 export default function PrivacyPage() {
   return (

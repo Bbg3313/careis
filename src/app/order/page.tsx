@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 import { OrderForm } from "@/components/order-form";
 import { getProductBySlug } from "@/lib/product-data";
 import { getReferralCodeFromCookie } from "@/lib/referral";
+import { noIndexPageMetadata } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  ...noIndexPageMetadata,
+  title: "주문하기",
+  description: "배송지와 결제 정보를 입력해 주문을 완료합니다.",
+};
 
 export default async function OrderPage({
   searchParams,

@@ -110,7 +110,7 @@ export const sunPackDetailAssets = {
   ] satisfies SunPackStorySlide[],
 };
 
-/** 일루미네이터 상세: 제공 4장 썸네일(780×1024) */
+/** 일루미네이터 상세: 썸네일 7장(앞 4장은 기존 에디토리얼 스토리와 대응, 5~7은 제품 컷 추가) */
 export const illuminatorDetailAssets = {
   heroImage: "/images/illum-thumb-01.png",
   heroPixelSize: { width: 780, height: 1024 },
@@ -119,5 +119,8 @@ export const illuminatorDetailAssets = {
     "/images/illum-thumb-02.png",
     "/images/illum-thumb-03.png",
     "/images/illum-thumb-04.png",
+    "/images/illum-thumb-05.png",
+    "/images/illum-thumb-06.png",
+    "/images/illum-thumb-07.png",
   ],
 } as const;

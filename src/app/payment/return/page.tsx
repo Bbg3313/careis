@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
+
 import { PaymentReturnHandler } from "@/components/payment-return-handler";
+import { noIndexPageMetadata } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  ...noIndexPageMetadata,
+  title: "결제 처리",
+  description: "결제 승인 결과를 확인하는 페이지입니다.",
+};
 
 export default async function PaymentReturnPage({
   searchParams,

@@ -1,10 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+import { SITE_NAME } from "@/lib/site-seo";
 
 const policies = [
   { href: "/policy/terms", title: "이용약관", description: "비회원 구매 및 서비스 이용 기본 약관" },
   { href: "/policy/privacy", title: "개인정보처리방침", description: "주문·결제·배송 관련 개인정보 처리 기준" },
   { href: "/policy/shipping", title: "배송/교환/반품", description: "배송, 교환, 반품, 환불 안내" },
 ];
+
+export const metadata: Metadata = {
+  title: "정책 안내",
+  description: "이용약관, 개인정보처리방침, 배송·교환·반품 안내를 한곳에서 확인하세요.",
+  alternates: { canonical: "/policy" },
+  openGraph: {
+    url: "/policy",
+    title: `정책 안내 · ${SITE_NAME}`,
+    description: "서비스 이용 및 주문·배송 관련 정책입니다.",
+  },
+};
 
 export default function PolicyPage() {
   return (

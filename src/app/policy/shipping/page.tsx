@@ -1,4 +1,18 @@
+import type { Metadata } from "next";
+
 import { BUSINESS_INFO } from "@/lib/business-info";
+import { SITE_NAME } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  title: "배송·교환·반품",
+  description: "CAREIS 배송 안내, 교환·반품 절차, 환불 기준을 정리했습니다.",
+  alternates: { canonical: "/policy/shipping" },
+  openGraph: {
+    url: "/policy/shipping",
+    title: `배송·교환·반품 · ${SITE_NAME}`,
+    description: "택배 배송, 교환·반품 신청, 환불 처리 안내입니다.",
+  },
+};
 
 export default function ShippingPage() {
   return (

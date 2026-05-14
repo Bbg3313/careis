@@ -1,5 +1,22 @@
+import type { Metadata } from "next";
+
 import { ProductCard } from "@/components/product-card";
 import { products } from "@/lib/product-data";
+import { SITE_NAME } from "@/lib/site-seo";
+
+export const metadata: Metadata = {
+  title: "제품",
+  description:
+    "심플스틱 선팩 SPF50+ / PA+++ 미백·주름개선 선케어, 일루미네이터 시스테아민 5% 야간 브라이트닝 집중 케어. CAREIS 시그니처 2-step 루틴을 한 페이지에서 비교합니다.",
+  keywords: ["선팩", "일루미네이터", "시스테아민", "SPF50", "더마코스메틱", "CAREIS", "케어이즈"],
+  alternates: { canonical: "/products" },
+  openGraph: {
+    url: "/products",
+    title: `제품 · ${SITE_NAME}`,
+    description:
+      "낮에는 선케어, 밤에는 브라이트닝 집중 케어. 선팩과 일루미네이터 두 가지 시그니처 제품을 만나보세요.",
+  },
+};
 
 export default function ProductsPage() {
   return (
