@@ -19,7 +19,7 @@ function useSlLogo() {
   return existsSync(pngSlLogo);
 }
 
-/** 우선순위: SVG 마크 → SL 마스터 PNG → 기존 소스 PNG → 로고 PNG */
+/** 우선순위: SL 마스터 PNG(투명) → 기존 소스 PNG → 로고 PNG */
 function faviconPngMasterPath() {
   if (useSlLogo()) return pngSlLogo;
   if (existsSync(pngPreferred)) return pngPreferred;
@@ -192,31 +192,40 @@ async function rasterMasterToSharp(srcPath) {
 }
 
 /**
- * 일부보내기에서 검은 글자가 알파만 깨져 반투명으로 들어오는 경우 복구
- * (배경은 여전히 a=0 유지)
+ * SL 마스터가 JPEG 등 불투명 파일인 경우: 밝은 무채 배경만 투명 처리(검정·골드·남색 유지).
  */
-async function solidifyDarkInkAlpha(imageSharp) {
-  const { data, info } = await imageSharp.clone().ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+async function slOpaqueMasterToPngAlpha(srcPath) {
+  const meta = await sharp(srcPath).metadata();
+  if (meta.hasAlpha && meta.format === "png") {
+    return sharp(srcPath).ensureAlpha();
+  }
+
+  const { data, info } = await sharp(srcPath).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const w = info.width;
   const h = info.height;
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    let a = data[i + 3];
-    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-    if (a === 0) continue;
-    if (lum < 210 && a > 0 && a < 252) {
-      data[i + 3] = 255;
-    }
-    if (lum > 248 && a < 48) {
-      data[i] = 0;
-      data[i + 1] = 0;
-      data[i + 2] = 0;
-      data[i + 3] = 0;
+  const out = Buffer.alloc(w * h * 4);
+
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const si = (y * w + x) * 3;
+      const r = data[si];
+      const g = data[si + 1];
+      const b = data[si + 2];
+      const maxc = Math.max(r, g, b);
+      const minc = Math.min(r, g, b);
+      const sat = maxc === 0 ? 0 : (maxc - minc) / maxc;
+      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      const isNeutralBg = lum > 198 && sat < 0.055 && maxc > 185;
+
+      const di = (y * w + x) * 4;
+      out[di] = r;
+      out[di + 1] = g;
+      out[di + 2] = b;
+      out[di + 3] = isNeutralBg ? 0 : 255;
     }
   }
-  return sharp(data, { raw: { width: w, height: h, channels: 4 } }).ensureAlpha();
+
+  return sharp(out, { raw: { width: w, height: h, channels: 4 } }).ensureAlpha();
 }
 
 /**
@@ -253,12 +262,12 @@ async function trimTransparentMargins(imageSharp, alphaThreshold = 12) {
   });
 }
 
-/** 마스터 PNG 준비: SL은 원본 그대로(배경만 투명 유지), 그 외는 알파 기준 여백 제거 */
+/** 마스터 PNG 준비: SL은 원본 색 유지·배경만 투명, 투명 여백만 잘라 최대 크기로 맞춤 */
 async function preparedPngPipeline() {
   const path = faviconPngMasterPath();
   if (useSlLogo()) {
-    const fixed = await solidifyDarkInkAlpha(sharp(path).ensureAlpha());
-    return trimTransparentMargins(fixed);
+    const base = await slOpaqueMasterToPngAlpha(path);
+    return trimTransparentMargins(base);
   }
   const raw = await rasterMasterToSharp(path);
   const meta = await sharp(path).metadata();
@@ -293,6 +302,22 @@ async function squareFromSvg(px, filename) {
  */
 async function squareFromPng(px, filename, opts = {}) {
   const base = await preparedPngPipeline();
+
+  if (opts.softAlpha) {
+    await base
+      .clone()
+      .ensureAlpha()
+      .resize(px, px, {
+        fit: "contain",
+        background: transparent,
+        position: "centre",
+        kernel: sharp.kernel.lanczos3,
+      })
+      .png()
+      .toFile(join(root, "public", filename));
+    return;
+  }
+
   const inner = Math.max(1, Math.round(px * 0.92));
   const resized = base.clone().ensureAlpha().resize(inner, inner, {
     fit: "contain",
@@ -307,11 +332,6 @@ async function squareFromPng(px, filename, opts = {}) {
       create: { width: px, height: px, channels: 4, background: transparent },
     }).composite([{ input: buf, gravity: "centre" }]);
   };
-
-  if (opts.softAlpha) {
-    await padToSquare(resized).png().toFile(join(root, "public", filename));
-    return;
-  }
 
   const { data, info } = await (await padToSquare(resized)).raw().toBuffer({ resolveWithObject: true });
   for (let i = 3; i < data.length; i += 4) {
@@ -332,12 +352,12 @@ async function squareFromPng(px, filename, opts = {}) {
 }
 
 async function square(px, filename) {
-  if (useSvgSource()) {
-    await squareFromSvg(px, filename);
-    return;
-  }
   if (useSlLogo()) {
     await squareFromPng(px, filename, { softAlpha: true });
+    return;
+  }
+  if (useSvgSource()) {
+    await squareFromSvg(px, filename);
     return;
   }
   await squareFromPng(px, filename);
@@ -354,7 +374,9 @@ await square(180, "apple-touch-icon.png");
 copyFileSync(join(root, "public/favicon-192.png"), join(root, "src/app/icon.png"));
 
 const iconSvgPublic = join(root, "public/icon.svg");
-if (useSvgSource()) {
+if (useSlLogo()) {
+  if (existsSync(iconSvgPublic)) unlinkSync(iconSvgPublic);
+} else if (useSvgSource()) {
   copyFileSync(svgMark, iconSvgPublic);
 } else if (existsSync(iconSvgPublic)) {
   unlinkSync(iconSvgPublic);
