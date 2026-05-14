@@ -19,7 +19,7 @@ function useSlLogo() {
   return existsSync(pngSlLogo);
 }
 
-/** 우선순위: SL 마스터 → 기존 소스 PNG → 로고 PNG */
+/** 우선순위: SVG 마크 → SL 마스터 PNG → 기존 소스 PNG → 로고 PNG */
 function faviconPngMasterPath() {
   if (useSlLogo()) return pngSlLogo;
   if (existsSync(pngPreferred)) return pngPreferred;
@@ -273,6 +273,7 @@ async function preparedPngPipeline() {
   }
 }
 
+/** SVG는 viewBox 여백으로 클립 방지; 래스터는 px에 맞춤 */
 async function squareFromSvg(px, filename) {
   const buf = readFileSync(svgMark);
   await sharp(buf)
@@ -292,19 +293,27 @@ async function squareFromSvg(px, filename) {
  */
 async function squareFromPng(px, filename, opts = {}) {
   const base = await preparedPngPipeline();
-  const resized = base.clone().ensureAlpha().resize(px, px, {
+  const inner = Math.max(1, Math.round(px * 0.92));
+  const resized = base.clone().ensureAlpha().resize(inner, inner, {
     fit: "contain",
     background: transparent,
     position: "center",
     kernel: sharp.kernel.lanczos3,
   });
 
+  const padToSquare = async (pipeline) => {
+    const buf = await pipeline.png().toBuffer();
+    return sharp({
+      create: { width: px, height: px, channels: 4, background: transparent },
+    }).composite([{ input: buf, gravity: "centre" }]);
+  };
+
   if (opts.softAlpha) {
-    await resized.png().toFile(join(root, "public", filename));
+    await padToSquare(resized).png().toFile(join(root, "public", filename));
     return;
   }
 
-  const { data, info } = await resized.raw().toBuffer({ resolveWithObject: true });
+  const { data, info } = await (await padToSquare(resized)).raw().toBuffer({ resolveWithObject: true });
   for (let i = 3; i < data.length; i += 4) {
     const on = data[i] >= 130;
     data[i] = on ? 255 : 0;
@@ -323,26 +332,29 @@ async function squareFromPng(px, filename, opts = {}) {
 }
 
 async function square(px, filename) {
+  if (useSvgSource()) {
+    await squareFromSvg(px, filename);
+    return;
+  }
   if (useSlLogo()) {
     await squareFromPng(px, filename, { softAlpha: true });
     return;
   }
-  if (useSvgSource()) await squareFromSvg(px, filename);
-  else await squareFromPng(px, filename);
+  await squareFromPng(px, filename);
 }
 
 await square(16, "favicon-16.png");
 await square(32, "favicon-32.png");
 await square(48, "favicon-48.png");
 await square(64, "favicon-64.png");
+await square(96, "favicon-96.png");
+await square(192, "favicon-192.png");
 await square(180, "apple-touch-icon.png");
 
-copyFileSync(join(root, "public/favicon-64.png"), join(root, "src/app/icon.png"));
+copyFileSync(join(root, "public/favicon-192.png"), join(root, "src/app/icon.png"));
 
 const iconSvgPublic = join(root, "public/icon.svg");
-if (useSlLogo()) {
-  if (existsSync(iconSvgPublic)) unlinkSync(iconSvgPublic);
-} else if (useSvgSource()) {
+if (useSvgSource()) {
   copyFileSync(svgMark, iconSvgPublic);
 } else if (existsSync(iconSvgPublic)) {
   unlinkSync(iconSvgPublic);
