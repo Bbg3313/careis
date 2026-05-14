@@ -121,8 +121,7 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
                   </span>
                 </h2>
                 <p className="copy-pretty mt-4 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
-                  {product.tagline}. 성분 작용, ODT 전달, 임상 맥락, 사용 프로토콜을 시각 블록으로 나눠 한눈에 읽히게
-                  구성했습니다.
+                  {product.tagline} — 아래는 핵심만 요약했습니다.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2 lg:justify-end">
@@ -249,7 +248,7 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
                         </div>
                       ) : null}
 
-                      <div className="mt-6 space-y-4 text-sm leading-8 text-slate-600 sm:text-[15px] sm:leading-8">
+                      <div className="mt-5 space-y-3 text-sm leading-7 text-slate-600 sm:text-[15px] sm:leading-7">
                         {splitParagraphs(block.description).map((p, i) => (
                           <p key={i} className="copy-pretty first:font-medium first:text-slate-800">
                             {p}
@@ -258,7 +257,7 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
                       </div>
 
                       {block.bullets?.length ? (
-                        <ul className="mt-8 space-y-3 border-t border-slate-200/60 pt-6">
+                        <ul className="mt-6 space-y-2.5 border-t border-slate-200/60 pt-5">
                           {block.bullets.map((b, bi) => (
                             <li
                               key={b}
@@ -292,9 +291,7 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
                 <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-indigo-600/90">Spec sheet</p>
                 <h3 className="display-font mt-2 text-xl font-semibold text-slate-900 sm:text-2xl">한눈에 보는 스펙</h3>
               </div>
-              <p className="max-w-xs text-right text-xs leading-relaxed text-slate-500">
-                구매 결정에 쓰이는 수치·주의·루틴만 모았습니다.
-              </p>
+              <p className="max-w-xs text-right text-xs leading-relaxed text-slate-500">핵심 스펙만.</p>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
               {product.info.map((entry, i) => (
