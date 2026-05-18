@@ -85,7 +85,9 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
               key={tab.key}
               href={tab.href}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                active ? "bg-stone-900 text-white" : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
+                active
+                  ? "bg-stone-900 !text-white hover:!text-white visited:!text-white"
+                  : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
               }`}
             >
               {tab.label}
