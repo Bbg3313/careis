@@ -21,10 +21,10 @@ function StatCard({ label, value, href }: { label: string; value: number; href: 
   return (
     <Link
       href={href}
-      className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition hover:border-[#b89156]/40 hover:shadow-md"
+      className="flex flex-col rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition hover:border-[#b89156]/40 hover:shadow-md"
     >
-      <p className="text-xs font-medium tracking-wide text-stone-500 normal-case">{label}</p>
-      <p className="mt-2 text-3xl font-semibold tabular-nums text-stone-900">{value}</p>
+      <p className="text-left text-xs font-medium tracking-wide text-stone-500 normal-case">{label}</p>
+      <p className="mt-2 text-right text-3xl font-semibold tabular-nums text-stone-900">{value}</p>
     </Link>
   );
 }
@@ -86,35 +86,35 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
       <div>
         <h2 className="mb-3 text-base font-semibold text-stone-900">주문 요약</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="전체" value={stats.all} href={buildAdminOrdersHref({ from, to })} />
-        <StatCard label="결제 완료" value={stats.paid} href={buildAdminOrdersHref({ status: "PAID", from, to })} />
-        <StatCard label="결제 대기" value={stats.pending} href={buildAdminOrdersHref({ status: "PENDING", from, to })} />
-        <StatCard
-          label="취소·환불"
-          value={stats.cancelled + stats.refunded}
-          href={buildAdminOrdersHref({ status: "CANCELLED_REFUNDED", from, to })}
-        />
-      </div>
+          <StatCard label="전체" value={stats.all} href={buildAdminOrdersHref({ from, to })} />
+          <StatCard label="결제 완료" value={stats.paid} href={buildAdminOrdersHref({ status: "PAID", from, to })} />
+          <StatCard label="결제 대기" value={stats.pending} href={buildAdminOrdersHref({ status: "PENDING", from, to })} />
+          <StatCard
+            label="취소·환불"
+            value={stats.cancelled + stats.refunded}
+            href={buildAdminOrdersHref({ status: "CANCELLED_REFUNDED", from, to })}
+          />
+        </div>
       </div>
 
       <div>
         <h2 className="mb-3 text-base font-semibold text-stone-900">배송 단계</h2>
         <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard
-          label="배송 전"
-          value={stats.paidAwaitingShip}
-          href={buildAdminOrdersHref({ status: "PAID", fulfillment: "AWAITING_SHIP", from, to })}
-        />
-        <StatCard
-          label="배송중"
-          value={stats.paidInTransit}
-          href={buildAdminOrdersHref({ status: "PAID", fulfillment: "IN_TRANSIT", from, to })}
-        />
-        <StatCard
-          label="배송완료"
-          value={stats.paidDelivered}
-          href={buildAdminOrdersHref({ status: "PAID", fulfillment: "DELIVERED", from, to })}
-        />
+          <StatCard
+            label="배송 전"
+            value={stats.paidAwaitingShip}
+            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "AWAITING_SHIP", from, to })}
+          />
+          <StatCard
+            label="배송중"
+            value={stats.paidInTransit}
+            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "IN_TRANSIT", from, to })}
+          />
+          <StatCard
+            label="배송완료"
+            value={stats.paidDelivered}
+            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "DELIVERED", from, to })}
+          />
         </div>
       </div>
 
@@ -127,9 +127,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
             공구캠페인
           </Link>
         </div>
-        <div className="px-2 py-2 sm:px-0 sm:py-0">
-          <AdminDashboardPromoLinks baseUrlFromEnv={siteUrl} campaigns={promoLinkRows} />
-        </div>
+        <AdminDashboardPromoLinks baseUrlFromEnv={siteUrl} campaigns={promoLinkRows} />
       </section>
 
       <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
@@ -140,16 +138,16 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
           </Link>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
+          <table className="w-full min-w-[800px] border-collapse text-left text-sm text-stone-800">
             <thead className="bg-[#faf8f5] text-xs text-stone-600">
               <tr>
-                <th className="px-5 py-3 font-medium">주문번호</th>
-                <th className="px-5 py-3 font-medium">일시</th>
-                <th className="px-5 py-3 font-medium">고객</th>
-                <th className="px-5 py-3 font-medium">결제</th>
-                <th className="px-5 py-3 font-medium">배송</th>
-                <th className="px-5 py-3 font-medium">레퍼럴·공구</th>
-                <th className="px-5 py-3 font-medium text-right">금액</th>
+                <th className="align-middle px-5 py-3 font-medium">주문번호</th>
+                <th className="align-middle px-5 py-3 font-medium">일시</th>
+                <th className="align-middle px-5 py-3 font-medium">고객</th>
+                <th className="align-middle px-5 py-3 font-medium">결제</th>
+                <th className="align-middle px-5 py-3 font-medium">배송</th>
+                <th className="align-middle px-5 py-3 font-medium">레퍼럴·공구</th>
+                <th className="align-middle px-5 py-3 text-right font-medium">금액</th>
               </tr>
             </thead>
             <tbody>
@@ -162,24 +160,24 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
               ) : (
                 recent.map((order) => (
                   <tr key={order.id} className="border-t border-stone-100">
-                    <td className="px-5 py-3">
+                    <td className="align-top px-5 py-3">
                       <Link href={`/admin/orders/${encodeURIComponent(order.orderNumber)}`} className="font-medium text-[#8b673f] hover:underline">
                         {order.orderNumber}
                       </Link>
                     </td>
-                    <td className="px-5 py-3 text-stone-600">{formatDate(order.createdAt)}</td>
-                    <td className="px-5 py-3 text-stone-600">
+                    <td className="align-top whitespace-nowrap px-5 py-3 tabular-nums text-stone-600">{formatDate(order.createdAt)}</td>
+                    <td className="align-top px-5 py-3 text-stone-600">
                       <div>{order.customerName}</div>
                       <div className="text-xs text-stone-400">{formatKoreanMobileDisplay(order.phone)}</div>
                     </td>
-                    <td className="whitespace-nowrap px-5 py-3 text-stone-700">{adminPaymentStatusLabel(order.paymentStatus)}</td>
-                    <td className="whitespace-nowrap px-5 py-3 text-stone-700">{adminFulfillmentLabel(order)}</td>
-                    <td className="max-w-[160px] px-5 py-3">
-                      <div className="truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
+                    <td className="align-top whitespace-nowrap px-5 py-3 text-stone-700">{adminPaymentStatusLabel(order.paymentStatus)}</td>
+                    <td className="align-top whitespace-nowrap px-5 py-3 text-stone-700">{adminFulfillmentLabel(order)}</td>
+                    <td className="align-top px-5 py-3">
+                      <div className="max-w-[200px] truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
                         {inflowSummary(order)}
                       </div>
                     </td>
-                    <td className="px-5 py-3 text-right font-medium text-stone-900">{formatCurrency(order.totalAmount)}</td>
+                    <td className="align-top whitespace-nowrap px-5 py-3 text-right font-medium tabular-nums text-stone-900">{formatCurrency(order.totalAmount)}</td>
                   </tr>
                 ))
               )}
