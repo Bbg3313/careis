@@ -60,18 +60,27 @@ function AutoPlayVideo({ src, mime }: { src: string; mime: string }) {
   );
 }
 
-function StoryGifSlide({ slide, index }: { slide: SunPackStorySlide; index: number }) {
+function StoryGifSlide({
+  slide,
+  index,
+  imageAltBase,
+}: {
+  slide: SunPackStorySlide;
+  index: number;
+  imageAltBase: string;
+}) {
   const [gifBroken, setGifBroken] = useState(false);
   const poster = slide.posterSrc;
   const eager = index < 2;
   const loading = eager ? "eager" : "lazy";
+  const alt = `${imageAltBase} ${index + 1}`;
 
   if (!poster) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={slide.src}
-        alt={`선팩 상세 ${index + 1}`}
+        alt={alt}
         width={slide.width}
         height={slide.height}
         className="block h-auto w-full max-w-full select-none"
@@ -100,7 +109,7 @@ function StoryGifSlide({ slide, index }: { slide: SunPackStorySlide; index: numb
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={slide.src}
-          alt={`선팩 상세 ${index + 1}`}
+          alt={alt}
           width={slide.width}
           height={slide.height}
           className="pointer-events-none absolute inset-0 block h-full w-full object-contain select-none"
@@ -115,8 +124,18 @@ function StoryGifSlide({ slide, index }: { slide: SunPackStorySlide; index: numb
   );
 }
 
-export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; index: number }) {
+export function SunPackStorySlide({
+  slide,
+  index,
+  imageAltBase = "선팩 상세",
+}: {
+  slide: SunPackStorySlide;
+  index: number;
+  /** 접근성 alt 접두 (예: 일루미 관리자 추가 슬라이드) */
+  imageAltBase?: string;
+}) {
   const ext = mediaExtension(slide.src);
+  const alt = `${imageAltBase} ${index + 1}`;
 
   if (ext === "mp4" || ext === "webm") {
     const mime = ext === "webm" ? "video/webm" : "video/mp4";
@@ -126,13 +145,13 @@ export function SunPackStorySlide({ slide, index }: { slide: SunPackStorySlide; 
   const isGif = ext === "gif";
 
   if (isGif) {
-    return <StoryGifSlide slide={slide} index={index} />;
+    return <StoryGifSlide slide={slide} index={index} imageAltBase={imageAltBase} />;
   }
 
   return (
     <Image
       src={slide.src}
-      alt={`선팩 상세 ${index + 1}`}
+      alt={alt}
       width={slide.width}
       height={slide.height}
       className="block h-auto w-full max-w-full"

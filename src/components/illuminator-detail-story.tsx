@@ -1,10 +1,21 @@
+"use client";
+
 import Image from "next/image";
 import clsx from "clsx";
 
 import { DetailAccordionItem } from "@/components/detail-accordion-item";
+import { SunPackStorySlide as SunPackStorySlideView } from "@/components/sun-pack-story-slide";
 import type { ProductContent } from "@/lib/product-data";
-import { ILLUMINATOR_DETAIL_MAX_WIDTH_PX, type SunPackStorySlide } from "@/lib/site-assets";
+import {
+  ILLUMINATOR_DETAIL_MAX_WIDTH_PX,
+  illuminatorDetailAssets,
+  type SunPackStorySlide,
+} from "@/lib/site-assets";
 import { splitParagraphs } from "@/lib/text-paragraphs";
+
+/** 고정 7섹션 이미지 — 관리자 슬라이드와 합성하지 않음 */
+const FIXED_SECTION_CUTS = illuminatorDetailAssets.thumbnailImages;
+const FIXED_CUT_PIXEL = illuminatorDetailAssets.heroPixelSize;
 
 function storyMediaExtension(src: string) {
   return src.split("?")[0].split(".").pop()?.toLowerCase() ?? "";
@@ -149,11 +160,11 @@ function decoFor(accent?: string): SectionDeco {
 
 export function IlluminatorDetailStory({
   product,
-  sectionSlides,
+  adminSlides,
 }: {
   product: ProductContent;
-  /** 관리자 슬라이드 + 부족분은 기본 컷으로 채운 배열(섹션 인덱스와 1:1) */
-  sectionSlides: SunPackStorySlide[];
+  /** 관리자 추가 슬라이드: sortOrder 순으로 위에서부터만 쌓임(고정 템플릿과 합성 없음) */
+  adminSlides: SunPackStorySlide[];
 }) {
   const sections = product.sections;
 
@@ -218,19 +229,57 @@ export function IlluminatorDetailStory({
           </div>
         </div>
 
-        {/* 본문 섹션: 이미지 + 카드형 타이포 교차 */}
+        {adminSlides.length > 0 ? (
+          <div className="overflow-hidden rounded-[28px] border border-indigo-100/90 bg-white shadow-[0_16px_48px_rgba(30,27,75,0.06)]">
+            <div className="divide-y divide-slate-100/90">
+              {adminSlides.map((slide, index) => {
+                const paras = slide.body ? splitParagraphs(slide.body) : [];
+                return (
+                  <div key={`admin-slide-${slide.src}-${index}`} className="bg-white">
+                    <div
+                      className="mx-auto w-full min-w-0"
+                      style={{ maxWidth: Math.min(slide.width, ILLUMINATOR_DETAIL_MAX_WIDTH_PX) }}
+                    >
+                      <SunPackStorySlideView
+                        slide={slide}
+                        index={index}
+                        imageAltBase={`${product.shortName} 추가 상세`}
+                      />
+                    </div>
+                    {paras.length > 0 ? (
+                      <div className="border-t border-indigo-100/40 bg-slate-50/80 px-4 py-6 sm:px-8 sm:py-8">
+                        <div className="mx-auto max-w-[min(42rem,100%)] space-y-4 text-sm leading-7 text-slate-700 sm:text-[15px] sm:leading-8">
+                          {paras.map((p, i) => (
+                            <p key={i} className="copy-pretty">
+                              {p}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
+        {/* 본문 섹션: 이미지 + 카드형 타이포 교차 (고정 에셋 + product.sections) */}
         <div className="space-y-10 sm:space-y-12">
           {sections.map((block, index) => {
-            const slide = sectionSlides[index];
-            if (!slide) return null;
+            const src = FIXED_SECTION_CUTS[index];
+            if (!src) return null;
+            const slide: SunPackStorySlide = {
+              src,
+              width: FIXED_CUT_PIXEL.width,
+              height: FIXED_CUT_PIXEL.height,
+            };
             const reversed = index % 2 === 1;
             const deco = decoFor(block.accent);
-            const descriptionParagraphs = slide.body?.trim()
-              ? splitParagraphs(slide.body)
-              : splitParagraphs(block.description);
+            const descriptionParagraphs = splitParagraphs(block.description);
 
             return (
-              <article key={`${slide.src}-${index}`} className="relative">
+              <article key={`fixed-section-${src}-${index}`} className="relative">
                 {index > 0 ? (
                   <div className="mb-10 flex justify-center sm:mb-12" aria-hidden>
                     <div className="h-10 w-px bg-[linear-gradient(180deg,transparent_0%,rgba(99,102,241,0.35)_50%,transparent_100%)]" />
