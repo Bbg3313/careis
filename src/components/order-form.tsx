@@ -30,6 +30,37 @@ function agreementsAllChecked(state: AgreementState) {
   return AGREEMENT_KEYS.every((key) => state[key]);
 }
 
+/** 시드·QA용 등 고객에게 그대로 노출하기 부적절한 캠페인 */
+function looksLikeInternalOrTestPromo(code: string, title: string): boolean {
+  const c = code.trim().toLowerCase();
+  const t = title.trim().toLowerCase();
+  if (c.startsWith("test_") || c.startsWith("test-")) return true;
+  if (/^test\d/.test(c)) return true;
+  if (t.includes("테스트")) return true;
+  if (t.includes("test ") || t === "test") return true;
+  return false;
+}
+
+function customerPromoBenefitCopy(applied: { code: string; title: string }): { headline: string; sub?: string } {
+  if (looksLikeInternalOrTestPromo(applied.code, applied.title)) {
+    return {
+      headline: "특별 할인가가 적용된 주문이에요",
+      sub: "공구·이벤트 혜택이 정상적으로 반영되었습니다.",
+    };
+  }
+  const head = applied.title.trim() || "특별 혜택";
+  return { headline: `${head} 혜택이 적용되었어요` };
+}
+
+function customerBenefitStatusLabel(
+  applied: { code: string; title: string } | null | undefined,
+  referral: string | null,
+): string {
+  if (applied) return "특별 할인가 적용";
+  if (referral) return "코드 반영됨";
+  return "일반 주문";
+}
+
 declare global {
   interface Window {
     daum?: {
@@ -125,14 +156,24 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
       });
   }, [selectedItems, quote]);
 
+  const listSubtotal = useMemo(
+    () => orderSummaryLines.reduce((sum, item) => sum + item.listUnit * item.quantity, 0),
+    [orderSummaryLines],
+  );
+
   const totalAmount = useMemo(
     () => orderSummaryLines.reduce((sum, item) => sum + item.lineTotal, 0),
     [orderSummaryLines],
   );
 
-  const listSubtotal = useMemo(
-    () => orderSummaryLines.reduce((sum, item) => sum + item.listUnit * item.quantity, 0),
-    [orderSummaryLines],
+  const appliedPromoBenefit = useMemo(() => {
+    if (!quote?.appliedPromo) return null;
+    return customerPromoBenefitCopy(quote.appliedPromo);
+  }, [quote?.appliedPromo]);
+
+  const discountAmount = useMemo(
+    () => (listSubtotal > totalAmount ? listSubtotal - totalAmount : 0),
+    [listSubtotal, totalAmount],
   );
 
   useEffect(() => {
@@ -583,36 +624,50 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             </div>
           )}
 
-          {quote?.appliedPromo ? (
-            <p className="mt-3 text-xs text-emerald-800">
-              적용: {quote.appliedPromo.title} ({quote.appliedPromo.code})
-            </p>
-          ) : null}
-
-          {listSubtotal > totalAmount ? (
-            <div className="flex items-center justify-between border-t border-stone-100 pt-3 text-sm text-emerald-800">
-              <span>프로모 할인</span>
-              <span>-{formatCurrency(listSubtotal - totalAmount)}</span>
+          {appliedPromoBenefit ? (
+            <div
+              role="status"
+              className="mt-4 rounded-2xl border border-emerald-200/90 bg-gradient-to-br from-emerald-50 via-white to-white px-4 py-3.5 shadow-[0_1px_0_rgba(16,185,129,0.06)]"
+            >
+              <p className="text-[15px] font-semibold leading-7 text-emerald-950 [text-wrap:balance]">
+                {appliedPromoBenefit.headline}
+              </p>
+              {appliedPromoBenefit.sub ? (
+                <p className="mt-1.5 text-xs leading-6 text-emerald-900/85">{appliedPromoBenefit.sub}</p>
+              ) : null}
             </div>
           ) : null}
 
-          <div className="flex items-center justify-between pt-4 text-base font-semibold text-stone-900">
-            <span>총 결제 예정 금액</span>
-            <span className="flex items-center gap-2">
+          {discountAmount > 0 ? (
+            <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-2 border-t border-stone-100 pt-4 text-sm text-emerald-800">
+              <span className="min-w-0 flex-1 text-[15px] font-medium leading-7 [overflow-wrap:anywhere]">
+                혜택으로 절약된 금액
+              </span>
+              <span className="shrink-0 whitespace-nowrap text-right text-[15px] font-semibold tabular-nums leading-7 tracking-tight">
+                −{formatCurrency(discountAmount)}
+              </span>
+            </div>
+          ) : null}
+
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-2 pt-4 text-base font-semibold text-stone-900">
+            <span className="min-w-0 flex-1 leading-7 [overflow-wrap:anywhere]">총 결제 예정 금액</span>
+            <span className="flex shrink-0 items-baseline gap-2 leading-7">
               {quoteLoading ? <span className="text-xs font-normal text-stone-500">확인 중</span> : null}
               {formatCurrency(totalAmount)}
             </span>
           </div>
         </div>
 
-        <div className="space-y-2 rounded-[24px] bg-white p-5 text-sm text-stone-600 md:rounded-[28px] md:p-6">
-          <div className="flex items-center justify-between">
-            <span>레퍼럴 코드</span>
-            <strong className="text-stone-900">{resolvedReferralCode ?? "직접 유입"}</strong>
+        <div className="space-y-3 rounded-[24px] bg-white p-5 text-sm text-stone-600 md:rounded-[28px] md:p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1.5">
+            <span className="shrink-0 leading-7 text-stone-600">혜택 안내</span>
+            <strong className="max-w-full text-right text-[15px] font-semibold leading-7 text-stone-900 sm:max-w-[70%] [overflow-wrap:anywhere]">
+              {customerBenefitStatusLabel(quote?.appliedPromo, resolvedReferralCode)}
+            </strong>
           </div>
-          <div className="flex items-center justify-between">
-            <span>결제 상태</span>
-            <strong className="text-amber-700">결제 진행 전</strong>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1.5">
+            <span className="shrink-0 leading-7 text-stone-600">결제 상태</span>
+            <strong className="leading-7 text-amber-700">결제 진행 전</strong>
           </div>
         </div>
 
