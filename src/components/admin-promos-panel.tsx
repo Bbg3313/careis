@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { formatCurrency } from "@/lib/utils";
+import { PromoReferralLinkCopy } from "@/components/promo-referral-link-copy";
+
+const PUBLIC_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
 type Campaign = {
   id: string;
@@ -115,6 +118,7 @@ export function AdminPromosPanel() {
               <th className="px-4 py-3">할인</th>
               <th className="px-4 py-3">상품</th>
               <th className="px-4 py-3">기간</th>
+              <th className="px-4 py-3">유입 링크</th>
               <th className="px-4 py-3">활성</th>
             </tr>
           </thead>
@@ -129,6 +133,9 @@ export function AdminPromosPanel() {
                 <td className="px-4 py-3 text-stone-600">{formatSlugs(c.productSlugs)}</td>
                 <td className="px-4 py-3 text-xs text-stone-500">
                   {new Date(c.startsAt).toLocaleString("ko-KR")} ~ {new Date(c.endsAt).toLocaleString("ko-KR")}
+                </td>
+                <td className="min-w-[200px] px-4 py-3 align-top">
+                  <PromoReferralLinkCopy baseUrlFromEnv={PUBLIC_SITE_URL} code={c.code} compact />
                 </td>
                 <td className="px-4 py-3">
                   <button
@@ -149,7 +156,7 @@ export function AdminPromosPanel() {
             ))}
             {campaigns.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-stone-500">
+                <td colSpan={7} className="px-4 py-8 text-center text-stone-500">
                   등록된 공구가 없습니다. 아래에서 새로 만듭니다.
                 </td>
               </tr>

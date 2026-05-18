@@ -1,8 +1,10 @@
 import Link from "next/link";
 
+import { AdminDashboardPromoLinks } from "@/components/admin-dashboard-promo-links";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { inflowSummary } from "@/lib/admin-order-inflow";
 import { loadAdminOrdersOverview } from "@/lib/orders";
+import { listPromoCampaignsAdmin } from "@/lib/promo";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -26,6 +28,23 @@ export default async function AdminDashboardPage() {
   const orders = loaded.ok ? loaded.orders : [];
   const recent = orders.slice(0, 8);
 
+  let promoLinkRows: { id: string; code: string; title: string; isActive: boolean }[] = [];
+  if (loaded.ok) {
+    try {
+      const rows = await listPromoCampaignsAdmin();
+      promoLinkRows = rows.slice(0, 12).map((r) => ({
+        id: r.id,
+        code: r.code,
+        title: r.title,
+        isActive: r.isActive,
+      }));
+    } catch {
+      promoLinkRows = [];
+    }
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+
   return (
     <div className="space-y-10">
       <div>
@@ -47,6 +66,25 @@ export default async function AdminDashboardPage() {
           href="/admin/orders?status=CANCELLED_REFUNDED"
         />
       </div>
+
+      {loaded.ok ? (
+        <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 px-5 py-4">
+            <div>
+              <h2 className="text-sm font-semibold text-stone-900">공구 유입 링크</h2>
+              <p className="mt-1 text-xs text-stone-500">
+                인플루에게 보낼 주소입니다. <span className="font-mono">NEXT_PUBLIC_SITE_URL</span>이 있으면 그 도메인으로, 없으면 현재 접속 주소 기준으로 표시됩니다.
+              </p>
+            </div>
+            <Link href="/admin/promos" className="text-xs font-medium text-[#8b673f] hover:underline">
+              공구 관리
+            </Link>
+          </div>
+          <div className="px-2 py-2 sm:px-0 sm:py-0">
+            <AdminDashboardPromoLinks baseUrlFromEnv={siteUrl} campaigns={promoLinkRows} />
+          </div>
+        </section>
+      ) : null}
 
       <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-stone-100 px-5 py-4">
