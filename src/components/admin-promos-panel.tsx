@@ -133,13 +133,16 @@ export function AdminPromosPanel() {
                 <td className="px-4 py-3">
                   <button
                     type="button"
+                    role="switch"
+                    aria-checked={c.isActive}
+                    aria-label={`${c.title} (${c.code}) ${c.isActive ? "비활성화" : "활성화"}`}
                     disabled={saving}
                     onClick={() => void toggleActive(c)}
-                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      c.isActive ? "bg-emerald-100 text-emerald-900" : "bg-stone-200 text-stone-600"
-                    }`}
+                    className={`flex h-8 w-14 shrink-0 items-center rounded-full p-1 transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2 ${
+                      c.isActive ? "justify-end bg-emerald-500" : "justify-start bg-stone-300"
+                    } ${saving ? "cursor-wait opacity-50" : ""}`}
                   >
-                    {c.isActive ? "ON" : "OFF"}
+                    <span className="pointer-events-none h-6 w-6 rounded-full bg-white shadow-sm ring-1 ring-black/5" />
                   </button>
                 </td>
               </tr>
