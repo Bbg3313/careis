@@ -12,7 +12,7 @@ export function AdminDashboardPromoLinks({ baseUrlFromEnv, campaigns }: { baseUr
       <p className="text-sm text-stone-500">
         등록된 공구가 없습니다.{" "}
         <Link href="/admin/promos" className="font-medium text-[#8b673f] underline underline-offset-2">
-          공구·프로모
+          공구캠페인
         </Link>
         에서 만드세요.
       </p>

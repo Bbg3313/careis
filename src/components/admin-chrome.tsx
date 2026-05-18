@@ -40,7 +40,7 @@ export function AdminChrome({
           상세 이미지
         </Link>
         <Link href="/admin/promos" className="text-stone-600 hover:text-stone-900">
-          공구·프로모
+          공구캠페인
         </Link>
         <a
           href="/api/admin/orders/export"

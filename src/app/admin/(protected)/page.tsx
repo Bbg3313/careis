@@ -77,7 +77,7 @@ export default async function AdminDashboardPage() {
               </p>
             </div>
             <Link href="/admin/promos" className="text-xs font-medium text-[#8b673f] hover:underline">
-              공구 관리
+              공구캠페인
             </Link>
           </div>
           <div className="px-2 py-2 sm:px-0 sm:py-0">
