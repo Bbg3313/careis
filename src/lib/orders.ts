@@ -1,6 +1,7 @@
-import { OrderStatus, PaymentMethod, ProductStatus } from "@prisma/client";
+import { OrderStatus, PaymentMethod, ProductStatus, type Prisma } from "@prisma/client";
 import { z } from "zod";
 
+import { prismaOrderCreatedAtRange } from "@/lib/admin-orders-date-filter";
 import { prisma } from "@/lib/db";
 import { computeOrderPricing, resolveAppliedPromoCampaign } from "@/lib/promo";
 import { getProductBySlug } from "@/lib/product-data";
@@ -151,12 +152,12 @@ export async function createOrder(input: CreateOrderInput) {
 
 /** 프로덕션 등에서 DB 미구성 시 UI가 500이 되지 않도록 관리자 화면 전용 로더 */
 
-export async function loadAdminOrdersOverview(): Promise<
+export async function loadAdminOrdersOverview(dateQuery?: { from?: string; to?: string }): Promise<
   | { ok: true; stats: Awaited<ReturnType<typeof getOrderStats>>; orders: Awaited<ReturnType<typeof getOrders>> }
   | { ok: false }
 > {
   try {
-    const [stats, orders] = await Promise.all([getOrderStats(), getOrders()]);
+    const [stats, orders] = await Promise.all([getOrderStats(dateQuery), getOrders(dateQuery)]);
     return { ok: true, stats, orders };
   } catch (error) {
     console.error("[orders] admin overview load failed", error);
@@ -164,12 +165,12 @@ export async function loadAdminOrdersOverview(): Promise<
   }
 }
 
-export async function loadAdminOrdersList(): Promise<
+export async function loadAdminOrdersList(dateQuery?: { from?: string; to?: string }): Promise<
   | { ok: true; orders: Awaited<ReturnType<typeof getOrders>> }
   | { ok: false }
 > {
   try {
-    const orders = await getOrders();
+    const orders = await getOrders(dateQuery);
     return { ok: true, orders };
   } catch (error) {
     console.error("[orders] admin orders list load failed", error);
@@ -190,8 +191,10 @@ export async function loadAdminOrderByNumber(orderNumber: string): Promise<
   }
 }
 
-export async function getOrders() {
+export async function getOrders(dateQuery?: { from?: string; to?: string }) {
+  const dateWhere = prismaOrderCreatedAtRange(dateQuery?.from, dateQuery?.to);
   return prisma.order.findMany({
+    where: Object.keys(dateWhere).length ? (dateWhere as Prisma.OrderWhereInput) : undefined,
     orderBy: { createdAt: "desc" },
     include: {
       orderItems: true,
@@ -238,13 +241,15 @@ export async function updateOrderAdminFields(
   });
 }
 
-export async function getOrderStats() {
+export async function getOrderStats(dateQuery?: { from?: string; to?: string }) {
+  const dateWhere = prismaOrderCreatedAtRange(dateQuery?.from, dateQuery?.to);
+  const base = (Object.keys(dateWhere).length ? dateWhere : {}) as Prisma.OrderWhereInput;
   const [all, pending, paid, cancelled, refunded] = await Promise.all([
-    prisma.order.count(),
-    prisma.order.count({ where: { paymentStatus: OrderStatus.PENDING } }),
-    prisma.order.count({ where: { paymentStatus: OrderStatus.PAID } }),
-    prisma.order.count({ where: { paymentStatus: OrderStatus.CANCELLED } }),
-    prisma.order.count({ where: { paymentStatus: OrderStatus.REFUNDED } }),
+    prisma.order.count({ where: base }),
+    prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.PENDING } }),
+    prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.PAID } }),
+    prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.CANCELLED } }),
+    prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.REFUNDED } }),
   ]);
   return { all, pending, paid, cancelled, refunded };
 }

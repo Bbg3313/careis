@@ -1,7 +1,9 @@
 import Link from "next/link";
 
 import { AdminDashboardPromoLinks } from "@/components/admin-dashboard-promo-links";
+import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
 import { inflowSummary } from "@/lib/admin-order-inflow";
 import { loadAdminOrdersOverview } from "@/lib/orders";
 import { listPromoCampaignsAdmin } from "@/lib/promo";
@@ -9,6 +11,10 @@ import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+
+type DashboardPageProps = {
+  searchParams: Promise<{ from?: string; to?: string }>;
+};
 
 function StatCard({ label, value, href }: { label: string; value: number; href: string }) {
   return (
@@ -22,11 +28,14 @@ function StatCard({ label, value, href }: { label: string; value: number; href: 
   );
 }
 
-export default async function AdminDashboardPage() {
-  const loaded = await loadAdminOrdersOverview();
+export default async function AdminDashboardPage({ searchParams }: DashboardPageProps) {
+  const { from, to } = await searchParams;
+  const loaded = await loadAdminOrdersOverview({ from, to });
   const stats = loaded.ok ? loaded.stats : { all: 0, pending: 0, paid: 0, cancelled: 0, refunded: 0 };
   const orders = loaded.ok ? loaded.orders : [];
   const recent = orders.slice(0, 8);
+
+  const dateFilterActive = Boolean(from?.trim() || to?.trim());
 
   let promoLinkRows: { id: string; code: string; title: string; isActive: boolean }[] = [];
   if (loaded.ok) {
@@ -49,21 +58,35 @@ export default async function AdminDashboardPage() {
     <div className="space-y-10">
       <div>
         <h1 className="text-2xl font-semibold text-stone-900">주문 한눈에 보기</h1>
-        <p className="mt-1 text-sm text-stone-500">숫자를 누르면 해당 상태만 주문 목록으로 이동합니다.</p>
+        <p className="mt-1 text-sm text-stone-500">
+          숫자를 누르면 해당 상태만 주문 목록으로 이동합니다.
+          {dateFilterActive ? (
+            <span className="ml-2 text-[#8b673f]">
+              (기간: {from?.trim() || "…"} ~ {to?.trim() || "…"} — 아래 숫자·목록·링크에 동일 기간이 적용됩니다.)
+            </span>
+          ) : null}
+        </p>
       </div>
 
       {!loaded.ok ? (
         <AdminDbUnavailableNotice />
       ) : null}
 
+      <AdminOrdersDateFilterForm
+        action="/admin"
+        defaultFrom={from}
+        defaultTo={to}
+        clearHref="/admin"
+      />
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="전체" value={stats.all} href="/admin/orders" />
-        <StatCard label="결제 완료" value={stats.paid} href="/admin/orders?status=PAID" />
-        <StatCard label="결제 대기" value={stats.pending} href="/admin/orders?status=PENDING" />
+        <StatCard label="전체" value={stats.all} href={buildAdminOrdersHref({ from, to })} />
+        <StatCard label="결제 완료" value={stats.paid} href={buildAdminOrdersHref({ status: "PAID", from, to })} />
+        <StatCard label="결제 대기" value={stats.pending} href={buildAdminOrdersHref({ status: "PENDING", from, to })} />
         <StatCard
           label="취소·환불"
           value={stats.cancelled + stats.refunded}
-          href="/admin/orders?status=CANCELLED_REFUNDED"
+          href={buildAdminOrdersHref({ status: "CANCELLED_REFUNDED", from, to })}
         />
       </div>
 
@@ -89,7 +112,7 @@ export default async function AdminDashboardPage() {
       <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-stone-100 px-5 py-4">
           <h2 className="text-sm font-semibold text-stone-900">최근 주문</h2>
-          <Link href="/admin/orders" className="text-xs font-medium text-[#8b673f] hover:underline">
+          <Link href={buildAdminOrdersHref({ from, to })} className="text-xs font-medium text-[#8b673f] hover:underline">
             전체 보기
           </Link>
         </div>

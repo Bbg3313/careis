@@ -1,15 +1,16 @@
 import Link from "next/link";
 
+import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
-import { inflowSummary } from "@/lib/admin-order-inflow";
-import { loadAdminOrdersList } from "@/lib/orders";
+import { buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
+import { inflowSummary } from "@/lib/admin-order-inflow";import { loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; from?: string; to?: string }>;
 };
 
 function statusLabel(status: string | undefined) {
@@ -26,8 +27,8 @@ function statusLabel(status: string | undefined) {
 }
 
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
-  const { status } = await searchParams;
-  const loaded = await loadAdminOrdersList();
+  const { status, from, to } = await searchParams;
+  const loaded = await loadAdminOrdersList({ from, to });
   let orders = loaded.ok ? loaded.orders : [];
 
   if (status === "PAID") {
@@ -38,28 +39,50 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
     orders = orders.filter((o) => o.paymentStatus === "CANCELLED" || o.paymentStatus === "REFUNDED");
   }
 
+  const dateFilterActive = Boolean(from?.trim() || to?.trim());
+  const clearOrdersHref = buildAdminOrdersHref({ status: status || undefined });
+
   const tabs = [
-    { href: "/admin/orders", label: "전체", key: "" },
-    { href: "/admin/orders?status=PAID", label: "결제완료", key: "PAID" },
-    { href: "/admin/orders?status=PENDING", label: "결제대기", key: "PENDING" },
-    { href: "/admin/orders?status=CANCELLED_REFUNDED", label: "취소·환불", key: "CANCELLED_REFUNDED" },
+    { href: buildAdminOrdersHref({ from, to }), label: "전체", key: "" },
+    { href: buildAdminOrdersHref({ status: "PAID", from, to }), label: "결제완료", key: "PAID" },
+    { href: buildAdminOrdersHref({ status: "PENDING", from, to }), label: "결제대기", key: "PENDING" },
+    {
+      href: buildAdminOrdersHref({ status: "CANCELLED_REFUNDED", from, to }),
+      label: "취소·환불",
+      key: "CANCELLED_REFUNDED",
+    },
   ] as const;
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-semibold text-stone-900">주문 목록</h1>
-        <p className="mt-1 text-sm text-stone-500">{statusLabel(status)} · {orders.length}건</p>
+        <p className="mt-1 text-sm text-stone-500">
+          {statusLabel(status)} · {orders.length}건
+          {dateFilterActive ? (
+            <span className="ml-2 text-[#8b673f]">
+              (기간 필터: {from?.trim() || "…"} ~ {to?.trim() || "…"})
+            </span>
+          ) : null}
+        </p>
       </div>
 
       {!loaded.ok ? <AdminDbUnavailableNotice /> : null}
+
+      <AdminOrdersDateFilterForm
+        action="/admin/orders"
+        status={status}
+        defaultFrom={from}
+        defaultTo={to}
+        clearHref={clearOrdersHref}
+      />
 
       <div className="flex flex-wrap gap-2">
         {tabs.map((tab) => {
           const active = (status ?? "") === tab.key || (!status && tab.key === "");
           return (
             <Link
-              key={tab.href}
+              key={tab.key}
               href={tab.href}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                 active ? "bg-stone-900 text-white" : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
