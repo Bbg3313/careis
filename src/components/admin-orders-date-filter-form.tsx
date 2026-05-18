@@ -3,15 +3,24 @@ import Link from "next/link";
 type Props = {
   action: "/admin/orders" | "/admin";
   status?: string;
+  fulfillment?: string;
   defaultFrom?: string;
   defaultTo?: string;
   clearHref: string;
 };
 
-export function AdminOrdersDateFilterForm({ action, status, defaultFrom, defaultTo, clearHref }: Props) {
+export function AdminOrdersDateFilterForm({
+  action,
+  status,
+  fulfillment,
+  defaultFrom,
+  defaultTo,
+  clearHref,
+}: Props) {
   return (
     <form method="get" action={action} className="flex flex-wrap items-end gap-3 rounded-2xl border border-stone-200 bg-[#faf8f5] px-4 py-3">
       {status ? <input type="hidden" name="status" value={status} /> : null}
+      {fulfillment ? <input type="hidden" name="fulfillment" value={fulfillment} /> : null}
       <label className="flex min-w-[10.5rem] flex-col gap-1 text-xs font-medium text-stone-600">
         시작일
         <input
@@ -42,9 +51,6 @@ export function AdminOrdersDateFilterForm({ action, status, defaultFrom, default
       >
         초기화
       </Link>
-      <p className="w-full text-[11px] leading-relaxed text-stone-500 sm:text-xs">
-        주문 생성일 기준(KST 달력)입니다. 한쪽만 넣으면 그날부터·까지로 동작합니다.
-      </p>
     </form>
   );
 }

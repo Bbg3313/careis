@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AdminDashboardPromoLinks } from "@/components/admin-dashboard-promo-links";
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
-import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
+import { adminOrderProgressLabel } from "@/lib/admin-fulfillment";
 import { buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
 import { inflowSummary } from "@/lib/admin-order-inflow";
 import { loadAdminOrdersOverview } from "@/lib/orders";
@@ -37,10 +37,19 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
     listPromoCampaignsAdmin().catch(() => [] as Awaited<ReturnType<typeof listPromoCampaignsAdmin>>),
   ]);
 
-  const stats = loaded.ok ? loaded.stats : { all: 0, pending: 0, paid: 0, cancelled: 0, refunded: 0 };
+  const stats = loaded.ok
+    ? loaded.stats
+    : {
+        all: 0,
+        pending: 0,
+        paid: 0,
+        cancelled: 0,
+        refunded: 0,
+        paidAwaitingShip: 0,
+        paidInTransit: 0,
+        paidDelivered: 0,
+      };
   const recent = loaded.ok ? loaded.orders : [];
-
-  const dateFilterActive = Boolean(from?.trim() || to?.trim());
 
   const promoLinkRows = promoRows.slice(0, 12).map((r) => ({
     id: r.id,
@@ -55,14 +64,6 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
     <div className="space-y-10">
       <div>
         <h1 className="text-2xl font-semibold text-stone-900">주문 한눈에 보기</h1>
-        <p className="mt-1 text-sm text-stone-500">
-          숫자를 누르면 해당 상태만 주문 목록으로 이동합니다.
-          {dateFilterActive ? (
-            <span className="ml-2 text-[#8b673f]">
-              (기간: {from?.trim() || "…"} ~ {to?.trim() || "…"} — 아래 숫자·목록·링크에 동일 기간이 적용됩니다.)
-            </span>
-          ) : null}
-        </p>
       </div>
 
       {!loaded.ok ? (
@@ -88,13 +89,30 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
       </div>
 
       {loaded.ok ? (
+        <div className="grid gap-4 sm:grid-cols-3">
+          <StatCard
+            label="배송 전"
+            value={stats.paidAwaitingShip}
+            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "AWAITING_SHIP", from, to })}
+          />
+          <StatCard
+            label="배송중"
+            value={stats.paidInTransit}
+            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "IN_TRANSIT", from, to })}
+          />
+          <StatCard
+            label="배송완료"
+            value={stats.paidDelivered}
+            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "DELIVERED", from, to })}
+          />
+        </div>
+      ) : null}
+
+      {loaded.ok ? (
         <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 px-5 py-4">
             <div>
               <h2 className="text-sm font-semibold text-stone-900">공구 유입 링크</h2>
-              <p className="mt-1 text-xs text-stone-500">
-                인플루에게 보낼 주소입니다. <span className="font-mono">NEXT_PUBLIC_SITE_URL</span>이 있으면 그 도메인으로, 없으면 현재 접속 주소 기준으로 표시됩니다.
-              </p>
             </div>
             <Link href="/admin/promos" className="text-xs font-medium text-[#8b673f] hover:underline">
               공구캠페인
@@ -120,8 +138,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                 <th className="px-5 py-3 font-medium">주문번호</th>
                 <th className="px-5 py-3 font-medium">일시</th>
                 <th className="px-5 py-3 font-medium">고객</th>
-                <th className="px-5 py-3 font-medium">상태</th>
-                <th className="px-5 py-3 font-medium">배송단계</th>
+                <th className="px-5 py-3 font-medium">진행 상태</th>
                 <th className="px-5 py-3 font-medium">레퍼럴·공구</th>
                 <th className="px-5 py-3 font-medium text-right">금액</th>
               </tr>
@@ -129,7 +146,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
             <tbody>
               {recent.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-5 py-10 text-center text-stone-500">
+                  <td colSpan={6} className="px-5 py-10 text-center text-stone-500">
                     주문이 없습니다.
                   </td>
                 </tr>
@@ -146,8 +163,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                       <div>{order.customerName}</div>
                       <div className="text-xs text-stone-400">{formatKoreanMobileDisplay(order.phone)}</div>
                     </td>
-                    <td className="px-5 py-3 text-stone-700">{order.paymentStatus}</td>
-                    <td className="px-5 py-3 text-stone-700">{adminFulfillmentLabel(order)}</td>
+                    <td className="whitespace-nowrap px-5 py-3 text-stone-700">{adminOrderProgressLabel(order)}</td>
                     <td className="max-w-[160px] px-5 py-3">
                       <div className="truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
                         {inflowSummary(order)}

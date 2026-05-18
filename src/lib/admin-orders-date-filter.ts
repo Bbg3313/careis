@@ -45,9 +45,10 @@ export function prismaOrderCreatedAtRange(fromRaw?: string, toRaw?: string): Pri
   return { createdAt: filter };
 }
 
-export function buildAdminOrdersHref(opts: { status?: string; from?: string; to?: string }): string {
+export function buildAdminOrdersHref(opts: { status?: string; fulfillment?: string; from?: string; to?: string }): string {
   const p = new URLSearchParams();
   if (opts.status) p.set("status", opts.status);
+  if (opts.fulfillment?.trim()) p.set("fulfillment", opts.fulfillment.trim());
   if (opts.from?.trim()) p.set("from", opts.from.trim());
   if (opts.to?.trim()) p.set("to", opts.to.trim());
   const q = p.toString();

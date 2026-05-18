@@ -441,17 +441,41 @@ export async function syncDeliveryStatusBatchForCron(maxOrders = 40) {
   return { polled: eligible.length, updated, skippedNoKey: false as const };
 }
 
+const NON_EMPTY_TRACK: Prisma.OrderWhereInput = {
+  AND: [{ trackingNumber: { not: null } }, { NOT: { trackingNumber: "" } }],
+};
+
 export async function getOrderStats(dateQuery?: { from?: string; to?: string }) {
   const dateWhere = prismaOrderCreatedAtRange(dateQuery?.from, dateQuery?.to);
   const base = (Object.keys(dateWhere).length ? dateWhere : {}) as Prisma.OrderWhereInput;
-  const [all, pending, paid, cancelled, refunded] = await Promise.all([
-    prisma.order.count({ where: base }),
-    prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.PENDING } }),
-    prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.PAID } }),
-    prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.CANCELLED } }),
-    prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.REFUNDED } }),
-  ]);
-  return { all, pending, paid, cancelled, refunded };
+  const paidBase: Prisma.OrderWhereInput = { ...base, paymentStatus: OrderStatus.PAID };
+  const notDelivered: Prisma.OrderWhereInput = {
+    ...paidBase,
+    fulfillmentStatus: { not: FulfillmentStatus.DELIVERED },
+  };
+  const inTransitWhere: Prisma.OrderWhereInput = {
+    ...notDelivered,
+    OR: [{ fulfillmentStatus: FulfillmentStatus.IN_TRANSIT }, NON_EMPTY_TRACK],
+  };
+  const [all, pending, paid, cancelled, refunded, paidDelivered, paidInTransit, paidAwaitingShip] =
+    await Promise.all([
+      prisma.order.count({ where: base }),
+      prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.PENDING } }),
+      prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.PAID } }),
+      prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.CANCELLED } }),
+      prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.REFUNDED } }),
+      prisma.order.count({
+        where: { ...paidBase, fulfillmentStatus: FulfillmentStatus.DELIVERED },
+      }),
+      prisma.order.count({ where: inTransitWhere }),
+      prisma.order.count({
+        where: {
+          ...notDelivered,
+          NOT: { OR: [{ fulfillmentStatus: FulfillmentStatus.IN_TRANSIT }, NON_EMPTY_TRACK] },
+        },
+      }),
+    ]);
+  return { all, pending, paid, cancelled, refunded, paidAwaitingShip, paidInTransit, paidDelivered };
 }
 
 export async function setOrderPaymentRequested(orderNumber: string, metadata: PaymentRequestMetadata) {

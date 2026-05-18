@@ -2,16 +2,17 @@ import Link from "next/link";
 
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
-import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
+import { adminFulfillmentLabel, adminPaymentStatusLabel, orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
 import { buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
-import { inflowSummary } from "@/lib/admin-order-inflow";import { loadAdminOrdersList } from "@/lib/orders";
+import { inflowSummary } from "@/lib/admin-order-inflow";
+import { loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-  searchParams: Promise<{ status?: string; from?: string; to?: string }>;
+  searchParams: Promise<{ status?: string; fulfillment?: string; from?: string; to?: string }>;
 };
 
 function statusLabel(status: string | undefined) {
@@ -27,8 +28,21 @@ function statusLabel(status: string | undefined) {
   }
 }
 
+function fulfillmentChipLabel(fulfillment: string | undefined) {
+  switch (fulfillment) {
+    case "AWAITING_SHIP":
+      return "배송 전만";
+    case "IN_TRANSIT":
+      return "배송중만";
+    case "DELIVERED":
+      return "배송완료만";
+    default:
+      return "";
+  }
+}
+
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
-  const { status, from, to } = await searchParams;
+  const { status, fulfillment, from, to } = await searchParams;
   const loaded = await loadAdminOrdersList({ from, to });
   let orders = loaded.ok ? loaded.orders : [];
 
@@ -40,8 +54,15 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
     orders = orders.filter((o) => o.paymentStatus === "CANCELLED" || o.paymentStatus === "REFUNDED");
   }
 
-  const dateFilterActive = Boolean(from?.trim() || to?.trim());
-  const clearOrdersHref = buildAdminOrdersHref({ status: status || undefined });
+  const fulfillmentEffective = status === "PAID" ? fulfillment : undefined;
+  if (fulfillmentEffective) {
+    orders = orders.filter((o) => orderMatchesAdminFulfillmentFilter(o, fulfillmentEffective));
+  }
+
+  const clearOrdersHref = buildAdminOrdersHref({
+    status: status || undefined,
+    fulfillment: fulfillmentEffective || undefined,
+  });
 
   const tabs = [
     { href: buildAdminOrdersHref({ from, to }), label: "전체", key: "" },
@@ -54,18 +75,34 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
     },
   ] as const;
 
+  const fulfillmentTabs = [
+    { href: buildAdminOrdersHref({ status: "PAID", from, to }), label: "배송 전체", key: "" },
+    {
+      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "AWAITING_SHIP", from, to }),
+      label: "배송 전",
+      key: "AWAITING_SHIP",
+    },
+    {
+      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "IN_TRANSIT", from, to }),
+      label: "배송중",
+      key: "IN_TRANSIT",
+    },
+    {
+      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "DELIVERED", from, to }),
+      label: "배송완료",
+      key: "DELIVERED",
+    },
+  ] as const;
+
+  const chip = fulfillmentChipLabel(fulfillmentEffective);
+  const subtitle =
+    chip && status === "PAID" ? `${statusLabel(status)} · ${chip} · ${orders.length}건` : `${statusLabel(status)} · ${orders.length}건`;
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-semibold text-stone-900">주문 목록</h1>
-        <p className="mt-1 text-sm text-stone-500">
-          {statusLabel(status)} · {orders.length}건
-          {dateFilterActive ? (
-            <span className="ml-2 text-[#8b673f]">
-              (기간 필터: {from?.trim() || "…"} ~ {to?.trim() || "…"})
-            </span>
-          ) : null}
-        </p>
+        <p className="mt-1 text-sm text-stone-500">{subtitle}</p>
       </div>
 
       {!loaded.ok ? <AdminDbUnavailableNotice /> : null}
@@ -73,6 +110,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
       <AdminOrdersDateFilterForm
         action="/admin/orders"
         status={status}
+        fulfillment={fulfillmentEffective}
         defaultFrom={from}
         defaultTo={to}
         clearHref={clearOrdersHref}
@@ -96,6 +134,27 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
           );
         })}
       </div>
+
+      {status === "PAID" ? (
+        <div className="flex flex-wrap gap-2">
+          {fulfillmentTabs.map((tab) => {
+            const active = (fulfillmentEffective ?? "") === tab.key || (!fulfillmentEffective && tab.key === "");
+            return (
+              <Link
+                key={tab.key || "all"}
+                href={tab.href}
+                className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                  active
+                    ? "bg-[#8b673f] !text-white hover:!text-white visited:!text-white"
+                    : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
+                }`}
+              >
+                {tab.label}
+              </Link>
+            );
+          })}
+        </div>
+      ) : null}
 
       <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
@@ -140,7 +199,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                       <div>{order.customerName}</div>
                       <div className="text-xs text-stone-400">{formatKoreanMobileDisplay(order.phone)}</div>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-stone-700">{order.paymentStatus}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-stone-700">{adminPaymentStatusLabel(order.paymentStatus)}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-stone-700">{adminFulfillmentLabel(order)}</td>
                     <td className="max-w-[160px] px-4 py-3">
                       <div className="truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
