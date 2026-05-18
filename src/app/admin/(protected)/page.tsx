@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { inflowSummary } from "@/lib/admin-order-inflow";
 import { loadAdminOrdersOverview } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -63,13 +64,14 @@ export default async function AdminDashboardPage() {
                 <th className="px-5 py-3 font-medium">고객</th>
                 <th className="px-5 py-3 font-medium">상태</th>
                 <th className="px-5 py-3 font-medium">배송</th>
+                <th className="px-5 py-3 font-medium">레퍼럴·공구</th>
                 <th className="px-5 py-3 font-medium text-right">금액</th>
               </tr>
             </thead>
             <tbody>
               {recent.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-10 text-center text-stone-500">
+                  <td colSpan={7} className="px-5 py-10 text-center text-stone-500">
                     주문이 없습니다.
                   </td>
                 </tr>
@@ -95,6 +97,11 @@ export default async function AdminDashboardPage() {
                       ) : (
                         <span>—</span>
                       )}
+                    </td>
+                    <td className="max-w-[160px] px-5 py-3">
+                      <div className="truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
+                        {inflowSummary(order)}
+                      </div>
                     </td>
                     <td className="px-5 py-3 text-right font-medium text-stone-900">{formatCurrency(order.totalAmount)}</td>
                   </tr>

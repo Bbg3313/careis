@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { inflowSummary } from "@/lib/admin-order-inflow";
 import { loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -81,13 +82,14 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                 <th className="px-4 py-3 font-medium">고객</th>
                 <th className="px-4 py-3 font-medium">결제</th>
                 <th className="px-4 py-3 font-medium">배송</th>
+                <th className="px-4 py-3 font-medium">레퍼럴·공구</th>
                 <th className="px-4 py-3 font-medium text-right">금액</th>
               </tr>
             </thead>
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-stone-500">
+                  <td colSpan={8} className="px-4 py-12 text-center text-stone-500">
                     표시할 주문이 없습니다.
                   </td>
                 </tr>
@@ -121,6 +123,11 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                       ) : (
                         "—"
                       )}
+                    </td>
+                    <td className="max-w-[160px] px-4 py-3">
+                      <div className="truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
+                        {inflowSummary(order)}
+                      </div>
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-stone-900">
                       {formatCurrency(order.totalAmount)}

@@ -91,6 +91,23 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
                 <dd className="text-stone-800">{order.paymentProvider}</dd>
               </div>
             ) : null}
+            <div className="border-t border-stone-100 pt-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-stone-500">유입 · 공구</p>
+              <dl className="mt-2 space-y-2 text-sm">
+                <div className="flex justify-between gap-4">
+                  <dt className="text-stone-500">적용 공구 코드</dt>
+                  <dd className="font-mono text-stone-800">{order.appliedPromoCode ?? "—"}</dd>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <dt className="text-stone-500">레퍼럴(ref)</dt>
+                  <dd className="font-mono text-stone-800">{order.referralCode ?? "—"}</dd>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <dt className="text-stone-500">쿠폰 입력</dt>
+                  <dd className="font-mono text-stone-800">{order.couponCode?.trim() ? order.couponCode : "—"}</dd>
+                </div>
+              </dl>
+            </div>
           </dl>
         </section>
       </div>
