@@ -1,4 +1,4 @@
-import { PrismaClient, ProductStatus } from "@prisma/client";
+import { PrismaClient, ProductStatus, PromoDiscountType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -46,6 +46,32 @@ async function main() {
       slug: "illuminator",
       price: 150000,
       status: ProductStatus.ACTIVE,
+    },
+  });
+
+  /** 테스트 공구: 정가 대비 1만 원 할인 → 선팩 4.9만 / 일루미 14만 (?ref=test_49_140) */
+  const testStarts = new Date(Date.now() - 120_000);
+  const testEnds = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  await prisma.promoCampaign.upsert({
+    where: { code: "test_49_140" },
+    create: {
+      code: "test_49_140",
+      title: "테스트 공구 (선팩 4.9만 / 일루미 14만)",
+      discountType: PromoDiscountType.FIXED_PER_UNIT,
+      discountValue: 10000,
+      productSlugs: ["sun-pack", "illuminator"],
+      startsAt: testStarts,
+      endsAt: testEnds,
+      isActive: true,
+    },
+    update: {
+      title: "테스트 공구 (선팩 4.9만 / 일루미 14만)",
+      discountType: PromoDiscountType.FIXED_PER_UNIT,
+      discountValue: 10000,
+      productSlugs: ["sun-pack", "illuminator"],
+      startsAt: testStarts,
+      endsAt: testEnds,
+      isActive: true,
     },
   });
 }
