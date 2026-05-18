@@ -50,6 +50,22 @@ declare global {
   }
 }
 
+type QuoteOk = {
+  ok: true;
+  lines: Array<{
+    productSlug: ProductSlug;
+    quantity: number;
+    listUnitPrice: number;
+    unitPrice: number;
+    lineTotal: number;
+    name: string;
+    englishName: string;
+  }>;
+  listTotal: number;
+  totalAmount: number;
+  appliedPromo: { code: string; title: string } | null;
+};
+
 export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   const router = useRouter();
   const [selectedItems, setSelectedItems] = useState<SelectedItemState>(() => {
@@ -85,26 +101,92 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const orderItems = useMemo(
-    () =>
-      products
-        .filter((product) => selectedItems[product.slug].selected)
-        .map((product) => ({
+  const [quote, setQuote] = useState<QuoteOk | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
+
+  const orderSummaryLines = useMemo(() => {
+    return products
+      .filter((product) => selectedItems[product.slug].selected)
+      .map((product) => {
+        const q = quote?.lines?.find((l) => l.productSlug === product.slug);
+        const quantity = selectedItems[product.slug].quantity;
+        const listUnit = q?.listUnitPrice ?? product.price;
+        const unit = q?.unitPrice ?? product.price;
+        const lineTotal = unit * quantity;
+        return {
           productSlug: product.slug,
           name: product.name,
           englishName: product.englishName,
-          tagline: product.tagline,
-          unitPrice: product.price,
-          quantity: selectedItems[product.slug].quantity,
-          amount: product.price * selectedItems[product.slug].quantity,
-        })),
-    [selectedItems],
-  );
+          quantity,
+          listUnit,
+          unit,
+          lineTotal,
+        };
+      });
+  }, [selectedItems, quote]);
 
   const totalAmount = useMemo(
-    () => orderItems.reduce((sum, item) => sum + item.amount, 0),
-    [orderItems],
+    () => orderSummaryLines.reduce((sum, item) => sum + item.lineTotal, 0),
+    [orderSummaryLines],
   );
+
+  const listSubtotal = useMemo(
+    () => orderSummaryLines.reduce((sum, item) => sum + item.listUnit * item.quantity, 0),
+    [orderSummaryLines],
+  );
+
+  useEffect(() => {
+    const items = products
+      .filter((product) => selectedItems[product.slug].selected)
+      .map((product) => ({
+        productSlug: product.slug,
+        quantity: selectedItems[product.slug].quantity,
+      }));
+
+    if (items.length === 0) {
+      setQuote(null);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => {
+      void (async () => {
+        setQuoteLoading(true);
+        try {
+          const response = await fetch("/api/order-quote", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            signal: controller.signal,
+            body: JSON.stringify({
+              items,
+              referralCode: resolvedReferralCode,
+              couponCode: couponCode.trim(),
+            }),
+          });
+          const data = (await response.json()) as QuoteOk | { ok: false; error?: string };
+          if (!controller.signal.aborted && response.ok && data && "ok" in data && data.ok) {
+            setQuote(data);
+          } else if (!controller.signal.aborted) {
+            setQuote(null);
+          }
+        } catch {
+          if (!controller.signal.aborted) {
+            setQuote(null);
+          }
+        } finally {
+          if (!controller.signal.aborted) {
+            setQuoteLoading(false);
+          }
+        }
+      })();
+    }, 280);
+
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
+  }, [selectedItems, resolvedReferralCode, couponCode]);
+
   const fullAddress = useMemo(
     () => [address, addressDetail.trim()].filter(Boolean).join(" "),
     [address, addressDetail],
@@ -157,7 +239,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (orderItems.length === 0) {
+    if (orderSummaryLines.length === 0) {
       setErrorMessage("구매할 상품을 최소 1개 이상 선택해주세요.");
       return;
     }
@@ -182,7 +264,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          items: orderItems.map((item) => ({
+          items: orderSummaryLines.map((item) => ({
             productSlug: item.productSlug,
             quantity: item.quantity,
           })),
@@ -258,7 +340,27 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
                       <p className="text-[11px] uppercase tracking-[0.18em] text-stone-500">{product.englishName}</p>
                       <h2 className="text-[26px] font-semibold text-stone-900 md:text-2xl">{product.name}</h2>
                       <p className="copy-pretty max-w-xl text-sm leading-6 text-stone-600 md:leading-7">{product.tagline}</p>
-                      <p className="text-base font-semibold text-stone-900">{formatCurrency(product.price)}</p>
+                      {itemState.selected ? (
+                        <div className="space-y-1">
+                          {quoteLoading ? <p className="text-xs text-stone-500">가격 확인 중…</p> : null}
+                          {(() => {
+                            const line = quote?.lines?.find((l) => l.productSlug === product.slug);
+                            const list = line?.listUnitPrice ?? product.price;
+                            const unit = line?.unitPrice ?? product.price;
+                            return unit < list ? (
+                              <p className="text-base font-semibold text-stone-900">
+                                <span className="text-sm font-normal text-stone-400 line-through">{formatCurrency(list)}</span>{" "}
+                                {formatCurrency(unit)}
+                                <span className="ml-1 text-xs font-normal text-emerald-800">공구가</span>
+                              </p>
+                            ) : (
+                              <p className="text-base font-semibold text-stone-900">{formatCurrency(unit)}</p>
+                            );
+                          })()}
+                        </div>
+                      ) : (
+                        <p className="text-base font-semibold text-stone-500">{formatCurrency(product.price)}</p>
+                      )}
                     </div>
                   </div>
 
@@ -389,12 +491,15 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
 
         <div className="grid gap-4 md:grid-cols-2">
           <label className="space-y-2 text-sm text-stone-700">
-            <span>쿠폰코드</span>
+            <span>쿠폰·공구 코드</span>
             <input
               value={couponCode}
               onChange={(event) => setCouponCode(event.target.value)}
               className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 outline-none"
             />
+            <span className="block text-xs leading-5 text-stone-500">
+              인플루 전용 코드가 있으면 입력하세요. <span className="font-mono">?ref=</span>와 동일한 문자열이면 링크만으로도 자동 적용됩니다. 쿠폰이 있으면 레퍼럴보다 우선합니다.
+            </span>
           </label>
         </div>
 
@@ -446,11 +551,11 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
         </div>
 
         <div className="rounded-[24px] bg-white p-5 md:rounded-[28px] md:p-6">
-          {orderItems.length === 0 ? (
+          {orderSummaryLines.length === 0 ? (
             <p className="text-sm leading-7 text-stone-500">아직 선택한 상품이 없습니다. 왼쪽에서 상품을 선택해주세요.</p>
           ) : (
             <div className="space-y-4">
-              {orderItems.map((item) => (
+              {orderSummaryLines.map((item) => (
                 <div key={item.productSlug} className="border-b border-stone-100 pb-4 last:border-b-0 last:pb-0">
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -459,7 +564,18 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
                     </div>
                     <div className="text-right text-sm text-stone-600">
                       <p>{item.quantity}개</p>
-                      <p className="mt-1 font-medium text-stone-900">{formatCurrency(item.amount)}</p>
+                      <p className="mt-1 font-medium text-stone-900">
+                        {item.unit < item.listUnit ? (
+                          <>
+                            <span className="mr-1 text-xs font-normal text-stone-400 line-through">
+                              {formatCurrency(item.listUnit * item.quantity)}
+                            </span>
+                            {formatCurrency(item.lineTotal)}
+                          </>
+                        ) : (
+                          formatCurrency(item.lineTotal)
+                        )}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -467,9 +583,25 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             </div>
           )}
 
+          {quote?.appliedPromo ? (
+            <p className="mt-3 text-xs text-emerald-800">
+              적용: {quote.appliedPromo.title} ({quote.appliedPromo.code})
+            </p>
+          ) : null}
+
+          {listSubtotal > totalAmount ? (
+            <div className="flex items-center justify-between border-t border-stone-100 pt-3 text-sm text-emerald-800">
+              <span>프로모 할인</span>
+              <span>-{formatCurrency(listSubtotal - totalAmount)}</span>
+            </div>
+          ) : null}
+
           <div className="flex items-center justify-between pt-4 text-base font-semibold text-stone-900">
             <span>총 결제 예정 금액</span>
-            <span>{formatCurrency(totalAmount)}</span>
+            <span className="flex items-center gap-2">
+              {quoteLoading ? <span className="text-xs font-normal text-stone-500">확인 중</span> : null}
+              {formatCurrency(totalAmount)}
+            </span>
           </div>
         </div>
 

@@ -92,7 +92,7 @@ function IlluminatorDetailPage({
         </div>
         <div className="grid grid-cols-[110px_1fr] gap-4 pb-1">
           <dt className="text-stone-500">배송비</dt>
-          <dd className="text-stone-700">3,000원 (50,000원 이상 구매 시 무료)</dd>
+          <dd className="text-stone-700">무료배송</dd>
         </div>
       </dl>
 
@@ -212,7 +212,7 @@ function ExchangeReturnAccordionList() {
             </div>
             <div className={shipCell}>
               <p className="font-medium text-stone-900">배송 비용</p>
-              <p className="mt-2 leading-7">3,000원 / 50,000원 이상 구매 시 무료</p>
+              <p className="mt-2 leading-7">전 제품 무료배송</p>
             </div>
             <div className={shipCell}>
               <p className="font-medium text-stone-900">배송 기간</p>
@@ -364,7 +364,7 @@ function SunPackDetailPage({
         </div>
         <div className="grid grid-cols-[110px_1fr] gap-4 pb-1">
           <dt className="text-stone-500">배송비</dt>
-          <dd className="text-stone-700">3,000원 (50,000원 이상 구매 시 무료)</dd>
+          <dd className="text-stone-700">무료배송</dd>
         </div>
       </dl>
 

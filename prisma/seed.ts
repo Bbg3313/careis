@@ -34,7 +34,7 @@ async function main() {
       tagline: "색소 고민을 위한 야간 집중 케어",
       description: "ODT 기술을 바탕으로 한 나이트 브라이트닝 루틴",
       sku: "CAREIS-ILLUM-001",
-      price: 119000,
+      price: 150000,
       status: ProductStatus.ACTIVE,
     },
     create: {
@@ -44,7 +44,7 @@ async function main() {
       description: "ODT 기술을 바탕으로 한 나이트 브라이트닝 루틴",
       sku: "CAREIS-ILLUM-001",
       slug: "illuminator",
-      price: 119000,
+      price: 150000,
       status: ProductStatus.ACTIVE,
     },
   });

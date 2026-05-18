@@ -26,6 +26,11 @@ enum PaymentMethod {
   KAKAO_PAY
 }
 
+enum PromoDiscountType {
+  PERCENT
+  FIXED_PER_UNIT
+}
+
 model Product {
   id           String        @id @default(cuid())
   sku          String        @unique
@@ -65,6 +70,8 @@ model Order {
   paymentPayload  String?
   referralCode   String?
   couponCode     String?
+  /** 주문 시점에 적용된 공구/프로모 캠페인 코드(정규화). 미적용 시 null */
+  appliedPromoCode String?
   /** 택배사명 (자유 입력) */
   carrier            String?
   /** 운송장 번호 */
@@ -75,6 +82,21 @@ model Order {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   orderItems     OrderItem[]
+}
+
+/** 인플루 공구 등: 코드(?ref= / 쿠폰)와 기간·할인 규칙 */
+model PromoCampaign {
+  id             String            @id @default(cuid())
+  code           String            @unique
+  title          String
+  discountType   PromoDiscountType
+  discountValue  Int
+  productSlugs   Json
+  startsAt       DateTime
+  endsAt         DateTime
+  isActive       Boolean           @default(true)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
 }
 
 model OrderItem {

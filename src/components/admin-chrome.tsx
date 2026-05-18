@@ -39,6 +39,9 @@ export function AdminChrome({
         <Link href="/admin/product-detail" className="text-stone-600 hover:text-stone-900">
           상세 이미지
         </Link>
+        <Link href="/admin/promos" className="text-stone-600 hover:text-stone-900">
+          공구·프로모
+        </Link>
         <a
           href="/api/admin/orders/export"
           className="text-stone-600 hover:text-stone-900"

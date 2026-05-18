@@ -28,6 +28,7 @@ export async function buildOrdersWorkbook() {
       단가: item.unitPrice,
       주문금액: order.totalAmount,
       레퍼럴코드: order.referralCode ?? "",
+      적용프로모: order.appliedPromoCode ?? "",
       쿠폰코드: order.couponCode ?? "",
       결제실패코드: order.paymentFailureCode ?? "",
       결제실패메시지: order.paymentFailureMessage ?? "",

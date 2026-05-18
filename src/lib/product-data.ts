@@ -146,7 +146,7 @@ export const products: ProductContent[] = [
     heroDescription:
       "시스테아민 5%·나이아신아마이드·알부틴과 ODT 막으로 야간 집중 → 4개월 후 주 2회 유지까지 이어지는 브라이트닝 루틴입니다.",
     theme: "cool",
-    price: 119000,
+    price: 150000,
     promoMaxDiscountPercent: 15,
     promoMaxDiscountNote: "* 레퍼럴·기간 한정 할인 등 적용 시 기준이 달라질 수 있습니다.",
     keywords: ["Night Care", "ODT Film", "Cysteamine 5%"],

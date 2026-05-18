@@ -2,6 +2,7 @@ import { OrderStatus, PaymentMethod, ProductStatus } from "@prisma/client";
 import { z } from "zod";
 
 import { prisma } from "@/lib/db";
+import { computeOrderPricing, resolveAppliedPromoCampaign } from "@/lib/promo";
 import { getProductBySlug } from "@/lib/product-data";
 import { sanitizeReferralCode } from "@/lib/referral";
 
@@ -102,10 +103,14 @@ export async function createOrder(input: CreateOrderInput) {
   }
 
   const referralCode = sanitizeReferralCode(parsed.referralCode);
-  const totalAmount = normalizedItems.reduce((sum, item) => {
-    const product = products.find((entry) => entry.slug === item.productSlug);
-    return sum + (product?.price ?? 0) * item.quantity;
-  }, 0);
+  const couponStored = parsed.couponCode?.trim() ? parsed.couponCode.trim() : null;
+
+  const campaign = await resolveAppliedPromoCampaign(couponStored, referralCode);
+  const pricing = computeOrderPricing(normalizedItems, products, campaign);
+
+  if (pricing.lines.length !== normalizedItems.length) {
+    throw new Error("선택한 상품 정보를 일부 찾을 수 없습니다.");
+  }
 
   return prisma.order.create({
     data: {
@@ -115,15 +120,15 @@ export async function createOrder(input: CreateOrderInput) {
       postalCode: parsed.postalCode,
       address: parsed.address,
       memo: parsed.memo || null,
-      couponCode: parsed.couponCode || null,
+      couponCode: couponStored,
       paymentMethod: parsed.paymentMethod,
       paymentStatus: OrderStatus.PENDING,
       referralCode,
-      totalAmount,
+      appliedPromoCode: pricing.appliedPromo?.code ?? null,
+      totalAmount: pricing.totalAmount,
       orderItems: {
-        create: normalizedItems.map((item) => {
-          const product = products.find((entry) => entry.slug === item.productSlug);
-
+        create: pricing.lines.map((line) => {
+          const product = products.find((entry) => entry.slug === line.productSlug);
           if (!product) {
             throw new Error("선택한 상품 정보를 찾을 수 없습니다.");
           }
@@ -132,8 +137,8 @@ export async function createOrder(input: CreateOrderInput) {
             productId: product.id,
             sku: product.sku,
             productNameSnapshot: product.name,
-            quantity: item.quantity,
-            unitPrice: product.price,
+            quantity: line.quantity,
+            unitPrice: line.unitPrice,
           };
         }),
       },
