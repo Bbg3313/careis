@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminOrderDetailPage({ params }: { params: Promise<{ orderNumber: string }> }) {
   const { orderNumber: raw } = await params;
   const orderNumber = decodeURIComponent(raw);
-  let loaded = await loadAdminOrderByNumber(orderNumber);
+  const loaded = await loadAdminOrderByNumber(orderNumber);
   if (!loaded.ok) {
     return (
       <div className="space-y-6">

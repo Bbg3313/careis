@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { DetailAccordionItem } from "@/components/detail-accordion-item";
@@ -306,21 +305,6 @@ function PurchaseExchangeReturnGuideHeader() {
         상품 수령 후 교환 및 반품이 필요한 경우 아래를 확인해 주세요.
       </p>
     </div>
-  );
-}
-
-function ProductExchangeReturnSection() {
-  return (
-    <section
-      id="exchange-return"
-      className="overflow-hidden rounded-[28px] border border-[rgba(184,145,86,0.18)] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1e7_100%)] shadow-[0_24px_60px_rgba(89,63,28,0.06)]"
-    >
-      <PurchaseExchangeReturnGuideHeader />
-
-      <div className="px-4 py-2 md:px-6 md:py-4">
-        <ExchangeReturnAccordionList />
-      </div>
-    </section>
   );
 }
 
