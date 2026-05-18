@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
 import { buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
 import { inflowSummary } from "@/lib/admin-order-inflow";import { loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
@@ -106,7 +107,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                 <th className="px-4 py-3 font-medium">상품</th>
                 <th className="px-4 py-3 font-medium">고객</th>
                 <th className="px-4 py-3 font-medium">결제</th>
-                <th className="px-4 py-3 font-medium">배송</th>
+                <th className="px-4 py-3 font-medium">배송단계</th>
                 <th className="px-4 py-3 font-medium">레퍼럴·공구</th>
                 <th className="px-4 py-3 font-medium text-right">금액</th>
               </tr>
@@ -140,15 +141,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                       <div className="text-xs text-stone-400">{formatKoreanMobileDisplay(order.phone)}</div>
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-stone-700">{order.paymentStatus}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-stone-600">
-                      {order.trackingNumber ? (
-                        <span className="text-emerald-700">등록됨</span>
-                      ) : order.paymentStatus === "PAID" ? (
-                        <span className="text-amber-700">발송 전</span>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-stone-700">{adminFulfillmentLabel(order)}</td>
                     <td className="max-w-[160px] px-4 py-3">
                       <div className="truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
                         {inflowSummary(order)}

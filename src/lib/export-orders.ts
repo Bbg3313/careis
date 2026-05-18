@@ -1,5 +1,6 @@
 import * as XLSX from "xlsx";
 
+import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
 import { getOrders } from "@/lib/orders";
 import { formatDate } from "@/lib/utils";
 
@@ -22,6 +23,8 @@ export async function buildOrdersWorkbook() {
       운송장번호: order.trackingNumber ?? "",
       발송일시: order.shippedAt ? formatDate(order.shippedAt) : "",
       관리자메모: order.adminNote ?? "",
+      배송단계: adminFulfillmentLabel(order),
+      배송완료일시: order.deliveredAt ? formatDate(order.deliveredAt) : "",
       상품명: item.productNameSnapshot,
       SKU: item.sku,
       수량: item.quantity,

@@ -1,4 +1,4 @@
-import { OrderStatus, PaymentMethod, ProductStatus, type Prisma } from "@prisma/client";
+import { FulfillmentStatus, OrderStatus, PaymentMethod, ProductStatus, type Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { prismaOrderCreatedAtRange } from "@/lib/admin-orders-date-filter";
@@ -124,6 +124,8 @@ export async function createOrder(input: CreateOrderInput) {
       couponCode: couponStored,
       paymentMethod: parsed.paymentMethod,
       paymentStatus: OrderStatus.PENDING,
+      fulfillmentStatus: null,
+      deliveredAt: null,
       referralCode,
       appliedPromoCode: pricing.appliedPromo?.code ?? null,
       totalAmount: pricing.totalAmount,
@@ -246,8 +248,38 @@ export async function updateOrderAdminFields(
   const trackingNumber = parsed.trackingNumber?.trim() || null;
   const adminNote = parsed.adminNote?.trim() || null;
 
-  const existing = await prisma.order.findUnique({ where: { orderNumber }, select: { shippedAt: true } });
-  const shippedAt = trackingNumber ? existing?.shippedAt ?? new Date() : null;
+  const existing = await prisma.order.findUnique({
+    where: { orderNumber },
+    select: {
+      shippedAt: true,
+      paymentStatus: true,
+      fulfillmentStatus: true,
+      trackingNumber: true,
+    },
+  });
+  if (!existing) {
+    throw new Error("주문을 찾을 수 없습니다.");
+  }
+
+  if (existing.paymentStatus !== OrderStatus.PAID) {
+    return prisma.order.update({
+      where: { orderNumber },
+      data: { carrier, trackingNumber, adminNote },
+      include: { orderItems: true },
+    });
+  }
+
+  if (existing.fulfillmentStatus === FulfillmentStatus.DELIVERED) {
+    return prisma.order.update({
+      where: { orderNumber },
+      data: { carrier, trackingNumber, adminNote },
+      include: { orderItems: true },
+    });
+  }
+
+  const hasTracking = Boolean(trackingNumber);
+  const fulfillmentStatus = hasTracking ? FulfillmentStatus.IN_TRANSIT : FulfillmentStatus.AWAITING_SHIP;
+  const shippedAt = hasTracking ? existing.shippedAt ?? new Date() : null;
 
   return prisma.order.update({
     where: { orderNumber },
@@ -255,7 +287,53 @@ export async function updateOrderAdminFields(
       carrier,
       trackingNumber,
       adminNote,
+      fulfillmentStatus,
       shippedAt,
+    },
+    include: { orderItems: true },
+  });
+}
+
+export async function markAdminOrderDelivered(orderNumber: string) {
+  const existing = await prisma.order.findUnique({
+    where: { orderNumber },
+    select: {
+      paymentStatus: true,
+      fulfillmentStatus: true,
+      trackingNumber: true,
+    },
+  });
+  if (!existing) {
+    throw new Error("주문을 찾을 수 없습니다.");
+  }
+  if (existing.paymentStatus !== OrderStatus.PAID) {
+    throw new Error("결제 완료된 주문만 배송완료 처리할 수 있습니다.");
+  }
+  if (!existing.trackingNumber?.trim()) {
+    throw new Error("운송장 번호를 먼저 등록해 주세요.");
+  }
+  if (existing.fulfillmentStatus === FulfillmentStatus.DELIVERED) {
+    return prisma.order.findUnique({
+      where: { orderNumber },
+      include: { orderItems: true },
+    });
+  }
+
+  const hasTrack = Boolean(existing.trackingNumber?.trim());
+  const inTransit =
+    existing.fulfillmentStatus === FulfillmentStatus.IN_TRANSIT ||
+    (existing.fulfillmentStatus === FulfillmentStatus.AWAITING_SHIP && hasTrack) ||
+    (existing.fulfillmentStatus === null && hasTrack);
+
+  if (!inTransit) {
+    throw new Error("송장 등록 후(배송중)에만 배송완료 처리할 수 있습니다.");
+  }
+
+  return prisma.order.update({
+    where: { orderNumber },
+    data: {
+      fulfillmentStatus: FulfillmentStatus.DELIVERED,
+      deliveredAt: new Date(),
     },
     include: { orderItems: true },
   });
@@ -326,6 +404,8 @@ export async function confirmOrderPayment(input: PaymentConfirmationInput) {
       refundedAt: null,
       paymentFailureCode: null,
       paymentFailureMessage: null,
+      fulfillmentStatus: FulfillmentStatus.AWAITING_SHIP,
+      deliveredAt: null,
     },
     include: {
       orderItems: true,
@@ -350,6 +430,8 @@ export async function failOrderPayment(input: PaymentFailureInput) {
       paymentFailureCode: input.code ?? null,
       paymentFailureMessage: input.message ?? "결제가 승인되지 않았습니다.",
       paymentPayload: input.payload ?? order.paymentPayload,
+      fulfillmentStatus: null,
+      deliveredAt: null,
     },
   });
 }
@@ -361,6 +443,8 @@ export async function refundOrderPayment(orderNumber: string, payload?: string |
       paymentStatus: OrderStatus.REFUNDED,
       refundedAt: new Date(),
       paymentPayload: payload ?? undefined,
+      fulfillmentStatus: null,
+      deliveredAt: null,
     },
     include: {
       orderItems: true,

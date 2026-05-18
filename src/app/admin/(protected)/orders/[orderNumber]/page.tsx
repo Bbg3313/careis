@@ -1,8 +1,10 @@
+import { FulfillmentStatus } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { saveOrderAdminForm } from "./actions";
+import { markOrderDeliveredForm, saveOrderAdminForm } from "./actions";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
 import { loadAdminOrderByNumber } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { trackingLookupUrl } from "@/lib/tracking-url";
@@ -30,6 +32,10 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
   }
 
   const lookup = trackingLookupUrl(order.carrier, order.trackingNumber);
+  const showDeliverButton =
+    order.paymentStatus === "PAID" &&
+    order.fulfillmentStatus !== FulfillmentStatus.DELIVERED &&
+    Boolean(order.trackingNumber?.trim());
 
   return (
     <div className="space-y-8">
@@ -82,6 +88,16 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
               <dd className="font-medium text-stone-900">{order.paymentStatus}</dd>
             </div>
             <div className="flex justify-between gap-4">
+              <dt className="text-stone-500">배송 단계</dt>
+              <dd className="font-medium text-stone-900">{adminFulfillmentLabel(order)}</dd>
+            </div>
+            {order.deliveredAt ? (
+              <div className="flex justify-between gap-4">
+                <dt className="text-stone-500">배송완료 처리</dt>
+                <dd className="text-stone-800">{formatDate(order.deliveredAt)}</dd>
+              </div>
+            ) : null}
+            <div className="flex justify-between gap-4">
               <dt className="text-stone-500">수단</dt>
               <dd className="text-stone-800">{order.paymentMethod}</dd>
             </div>
@@ -128,7 +144,10 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
 
       <section className="rounded-2xl border border-[#b89156]/25 bg-[#fffdf9] p-6 shadow-sm">
         <h2 className="text-sm font-semibold text-stone-900">배송·메모 (관리자)</h2>
-        <p className="mt-1 text-xs text-stone-500">택배사·운송장만 입력해도 됩니다. 저장 시 송장 최초 등록 시각이 기록됩니다.</p>
+        <p className="mt-1 text-xs text-stone-500">
+          결제 완료 후 <strong>발송준비</strong> → 운송장을 저장하면 <strong>배송중</strong> → 실제 수령이 확인되면 아래{" "}
+          <strong>배송완료 처리</strong>를 눌러 마감합니다.
+        </p>
         <form action={saveOrderAdminForm.bind(null, order.orderNumber)} className="mt-5 grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
             <span className="text-stone-600">택배사</span>
@@ -176,6 +195,17 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
             ) : null}
           </div>
         </form>
+        {showDeliverButton ? (
+          <form action={markOrderDeliveredForm.bind(null, order.orderNumber)} className="mt-5 border-t border-stone-200/80 pt-5">
+            <p className="text-xs text-stone-600">택배 배송이 고객에게 완료된 것이 확인된 경우에만 눌러 주세요.</p>
+            <button
+              type="submit"
+              className="mt-3 rounded-full bg-emerald-800 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-900"
+            >
+              배송완료 처리
+            </button>
+          </form>
+        ) : null}
       </section>
     </div>
   );

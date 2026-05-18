@@ -19,6 +19,13 @@ enum OrderStatus {
   REFUNDED
 }
 
+/** 결제 완료(PAID) 이후 물류 단계. 미결제·취소·환불 주문은 null */
+enum FulfillmentStatus {
+  AWAITING_SHIP
+  IN_TRANSIT
+  DELIVERED
+}
+
 enum PaymentMethod {
   CREDIT_CARD
   NAVER_PAY
@@ -77,6 +84,10 @@ model Order {
   /** 운송장 번호 */
   trackingNumber     String?
   shippedAt          DateTime?
+  /** 결제 완료 후 배송 진행 단계 (미결제 등은 null) */
+  fulfillmentStatus FulfillmentStatus?
+  /** 관리자가 배송완료 처리한 시각 */
+  deliveredAt       DateTime?
   /** 관리자 메모 (고객 비노출) */
   adminNote          String?
   createdAt      DateTime      @default(now())
