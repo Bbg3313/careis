@@ -530,19 +530,26 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           </label>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="space-y-2 text-sm text-stone-700">
-            <span>쿠폰·공구 코드</span>
-            <input
-              value={couponCode}
-              onChange={(event) => setCouponCode(event.target.value)}
-              className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 outline-none"
-            />
-            <span className="block text-xs leading-5 text-stone-500">
-              인플루 전용 코드가 있으면 입력하세요. <span className="font-mono">?ref=</span>와 동일한 문자열이면 링크만으로도 자동 적용됩니다. 쿠폰이 있으면 레퍼럴보다 우선합니다.
-            </span>
-          </label>
-        </div>
+        <details className="rounded-2xl border border-stone-200 bg-stone-50/60 px-4 py-3 text-sm text-stone-700 open:bg-stone-50">
+          <summary className="cursor-pointer select-none text-[15px] font-medium leading-7 text-stone-900 [&::-webkit-details-marker]:hidden [&::marker]:content-none">
+            할인·공구 코드{" "}
+            <span className="font-normal text-stone-500">(선택 — 전용 링크로 오셨다면 비워 두셔도 됩니다)</span>
+          </summary>
+          <div className="mt-4 space-y-2 border-t border-stone-200/90 pt-4">
+            <label className="block space-y-2 text-stone-700">
+              <span className="text-xs font-medium text-stone-600">코드 입력</span>
+              <input
+                value={couponCode}
+                onChange={(event) => setCouponCode(event.target.value)}
+                placeholder="문자·메시지로 받은 코드만 입력"
+                className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 outline-none"
+              />
+              <span className="block text-xs leading-5 text-stone-500">
+                인플루 전용 주소로 들어오시면 같은 코드가 자동으로 반영됩니다. 코드만 따로 받으신 경우에만 적어 주세요. 여기 입력한 값은 링크로 넘어온 값보다 우선합니다.
+              </span>
+            </label>
+          </div>
+        </details>
 
         <label className="space-y-2 text-sm text-stone-700">
           <span>배송 메모</span>
