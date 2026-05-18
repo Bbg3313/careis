@@ -20,6 +20,7 @@ export async function buildOrdersWorkbook() {
       우편번호: order.postalCode,
       주소: order.address,
       택배사: order.carrier ?? "",
+      스마트택배코드: order.trackingCarrierCode ?? "",
       운송장번호: order.trackingNumber ?? "",
       발송일시: order.shippedAt ? formatDate(order.shippedAt) : "",
       관리자메모: order.adminNote ?? "",

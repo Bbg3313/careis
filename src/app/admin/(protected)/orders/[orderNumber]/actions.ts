@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { requireAdminUser } from "@/lib/admin-auth";
-import { markAdminOrderDelivered, updateOrderAdminFields } from "@/lib/orders";
+import { markAdminOrderDelivered, syncOrderDeliveryFromSweetTracker, updateOrderAdminFields } from "@/lib/orders";
 
 export async function saveOrderAdminForm(orderNumber: string, formData: FormData) {
   await requireAdminUser();
@@ -12,8 +12,11 @@ export async function saveOrderAdminForm(orderNumber: string, formData: FormData
   await updateOrderAdminFields(orderNumber, {
     carrier: String(formData.get("carrier") ?? ""),
     trackingNumber: String(formData.get("trackingNumber") ?? ""),
+    trackingCarrierCode: String(formData.get("trackingCarrierCode") ?? ""),
     adminNote: String(formData.get("adminNote") ?? ""),
   });
+
+  await syncOrderDeliveryFromSweetTracker(orderNumber, { ignoreInterval: true });
 
   revalidatePath("/admin");
   revalidatePath("/admin/orders");

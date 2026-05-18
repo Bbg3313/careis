@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prismaOrderCreatedAtRange } from "@/lib/admin-orders-date-filter";
 import { prisma } from "@/lib/db";
 import { computeOrderPricing, resolveAppliedPromoCampaign } from "@/lib/promo";
+import { fetchSweetTrackerDeliveryComplete } from "@/lib/sweet-tracker";
 import { getProductBySlug } from "@/lib/product-data";
 import { sanitizeReferralCode } from "@/lib/referral";
 
@@ -236,6 +237,7 @@ export async function getOrderByNumber(orderNumber: string) {
 const adminOrderUpdateSchema = z.object({
   carrier: z.string().max(40).optional().nullable(),
   trackingNumber: z.string().max(80).optional().nullable(),
+  trackingCarrierCode: z.string().max(8).optional().nullable(),
   adminNote: z.string().max(2000).optional().nullable(),
 });
 
@@ -246,6 +248,7 @@ export async function updateOrderAdminFields(
   const parsed = adminOrderUpdateSchema.parse(input);
   const carrier = parsed.carrier?.trim() || null;
   const trackingNumber = parsed.trackingNumber?.trim() || null;
+  const trackingCarrierCode = parsed.trackingCarrierCode?.trim() || null;
   const adminNote = parsed.adminNote?.trim() || null;
 
   const existing = await prisma.order.findUnique({
@@ -264,7 +267,7 @@ export async function updateOrderAdminFields(
   if (existing.paymentStatus !== OrderStatus.PAID) {
     return prisma.order.update({
       where: { orderNumber },
-      data: { carrier, trackingNumber, adminNote },
+      data: { carrier, trackingNumber, trackingCarrierCode, adminNote },
       include: { orderItems: true },
     });
   }
@@ -272,7 +275,7 @@ export async function updateOrderAdminFields(
   if (existing.fulfillmentStatus === FulfillmentStatus.DELIVERED) {
     return prisma.order.update({
       where: { orderNumber },
-      data: { carrier, trackingNumber, adminNote },
+      data: { carrier, trackingNumber, trackingCarrierCode, adminNote },
       include: { orderItems: true },
     });
   }
@@ -286,6 +289,7 @@ export async function updateOrderAdminFields(
     data: {
       carrier,
       trackingNumber,
+      trackingCarrierCode,
       adminNote,
       fulfillmentStatus,
       shippedAt,
@@ -337,6 +341,104 @@ export async function markAdminOrderDelivered(orderNumber: string) {
     },
     include: { orderItems: true },
   });
+}
+
+/** 관리자 상세 진입 등: 짧은 주기. 크론은 `syncDeliveryStatusBatchForCron`. */
+export const SWEET_TRACKER_DETAIL_MIN_INTERVAL_MS = 12 * 60 * 1000;
+const SWEET_TRACKER_CRON_MIN_INTERVAL_MS = 3 * 60 * 60 * 1000;
+
+export type SyncDeliveryFromTrackerResult = "skipped" | "no_key" | "unchanged" | "updated";
+
+/**
+ * 스마트택배 API로 배송 완료 여부를 확인해 `DELIVERED`로 맞춥니다.
+ * `SWEET_TRACKER_API_KEY`, 주문의 `trackingCarrierCode`·`trackingNumber`가 있어야 합니다.
+ */
+export async function syncOrderDeliveryFromSweetTracker(
+  orderNumber: string,
+  opts?: { minIntervalMs?: number; ignoreInterval?: boolean },
+): Promise<SyncDeliveryFromTrackerResult> {
+  const key = process.env.SWEET_TRACKER_API_KEY?.trim();
+  if (!key) {
+    return "no_key";
+  }
+
+  const minInterval = opts?.minIntervalMs ?? SWEET_TRACKER_CRON_MIN_INTERVAL_MS;
+
+  const order = await prisma.order.findUnique({
+    where: { orderNumber },
+    select: {
+      trackingNumber: true,
+      trackingCarrierCode: true,
+      paymentStatus: true,
+      fulfillmentStatus: true,
+      lastSweetTrackerPollAt: true,
+    },
+  });
+  if (!order) return "skipped";
+  if (order.paymentStatus !== OrderStatus.PAID) return "skipped";
+  if (order.fulfillmentStatus === FulfillmentStatus.DELIVERED) return "unchanged";
+
+  const inv = order.trackingNumber?.trim();
+  const code = order.trackingCarrierCode?.trim();
+  if (!inv || !code) return "skipped";
+
+  if (!opts?.ignoreInterval && order.lastSweetTrackerPollAt) {
+    const elapsed = Date.now() - order.lastSweetTrackerPollAt.getTime();
+    if (elapsed < minInterval) return "unchanged";
+  }
+
+  const poll = await fetchSweetTrackerDeliveryComplete(code, inv);
+
+  if (poll.httpOk && poll.deliveryComplete) {
+    await prisma.order.update({
+      where: { orderNumber },
+      data: {
+        fulfillmentStatus: FulfillmentStatus.DELIVERED,
+        deliveredAt: new Date(),
+        lastSweetTrackerPollAt: new Date(),
+      },
+    });
+    return "updated";
+  }
+
+  await prisma.order.update({
+    where: { orderNumber },
+    data: { lastSweetTrackerPollAt: new Date() },
+  });
+  return "unchanged";
+}
+
+/** Vercel Cron 등: 조회 가능한 배송중 주문을 일괄 동기화 */
+export async function syncDeliveryStatusBatchForCron(maxOrders = 40) {
+  const key = process.env.SWEET_TRACKER_API_KEY?.trim();
+  if (!key) {
+    return { polled: 0, updated: 0, skippedNoKey: true as const };
+  }
+
+  const threshold = new Date(Date.now() - SWEET_TRACKER_CRON_MIN_INTERVAL_MS);
+  const rows = await prisma.order.findMany({
+    where: {
+      paymentStatus: OrderStatus.PAID,
+      fulfillmentStatus: { not: FulfillmentStatus.DELIVERED },
+      trackingCarrierCode: { not: null },
+      OR: [{ lastSweetTrackerPollAt: null }, { lastSweetTrackerPollAt: { lt: threshold } }],
+    },
+    select: { orderNumber: true, trackingNumber: true, trackingCarrierCode: true },
+    take: maxOrders * 2,
+    orderBy: { lastSweetTrackerPollAt: "asc" },
+  });
+
+  const eligible = rows.filter((r) => r.trackingNumber?.trim() && r.trackingCarrierCode?.trim()).slice(0, maxOrders);
+
+  let updated = 0;
+  for (const row of eligible) {
+    const r = await syncOrderDeliveryFromSweetTracker(row.orderNumber, {
+      minIntervalMs: SWEET_TRACKER_CRON_MIN_INTERVAL_MS,
+    });
+    if (r === "updated") updated += 1;
+    await new Promise((resolve) => setTimeout(resolve, 150));
+  }
+  return { polled: eligible.length, updated, skippedNoKey: false as const };
 }
 
 export async function getOrderStats(dateQuery?: { from?: string; to?: string }) {
@@ -432,6 +534,8 @@ export async function failOrderPayment(input: PaymentFailureInput) {
       paymentPayload: input.payload ?? order.paymentPayload,
       fulfillmentStatus: null,
       deliveredAt: null,
+      trackingCarrierCode: null,
+      lastSweetTrackerPollAt: null,
     },
   });
 }
@@ -445,6 +549,8 @@ export async function refundOrderPayment(orderNumber: string, payload?: string |
       paymentPayload: payload ?? undefined,
       fulfillmentStatus: null,
       deliveredAt: null,
+      trackingCarrierCode: null,
+      lastSweetTrackerPollAt: null,
     },
     include: {
       orderItems: true,

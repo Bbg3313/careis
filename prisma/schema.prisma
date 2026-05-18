@@ -83,6 +83,8 @@ model Order {
   carrier            String?
   /** 운송장 번호 */
   trackingNumber     String?
+  /** 스마트택배(스윗트래커) 택배사 코드 — API 자동 배송완료에 사용 */
+  trackingCarrierCode  String?
   shippedAt          DateTime?
   /** 결제 완료 후 배송 진행 단계 (미결제 등은 null) */
   fulfillmentStatus FulfillmentStatus?
@@ -90,6 +92,8 @@ model Order {
   deliveredAt       DateTime?
   /** 관리자 메모 (고객 비노출) */
   adminNote          String?
+  /** 스마트택배 조회 마지막 시각 (조회 한도·부하 완화) */
+  lastSweetTrackerPollAt DateTime?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   orderItems     OrderItem[]

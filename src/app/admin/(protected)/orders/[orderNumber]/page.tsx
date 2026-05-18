@@ -5,9 +5,10 @@ import { notFound } from "next/navigation";
 import { markOrderDeliveredForm, saveOrderAdminForm } from "./actions";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
-import { loadAdminOrderByNumber } from "@/lib/orders";
+import { loadAdminOrderByNumber, SWEET_TRACKER_DETAIL_MIN_INTERVAL_MS, syncOrderDeliveryFromSweetTracker } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { trackingLookupUrl } from "@/lib/tracking-url";
+import { SWEET_TRACKER_CARRIER_OPTIONS } from "@/lib/sweet-tracker-carriers";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +16,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminOrderDetailPage({ params }: { params: Promise<{ orderNumber: string }> }) {
   const { orderNumber: raw } = await params;
   const orderNumber = decodeURIComponent(raw);
-  const loaded = await loadAdminOrderByNumber(orderNumber);
+  let loaded = await loadAdminOrderByNumber(orderNumber);
   if (!loaded.ok) {
     return (
       <div className="space-y-6">
@@ -26,9 +27,22 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
       </div>
     );
   }
-  const order = loaded.order;
-  if (!order) {
+  if (!loaded.order) {
     notFound();
+  }
+
+  let order = loaded.order;
+
+  if (process.env.SWEET_TRACKER_API_KEY) {
+    const sync = await syncOrderDeliveryFromSweetTracker(orderNumber, {
+      minIntervalMs: SWEET_TRACKER_DETAIL_MIN_INTERVAL_MS,
+    });
+    if (sync === "updated") {
+      const next = await loadAdminOrderByNumber(orderNumber);
+      if (next.ok && next.order) {
+        order = next.order;
+      }
+    }
   }
 
   const lookup = trackingLookupUrl(order.carrier, order.trackingNumber);
@@ -145,10 +159,26 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
       <section className="rounded-2xl border border-[#b89156]/25 bg-[#fffdf9] p-6 shadow-sm">
         <h2 className="text-sm font-semibold text-stone-900">배송·메모 (관리자)</h2>
         <p className="mt-1 text-xs text-stone-500">
-          결제 완료 후 <strong>발송준비</strong> → 운송장을 저장하면 <strong>배송중</strong> → 실제 수령이 확인되면 아래{" "}
-          <strong>배송완료 처리</strong>를 눌러 마감합니다.
+          결제 완료 후 <strong>발송준비</strong> → 운송장을 저장하면 <strong>배송중</strong> → 스마트택배 조회상 배송완료이면{" "}
+          <strong>자동으로 배송완료</strong>로 바뀝니다. (서버에 <span className="font-mono">SWEET_TRACKER_API_KEY</span>와
+          아래 택배사 코드 필요 · 주기 크론 + 이 페이지를 열 때 동기화)
         </p>
         <form action={saveOrderAdminForm.bind(null, order.orderNumber)} className="mt-5 grid gap-4 sm:grid-cols-2">
+          <label className="block text-sm sm:col-span-2">
+            <span className="text-stone-600">스마트택배 택배사 코드</span>
+            <select
+              name="trackingCarrierCode"
+              defaultValue={order.trackingCarrierCode ?? ""}
+              className="mt-1 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-stone-900 outline-none focus:border-[#b89156]"
+            >
+              <option value="">미지정 (자동 배송완료 조회 안 함)</option>
+              {SWEET_TRACKER_CARRIER_OPTIONS.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.label} ({c.code})
+                </option>
+              ))}
+            </select>
+          </label>
           <label className="block text-sm">
             <span className="text-stone-600">택배사</span>
             <input
@@ -197,7 +227,9 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
         </form>
         {showDeliverButton ? (
           <form action={markOrderDeliveredForm.bind(null, order.orderNumber)} className="mt-5 border-t border-stone-200/80 pt-5">
-            <p className="text-xs text-stone-600">택배 배송이 고객에게 완료된 것이 확인된 경우에만 눌러 주세요.</p>
+            <p className="text-xs text-stone-600">
+              스마트택배 연동이 없거나 조회 지연이 있을 때만 사용하세요. 정상 시에는 조회 API가 자동으로 완료 처리합니다.
+            </p>
             <button
               type="submit"
               className="mt-3 rounded-full bg-emerald-800 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-900"
