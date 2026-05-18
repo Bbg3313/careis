@@ -88,25 +88,23 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
         />
       </div>
 
-      {loaded.ok ? (
-        <div className="grid gap-4 sm:grid-cols-3">
-          <StatCard
-            label="배송 전"
-            value={stats.paidAwaitingShip}
-            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "AWAITING_SHIP", from, to })}
-          />
-          <StatCard
-            label="배송중"
-            value={stats.paidInTransit}
-            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "IN_TRANSIT", from, to })}
-          />
-          <StatCard
-            label="배송완료"
-            value={stats.paidDelivered}
-            href={buildAdminOrdersHref({ status: "PAID", fulfillment: "DELIVERED", from, to })}
-          />
-        </div>
-      ) : null}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <StatCard
+          label="배송 전"
+          value={stats.paidAwaitingShip}
+          href={buildAdminOrdersHref({ status: "PAID", fulfillment: "AWAITING_SHIP", from, to })}
+        />
+        <StatCard
+          label="배송중"
+          value={stats.paidInTransit}
+          href={buildAdminOrdersHref({ status: "PAID", fulfillment: "IN_TRANSIT", from, to })}
+        />
+        <StatCard
+          label="배송완료"
+          value={stats.paidDelivered}
+          href={buildAdminOrdersHref({ status: "PAID", fulfillment: "DELIVERED", from, to })}
+        />
+      </div>
 
       {loaded.ok ? (
         <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
