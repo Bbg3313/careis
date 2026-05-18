@@ -3,8 +3,16 @@
 import Link from "next/link";
 
 import { PromoReferralLinkCopy } from "@/components/promo-referral-link-copy";
+import { formatCurrency } from "@/lib/utils";
 
-type Row = { id: string; code: string; title: string; isActive: boolean };
+type Row = {
+  id: string;
+  code: string;
+  title: string;
+  isActive: boolean;
+  paidCount: number;
+  totalPaidAmount: number;
+};
 
 export function AdminDashboardPromoLinks({ baseUrlFromEnv, campaigns }: { baseUrlFromEnv: string; campaigns: Row[] }) {
   if (campaigns.length === 0) {
@@ -28,7 +36,9 @@ export function AdminDashboardPromoLinks({ baseUrlFromEnv, campaigns }: { baseUr
             <th className="px-5 py-3 font-medium">제목</th>
             <th className="px-5 py-3 font-medium">활성</th>
             <th className="px-5 py-3 font-medium">유입 링크</th>
-            <th className="px-5 py-3 font-medium">실적</th>
+            <th className="px-5 py-3 font-medium">결제완료</th>
+            <th className="px-5 py-3 font-medium">총액</th>
+            <th className="px-5 py-3 font-medium">상세</th>
           </tr>
         </thead>
         <tbody>
@@ -54,9 +64,11 @@ export function AdminDashboardPromoLinks({ baseUrlFromEnv, campaigns }: { baseUr
               <td className="min-w-[200px] px-5 py-3">
                 <PromoReferralLinkCopy baseUrlFromEnv={baseUrlFromEnv} code={c.code} compact />
               </td>
+              <td className="whitespace-nowrap px-5 py-3 tabular-nums text-stone-800">{c.paidCount}건</td>
+              <td className="whitespace-nowrap px-5 py-3 tabular-nums text-stone-800">{formatCurrency(c.totalPaidAmount)}</td>
               <td className="whitespace-nowrap px-5 py-3">
                 <Link href={`/admin/promos/${encodeURIComponent(c.id)}`} className="text-sm font-medium text-[#8b673f] hover:underline">
-                  보기
+                  목록
                 </Link>
               </td>
             </tr>

@@ -44,6 +44,35 @@ export async function listPromoCampaignsAdmin() {
   });
 }
 
+/** 대시보드: `appliedPromoCode`별 결제 완료 건수·합계 */
+export async function aggregatePaidOrdersByAppliedPromoCode(): Promise<
+  Map<string, { paidCount: number; totalPaidAmount: number }>
+> {
+  try {
+    const rows = await prisma.order.groupBy({
+      by: ["appliedPromoCode"],
+      where: {
+        paymentStatus: OrderStatus.PAID,
+        appliedPromoCode: { not: null },
+      },
+      _count: { _all: true },
+      _sum: { totalAmount: true },
+    });
+    const map = new Map<string, { paidCount: number; totalPaidAmount: number }>();
+    for (const r of rows) {
+      const code = r.appliedPromoCode;
+      if (!code) continue;
+      map.set(code, {
+        paidCount: r._count._all,
+        totalPaidAmount: r._sum.totalAmount ?? 0,
+      });
+    }
+    return map;
+  } catch {
+    return new Map();
+  }
+}
+
 /** 공구 코드가 주문에 `appliedPromoCode`로 박힌 결제 완료 건만 집계 */
 export async function loadAdminPromoPaidPerformance(campaignId: string): Promise<
   | {
