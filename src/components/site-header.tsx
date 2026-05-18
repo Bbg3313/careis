@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { PromoCountdownStrip } from "@/components/promo-countdown-strip";
 import { SiteLogo } from "@/components/site-logo";
 
 const navItems = [
@@ -9,9 +10,16 @@ const navItems = [
   { href: "/contact", label: "CONTACT" },
 ];
 
-export function SiteHeader() {
+export function SiteHeader({
+  promoCountdown,
+}: {
+  promoCountdown?: { endsAtIso: string; title: string } | null;
+}) {
   return (
     <header className="sticky inset-x-0 top-0 z-50 border-b border-[rgba(116,88,59,0.08)] bg-[rgba(250,248,244,0.86)] backdrop-blur-xl">
+      {promoCountdown ? (
+        <PromoCountdownStrip endsAtIso={promoCountdown.endsAtIso} title={promoCountdown.title} />
+      ) : null}
       <div className="mx-auto max-w-7xl px-4 py-2.5 md:px-6 lg:px-8 lg:py-4">
         <div className="flex items-center justify-between gap-2 sm:gap-3">
           <div className="flex min-w-0 shrink items-center gap-2.5 sm:gap-3 md:gap-3.5">

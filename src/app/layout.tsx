@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Cormorant_Garamond, Noto_Sans_KR } from "next/font/google";
 
 import { ReferralTracker } from "@/components/referral-tracker";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { getSitePromoCountdown } from "@/lib/promo-countdown-site";
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_KEYWORDS,
@@ -81,11 +83,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? "";
+  const onStorefront = !pathname.startsWith("/admin");
+
+  let promoCountdown: { endsAtIso: string; title: string } | null = null;
+  if (onStorefront) {
+    const row = await getSitePromoCountdown();
+    if (row) {
+      promoCountdown = { endsAtIso: row.endsAt.toISOString(), title: row.title };
+    }
+  }
+
   return (
     <html lang="ko">
       <body className={`${notoSansKr.className} ${cormorant.variable}`}>
@@ -94,7 +108,7 @@ export default function RootLayout({
             <ReferralTracker />
           </Suspense>
           <ScrollToTopButton />
-          <SiteHeader />
+          <SiteHeader promoCountdown={promoCountdown} />
           <main className="mx-auto max-w-7xl px-4 pb-6 pt-5 md:px-8 md:pb-14 md:pt-10 lg:pt-8">{children}</main>
           <SiteFooter />
         </div>
