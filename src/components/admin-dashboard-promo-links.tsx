@@ -28,12 +28,17 @@ export function AdminDashboardPromoLinks({ baseUrlFromEnv, campaigns }: { baseUr
             <th className="px-5 py-3 font-medium">제목</th>
             <th className="px-5 py-3 font-medium">활성</th>
             <th className="px-5 py-3 font-medium">유입 링크</th>
+            <th className="px-5 py-3 font-medium">실적</th>
           </tr>
         </thead>
         <tbody>
           {campaigns.map((c) => (
             <tr key={c.id} className="border-t border-stone-100">
-              <td className="whitespace-nowrap px-5 py-3 font-mono text-stone-900">{c.code}</td>
+              <td className="whitespace-nowrap px-5 py-3 font-mono text-stone-900">
+                <Link href={`/admin/promos/${encodeURIComponent(c.id)}`} className="text-[#8b673f] hover:underline">
+                  {c.code}
+                </Link>
+              </td>
               <td className="max-w-[200px] px-5 py-3 text-stone-700">
                 <span className="line-clamp-2">{c.title}</span>
               </td>
@@ -48,6 +53,11 @@ export function AdminDashboardPromoLinks({ baseUrlFromEnv, campaigns }: { baseUr
               </td>
               <td className="min-w-[200px] px-5 py-3">
                 <PromoReferralLinkCopy baseUrlFromEnv={baseUrlFromEnv} code={c.code} compact />
+              </td>
+              <td className="whitespace-nowrap px-5 py-3">
+                <Link href={`/admin/promos/${encodeURIComponent(c.id)}`} className="text-sm font-medium text-[#8b673f] hover:underline">
+                  보기
+                </Link>
               </td>
             </tr>
           ))}

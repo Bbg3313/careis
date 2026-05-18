@@ -1,5 +1,4 @@
-import type { Prisma, PromoCampaign, PromoDiscountType } from "@prisma/client";
-
+import { OrderStatus, type Prisma, type PromoCampaign, type PromoDiscountType } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import type { ProductSlug } from "@/lib/product-data";
 import { sanitizeReferralCode } from "@/lib/referral";
@@ -43,6 +42,54 @@ export async function listPromoCampaignsAdmin() {
   return prisma.promoCampaign.findMany({
     orderBy: { startsAt: "desc" },
   });
+}
+
+/** 공구 코드가 주문에 `appliedPromoCode`로 박힌 결제 완료 건만 집계 */
+export async function loadAdminPromoPaidPerformance(campaignId: string): Promise<
+  | {
+      ok: true;
+      campaign: PromoCampaign;
+      paidCount: number;
+      totalPaidAmount: number;
+      orders: Prisma.OrderGetPayload<{ include: { orderItems: true } }>[];
+    }
+  | { ok: false; reason: "not_found" | "db" }
+> {
+  try {
+    const campaign = await prisma.promoCampaign.findUnique({
+      where: { id: campaignId },
+    });
+    if (!campaign) return { ok: false, reason: "not_found" };
+
+    const wherePaidApplied = {
+      paymentStatus: OrderStatus.PAID,
+      appliedPromoCode: campaign.code,
+    };
+
+    const [agg, orders] = await Promise.all([
+      prisma.order.aggregate({
+        where: wherePaidApplied,
+        _sum: { totalAmount: true },
+        _count: { _all: true },
+      }),
+      prisma.order.findMany({
+        where: wherePaidApplied,
+        orderBy: [{ paidAt: "desc" }, { createdAt: "desc" }],
+        include: { orderItems: true },
+      }),
+    ]);
+
+    return {
+      ok: true,
+      campaign,
+      paidCount: agg._count._all,
+      totalPaidAmount: agg._sum.totalAmount ?? 0,
+      orders,
+    };
+  } catch (error) {
+    console.error("[promo] loadAdminPromoPaidPerformance failed", error);
+    return { ok: false, reason: "db" };
+  }
 }
 
 export type CreatePromoCampaignInput = {

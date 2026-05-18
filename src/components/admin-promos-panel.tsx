@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 import { formatCurrency } from "@/lib/utils";
@@ -119,6 +120,7 @@ export function AdminPromosPanel() {
               <th className="px-4 py-3">상품</th>
               <th className="px-4 py-3">기간</th>
               <th className="px-4 py-3">유입 링크</th>
+              <th className="px-4 py-3">실적</th>
               <th className="px-4 py-3">활성</th>
             </tr>
           </thead>
@@ -136,6 +138,11 @@ export function AdminPromosPanel() {
                 </td>
                 <td className="min-w-[200px] px-4 py-3 align-top">
                   <PromoReferralLinkCopy baseUrlFromEnv={PUBLIC_SITE_URL} code={c.code} compact />
+                </td>
+                <td className="whitespace-nowrap px-4 py-3">
+                  <Link href={`/admin/promos/${encodeURIComponent(c.id)}`} className="text-xs font-medium text-[#8b673f] hover:underline">
+                    보기
+                  </Link>
                 </td>
                 <td className="px-4 py-3">
                   <button
@@ -156,7 +163,7 @@ export function AdminPromosPanel() {
             ))}
             {campaigns.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-stone-500">
+                <td colSpan={8} className="px-4 py-8 text-center text-stone-500">
                   등록된 공구가 없습니다. 아래에서 새로 만듭니다.
                 </td>
               </tr>
