@@ -18,6 +18,7 @@ import {
   SUN_PACK_DETAIL_MAX_WIDTH_PX,
   type SunPackStorySlide,
 } from "@/lib/site-assets";
+import { mergeIlluminatorSlidesWithFallback } from "@/lib/product-detail-slides";
 import { formatCurrency } from "@/lib/utils";
 
 export function ProductDetailPage({
@@ -44,6 +45,7 @@ export function ProductDetailPage({
       <IlluminatorDetailPage
         product={product}
         visual={visual as (typeof productVisuals)["illuminator"]}
+        storySlides={sunPackStorySlides ?? []}
       />
     );
   }
@@ -54,10 +56,18 @@ export function ProductDetailPage({
 function IlluminatorDetailPage({
   product,
   visual,
+  storySlides,
 }: {
   product: ProductContent;
   visual: (typeof productVisuals)["illuminator"];
+  storySlides: SunPackStorySlide[];
 }) {
+  const mergedIlluminatorSlides = mergeIlluminatorSlidesWithFallback(storySlides);
+  const galleryMain = mergedIlluminatorSlides[0] ?? {
+    src: illuminatorDetailAssets.heroImage,
+    ...illuminatorDetailAssets.heroPixelSize,
+  };
+
   const purchaseAsideBody = (
     <>
       <div className="space-y-3 border-b border-stone-100 pb-6">
@@ -132,10 +142,10 @@ function IlluminatorDetailPage({
                 accent="cool"
                 mainFrame="square"
                 maxWidthPx={ILLUMINATOR_DETAIL_MAX_WIDTH_PX}
-                defaultMainSrc={illuminatorDetailAssets.heroImage}
-                thumbnailSrcs={[...illuminatorDetailAssets.thumbnailImages]}
+                defaultMainSrc={galleryMain.src}
+                thumbnailSrcs={mergedIlluminatorSlides.map((s) => s.src)}
                 alt={visual.alt}
-                pixelSize={illuminatorDetailAssets.heroPixelSize}
+                pixelSize={{ width: galleryMain.width, height: galleryMain.height }}
                 productName={product.name}
               />
             </section>
@@ -156,7 +166,7 @@ function IlluminatorDetailPage({
           <SunPackDetailTabs />
 
           <section id="detail" className="scroll-mt-[var(--site-sticky-offset)]">
-            <IlluminatorDetailStory product={product} />
+            <IlluminatorDetailStory product={product} sectionSlides={mergedIlluminatorSlides} />
           </section>
 
           <section

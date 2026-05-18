@@ -3,11 +3,66 @@ import clsx from "clsx";
 
 import { DetailAccordionItem } from "@/components/detail-accordion-item";
 import type { ProductContent } from "@/lib/product-data";
-import { ILLUMINATOR_DETAIL_MAX_WIDTH_PX, illuminatorDetailAssets } from "@/lib/site-assets";
+import { ILLUMINATOR_DETAIL_MAX_WIDTH_PX, type SunPackStorySlide } from "@/lib/site-assets";
 import { splitParagraphs } from "@/lib/text-paragraphs";
 
-/** 갤러리 썸네일과 동일 7장 순서 — product.sections(일루미 7개)와 1:1 대응 */
-const cuts = illuminatorDetailAssets.thumbnailImages;
+function storyMediaExtension(src: string) {
+  return src.split("?")[0].split(".").pop()?.toLowerCase() ?? "";
+}
+
+function IlluminatorStoryFillMedia({
+  slide,
+  index,
+  alt,
+}: {
+  slide: SunPackStorySlide;
+  index: number;
+  alt: string;
+}) {
+  const ext = storyMediaExtension(slide.src);
+
+  if (ext === "mp4" || ext === "webm") {
+    const mime = ext === "webm" ? "video/webm" : "video/mp4";
+    return (
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={alt}
+      >
+        <source src={slide.src} type={mime} />
+      </video>
+    );
+  }
+
+  if (ext === "gif") {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={slide.src}
+        alt={alt}
+        className="absolute inset-0 h-full w-full object-cover"
+        loading={index === 0 ? "eager" : "lazy"}
+        decoding="async"
+      />
+    );
+  }
+
+  return (
+    <Image
+      src={slide.src}
+      alt={alt}
+      fill
+      className="object-cover"
+      sizes={`(max-width: 1024px) 100vw, min(${ILLUMINATOR_DETAIL_MAX_WIDTH_PX / 2}px, 48vw)`}
+      quality={95}
+      priority={index === 0}
+    />
+  );
+}
 
 type SectionDeco = {
   badgeClass: string;
@@ -92,7 +147,14 @@ function decoFor(accent?: string): SectionDeco {
   return SECTION_DECO[accent] ?? DEFAULT_DECO;
 }
 
-export function IlluminatorDetailStory({ product }: { product: ProductContent }) {
+export function IlluminatorDetailStory({
+  product,
+  sectionSlides,
+}: {
+  product: ProductContent;
+  /** 관리자 슬라이드 + 부족분은 기본 컷으로 채운 배열(섹션 인덱스와 1:1) */
+  sectionSlides: SunPackStorySlide[];
+}) {
   const sections = product.sections;
 
   return (
@@ -158,14 +220,17 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
 
         {/* 본문 섹션: 이미지 + 카드형 타이포 교차 */}
         <div className="space-y-10 sm:space-y-12">
-          {cuts.map((src, index) => {
-            const block = sections[index];
-            if (!block) return null;
+          {sections.map((block, index) => {
+            const slide = sectionSlides[index];
+            if (!slide) return null;
             const reversed = index % 2 === 1;
             const deco = decoFor(block.accent);
+            const descriptionParagraphs = slide.body?.trim()
+              ? splitParagraphs(slide.body)
+              : splitParagraphs(block.description);
 
             return (
-              <article key={src} className="relative">
+              <article key={`${slide.src}-${index}`} className="relative">
                 {index > 0 ? (
                   <div className="mb-10 flex justify-center sm:mb-12" aria-hidden>
                     <div className="h-10 w-px bg-[linear-gradient(180deg,transparent_0%,rgba(99,102,241,0.35)_50%,transparent_100%)]" />
@@ -185,14 +250,10 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
                         reversed ? "lg:order-2" : "lg:order-1",
                       )}
                     >
-                      <Image
-                        src={src}
+                      <IlluminatorStoryFillMedia
+                        slide={slide}
+                        index={index}
                         alt={`${product.name} — ${block.title}`}
-                        fill
-                        className="object-cover"
-                        sizes={`(max-width: 1024px) 100vw, min(${ILLUMINATOR_DETAIL_MAX_WIDTH_PX / 2}px, 48vw)`}
-                        quality={95}
-                        priority={index === 0}
                       />
                       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.12)_0%,transparent_40%,rgba(15,23,42,0.35)_100%)]" />
                       <div
@@ -252,7 +313,7 @@ export function IlluminatorDetailStory({ product }: { product: ProductContent })
                       ) : null}
 
                       <div className="mt-5 space-y-3 text-sm leading-7 text-slate-600 sm:text-[15px] sm:leading-7">
-                        {splitParagraphs(block.description).map((p, i) => (
+                        {descriptionParagraphs.map((p, i) => (
                           <p key={i} className="copy-pretty first:font-medium first:text-slate-800">
                             {p}
                           </p>
