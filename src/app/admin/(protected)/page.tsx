@@ -30,27 +30,23 @@ function StatCard({ label, value, href }: { label: string; value: number; href: 
 
 export default async function AdminDashboardPage({ searchParams }: DashboardPageProps) {
   const { from, to } = await searchParams;
-  const loaded = await loadAdminOrdersOverview({ from, to });
+
+  const [loaded, promoRows] = await Promise.all([
+    loadAdminOrdersOverview({ from, to }),
+    listPromoCampaignsAdmin().catch(() => [] as Awaited<ReturnType<typeof listPromoCampaignsAdmin>>),
+  ]);
+
   const stats = loaded.ok ? loaded.stats : { all: 0, pending: 0, paid: 0, cancelled: 0, refunded: 0 };
-  const orders = loaded.ok ? loaded.orders : [];
-  const recent = orders.slice(0, 8);
+  const recent = loaded.ok ? loaded.orders : [];
 
   const dateFilterActive = Boolean(from?.trim() || to?.trim());
 
-  let promoLinkRows: { id: string; code: string; title: string; isActive: boolean }[] = [];
-  if (loaded.ok) {
-    try {
-      const rows = await listPromoCampaignsAdmin();
-      promoLinkRows = rows.slice(0, 12).map((r) => ({
-        id: r.id,
-        code: r.code,
-        title: r.title,
-        isActive: r.isActive,
-      }));
-    } catch {
-      promoLinkRows = [];
-    }
-  }
+  const promoLinkRows = promoRows.slice(0, 12).map((r) => ({
+    id: r.id,
+    code: r.code,
+    title: r.title,
+    isActive: r.isActive,
+  }));
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 

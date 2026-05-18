@@ -153,11 +153,18 @@ export async function createOrder(input: CreateOrderInput) {
 /** 프로덕션 등에서 DB 미구성 시 UI가 500이 되지 않도록 관리자 화면 전용 로더 */
 
 export async function loadAdminOrdersOverview(dateQuery?: { from?: string; to?: string }): Promise<
-  | { ok: true; stats: Awaited<ReturnType<typeof getOrderStats>>; orders: Awaited<ReturnType<typeof getOrders>> }
+  | {
+      ok: true;
+      stats: Awaited<ReturnType<typeof getOrderStats>>;
+      orders: Awaited<ReturnType<typeof getRecentOrdersForAdmin>>;
+    }
   | { ok: false }
 > {
   try {
-    const [stats, orders] = await Promise.all([getOrderStats(dateQuery), getOrders(dateQuery)]);
+    const [stats, orders] = await Promise.all([
+      getOrderStats(dateQuery),
+      getRecentOrdersForAdmin(8, dateQuery),
+    ]);
     return { ok: true, stats, orders };
   } catch (error) {
     console.error("[orders] admin overview load failed", error);
@@ -196,6 +203,19 @@ export async function getOrders(dateQuery?: { from?: string; to?: string }) {
   return prisma.order.findMany({
     where: Object.keys(dateWhere).length ? (dateWhere as Prisma.OrderWhereInput) : undefined,
     orderBy: { createdAt: "desc" },
+    include: {
+      orderItems: true,
+    },
+  });
+}
+
+/** 대시보드 등: 전체 스캔 없이 최근 주문만 */
+export async function getRecentOrdersForAdmin(limit: number, dateQuery?: { from?: string; to?: string }) {
+  const dateWhere = prismaOrderCreatedAtRange(dateQuery?.from, dateQuery?.to);
+  return prisma.order.findMany({
+    where: Object.keys(dateWhere).length ? (dateWhere as Prisma.OrderWhereInput) : undefined,
+    orderBy: { createdAt: "desc" },
+    take: limit,
     include: {
       orderItems: true,
     },
