@@ -1,25 +1,26 @@
-import { prisma } from "@/lib/db";
+import { findActivePromoByCode } from "@/lib/promo";
+import { sanitizeReferralCode } from "@/lib/referral";
 
 export type SitePromoCountdownPayload = {
   endsAt: Date;
   title: string;
 };
 
-/** 쇼핑몰용: 진행 중이고 가장 먼저 종료되는 활성 공구 캠페인 */
-export async function getSitePromoCountdown(): Promise<SitePromoCountdownPayload | null> {
+/**
+ * 쇼핑몰 상단 공구 타이머: **레퍼럴 쿠키(`?ref=`로 저장된 코드)**가 있고,
+ * 그 코드에 해당하는 활성 공구가 있을 때만 표시합니다.
+ * 일반 메인 URL 방문자에게는 공구 배너를 띄우지 않습니다.
+ */
+export async function getSitePromoCountdownForReferrer(
+  referralFromCookie: string | null | undefined,
+): Promise<SitePromoCountdownPayload | null> {
+  const code = sanitizeReferralCode(referralFromCookie);
+  if (!code) return null;
+
   try {
-    const now = new Date();
-    const row = await prisma.promoCampaign.findFirst({
-      where: {
-        isActive: true,
-        startsAt: { lte: now },
-        endsAt: { gt: now },
-      },
-      orderBy: { endsAt: "asc" },
-      select: { endsAt: true, title: true },
-    });
-    if (!row) return null;
-    return { endsAt: row.endsAt, title: row.title };
+    const campaign = await findActivePromoByCode(code, new Date());
+    if (!campaign) return null;
+    return { endsAt: campaign.endsAt, title: campaign.title };
   } catch {
     return null;
   }
