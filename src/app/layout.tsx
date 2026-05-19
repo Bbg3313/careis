@@ -7,8 +7,6 @@ import { ReferralTracker } from "@/components/referral-tracker";
 import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getSitePromoCountdownForReferrer } from "@/lib/promo-countdown-site";
-import { getReferralCodeFromCookie, REFERRAL_FROM_QUERY_HEADER, sanitizeReferralCode } from "@/lib/referral";
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_KEYWORDS,
@@ -93,17 +91,6 @@ export default async function RootLayout({
   const pathname = headersList.get("x-pathname") ?? "";
   const onStorefront = !pathname.startsWith("/admin");
 
-  let promoCountdown: { endsAtIso: string; title: string } | null = null;
-  if (onStorefront) {
-    const refFromQuery = sanitizeReferralCode(headersList.get(REFERRAL_FROM_QUERY_HEADER));
-    const refCookie = await getReferralCodeFromCookie();
-    const refForPromo = refFromQuery ?? sanitizeReferralCode(refCookie);
-    const row = await getSitePromoCountdownForReferrer(refForPromo);
-    if (row) {
-      promoCountdown = { endsAtIso: row.endsAt.toISOString(), title: row.title };
-    }
-  }
-
   return (
     <html lang="ko">
       <body className={`${notoSansKr.className} ${cormorant.variable}`}>
@@ -112,7 +99,7 @@ export default async function RootLayout({
             <ReferralTracker />
           </Suspense>
           <ScrollToTopButton />
-          <SiteHeader promoCountdown={promoCountdown} />
+          <SiteHeader showStorefrontPromoGate={onStorefront} />
           <main className="mx-auto max-w-7xl px-4 pb-6 pt-5 md:px-8 md:pb-14 md:pt-10 lg:pt-8">{children}</main>
           <SiteFooter />
         </div>

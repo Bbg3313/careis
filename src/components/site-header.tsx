@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
-import { PromoCountdownStrip } from "@/components/promo-countdown-strip";
+import { PromoCountdownGate } from "@/components/promo-countdown-gate";
 import { SiteLogo } from "@/components/site-logo";
 
 const navItems = [
@@ -10,15 +11,13 @@ const navItems = [
   { href: "/contact", label: "CONTACT" },
 ];
 
-export function SiteHeader({
-  promoCountdown,
-}: {
-  promoCountdown?: { endsAtIso: string; title: string } | null;
-}) {
+export function SiteHeader({ showStorefrontPromoGate = false }: { showStorefrontPromoGate?: boolean }) {
   return (
     <header className="sticky inset-x-0 top-0 z-50 border-b border-[rgba(116,88,59,0.08)] bg-[rgba(250,248,244,0.86)] backdrop-blur-xl">
-      {promoCountdown ? (
-        <PromoCountdownStrip endsAtIso={promoCountdown.endsAtIso} title={promoCountdown.title} />
+      {showStorefrontPromoGate ? (
+        <Suspense fallback={null}>
+          <PromoCountdownGate />
+        </Suspense>
       ) : null}
       <div className="mx-auto max-w-7xl px-4 py-2.5 md:px-6 lg:px-8 lg:py-4">
         <div className="flex items-center justify-between gap-2 sm:gap-3">
@@ -38,15 +37,15 @@ export function SiteHeader({
 
           <nav className="flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-3 md:gap-4 lg:flex-initial lg:gap-8 [&::-webkit-scrollbar]:hidden">
             <div className="display-font flex min-w-0 flex-1 items-center justify-end gap-2.5 overflow-x-auto text-[9px] font-light uppercase tracking-[0.22em] text-[#c5b391] antialiased [text-rendering:geometricPrecision] sm:gap-3 sm:text-[10px] sm:tracking-[0.24em] md:gap-5 md:text-[11px] md:tracking-[0.26em] lg:gap-8 lg:text-[12px] lg:tracking-[0.28em]">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="shrink-0 whitespace-nowrap transition hover:text-[#a69678]"
-              >
-                {item.label}
-              </Link>
-            ))}
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="shrink-0 whitespace-nowrap transition hover:text-[#a69678]"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
             <Link
               href="/order"

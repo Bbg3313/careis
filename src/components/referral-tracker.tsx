@@ -3,20 +3,18 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
-const COOKIE_KEY = "careis_referral_code";
-const STORAGE_KEY = "careis_referral_code";
+import { REFERRAL_COOKIE_AGE, REFERRAL_COOKIE_KEY, sanitizeReferralCode } from "@/lib/referral-code";
+
+const STORAGE_KEY = REFERRAL_COOKIE_KEY;
 
 export function ReferralTracker() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const ref = searchParams.get("ref")?.trim().toLowerCase();
-    if (!ref) return;
-
-    const sanitized = ref.replace(/[^a-z0-9_-]/g, "");
+    const sanitized = sanitizeReferralCode(searchParams.get("ref"));
     if (!sanitized) return;
 
-    document.cookie = `${COOKIE_KEY}=${sanitized}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
+    document.cookie = `${REFERRAL_COOKIE_KEY}=${sanitized}; path=/; max-age=${REFERRAL_COOKIE_AGE}; samesite=lax`;
     window.localStorage.setItem(STORAGE_KEY, sanitized);
   }, [searchParams]);
 
