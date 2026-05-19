@@ -5,18 +5,24 @@ import { hasPublicSupabaseEnv } from "@/lib/supabase/env-public";
 import { refreshSupabaseSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const path = request.nextUrl.pathname;
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", path);
+  const requestWithPathname = new NextRequest(request, { headers: requestHeaders });
+
+  let supabaseResponse = NextResponse.next({ request: requestWithPathname });
   let user: { email?: string | null } | null = null;
 
   try {
-    const refreshed = await refreshSupabaseSession(request);
+    const refreshed = await refreshSupabaseSession(requestWithPathname);
     supabaseResponse = refreshed.response;
     user = refreshed.user;
   } catch (error) {
     console.error("[middleware] Supabase session refresh failed:", error);
   }
 
-  const ref = sanitizeReferralCode(request.nextUrl.searchParams.get("ref"));
+  const ref = sanitizeReferralCode(requestWithPathname.nextUrl.searchParams.get("ref"));
   if (ref) {
     supabaseResponse.cookies.set({
       name: REFERRAL_COOKIE_KEY,
@@ -27,7 +33,6 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  const path = request.nextUrl.pathname;
   const isAdminLogin = path === "/admin/login";
   const isAdminArea = path.startsWith("/admin");
 
@@ -35,7 +40,7 @@ export async function middleware(request: NextRequest) {
     const hasSupabase = hasPublicSupabaseEnv();
     if (hasSupabase && !user) {
       const login = new URL("/admin/login", request.url);
-      login.searchParams.set("next", `${path}${request.nextUrl.search}`);
+      login.searchParams.set("next", `${path}${requestWithPathname.nextUrl.search}`);
       return NextResponse.redirect(login);
     }
   }
@@ -52,7 +57,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/|favicon.ico|images/|media/|branding/).*)",
-  ],
+  matcher: ["/((?!_next/|favicon.ico|images/|media/|branding/).*)"],
 };
