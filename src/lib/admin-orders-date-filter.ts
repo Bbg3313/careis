@@ -55,8 +55,14 @@ export function buildAdminOrdersHref(opts: { status?: string; fulfillment?: stri
   return q ? `/admin/orders?${q}` : "/admin/orders";
 }
 
-/** 주문 목록과 동일한 기간·결제·배송 필터로 `/api/admin/orders/export` GET URL */
-export function buildAdminOrdersExportApiHref(opts: { status?: string; fulfillment?: string; from?: string; to?: string }): string {
+/** 주문 목록과 동일한 기간·결제·배송·유입 필터로 `/api/admin/orders/export` GET URL */
+export function buildAdminOrdersExportApiHref(opts: {
+  status?: string;
+  fulfillment?: string;
+  from?: string;
+  to?: string;
+  inflowCode?: string;
+}): string {
   const p = new URLSearchParams();
   const st = opts.status?.trim();
   const exportStatus = st === "PAID" || st === "PENDING" || st === "CANCELLED_REFUNDED" ? st : "ALL";
@@ -73,6 +79,7 @@ export function buildAdminOrdersExportApiHref(opts: { status?: string; fulfillme
 
   if (opts.from?.trim()) p.set("from", opts.from.trim());
   if (opts.to?.trim()) p.set("to", opts.to.trim());
+  if (opts.inflowCode?.trim()) p.set("inflowCode", opts.inflowCode.trim());
 
   return `/api/admin/orders/export?${p.toString()}`;
 }
