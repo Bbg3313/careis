@@ -5,7 +5,8 @@ import { sanitizeReferralCode } from "@/lib/referral-code";
 
 /**
  * 쇼핑몰 상단 공구 타이머(비로그인).
- * `ref`가 있으면(쿠키/URL로 유입 확인용) **현재 시각 기준 활성인 모든 공구**를 내려줌 — 캠페인이 여러 개면 줄을 여러 개 띄움.
+ * `ref`가 있으면 **현재 시각 기준 활성인 모든 공구**를 내려줌 — 캠페인이 여러 개면 줄을 여러 개 띄움.
+ * 각 행의 `title`은 관리자 프로모션의 「상단바 표시」 값( DB `PromoCampaign.title` )과 동일합니다.
  */
 export async function GET(req: Request) {
   const url = new URL(req.url);

@@ -103,6 +103,7 @@ model Order {
 model PromoCampaign {
   id             String            @id @default(cuid())
   code           String            @unique
+  /// 쇼핑몰 상단 공구 타이머에 노출되는 문구(관리자 「상단바 표시」)
   title          String
   discountType   PromoDiscountType
   discountValue  Int

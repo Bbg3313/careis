@@ -33,7 +33,7 @@ export function AdminDashboardPromoLinks({ baseUrlFromEnv, campaigns }: { baseUr
         <thead className="bg-[#faf8f5] text-xs text-stone-600">
           <tr>
             <th className="align-middle px-5 py-3 font-medium">코드</th>
-            <th className="align-middle px-5 py-3 font-medium">제목</th>
+            <th className="align-middle px-5 py-3 font-medium">상단바 표시</th>
             <th className="align-middle px-5 py-3 font-medium">활성</th>
             <th className="align-middle px-5 py-3 font-medium">유입 링크</th>
             <th className="align-middle px-5 py-3 font-medium">결제완료</th>

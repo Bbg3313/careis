@@ -37,7 +37,7 @@ function formatProductSlugsKo(slugs: unknown): string {
   const parts = slugs
     .filter((s): s is string => s === "sun-pack" || s === "illuminator")
     .map((s) => PRODUCT_SLUG_LABEL_KO[s] ?? s);
-  return parts.length > 0 ? parts.join(", ") : "—";
+  return parts.length > 0 ? parts.join(" · ") : "—";
 }
 
 export function AdminPromosPanel() {
@@ -155,11 +155,21 @@ export function AdminPromosPanel() {
       {loadError ? <p className="text-sm text-red-600">{loadError}</p> : null}
 
       <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-white">
-        <table className="min-w-[920px] w-full text-left text-[13px] text-stone-700">
+        <table className="min-w-[1000px] w-full table-fixed text-left text-[13px] text-stone-700">
+          <colgroup>
+            <col className="w-[8%]" />
+            <col className="w-[19%]" />
+            <col className="w-[11%]" />
+            <col className="w-[12%]" />
+            <col className="w-[18%]" />
+            <col className="w-[14%]" />
+            <col className="w-[13%]" />
+            <col className="w-[5%]" />
+          </colgroup>
           <thead className="border-b border-stone-200 bg-stone-50">
             <tr>
               <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">코드</th>
-              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">제목</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">상단바 표시</th>
               <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">할인</th>
               <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">상품</th>
               <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">기간</th>
@@ -171,34 +181,56 @@ export function AdminPromosPanel() {
           <tbody>
             {campaigns.map((c) => (
               <tr key={c.id} className="border-b border-stone-100 last:border-0">
-                <td className="px-3 py-2.5 align-middle font-mono text-[13px] text-stone-700">{c.code}</td>
-                <td className="px-3 py-2.5 align-middle text-[13px] text-stone-700">{c.title}</td>
-                <td className="px-3 py-2.5 align-middle tabular-nums text-[13px] text-stone-700">
-                  {c.discountType === "PERCENT" ? `${c.discountValue}%` : `${formatCurrency(c.discountValue)} /개`}
+                <td className="px-3 py-2 align-middle font-mono text-[13px] text-stone-700">{c.code}</td>
+                <td className="px-3 py-2 align-middle text-[13px] text-stone-700">
+                  <span className="line-clamp-2 break-words" title={c.title}>
+                    {c.title}
+                  </span>
                 </td>
-                <td className="px-3 py-2.5 align-middle text-[13px] text-stone-700">{formatProductSlugsKo(c.productSlugs)}</td>
-                <td className="px-3 py-2.5 align-middle text-[13px] leading-snug text-stone-700">
-                  {formatPromoDateTimeKoNoSeconds(c.startsAt)} ~ {formatPromoDateTimeKoNoSeconds(c.endsAt)}
+                <td className="px-3 py-2 align-middle whitespace-nowrap tabular-nums text-[13px] text-stone-700">
+                  {c.discountType === "PERCENT" ? (
+                    <span>{c.discountValue}%</span>
+                  ) : (
+                    <span>
+                      {formatCurrency(c.discountValue)}
+                      <span className="text-stone-500">/개</span>
+                    </span>
+                  )}
                 </td>
-                <td className="max-w-[11rem] px-3 py-2.5 align-middle">
-                  <PromoReferralLinkCopy baseUrlFromEnv={PUBLIC_SITE_URL} code={c.code} compact />
+                <td className="px-3 py-2 align-middle whitespace-nowrap text-[13px] text-stone-700">
+                  {formatProductSlugsKo(c.productSlugs)}
                 </td>
-                <td className="px-3 py-2.5 align-middle">
-                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] text-stone-700">
-                    <span className="whitespace-nowrap tabular-nums">결제 {c.paidCount}건</span>
-                    <span className="text-stone-400" aria-hidden>
+                <td className="px-3 py-2 align-top text-[12px] leading-snug text-stone-700">
+                  <div className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-baseline gap-x-2 gap-y-1.5 tabular-nums">
+                    <span className="text-[11px] font-medium text-stone-400">시작</span>
+                    <span className="min-w-0 break-keep">{formatPromoDateTimeKoNoSeconds(c.startsAt)}</span>
+                    <span className="text-[11px] font-medium text-stone-400">종료</span>
+                    <span className="min-w-0 break-keep">{formatPromoDateTimeKoNoSeconds(c.endsAt)}</span>
+                  </div>
+                </td>
+                <td className="px-3 py-2 align-middle">
+                  <div className="min-w-0 max-w-full">
+                    <PromoReferralLinkCopy baseUrlFromEnv={PUBLIC_SITE_URL} code={c.code} compact />
+                  </div>
+                </td>
+                <td className="px-3 py-2 align-middle">
+                  <div className="flex min-w-0 flex-nowrap items-center gap-x-1.5 text-[12px] text-stone-700">
+                    <span className="shrink-0 whitespace-nowrap tabular-nums">결제 {c.paidCount}건</span>
+                    <span className="shrink-0 text-stone-400" aria-hidden>
                       ·
                     </span>
-                    <span className="whitespace-nowrap tabular-nums">{formatCurrency(c.totalPaidAmount)}</span>
+                    <span className="min-w-0 flex-1 truncate tabular-nums" title={formatCurrency(c.totalPaidAmount)}>
+                      {formatCurrency(c.totalPaidAmount)}
+                    </span>
                     <Link
                       href={`/admin/promos/${encodeURIComponent(c.id)}`}
-                      className="whitespace-nowrap text-[11px] font-medium text-[#8b673f] underline-offset-2 hover:underline"
+                      className="shrink-0 whitespace-nowrap text-[11px] font-medium text-[#8b673f] underline-offset-2 hover:underline"
                     >
                       상세
                     </Link>
                   </div>
                 </td>
-                <td className="px-3 py-2.5 align-middle">
+                <td className="px-2 py-2 align-middle">
                   <button
                     type="button"
                     role="switch"
@@ -206,11 +238,11 @@ export function AdminPromosPanel() {
                     aria-label={`${c.title} (${c.code}) ${c.isActive ? "비활성화" : "활성화"}`}
                     disabled={saving}
                     onClick={() => void toggleActive(c)}
-                    className={`flex h-8 w-14 shrink-0 items-center rounded-full p-1 transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2 ${
+                    className={`flex h-[22px] w-9 shrink-0 items-center rounded-full p-[3px] transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-1 ${
                       c.isActive ? "justify-end bg-emerald-500" : "justify-start bg-stone-300"
                     } ${saving ? "cursor-wait opacity-50" : ""}`}
                   >
-                    <span className="pointer-events-none h-6 w-6 rounded-full bg-white shadow-sm ring-1 ring-black/5" />
+                    <span className="pointer-events-none h-3.5 w-3.5 rounded-full bg-white shadow-sm ring-1 ring-black/5" />
                   </button>
                 </td>
               </tr>
@@ -246,8 +278,15 @@ export function AdminPromosPanel() {
             <input name="code" required className="w-full rounded-xl border border-stone-200 px-3 py-2 font-mono" placeholder="influ_a_may" />
           </label>
           <label className="space-y-1 text-sm text-stone-700 md:col-span-2">
-            <span>제목 (내부용)</span>
-            <input name="title" required className="w-full rounded-xl border border-stone-200 px-3 py-2" placeholder="인플루A 5월 공구" />
+            <span>상단바 표시</span>
+            <input
+              name="title"
+              required
+              className="w-full rounded-xl border border-stone-200 px-3 py-2"
+              placeholder="예: 5월 박양근 공구"
+              maxLength={120}
+            />
+            <p className="text-xs font-normal text-stone-500">쇼핑몰 상단 공구 타이머에 그대로 노출됩니다. 짧고 읽기 쉽게 적어 주세요.</p>
           </label>
           <label className="space-y-1 text-sm text-stone-700">
             <span>할인 유형</span>
