@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
-import { adminFulfillmentLabel, adminPaymentStatusLabel, orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
+import { adminOrderProgressLabel, orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
 import { buildAdminOrdersExportApiHref, buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
 import { inflowSummary } from "@/lib/admin-order-inflow";
 import { loadAdminOrdersList } from "@/lib/orders";
@@ -44,7 +44,16 @@ function fulfillmentChipLabel(fulfillment: string | undefined) {
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
   const { status, fulfillment, from, to } = await searchParams;
   const loaded = await loadAdminOrdersList({ from, to });
-  let orders = loaded.ok ? loaded.orders : [];
+  const allOrdersInRange = loaded.ok ? loaded.orders : [];
+  const paidOrdersInRange = allOrdersInRange.filter((o) => o.paymentStatus === "PAID");
+  const fulfillmentStats = {
+    all: paidOrdersInRange.length,
+    awaiting: paidOrdersInRange.filter((o) => orderMatchesAdminFulfillmentFilter(o, "AWAITING_SHIP")).length,
+    inTransit: paidOrdersInRange.filter((o) => orderMatchesAdminFulfillmentFilter(o, "IN_TRANSIT")).length,
+    delivered: paidOrdersInRange.filter((o) => orderMatchesAdminFulfillmentFilter(o, "DELIVERED")).length,
+  };
+
+  let orders = allOrdersInRange;
 
   if (status === "PAID") {
     orders = orders.filter((o) => o.paymentStatus === "PAID");
@@ -153,26 +162,40 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         })}
       </div>
 
-      {status === "PAID" ? (
+      <div className="space-y-2">
+        <p className="text-[11px] text-stone-500">
+          배송 단계는 <span className="font-medium text-stone-700">결제완료</span> 주문만 해당합니다. 아래를 누르면 결제완료 목록으로 바뀌며 단계별로 좁혀집니다.
+        </p>
         <div className="flex flex-wrap gap-2">
           {fulfillmentTabs.map((tab) => {
-            const active = (fulfillmentEffective ?? "") === tab.key || (!fulfillmentEffective && tab.key === "");
+            const active =
+              status === "PAID" &&
+              ((fulfillmentEffective ?? "") === tab.key || (!fulfillmentEffective && tab.key === ""));
+            const count =
+              tab.key === ""
+                ? fulfillmentStats.all
+                : tab.key === "AWAITING_SHIP"
+                  ? fulfillmentStats.awaiting
+                  : tab.key === "IN_TRANSIT"
+                    ? fulfillmentStats.inTransit
+                    : fulfillmentStats.delivered;
             return (
               <Link
                 key={tab.key || "all"}
                 href={tab.href}
-                className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                className={`inline-flex items-baseline gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition ${
                   active
                     ? "bg-[#8b673f] !text-white hover:!text-white visited:!text-white"
                     : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
                 }`}
               >
-                {tab.label}
+                <span>{tab.label}</span>
+                <span className={`tabular-nums ${active ? "text-white/90" : "text-stone-500"}`}>{count}건</span>
               </Link>
             );
           })}
         </div>
-      ) : null}
+      </div>
 
       <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
@@ -183,8 +206,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                 <th className="px-4 py-3 font-medium">일시</th>
                 <th className="px-4 py-3 font-medium">상품</th>
                 <th className="px-4 py-3 font-medium">고객</th>
-                <th className="px-4 py-3 font-medium">결제</th>
-                <th className="px-4 py-3 font-medium">배송단계</th>
+                <th className="min-w-[10rem] px-4 py-3 font-medium">진행</th>
                 <th className="px-4 py-3 font-medium">레퍼럴·공구</th>
                 <th className="px-4 py-3 font-medium text-right">금액</th>
               </tr>
@@ -192,7 +214,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-12 text-center text-stone-500">
+                  <td colSpan={7} className="px-4 py-12 text-center text-stone-500">
                     표시할 주문이 없습니다.
                   </td>
                 </tr>
@@ -217,8 +239,9 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                       <div>{order.customerName}</div>
                       <div className="text-xs text-stone-400">{formatKoreanMobileDisplay(order.phone)}</div>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-stone-700">{adminPaymentStatusLabel(order.paymentStatus)}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-stone-700">{adminFulfillmentLabel(order)}</td>
+                    <td className="px-4 py-3 text-stone-800">
+                      <span className="text-[13px] font-medium leading-snug">{adminOrderProgressLabel(order)}</span>
+                    </td>
                     <td className="max-w-[160px] px-4 py-3">
                       <div className="truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
                         {inflowSummary(order)}
