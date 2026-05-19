@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { guardAdminApi } from "@/lib/admin-auth";
 import { floorDateToHour } from "@/lib/admin-promo-datetime";
-import { createPromoCampaign, listPromoCampaignsAdmin } from "@/lib/promo";
+import { aggregatePaidOrdersByAppliedPromoCode, createPromoCampaign, listPromoCampaignsAdmin } from "@/lib/promo";
 import type { ProductSlug } from "@/lib/product-data";
 
 const createBodySchema = z.object({
@@ -22,8 +22,26 @@ export async function GET() {
   const denied = await guardAdminApi();
   if (denied) return denied;
 
-  const campaigns = await listPromoCampaignsAdmin();
-  return NextResponse.json({ ok: true, campaigns });
+  const [campaigns, paidByCode] = await Promise.all([listPromoCampaignsAdmin(), aggregatePaidOrdersByAppliedPromoCode()]);
+
+  const payload = campaigns.map((c) => {
+    const agg = paidByCode.get(c.code) ?? { paidCount: 0, totalPaidAmount: 0 };
+    return {
+      id: c.id,
+      code: c.code,
+      title: c.title,
+      discountType: c.discountType,
+      discountValue: c.discountValue,
+      productSlugs: c.productSlugs,
+      startsAt: c.startsAt.toISOString(),
+      endsAt: c.endsAt.toISOString(),
+      isActive: c.isActive,
+      paidCount: agg.paidCount,
+      totalPaidAmount: agg.totalPaidAmount,
+    };
+  });
+
+  return NextResponse.json({ ok: true, campaigns: payload });
 }
 
 export async function POST(request: Request) {

@@ -4,10 +4,10 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { PromoCountdownStrip } from "@/components/promo-countdown-strip";
-import { resolveReferralCodeForClient } from "@/lib/referral-browser";
+import { referralCodeFromUrlForStorefront } from "@/lib/referral-browser";
 
 /**
- * `?ref=` · 레퍼럴 쿠키 · 동일 키의 localStorage 중 하나라도 있으면 공구 타이머를 띄움.
+ * 현재 URL에 `?ref=`가 있을 때만 공구 타이머를 띄움(쿠키·localStorage 무시).
  * RSC `headers()`에 커스텀 헤더가 안 잡히는 환경에서도 URL 기준으로 동작하게 클라이언트에서 조회합니다.
  */
 type StripCampaign = { id: string; endsAtIso: string; title: string };
@@ -18,7 +18,7 @@ export function PromoCountdownGate() {
   const [campaigns, setCampaigns] = useState<StripCampaign[] | null>(null);
 
   useEffect(() => {
-    const code = resolveReferralCodeForClient(searchParams);
+    const code = referralCodeFromUrlForStorefront(searchParams);
     if (!code) {
       setCampaigns(null);
       return;

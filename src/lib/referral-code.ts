@@ -9,3 +9,16 @@ export function sanitizeReferralCode(value: string | null | undefined) {
   if (!normalized) return null;
   return normalized.replace(/[^a-z0-9_-]/g, "");
 }
+
+/** 내부 라우트 href에 `ref` 쿼리를 붙이거나 덮어씀(공구 링크 유지용) */
+export function appendPromoRefToHref(href: string, ref: string | null | undefined): string {
+  const code = sanitizeReferralCode(ref ?? null);
+  if (!code || !href.startsWith("/")) return href;
+  const qIndex = href.indexOf("?");
+  const path = qIndex === -1 ? href : href.slice(0, qIndex);
+  const query = qIndex === -1 ? "" : href.slice(qIndex + 1);
+  const sp = new URLSearchParams(query);
+  sp.set("ref", code);
+  const next = sp.toString();
+  return next ? `${path}?${next}` : path;
+}

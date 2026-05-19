@@ -7,6 +7,7 @@ import { MobileProductStickyCta } from "@/components/mobile-product-sticky-cta";
 import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
 import { SunPackStorySlide as SunPackStorySlideView } from "@/components/sun-pack-story-slide";
 import { SunPackDetailTabs } from "@/components/sun-pack-detail-tabs";
+import { appendPromoRefToHref } from "@/lib/referral-code";
 import type { ProductContent } from "@/lib/product-data";
 import { BUSINESS_INFO, exchangeReturnAddressWithTrade } from "@/lib/business-info";
 import { splitParagraphs } from "@/lib/text-paragraphs";
@@ -23,9 +24,11 @@ import { formatCurrency } from "@/lib/utils";
 export function ProductDetailPage({
   product,
   sunPackStorySlides,
+  referralRef = null,
 }: {
   product: ProductContent;
   sunPackStorySlides?: SunPackStorySlide[];
+  referralRef?: string | null;
 }) {
   const visual = productVisuals[product.slug];
 
@@ -35,6 +38,7 @@ export function ProductDetailPage({
         product={product}
         visual={visual}
         storySlides={sunPackStorySlides ?? sunPackDetailAssets.storyImages}
+        referralRef={referralRef}
       />
     );
   }
@@ -45,6 +49,7 @@ export function ProductDetailPage({
         product={product}
         visual={visual as (typeof productVisuals)["illuminator"]}
         storySlides={sunPackStorySlides ?? []}
+        referralRef={referralRef}
       />
     );
   }
@@ -56,10 +61,12 @@ function IlluminatorDetailPage({
   product,
   visual,
   storySlides,
+  referralRef = null,
 }: {
   product: ProductContent;
   visual: (typeof productVisuals)["illuminator"];
   storySlides: SunPackStorySlide[];
+  referralRef?: string | null;
 }) {
   const purchaseAsideBody = (
     <>
@@ -105,13 +112,13 @@ function IlluminatorDetailPage({
 
       <div className="flex gap-3">
         <Link
-          href={`/order?product=${product.slug}`}
+          href={appendPromoRefToHref(`/order?product=${product.slug}`, referralRef)}
           className="btn-luxe-primary inline-flex flex-1 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
         >
           바로 구매
         </Link>
         <Link
-          href={`/cart?product=${product.slug}`}
+          href={appendPromoRefToHref(`/cart?product=${product.slug}`, referralRef)}
           className="btn-luxe-secondary inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
         >
           장바구니
@@ -315,10 +322,12 @@ function SunPackDetailPage({
   product,
   visual,
   storySlides,
+  referralRef = null,
 }: {
   product: ProductContent;
   visual: (typeof productVisuals)["sun-pack"];
   storySlides: SunPackStorySlide[];
+  referralRef?: string | null;
 }) {
   const purchaseAsideBody = (
     <>
@@ -364,13 +373,13 @@ function SunPackDetailPage({
 
       <div className="flex gap-3">
         <Link
-          href={`/order?product=${product.slug}`}
+          href={appendPromoRefToHref(`/order?product=${product.slug}`, referralRef)}
           className="btn-luxe-primary inline-flex flex-1 items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
         >
           바로 구매
         </Link>
         <Link
-          href={`/cart?product=${product.slug}`}
+          href={appendPromoRefToHref(`/cart?product=${product.slug}`, referralRef)}
           className="btn-luxe-secondary inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
         >
           장바구니

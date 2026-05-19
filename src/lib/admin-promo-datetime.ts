@@ -15,16 +15,24 @@ export function formatPromoDateTimeKoNoSeconds(isoOrDate: string | Date): string
   return d.toLocaleString("ko-KR", DISPLAY_OPTS);
 }
 
-/** `datetime-local` 기본값용 — 브라우저 현지 기준, 분·초·ms 는 0 */
-export function toLocalDatetimeLocalHourString(d: Date): string {
+/** `input type="date"` 기본값용 */
+export function toLocalDateInputValue(d: Date): string {
   const x = new Date(d.getTime());
   x.setMinutes(0, 0, 0);
   x.setMilliseconds(0);
   const y = x.getFullYear();
   const m = String(x.getMonth() + 1).padStart(2, "0");
   const day = String(x.getDate()).padStart(2, "0");
-  const h = String(x.getHours()).padStart(2, "0");
-  return `${y}-${m}-${day}T${h}:00`;
+  return `${y}-${m}-${day}`;
+}
+
+/** 프로모션 폼: 날짜 + 시(0~23) → API용 `YYYY-MM-DDTHH:00` */
+export function localDateAndHourToDatetimeLocal(dateStr: string, hourStr: string): string | null {
+  const d = dateStr.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) return null;
+  const h = Number.parseInt(String(hourStr).trim(), 10);
+  if (!Number.isFinite(h) || h < 0 || h > 23) return null;
+  return `${d}T${String(h).padStart(2, "0")}:00`;
 }
 
 export function floorDateToHour(d: Date): Date {

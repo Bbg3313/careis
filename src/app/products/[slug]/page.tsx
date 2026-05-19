@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ProductDetailPage } from "@/components/product-detail-page";
 import { getMergedStorySlides } from "@/lib/product-detail-slides";
 import { getProductBySlug, products } from "@/lib/product-data";
+import { sanitizeReferralCode } from "@/lib/referral-code";
 import { productVisuals } from "@/lib/site-assets";
 import { DEFAULT_KEYWORDS, SITE_NAME } from "@/lib/site-seo";
 
@@ -54,10 +55,14 @@ export async function generateMetadata({
 
 export default async function ProductPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ ref?: string }>;
 }) {
   const { slug } = await params;
+  const { ref } = await searchParams;
+  const referralRef = sanitizeReferralCode(ref ?? null);
   const product = getProductBySlug(slug);
 
   if (!product) {
@@ -66,5 +71,5 @@ export default async function ProductPage({
 
   const sunPackStorySlides = await getMergedStorySlides(product.slug);
 
-  return <ProductDetailPage product={product} sunPackStorySlides={sunPackStorySlides} />;
+  return <ProductDetailPage product={product} sunPackStorySlides={sunPackStorySlides} referralRef={referralRef} />;
 }

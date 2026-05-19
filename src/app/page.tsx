@@ -534,7 +534,7 @@ export default function HomePage() {
                 <p className="text-[11px] font-medium tracking-[0.14em] text-[#8b673f]">혜택</p>
                 <p className="mt-3 text-lg font-semibold text-stone-900">조건 그대로 반영</p>
                 <p className="mt-2 text-sm leading-snug text-stone-600 break-keep">
-                  안내된 할인·조건이 주문에 그대로 적용됩니다.
+                  안내된 프로모션 조건이 주문에 그대로 적용됩니다.
                 </p>
               </div>
               <div className="rounded-[22px] border border-[rgba(184,145,86,0.2)] bg-white/75 p-5 shadow-[0_12px_36px_rgba(89,63,28,0.05)] backdrop-blur-sm">

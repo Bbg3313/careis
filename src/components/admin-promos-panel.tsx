@@ -5,7 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import {
   formatPromoDateTimeKoNoSeconds,
-  toLocalDatetimeLocalHourString,
+  localDateAndHourToDatetimeLocal,
+  toLocalDateInputValue,
 } from "@/lib/admin-promo-datetime";
 import { PromoReferralLinkCopy } from "@/components/promo-referral-link-copy";
 import { formatCurrency } from "@/lib/utils";
@@ -22,11 +23,21 @@ type Campaign = {
   startsAt: string;
   endsAt: string;
   isActive: boolean;
+  paidCount: number;
+  totalPaidAmount: number;
 };
 
-function formatSlugs(slugs: unknown): string {
-  if (!Array.isArray(slugs)) return "";
-  return slugs.filter((s) => s === "sun-pack" || s === "illuminator").join(", ");
+const PRODUCT_SLUG_LABEL_KO: Record<string, string> = {
+  "sun-pack": "썬팩",
+  illuminator: "일루미네이터",
+};
+
+function formatProductSlugsKo(slugs: unknown): string {
+  if (!Array.isArray(slugs)) return "—";
+  const parts = slugs
+    .filter((s): s is string => s === "sun-pack" || s === "illuminator")
+    .map((s) => PRODUCT_SLUG_LABEL_KO[s] ?? s);
+  return parts.length > 0 ? parts.join(", ") : "—";
 }
 
 export function AdminPromosPanel() {
@@ -39,11 +50,21 @@ export function AdminPromosPanel() {
     setLoadError(null);
     try {
       const res = await fetch("/api/admin/promos");
-      const data = (await res.json()) as { ok?: boolean; campaigns?: Campaign[]; error?: string };
+      const data = (await res.json()) as {
+        ok?: boolean;
+        campaigns?: (Campaign & { paidCount?: number; totalPaidAmount?: number })[];
+        error?: string;
+      };
       if (!res.ok || !data.ok || !data.campaigns) {
         throw new Error(data.error ?? "목록을 불러오지 못했습니다.");
       }
-      setCampaigns(data.campaigns);
+      setCampaigns(
+        data.campaigns.map((row) => ({
+          ...row,
+          paidCount: row.paidCount ?? 0,
+          totalPaidAmount: row.totalPaidAmount ?? 0,
+        })),
+      );
     } catch (e) {
       setLoadError(e instanceof Error ? e.message : "목록을 불러오지 못했습니다.");
     }
@@ -77,14 +98,26 @@ export function AdminPromosPanel() {
     setFormError(null);
     setSaving(true);
     try {
+      const startsAt = localDateAndHourToDatetimeLocal(
+        String(formData.get("startsDate") ?? ""),
+        String(formData.get("startsHour") ?? ""),
+      );
+      const endsAt = localDateAndHourToDatetimeLocal(
+        String(formData.get("endsDate") ?? ""),
+        String(formData.get("endsHour") ?? ""),
+      );
+      if (!startsAt || !endsAt) {
+        throw new Error("시작·종료 날짜와 시각을 확인해 주세요.");
+      }
+
       const body = {
         code: String(formData.get("code") ?? "").trim(),
         title: String(formData.get("title") ?? "").trim(),
         discountType: String(formData.get("discountType") ?? "PERCENT"),
         discountValue: Number(formData.get("discountValue") ?? 0),
         productSlugs: ["sun-pack", "illuminator"].filter((slug) => formData.get(`p_${slug}`) === "on"),
-        startsAt: String(formData.get("startsAt") ?? ""),
-        endsAt: String(formData.get("endsAt") ?? ""),
+        startsAt,
+        endsAt,
         isActive: formData.get("isActive") === "on",
       };
 
@@ -110,50 +143,62 @@ export function AdminPromosPanel() {
   const startHour = new Date(nowLocal);
   startHour.setMinutes(0, 0, 0);
   startHour.setMilliseconds(0);
-  const defaultStart = toLocalDatetimeLocalHourString(startHour);
+  const defaultStartDate = toLocalDateInputValue(startHour);
+  const defaultStartHour = String(startHour.getHours());
   const endHour = new Date(startHour);
   endHour.setDate(endHour.getDate() + 14);
-  const defaultEnd = toLocalDatetimeLocalHourString(endHour);
+  const defaultEndDate = toLocalDateInputValue(endHour);
+  const defaultEndHour = String(endHour.getHours());
 
   return (
     <div className="space-y-10">
       {loadError ? <p className="text-sm text-red-600">{loadError}</p> : null}
 
       <div className="overflow-x-auto rounded-2xl border border-stone-200 bg-white">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-stone-200 bg-stone-50 text-xs uppercase tracking-wide text-stone-500">
+        <table className="min-w-[920px] w-full text-left text-[13px] text-stone-700">
+          <thead className="border-b border-stone-200 bg-stone-50">
             <tr>
-              <th className="px-4 py-3">코드</th>
-              <th className="px-4 py-3">제목</th>
-              <th className="px-4 py-3">할인</th>
-              <th className="px-4 py-3">상품</th>
-              <th className="px-4 py-3">기간</th>
-              <th className="px-4 py-3">유입 링크</th>
-              <th className="px-4 py-3">실적</th>
-              <th className="px-4 py-3">활성</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">코드</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">제목</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">할인</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">상품</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">기간</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">유입 링크</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">실적</th>
+              <th className="whitespace-nowrap px-3 py-2.5 text-[11px] font-medium uppercase tracking-wide text-stone-500">활성</th>
             </tr>
           </thead>
           <tbody>
             {campaigns.map((c) => (
               <tr key={c.id} className="border-b border-stone-100 last:border-0">
-                <td className="px-4 py-3 font-mono text-stone-900">{c.code}</td>
-                <td className="px-4 py-3 text-stone-800">{c.title}</td>
-                <td className="px-4 py-3 text-stone-700">
+                <td className="px-3 py-2.5 align-middle font-mono text-[13px] text-stone-700">{c.code}</td>
+                <td className="px-3 py-2.5 align-middle text-[13px] text-stone-700">{c.title}</td>
+                <td className="px-3 py-2.5 align-middle tabular-nums text-[13px] text-stone-700">
                   {c.discountType === "PERCENT" ? `${c.discountValue}%` : `${formatCurrency(c.discountValue)} /개`}
                 </td>
-                <td className="px-4 py-3 text-stone-600">{formatSlugs(c.productSlugs)}</td>
-                <td className="px-4 py-3 text-xs text-stone-500">
+                <td className="px-3 py-2.5 align-middle text-[13px] text-stone-700">{formatProductSlugsKo(c.productSlugs)}</td>
+                <td className="px-3 py-2.5 align-middle text-[13px] leading-snug text-stone-700">
                   {formatPromoDateTimeKoNoSeconds(c.startsAt)} ~ {formatPromoDateTimeKoNoSeconds(c.endsAt)}
                 </td>
-                <td className="min-w-[200px] px-4 py-3 align-top">
+                <td className="max-w-[11rem] px-3 py-2.5 align-middle">
                   <PromoReferralLinkCopy baseUrlFromEnv={PUBLIC_SITE_URL} code={c.code} compact />
                 </td>
-                <td className="whitespace-nowrap px-4 py-3">
-                  <Link href={`/admin/promos/${encodeURIComponent(c.id)}`} className="text-xs font-medium text-[#8b673f] hover:underline">
-                    보기
-                  </Link>
+                <td className="px-3 py-2.5 align-middle">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] text-stone-700">
+                    <span className="whitespace-nowrap tabular-nums">결제 {c.paidCount}건</span>
+                    <span className="text-stone-400" aria-hidden>
+                      ·
+                    </span>
+                    <span className="whitespace-nowrap tabular-nums">{formatCurrency(c.totalPaidAmount)}</span>
+                    <Link
+                      href={`/admin/promos/${encodeURIComponent(c.id)}`}
+                      className="whitespace-nowrap text-[11px] font-medium text-[#8b673f] underline-offset-2 hover:underline"
+                    >
+                      상세
+                    </Link>
+                  </div>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-3 py-2.5 align-middle">
                   <button
                     type="button"
                     role="switch"
@@ -172,7 +217,7 @@ export function AdminPromosPanel() {
             ))}
             {campaigns.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-8 text-center text-stone-500">
+                <td colSpan={8} className="px-3 py-8 text-center text-[13px] text-stone-700">
                   등록된 공구가 없습니다. 아래에서 새로 만듭니다.
                 </td>
               </tr>
@@ -228,31 +273,57 @@ export function AdminPromosPanel() {
               </label>
             </div>
           </fieldset>
-          <label className="space-y-1 text-sm text-stone-700">
-            <span>시작 (현지, 1시간 단위)</span>
-            <input
-              name="startsAt"
-              type="datetime-local"
-              required
-              step={3600}
-              defaultValue={defaultStart}
-              className="w-full rounded-xl border border-stone-200 px-3 py-2"
-            />
-          </label>
-          <label className="space-y-1 text-sm text-stone-700">
-            <span>종료 (현지, 1시간 단위)</span>
-            <input
-              name="endsAt"
-              type="datetime-local"
-              required
-              step={3600}
-              defaultValue={defaultEnd}
-              className="w-full rounded-xl border border-stone-200 px-3 py-2"
-            />
-          </label>
-          <p className="text-xs text-stone-500 md:col-span-2">
-            저장 시 시작·종료 시각은 정각(분·초 00)으로 맞춰집니다.
-          </p>
+          <div className="space-y-1 text-sm text-stone-700">
+            <span>시작 (현지)</span>
+            <div className="flex flex-wrap gap-2">
+              <input
+                name="startsDate"
+                type="date"
+                required
+                defaultValue={defaultStartDate}
+                className="min-w-0 flex-1 rounded-xl border border-stone-200 px-3 py-2"
+              />
+              <select
+                name="startsHour"
+                required
+                defaultValue={defaultStartHour}
+                className="w-full min-w-[7.5rem] rounded-xl border border-stone-200 px-3 py-2 sm:w-auto"
+                aria-label="시작 시각(시)"
+              >
+                {Array.from({ length: 24 }, (_, h) => (
+                  <option key={h} value={String(h)}>
+                    {String(h).padStart(2, "0")}시 (정각)
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="space-y-1 text-sm text-stone-700">
+            <span>종료 (현지)</span>
+            <div className="flex flex-wrap gap-2">
+              <input
+                name="endsDate"
+                type="date"
+                required
+                defaultValue={defaultEndDate}
+                className="min-w-0 flex-1 rounded-xl border border-stone-200 px-3 py-2"
+              />
+              <select
+                name="endsHour"
+                required
+                defaultValue={defaultEndHour}
+                className="w-full min-w-[7.5rem] rounded-xl border border-stone-200 px-3 py-2 sm:w-auto"
+                aria-label="종료 시각(시)"
+              >
+                {Array.from({ length: 24 }, (_, h) => (
+                  <option key={h} value={String(h)}>
+                    {String(h).padStart(2, "0")}시 (정각)
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <p className="text-xs text-stone-500 md:col-span-2">시간은 시 단위(정각)만 선택됩니다.</p>
           <label className="flex items-center gap-2 text-sm text-stone-700 md:col-span-2">
             <input type="checkbox" name="isActive" defaultChecked />
             생성 즉시 활성

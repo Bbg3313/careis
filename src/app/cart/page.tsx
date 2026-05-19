@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { getProductBySlug } from "@/lib/product-data";
+import { appendPromoRefToHref, sanitizeReferralCode } from "@/lib/referral-code";
 import { productVisuals } from "@/lib/site-assets";
 import { noIndexPageMetadata } from "@/lib/site-seo";
 import { formatCurrency } from "@/lib/utils";
@@ -16,11 +17,12 @@ export const metadata: Metadata = {
 export default async function CartPage({
   searchParams,
 }: {
-  searchParams: Promise<{ product?: string; qty?: string }>;
+  searchParams: Promise<{ product?: string; qty?: string; ref?: string }>;
 }) {
   const params = await searchParams;
   const product = getProductBySlug(params.product ?? "sun-pack");
   const quantity = Math.max(1, Number(params.qty ?? "1"));
+  const referralRef = sanitizeReferralCode(params.ref ?? null);
 
   const visual = product ? productVisuals[product.slug] : null;
 
@@ -82,7 +84,7 @@ export default async function CartPage({
           </div>
 
           <Link
-            href={`/order?product=${product.slug}&qty=${quantity}`}
+            href={appendPromoRefToHref(`/order?product=${product.slug}&qty=${quantity}`, referralRef)}
             className="btn-luxe-primary mt-8 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold"
           >
             주문서 작성하기

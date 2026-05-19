@@ -6,7 +6,8 @@ import { createPortal } from "react-dom";
 import { useLayoutEffect, useMemo, useState } from "react";
 
 import type { ProductContent } from "@/lib/product-data";
-import { resolveReferralCodeForClient } from "@/lib/referral-browser";
+import { referralCodeFromUrlForStorefront } from "@/lib/referral-browser";
+import { appendPromoRefToHref } from "@/lib/referral-code";
 import { formatCurrency } from "@/lib/utils";
 
 function primaryCtaClasses(theme: ProductContent["theme"]) {
@@ -32,17 +33,21 @@ export function MobileProductStickyCta({ product }: { product: ProductContent })
   const searchParams = useSearchParams();
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
-  const hasReferral = useMemo(
-    () => Boolean(resolveReferralCodeForClient(searchParams)),
-    [searchParams],
-  );
+  const refCode = useMemo(() => referralCodeFromUrlForStorefront(searchParams), [searchParams]);
+  const hasReferral = Boolean(refCode);
 
   useLayoutEffect(() => {
     setPortalTarget(document.body);
   }, []);
 
-  const orderHref = `/order?product=${product.slug}`;
-  const cartHref = `/cart?product=${product.slug}`;
+  const orderHref = useMemo(
+    () => appendPromoRefToHref(`/order?product=${product.slug}`, refCode),
+    [product.slug, refCode],
+  );
+  const cartHref = useMemo(
+    () => appendPromoRefToHref(`/cart?product=${product.slug}`, refCode),
+    [product.slug, refCode],
+  );
   const pct = hasReferral ? product.promoMaxDiscountPercent : undefined;
   const primaryLine =
     hasReferral && pct != null && pct > 0

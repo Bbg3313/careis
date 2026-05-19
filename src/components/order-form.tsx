@@ -234,18 +234,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   );
 
   useEffect(() => {
-    if (referralCode) {
-      setResolvedReferralCode(referralCode);
-      return;
-    }
-
-    const cookieReferral = document.cookie
-      .split("; ")
-      .find((item) => item.startsWith("careis_referral_code="))
-      ?.split("=")[1];
-    const storedReferral = window.localStorage.getItem("careis_referral_code");
-
-    setResolvedReferralCode(cookieReferral ?? storedReferral ?? null);
+    setResolvedReferralCode(referralCode);
   }, [referralCode]);
 
   useEffect(() => {

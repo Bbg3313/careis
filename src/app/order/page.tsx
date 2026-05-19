@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { OrderForm } from "@/components/order-form";
 import { getProductBySlug } from "@/lib/product-data";
-import { getReferralCodeFromCookie } from "@/lib/referral";
+import { sanitizeReferralCode } from "@/lib/referral-code";
 import { noIndexPageMetadata } from "@/lib/site-seo";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default async function OrderPage({
   searchParams,
 }: {
-  searchParams: Promise<{ product?: string; qty?: string }>;
+  searchParams: Promise<{ product?: string; qty?: string; ref?: string }>;
 }) {
   const params = await searchParams;
   const selectedProduct = params.product ? getProductBySlug(params.product) : null;
@@ -24,7 +24,7 @@ export default async function OrderPage({
     redirect("/products");
   }
 
-  const referralCode = await getReferralCodeFromCookie();
+  const referralCode = sanitizeReferralCode(params.ref ?? null);
   const quantity = Math.max(1, Number(params.qty ?? "1"));
 
   return (
