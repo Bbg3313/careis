@@ -4,6 +4,7 @@ import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { adminOrderProgressLabel, orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
 import { buildAdminOrdersExportApiHref, buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
+import { orderMatchesAdminListSearch, parseAdminOrdersListSearch } from "@/lib/admin-order-search";
 import { inflowSummary } from "@/lib/admin-order-inflow";
 import { loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
@@ -12,7 +13,14 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-  searchParams: Promise<{ status?: string; fulfillment?: string; from?: string; to?: string }>;
+  searchParams: Promise<{
+    status?: string;
+    fulfillment?: string;
+    from?: string;
+    to?: string;
+    searchBy?: string;
+    q?: string;
+  }>;
 };
 
 function statusLabel(status: string | undefined) {
@@ -42,7 +50,7 @@ function fulfillmentChipLabel(fulfillment: string | undefined) {
 }
 
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
-  const { status, fulfillment, from, to } = await searchParams;
+  const { status, fulfillment, from, to, searchBy, q } = await searchParams;
   const loaded = await loadAdminOrdersList({ from, to });
   const allOrdersInRange = loaded.ok ? loaded.orders : [];
   const paidOrdersInRange = allOrdersInRange.filter((o) => o.paymentStatus === "PAID");
@@ -52,6 +60,9 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
     inTransit: paidOrdersInRange.filter((o) => orderMatchesAdminFulfillmentFilter(o, "IN_TRANSIT")).length,
     delivered: paidOrdersInRange.filter((o) => orderMatchesAdminFulfillmentFilter(o, "DELIVERED")).length,
   };
+
+  const parsedSearch = parseAdminOrdersListSearch(searchBy, q);
+  const searchHrefOpts = parsedSearch ? { searchBy: parsedSearch.by, q: parsedSearch.needle } : {};
 
   let orders = allOrdersInRange;
 
@@ -68,44 +79,51 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
     orders = orders.filter((o) => orderMatchesAdminFulfillmentFilter(o, fulfillmentEffective));
   }
 
+  if (parsedSearch) {
+    orders = orders.filter((o) => orderMatchesAdminListSearch(o, parsedSearch));
+  }
+
   const clearOrdersHref = buildAdminOrdersHref({
     status: status || undefined,
     fulfillment: fulfillmentEffective || undefined,
   });
 
   const tabs = [
-    { href: buildAdminOrdersHref({ from, to }), label: "전체", key: "" },
-    { href: buildAdminOrdersHref({ status: "PAID", from, to }), label: "결제완료", key: "PAID" },
-    { href: buildAdminOrdersHref({ status: "PENDING", from, to }), label: "결제대기", key: "PENDING" },
+    { href: buildAdminOrdersHref({ from, to, ...searchHrefOpts }), label: "전체", key: "" },
+    { href: buildAdminOrdersHref({ status: "PAID", from, to, ...searchHrefOpts }), label: "결제완료", key: "PAID" },
+    { href: buildAdminOrdersHref({ status: "PENDING", from, to, ...searchHrefOpts }), label: "결제대기", key: "PENDING" },
     {
-      href: buildAdminOrdersHref({ status: "CANCELLED_REFUNDED", from, to }),
+      href: buildAdminOrdersHref({ status: "CANCELLED_REFUNDED", from, to, ...searchHrefOpts }),
       label: "취소·환불",
       key: "CANCELLED_REFUNDED",
     },
   ] as const;
 
   const fulfillmentTabs = [
-    { href: buildAdminOrdersHref({ status: "PAID", from, to }), label: "배송 전체", key: "" },
+    { href: buildAdminOrdersHref({ status: "PAID", from, to, ...searchHrefOpts }), label: "배송 전체", key: "" },
     {
-      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "AWAITING_SHIP", from, to }),
+      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "AWAITING_SHIP", from, to, ...searchHrefOpts }),
       label: "배송 전",
       key: "AWAITING_SHIP",
     },
     {
-      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "IN_TRANSIT", from, to }),
+      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "IN_TRANSIT", from, to, ...searchHrefOpts }),
       label: "배송중",
       key: "IN_TRANSIT",
     },
     {
-      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "DELIVERED", from, to }),
+      href: buildAdminOrdersHref({ status: "PAID", fulfillment: "DELIVERED", from, to, ...searchHrefOpts }),
       label: "배송완료",
       key: "DELIVERED",
     },
   ] as const;
 
   const chip = fulfillmentChipLabel(fulfillmentEffective);
+  const searchNote = parsedSearch ? " · 검색 적용" : "";
   const subtitle =
-    chip && status === "PAID" ? `${statusLabel(status)} · ${chip} · ${orders.length}건` : `${statusLabel(status)} · ${orders.length}건`;
+    chip && status === "PAID"
+      ? `${statusLabel(status)} · ${chip} · ${orders.length}건${searchNote}`
+      : `${statusLabel(status)} · ${orders.length}건${searchNote}`;
 
   const exportApiHref = loaded.ok
     ? buildAdminOrdersExportApiHref({
@@ -140,6 +158,9 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         fulfillment={fulfillmentEffective}
         defaultFrom={from}
         defaultTo={to}
+        showOrderSearch
+        defaultSearchBy={searchBy}
+        defaultQ={q}
         clearHref={clearOrdersHref}
       />
 
@@ -215,7 +236,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
               {orders.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-4 py-12 text-center text-stone-500">
-                    표시할 주문이 없습니다.
+                    {parsedSearch ? "검색 조건과 일치하는 주문이 없습니다." : "표시할 주문이 없습니다."}
                   </td>
                 </tr>
               ) : (
@@ -263,6 +284,11 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
           <p className="text-sm leading-relaxed text-stone-700">
             위 목록은 조회 조건과 동일하게 <strong className="text-stone-900">{orders.length}건</strong>입니다. 내용을 확인한 뒤
             아래에서 내려받으면 됩니다.
+            {parsedSearch ? (
+              <span className="mt-1 block text-xs text-stone-500">
+                엑셀은 기간·결제·배송 조건만 반영되며, 검색어(이름·번호·주문번호)는 엑셀에 적용되지 않습니다.
+              </span>
+            ) : null}
           </p>
           <a
             href={exportApiHref}

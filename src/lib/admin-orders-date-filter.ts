@@ -45,12 +45,26 @@ export function prismaOrderCreatedAtRange(fromRaw?: string, toRaw?: string): Pri
   return { createdAt: filter };
 }
 
-export function buildAdminOrdersHref(opts: { status?: string; fulfillment?: string; from?: string; to?: string }): string {
+export function buildAdminOrdersHref(opts: {
+  status?: string;
+  fulfillment?: string;
+  from?: string;
+  to?: string;
+  /** 주문 목록 검색(완전 일치). `q`가 있을 때만 넘깁니다. */
+  searchBy?: string;
+  q?: string;
+}): string {
   const p = new URLSearchParams();
   if (opts.status) p.set("status", opts.status);
   if (opts.fulfillment?.trim()) p.set("fulfillment", opts.fulfillment.trim());
   if (opts.from?.trim()) p.set("from", opts.from.trim());
   if (opts.to?.trim()) p.set("to", opts.to.trim());
+  const qv = opts.q?.trim();
+  if (qv) {
+    const sb = opts.searchBy === "name" || opts.searchBy === "phone" || opts.searchBy === "orderNumber" ? opts.searchBy : "orderNumber";
+    p.set("searchBy", sb);
+    p.set("q", qv);
+  }
   const q = p.toString();
   return q ? `/admin/orders?${q}` : "/admin/orders";
 }
