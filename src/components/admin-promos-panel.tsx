@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
-import { formatCurrency } from "@/lib/utils";
+import {
+  formatPromoDateTimeKoNoSeconds,
+  toLocalDatetimeLocalHourString,
+} from "@/lib/admin-promo-datetime";
 import { PromoReferralLinkCopy } from "@/components/promo-referral-link-copy";
+import { formatCurrency } from "@/lib/utils";
 
 const PUBLIC_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
@@ -103,8 +107,13 @@ export function AdminPromosPanel() {
   }
 
   const nowLocal = new Date();
-  const defaultStart = new Date(nowLocal.getTime() - 60_000).toISOString().slice(0, 16);
-  const defaultEnd = new Date(nowLocal.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16);
+  const startHour = new Date(nowLocal);
+  startHour.setMinutes(0, 0, 0);
+  startHour.setMilliseconds(0);
+  const defaultStart = toLocalDatetimeLocalHourString(startHour);
+  const endHour = new Date(startHour);
+  endHour.setDate(endHour.getDate() + 14);
+  const defaultEnd = toLocalDatetimeLocalHourString(endHour);
 
   return (
     <div className="space-y-10">
@@ -134,7 +143,7 @@ export function AdminPromosPanel() {
                 </td>
                 <td className="px-4 py-3 text-stone-600">{formatSlugs(c.productSlugs)}</td>
                 <td className="px-4 py-3 text-xs text-stone-500">
-                  {new Date(c.startsAt).toLocaleString("ko-KR")} ~ {new Date(c.endsAt).toLocaleString("ko-KR")}
+                  {formatPromoDateTimeKoNoSeconds(c.startsAt)} ~ {formatPromoDateTimeKoNoSeconds(c.endsAt)}
                 </td>
                 <td className="min-w-[200px] px-4 py-3 align-top">
                   <PromoReferralLinkCopy baseUrlFromEnv={PUBLIC_SITE_URL} code={c.code} compact />
@@ -173,7 +182,7 @@ export function AdminPromosPanel() {
       </div>
 
       <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-stone-900">새 공구 / 프로모</h2>
+        <h2 className="text-lg font-semibold text-stone-900">프로모션 생성</h2>
         <p className="mt-2 text-sm text-stone-600">
           코드는 URL <span className="font-mono text-stone-800">?ref=코드</span> 또는 주문서 쿠폰란과 동일하게 소문자로 매칭됩니다.
           쿠폰 입력이 있으면 레퍼럴보다 우선 적용됩니다.
@@ -220,13 +229,30 @@ export function AdminPromosPanel() {
             </div>
           </fieldset>
           <label className="space-y-1 text-sm text-stone-700">
-            <span>시작 (현지)</span>
-            <input name="startsAt" type="datetime-local" required defaultValue={defaultStart} className="w-full rounded-xl border border-stone-200 px-3 py-2" />
+            <span>시작 (현지, 1시간 단위)</span>
+            <input
+              name="startsAt"
+              type="datetime-local"
+              required
+              step={3600}
+              defaultValue={defaultStart}
+              className="w-full rounded-xl border border-stone-200 px-3 py-2"
+            />
           </label>
           <label className="space-y-1 text-sm text-stone-700">
-            <span>종료 (현지)</span>
-            <input name="endsAt" type="datetime-local" required defaultValue={defaultEnd} className="w-full rounded-xl border border-stone-200 px-3 py-2" />
+            <span>종료 (현지, 1시간 단위)</span>
+            <input
+              name="endsAt"
+              type="datetime-local"
+              required
+              step={3600}
+              defaultValue={defaultEnd}
+              className="w-full rounded-xl border border-stone-200 px-3 py-2"
+            />
           </label>
+          <p className="text-xs text-stone-500 md:col-span-2">
+            저장 시 시작·종료 시각은 정각(분·초 00)으로 맞춰집니다.
+          </p>
           <label className="flex items-center gap-2 text-sm text-stone-700 md:col-span-2">
             <input type="checkbox" name="isActive" defaultChecked />
             생성 즉시 활성
@@ -237,7 +263,7 @@ export function AdminPromosPanel() {
             disabled={saving}
             className="md:col-span-2 rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white disabled:opacity-50"
           >
-            {saving ? "처리 중…" : "캠페인 생성"}
+            {saving ? "처리 중…" : "프로모션 생성"}
           </button>
         </form>
       </div>

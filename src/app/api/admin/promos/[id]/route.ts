@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { guardAdminApi } from "@/lib/admin-auth";
+import { floorDateToHour } from "@/lib/admin-promo-datetime";
 import { updatePromoCampaignPartial } from "@/lib/promo";
 import type { ProductSlug } from "@/lib/product-data";
 
@@ -32,7 +33,7 @@ export async function PATCH(request: Request, ctx: Params) {
     if (body.discountValue != null) patch.discountValue = body.discountValue;
     if (body.productSlugs != null) patch.productSlugs = body.productSlugs as ProductSlug[];
     if (body.endsAt != null) {
-      const d = new Date(body.endsAt);
+      const d = floorDateToHour(new Date(body.endsAt));
       if (Number.isNaN(d.getTime())) {
         return NextResponse.json({ ok: false, error: "종료일시 형식이 올바르지 않습니다." }, { status: 400 });
       }

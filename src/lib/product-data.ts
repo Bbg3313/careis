@@ -47,8 +47,6 @@ export const products: ProductContent[] = [
       "심플스틱 선팩은 바이오 셀룰로오스 필름막 기술을 바탕으로, 자외선 차단 성능과 가벼운 사용감을 함께 담은 데일리 선케어입니다. 외출 전, 메이크업 전후, 야외 활동까지 부담 없이 손이 가는 제품입니다.",
     theme: "warm",
     price: 59000,
-    promoMaxDiscountPercent: 15,
-    promoMaxDiscountNote: "* 레퍼럴·기간 한정 할인 등 적용 시 기준이 달라질 수 있습니다.",
     keywords: ["Film Formula", "Irritation Free", "Easy Wash"],
     introPoints: [
       "특허 기반 바이오 셀룰로오스 필름막 기술",
@@ -147,8 +145,6 @@ export const products: ProductContent[] = [
       "시스테아민 5%·나이아신아마이드·알부틴과 ODT 막으로 야간 집중 → 4개월 후 주 2회 유지까지 이어지는 브라이트닝 루틴입니다.",
     theme: "cool",
     price: 150000,
-    promoMaxDiscountPercent: 15,
-    promoMaxDiscountNote: "* 레퍼럴·기간 한정 할인 등 적용 시 기준이 달라질 수 있습니다.",
     keywords: ["Night Care", "ODT Film", "Cysteamine 5%"],
     introPoints: [
       "기미, 잡티, PIH 고민을 고려한 야간 집중 케어",

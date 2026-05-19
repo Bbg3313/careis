@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { guardAdminApi } from "@/lib/admin-auth";
+import { floorDateToHour } from "@/lib/admin-promo-datetime";
 import { createPromoCampaign, listPromoCampaignsAdmin } from "@/lib/promo";
 import type { ProductSlug } from "@/lib/product-data";
 
@@ -31,8 +32,8 @@ export async function POST(request: Request) {
 
   try {
     const body = createBodySchema.parse(await request.json());
-    const startsAt = new Date(body.startsAt);
-    const endsAt = new Date(body.endsAt);
+    const startsAt = floorDateToHour(new Date(body.startsAt));
+    const endsAt = floorDateToHour(new Date(body.endsAt));
     if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
       return NextResponse.json({ ok: false, error: "날짜 형식이 올바르지 않습니다." }, { status: 400 });
     }

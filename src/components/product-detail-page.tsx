@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { DetailAccordionItem } from "@/components/detail-accordion-item";
 import { IlluminatorDetailStory } from "@/components/illuminator-detail-story";
@@ -189,7 +190,9 @@ function IlluminatorDetailPage({
         </aside>
       </div>
 
-      <MobileProductStickyCta product={product} />
+      <Suspense fallback={null}>
+        <MobileProductStickyCta product={product} />
+      </Suspense>
     </div>
   );
 }
@@ -432,7 +435,9 @@ function SunPackDetailPage({
         </aside>
       </div>
 
-      <MobileProductStickyCta product={product} />
+      <Suspense fallback={null}>
+        <MobileProductStickyCta product={product} />
+      </Suspense>
     </div>
   );
 }

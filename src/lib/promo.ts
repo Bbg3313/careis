@@ -24,6 +24,22 @@ export async function findActivePromoByCode(code: string | null | undefined, at 
   }
 }
 
+/** 상단 공구 타이머: 기간 내 활성 캠페인 전부 (코드별 1줄씩) */
+export async function findAllActivePromoCampaigns(at = new Date()) {
+  try {
+    return prisma.promoCampaign.findMany({
+      where: {
+        isActive: true,
+        startsAt: { lte: at },
+        endsAt: { gte: at },
+      },
+      orderBy: [{ endsAt: "asc" }, { code: "asc" }],
+    });
+  } catch {
+    return [];
+  }
+}
+
 /** 쿠폰 입력이 있으면 우선 매칭, 없거나 미매칭이면 레퍼럴 코드로 매칭 */
 export async function resolveAppliedPromoCampaign(
   couponCode: string | null | undefined,

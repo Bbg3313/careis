@@ -13,11 +13,13 @@ const navItems = [
 
 export function SiteHeader({ showStorefrontPromoGate = false }: { showStorefrontPromoGate?: boolean }) {
   return (
-    <header className="sticky inset-x-0 top-0 z-50 border-b border-[rgba(116,88,59,0.08)] bg-[rgba(250,248,244,0.86)] backdrop-blur-xl">
+    <header className="sticky inset-x-0 top-0 z-50 border-b border-[rgba(116,88,59,0.08)] bg-[rgba(250,248,244,0.86)] pt-[env(safe-area-inset-top,0px)] backdrop-blur-xl">
       {showStorefrontPromoGate ? (
-        <Suspense fallback={null}>
-          <PromoCountdownGate />
-        </Suspense>
+        <div className="relative z-[2] w-full shrink-0">
+          <Suspense fallback={null}>
+            <PromoCountdownGate />
+          </Suspense>
+        </div>
       ) : null}
       <div className="mx-auto max-w-7xl px-4 py-2.5 md:px-6 lg:px-8 lg:py-4">
         <div className="flex items-center justify-between gap-2 sm:gap-3">

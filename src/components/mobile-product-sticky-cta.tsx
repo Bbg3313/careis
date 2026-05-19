@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { createPortal } from "react-dom";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 
 import type { ProductContent } from "@/lib/product-data";
+import { resolveReferralCodeForClient } from "@/lib/referral-browser";
 import { formatCurrency } from "@/lib/utils";
 
 function primaryCtaClasses(theme: ProductContent["theme"]) {
@@ -27,7 +29,13 @@ function primaryCtaClasses(theme: ProductContent["theme"]) {
  * `document.body`로 포털해 모바일에서도 항상 최상단 레이어에 붙습니다.
  */
 export function MobileProductStickyCta({ product }: { product: ProductContent }) {
+  const searchParams = useSearchParams();
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+
+  const hasReferral = useMemo(
+    () => Boolean(resolveReferralCodeForClient(searchParams)),
+    [searchParams],
+  );
 
   useLayoutEffect(() => {
     setPortalTarget(document.body);
@@ -35,11 +43,20 @@ export function MobileProductStickyCta({ product }: { product: ProductContent })
 
   const orderHref = `/order?product=${product.slug}`;
   const cartHref = `/cart?product=${product.slug}`;
-  const pct = product.promoMaxDiscountPercent;
+  const pct = hasReferral ? product.promoMaxDiscountPercent : undefined;
   const primaryLine =
-    pct != null && pct > 0
+    hasReferral && pct != null && pct > 0
       ? `최대 ${pct}% 할인받고 구매하기`
-      : "지금 바로 구매하기";
+      : hasReferral
+        ? "캠페인·공구 링크로 구매하기"
+        : "지금 바로 구매하기";
+
+  const promoNote =
+    hasReferral && product.promoMaxDiscountNote
+      ? product.promoMaxDiscountNote
+      : hasReferral
+        ? "* 결제 단계에서 캠페인 조건이 안내된 대로 적용됩니다."
+        : null;
 
   const bar = (
     <div
@@ -71,8 +88,8 @@ export function MobileProductStickyCta({ product }: { product: ProductContent })
           {primaryLine}
         </Link>
 
-        {pct != null && pct > 0 && product.promoMaxDiscountNote ? (
-          <p className="text-center text-[10px] leading-relaxed text-stone-500">{product.promoMaxDiscountNote}</p>
+        {promoNote ? (
+          <p className="text-center text-[10px] leading-relaxed text-stone-500">{promoNote}</p>
         ) : null}
       </div>
     </div>
