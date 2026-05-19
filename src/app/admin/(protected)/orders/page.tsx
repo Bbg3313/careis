@@ -2,11 +2,11 @@ import Link from "next/link";
 
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
-import { adminOrderProgressLabel, orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
+import { adminOrderProgressLabel } from "@/lib/admin-fulfillment";
 import { buildAdminOrdersExportApiHref, buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
-import { orderMatchesAdminListSearch, parseAdminOrdersListSearch } from "@/lib/admin-order-search";
+import { parseAdminOrdersListSearch } from "@/lib/admin-order-search";
 import { inflowSummary } from "@/lib/admin-order-inflow";
-import { loadAdminOrdersList } from "@/lib/orders";
+import { ADMIN_ORDER_LIST_TAKE, loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -51,37 +51,19 @@ function fulfillmentChipLabel(fulfillment: string | undefined) {
 
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
   const { status, fulfillment, from, to, searchBy, q } = await searchParams;
-  const loaded = await loadAdminOrdersList({ from, to });
-  const allOrdersInRange = loaded.ok ? loaded.orders : [];
-  const paidOrdersInRange = allOrdersInRange.filter((o) => o.paymentStatus === "PAID");
-  const fulfillmentStats = {
-    all: paidOrdersInRange.length,
-    awaiting: paidOrdersInRange.filter((o) => orderMatchesAdminFulfillmentFilter(o, "AWAITING_SHIP")).length,
-    inTransit: paidOrdersInRange.filter((o) => orderMatchesAdminFulfillmentFilter(o, "IN_TRANSIT")).length,
-    delivered: paidOrdersInRange.filter((o) => orderMatchesAdminFulfillmentFilter(o, "DELIVERED")).length,
-  };
+  const loaded = await loadAdminOrdersList({ from, to, status, fulfillment, searchBy, q });
+
+  const orders = loaded.ok ? loaded.orders : [];
+  const totalMatching = loaded.ok ? loaded.totalMatching : 0;
+  const fulfillmentStats = loaded.ok
+    ? loaded.fulfillmentStats
+    : { all: 0, awaiting: 0, inTransit: 0, delivered: 0 };
+  const listCapped = loaded.ok ? loaded.listCapped : false;
 
   const parsedSearch = parseAdminOrdersListSearch(searchBy, q);
   const searchHrefOpts = parsedSearch ? { searchBy: parsedSearch.by, q: parsedSearch.needle } : {};
 
-  let orders = allOrdersInRange;
-
-  if (status === "PAID") {
-    orders = orders.filter((o) => o.paymentStatus === "PAID");
-  } else if (status === "PENDING") {
-    orders = orders.filter((o) => o.paymentStatus === "PENDING");
-  } else if (status === "CANCELLED_REFUNDED") {
-    orders = orders.filter((o) => o.paymentStatus === "CANCELLED" || o.paymentStatus === "REFUNDED");
-  }
-
   const fulfillmentEffective = status === "PAID" ? fulfillment : undefined;
-  if (fulfillmentEffective) {
-    orders = orders.filter((o) => orderMatchesAdminFulfillmentFilter(o, fulfillmentEffective));
-  }
-
-  if (parsedSearch) {
-    orders = orders.filter((o) => orderMatchesAdminListSearch(o, parsedSearch));
-  }
 
   const clearOrdersHref = buildAdminOrdersHref({
     status: status || undefined,
@@ -120,10 +102,11 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
 
   const chip = fulfillmentChipLabel(fulfillmentEffective);
   const searchNote = parsedSearch ? " · 검색 적용" : "";
+  const capNote = listCapped ? ` · 최신 ${ADMIN_ORDER_LIST_TAKE}건만 표시` : "";
   const subtitle =
     chip && status === "PAID"
-      ? `${statusLabel(status)} · ${chip} · ${orders.length}건${searchNote}`
-      : `${statusLabel(status)} · ${orders.length}건${searchNote}`;
+      ? `${statusLabel(status)} · ${chip} · ${totalMatching}건${searchNote}${capNote}`
+      : `${statusLabel(status)} · ${totalMatching}건${searchNote}${capNote}`;
 
   const exportApiHref = loaded.ok
     ? buildAdminOrdersExportApiHref({
@@ -218,6 +201,13 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         </div>
       </div>
 
+      {listCapped ? (
+        <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          조건에 맞는 주문이 <strong>{totalMatching}건</strong>입니다. 응답 속도를 위해 표에는 최신{" "}
+          <strong>{ADMIN_ORDER_LIST_TAKE}건</strong>만 보입니다. 나머지는 기간을 좁히거나 엑셀을 이용해 주세요.
+        </p>
+      ) : null}
+
       <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
@@ -282,11 +272,22 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
       {loaded.ok && exportApiHref ? (
         <div className="flex flex-col gap-3 rounded-2xl border border-stone-200 bg-[#faf8f5] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <p className="text-sm leading-relaxed text-stone-700">
-            위 목록은 조회 조건과 동일하게 <strong className="text-stone-900">{orders.length}건</strong>입니다. 내용을 확인한 뒤
-            아래에서 내려받으면 됩니다.
+            조건 일치 <strong className="text-stone-900">{totalMatching}건</strong>
+            {listCapped ? (
+              <>
+                {" "}
+                — 표에는 최신 <strong>{orders.length}건</strong>만 표시됩니다.
+              </>
+            ) : (
+              <>
+                {" "}
+                — 아래 표와 동일합니다.
+              </>
+            )}{" "}
+            엑셀은 기간·결제·배송만 반영됩니다(검색 미적용).
             {parsedSearch ? (
               <span className="mt-1 block text-xs text-stone-500">
-                엑셀은 기간·결제·배송 조건만 반영되며, 검색어(이름·번호·주문번호)는 엑셀에 적용되지 않습니다.
+                검색어(이름·번호·주문번호)는 엑셀에 적용되지 않습니다.
               </span>
             ) : null}
           </p>

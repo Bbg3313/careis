@@ -2,6 +2,7 @@ import { FulfillmentStatus, OrderStatus, PaymentMethod, ProductStatus, type Pris
 import { z } from "zod";
 
 import { orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
+import { adminOrderSearchToPrismaWhere, parseAdminOrdersListSearch } from "@/lib/admin-order-search";
 import { prismaOrderCreatedAtRange } from "@/lib/admin-orders-date-filter";
 import { prisma } from "@/lib/db";
 import { computeOrderPricing, resolveAppliedPromoCampaign } from "@/lib/promo";
@@ -176,13 +177,170 @@ export async function loadAdminOrdersOverview(dateQuery?: { from?: string; to?: 
   }
 }
 
-export async function loadAdminOrdersList(dateQuery?: { from?: string; to?: string }): Promise<
-  | { ok: true; orders: Awaited<ReturnType<typeof getOrders>> }
+/** 관리자 주문 목록: 한 번에 가져오는 행 상한(응답 속도). 총건수는 `totalMatching`. */
+export const ADMIN_ORDER_LIST_TAKE = 300;
+
+const adminOrdersListSelect = {
+  id: true,
+  orderNumber: true,
+  createdAt: true,
+  customerName: true,
+  phone: true,
+  paymentStatus: true,
+  fulfillmentStatus: true,
+  trackingNumber: true,
+  totalAmount: true,
+  referralCode: true,
+  appliedPromoCode: true,
+  couponCode: true,
+  orderItems: { select: { productNameSnapshot: true, quantity: true } },
+} satisfies Prisma.OrderSelect;
+
+export type AdminOrderListRow = Prisma.OrderGetPayload<{ select: typeof adminOrdersListSelect }>;
+
+function mergeOrderWhere(a: Prisma.OrderWhereInput, b: Prisma.OrderWhereInput): Prisma.OrderWhereInput {
+  return { AND: [a, b] };
+}
+
+function buildAdminPaidDateBaseWhere(from?: string, to?: string): Prisma.OrderWhereInput {
+  const and: Prisma.OrderWhereInput[] = [];
+  const dateWhere = prismaOrderCreatedAtRange(from, to);
+  if (Object.keys(dateWhere).length) {
+    and.push(dateWhere as Prisma.OrderWhereInput);
+  }
+  and.push({ paymentStatus: OrderStatus.PAID });
+  return and.length === 1 ? and[0]! : { AND: and };
+}
+
+const nonEmptyTrackingWhere: Prisma.OrderWhereInput = {
+  AND: [{ trackingNumber: { not: null } }, { NOT: { trackingNumber: "" } }],
+};
+
+const inTransitOrHasTrackingWhere: Prisma.OrderWhereInput = {
+  OR: [{ fulfillmentStatus: FulfillmentStatus.IN_TRANSIT }, nonEmptyTrackingWhere],
+};
+
+/** 결제완료·기간 내 `orderMatchesAdminFulfillmentFilter(..., AWAITING_SHIP)` 와 동일 */
+const awaitingShipInPaidWhere: Prisma.OrderWhereInput = {
+  AND: [{ NOT: { fulfillmentStatus: FulfillmentStatus.DELIVERED } }, { NOT: inTransitOrHasTrackingWhere }],
+};
+
+function buildAdminOrdersListWhere(input: {
+  from?: string;
+  to?: string;
+  status?: string;
+  fulfillment?: string;
+  search: ReturnType<typeof parseAdminOrdersListSearch>;
+}): Prisma.OrderWhereInput {
+  const and: Prisma.OrderWhereInput[] = [];
+  const dateWhere = prismaOrderCreatedAtRange(input.from, input.to);
+  if (Object.keys(dateWhere).length) {
+    and.push(dateWhere as Prisma.OrderWhereInput);
+  }
+
+  const st = input.status?.trim();
+  if (st === "PAID") {
+    and.push({ paymentStatus: OrderStatus.PAID });
+  } else if (st === "PENDING") {
+    and.push({ paymentStatus: OrderStatus.PENDING });
+  } else if (st === "CANCELLED_REFUNDED") {
+    and.push({ paymentStatus: { in: [OrderStatus.CANCELLED, OrderStatus.REFUNDED] } });
+  }
+
+  if (st === "PAID") {
+    const ful = input.fulfillment?.trim();
+    if (ful && ful !== "ALL") {
+      if (ful === "DELIVERED") {
+        and.push({ fulfillmentStatus: FulfillmentStatus.DELIVERED });
+      } else if (ful === "IN_TRANSIT") {
+        and.push({
+          NOT: { fulfillmentStatus: FulfillmentStatus.DELIVERED },
+          OR: [
+            { fulfillmentStatus: FulfillmentStatus.IN_TRANSIT },
+            nonEmptyTrackingWhere,
+          ],
+        });
+      } else if (ful === "AWAITING_SHIP") {
+        and.push(awaitingShipInPaidWhere);
+      }
+    }
+  }
+
+  if (input.search) {
+    and.push(adminOrderSearchToPrismaWhere(input.search));
+  }
+
+  if (and.length === 0) return {};
+  if (and.length === 1) return and[0]!;
+  return { AND: and };
+}
+
+export async function loadAdminOrdersList(params: {
+  from?: string;
+  to?: string;
+  status?: string;
+  fulfillment?: string;
+  searchBy?: string;
+  q?: string;
+}): Promise<
+  | {
+      ok: true;
+      orders: AdminOrderListRow[];
+      totalMatching: number;
+      fulfillmentStats: { all: number; awaiting: number; inTransit: number; delivered: number };
+      listCapped: boolean;
+    }
   | { ok: false }
 > {
   try {
-    const orders = await getOrders(dateQuery);
-    return { ok: true, orders };
+    const search = parseAdminOrdersListSearch(params.searchBy, params.q);
+    const fulfillmentEffective = params.status === "PAID" ? params.fulfillment : undefined;
+
+    const listWhere = buildAdminOrdersListWhere({
+      from: params.from,
+      to: params.to,
+      status: params.status,
+      fulfillment: fulfillmentEffective,
+      search,
+    });
+
+    const paidBase = buildAdminPaidDateBaseWhere(params.from, params.to);
+    const deliveredWhere = mergeOrderWhere(paidBase, { fulfillmentStatus: FulfillmentStatus.DELIVERED });
+    const inTransitCountWhere = mergeOrderWhere(paidBase, {
+      NOT: { fulfillmentStatus: FulfillmentStatus.DELIVERED },
+      OR: [
+        { fulfillmentStatus: FulfillmentStatus.IN_TRANSIT },
+        nonEmptyTrackingWhere,
+      ],
+    });
+    const awaitingCountWhere = mergeOrderWhere(paidBase, awaitingShipInPaidWhere);
+
+    const [totalMatching, orders, paidAll, awaitingCnt, inTransitCnt, deliveredCnt] = await Promise.all([
+      prisma.order.count({ where: listWhere }),
+      prisma.order.findMany({
+        where: listWhere,
+        select: adminOrdersListSelect,
+        orderBy: { createdAt: "desc" },
+        take: ADMIN_ORDER_LIST_TAKE,
+      }),
+      prisma.order.count({ where: paidBase }),
+      prisma.order.count({ where: awaitingCountWhere }),
+      prisma.order.count({ where: inTransitCountWhere }),
+      prisma.order.count({ where: deliveredWhere }),
+    ]);
+
+    return {
+      ok: true,
+      orders,
+      totalMatching,
+      fulfillmentStats: {
+        all: paidAll,
+        awaiting: awaitingCnt,
+        inTransit: inTransitCnt,
+        delivered: deliveredCnt,
+      },
+      listCapped: totalMatching > ADMIN_ORDER_LIST_TAKE,
+    };
   } catch (error) {
     console.error("[orders] admin orders list load failed", error);
     return { ok: false };
@@ -200,17 +358,6 @@ export async function loadAdminOrderByNumber(orderNumber: string): Promise<
     console.error("[orders] admin order detail load failed", error);
     return { ok: false };
   }
-}
-
-export async function getOrders(dateQuery?: { from?: string; to?: string }) {
-  const dateWhere = prismaOrderCreatedAtRange(dateQuery?.from, dateQuery?.to);
-  return prisma.order.findMany({
-    where: Object.keys(dateWhere).length ? (dateWhere as Prisma.OrderWhereInput) : undefined,
-    orderBy: { createdAt: "desc" },
-    include: {
-      orderItems: true,
-    },
-  });
 }
 
 export type OrdersExportFilter = {
