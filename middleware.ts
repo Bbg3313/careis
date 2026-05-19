@@ -1,23 +1,40 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-import { REFERRAL_COOKIE_AGE, REFERRAL_COOKIE_KEY, sanitizeReferralCode } from "@/lib/referral";
+import {
+  REFERRAL_COOKIE_AGE,
+  REFERRAL_COOKIE_KEY,
+  REFERRAL_FROM_QUERY_HEADER,
+  sanitizeReferralCode,
+} from "@/lib/referral";
 import { hasPublicSupabaseEnv } from "@/lib/supabase/env-public";
 import { refreshSupabaseSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const path = request.nextUrl.pathname;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", path);
+
+  const ref = sanitizeReferralCode(request.nextUrl.searchParams.get("ref"));
+  if (ref) {
+    requestHeaders.set(REFERRAL_FROM_QUERY_HEADER, ref);
+  }
+
+  const requestForRsc = new NextRequest(request, {
+    headers: requestHeaders,
+  });
+
+  let supabaseResponse: NextResponse;
   let user: { email?: string | null } | null = null;
 
   try {
-    const refreshed = await refreshSupabaseSession(request);
+    const refreshed = await refreshSupabaseSession(requestForRsc);
     supabaseResponse = refreshed.response;
     user = refreshed.user;
   } catch (error) {
     console.error("[middleware] Supabase session refresh failed:", error);
+    supabaseResponse = NextResponse.next({ request: requestForRsc });
   }
 
-  const ref = sanitizeReferralCode(request.nextUrl.searchParams.get("ref"));
   if (ref) {
     supabaseResponse.cookies.set({
       name: REFERRAL_COOKIE_KEY,
@@ -27,8 +44,6 @@ export async function middleware(request: NextRequest) {
       sameSite: "lax",
     });
   }
-
-  const path = request.nextUrl.pathname;
   const isAdminLogin = path === "/admin/login";
   const isAdminArea = path.startsWith("/admin");
 
@@ -48,7 +63,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  supabaseResponse.headers.set("x-pathname", path);
   return supabaseResponse;
 }
 

@@ -8,7 +8,7 @@ import { ScrollToTopButton } from "@/components/scroll-to-top-button";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getSitePromoCountdownForReferrer } from "@/lib/promo-countdown-site";
-import { getReferralCodeFromCookie } from "@/lib/referral";
+import { getReferralCodeFromCookie, REFERRAL_FROM_QUERY_HEADER, sanitizeReferralCode } from "@/lib/referral";
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_KEYWORDS,
@@ -95,8 +95,10 @@ export default async function RootLayout({
 
   let promoCountdown: { endsAtIso: string; title: string } | null = null;
   if (onStorefront) {
-    const ref = await getReferralCodeFromCookie();
-    const row = await getSitePromoCountdownForReferrer(ref);
+    const refFromQuery = sanitizeReferralCode(headersList.get(REFERRAL_FROM_QUERY_HEADER));
+    const refCookie = await getReferralCodeFromCookie();
+    const refForPromo = refFromQuery ?? sanitizeReferralCode(refCookie);
+    const row = await getSitePromoCountdownForReferrer(refForPromo);
     if (row) {
       promoCountdown = { endsAtIso: row.endsAt.toISOString(), title: row.title };
     }
