@@ -6,7 +6,7 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import {
   formatPromoDateTimeKoNoSeconds,
   localDateAndHourToDatetimeLocal,
-  toLocalDateInputValue,
+  toKstDateAndHourForInput,
 } from "@/lib/admin-promo-datetime";
 import { PromoReferralLinkCopy } from "@/components/promo-referral-link-copy";
 import { formatCurrency } from "@/lib/utils";
@@ -175,16 +175,14 @@ export function AdminPromosPanel() {
     }
   }
 
-  const nowLocal = new Date();
-  const startHour = new Date(nowLocal);
-  startHour.setMinutes(0, 0, 0);
-  startHour.setMilliseconds(0);
-  const defaultStartDate = toLocalDateInputValue(startHour);
-  const defaultStartHour = String(startHour.getHours());
-  const endHour = new Date(startHour);
-  endHour.setDate(endHour.getDate() + 14);
-  const defaultEndDate = toLocalDateInputValue(endHour);
-  const defaultEndHour = String(endHour.getHours());
+  const now = new Date();
+  const startK = toKstDateAndHourForInput(now);
+  const defaultStartDate = startK.date;
+  const defaultStartHour = startK.hour;
+  const endPlus14 = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+  const endK = toKstDateAndHourForInput(endPlus14);
+  const defaultEndDate = endK.date;
+  const defaultEndHour = endK.hour;
 
   return (
     <div className="space-y-10">
@@ -216,12 +214,12 @@ export function AdminPromosPanel() {
           </thead>
           <tbody>
             {campaigns.map((c) => {
-              const startD = new Date(c.startsAt);
-              const endD = new Date(c.endsAt);
-              const editStartDate = toLocalDateInputValue(startD);
-              const editStartHour = String(startD.getHours());
-              const editEndDate = toLocalDateInputValue(endD);
-              const editEndHour = String(endD.getHours());
+              const editStart = toKstDateAndHourForInput(c.startsAt);
+              const editEnd = toKstDateAndHourForInput(c.endsAt);
+              const editStartDate = editStart.date;
+              const editStartHour = editStart.hour;
+              const editEndDate = editEnd.date;
+              const editEndHour = editEnd.hour;
 
               return (
                 <Fragment key={c.id}>
