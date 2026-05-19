@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { findAllActivePromoCampaigns } from "@/lib/promo";
+import { findActivePromoByCode } from "@/lib/promo";
 import { sanitizeReferralCode } from "@/lib/referral-code";
 
 /**
  * 쇼핑몰 상단 공구 타이머(비로그인).
- * `ref`가 있으면 **현재 시각 기준 활성인 모든 공구**를 내려줌 — 캠페인이 여러 개면 줄을 여러 개 띄움.
- * 각 행의 `title`은 관리자 프로모션의 「상단바 표시」 값( DB `PromoCampaign.title` )과 동일합니다.
+ * `ref`와 **코드가 일치하고** 현재 시각에 활성인 공구 **한 건**만 내려줍니다.
+ * `title`은 관리자 「상단바 표시」(DB `PromoCampaign.title`) 그대로입니다.
  */
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -15,17 +15,19 @@ export async function GET(req: Request) {
     return NextResponse.json({ ok: false as const });
   }
   try {
-    const rows = await findAllActivePromoCampaigns(new Date());
-    if (rows.length === 0) {
+    const c = await findActivePromoByCode(code, new Date());
+    if (!c) {
       return NextResponse.json({ ok: false as const });
     }
     return NextResponse.json({
       ok: true as const,
-      campaigns: rows.map((c) => ({
-        id: c.id,
-        endsAtIso: c.endsAt.toISOString(),
-        title: c.title,
-      })),
+      campaigns: [
+        {
+          id: c.id,
+          endsAtIso: c.endsAt.toISOString(),
+          title: c.title,
+        },
+      ],
     });
   } catch {
     return NextResponse.json({ ok: false as const }, { status: 500 });

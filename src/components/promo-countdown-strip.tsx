@@ -48,16 +48,18 @@ export function PromoCountdownStrip({ endsAtIso, title }: { endsAtIso: string; t
     return null;
   }
 
-  const label = title.length > 48 ? `${title.slice(0, 46)}…` : title;
+  const label = title.length > 72 ? `${title.slice(0, 70)}…` : title;
 
   return (
     <div className="relative z-[2] border-b border-[rgba(139,103,63,0.22)] bg-[linear-gradient(90deg,#2a231c_0%,#3a3028_45%,#3a3028_55%,#2a231c_100%)] text-[11px] text-amber-50/95 antialiased sm:text-xs">
       <div className="mx-auto max-w-7xl px-4 py-2 sm:py-1.5 md:px-8">
-        {/* 1행: 공구 문구 + 관리자「상단바 표시」(DB title) / 2행: 저장된 종료 일시 + 카운트다운 — 모바일·데스크톱 동일 */}
+        {/* 1행: 관리자 「상단바 표시」(DB title)만 — 고정 접두어 없음 / 2행: 종료 일시 + 카운트다운 */}
         <div className="flex flex-col items-center justify-center gap-y-1">
-          <div className="flex w-full min-w-0 items-center justify-center gap-x-2">
-            <span className="shrink-0 font-medium text-amber-100/90">공구 종료까지</span>
-            <span className="min-w-0 truncate text-center font-medium text-amber-50" title={title}>
+          <div className="flex w-full min-w-0 items-center justify-center px-1">
+            <span
+              className="max-w-full text-center text-[12px] font-semibold leading-snug text-amber-50 sm:text-sm md:text-[15px]"
+              title={title}
+            >
               {label}
             </span>
           </div>
