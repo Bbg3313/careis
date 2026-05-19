@@ -100,9 +100,17 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold text-stone-900">주문 목록</h1>
-        <p className="mt-1 text-sm text-stone-500">{subtitle}</p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-stone-900">주문 목록</h1>
+          <p className="mt-1 text-sm text-stone-500">{subtitle}</p>
+        </div>
+        <Link
+          href="/admin/orders/export"
+          className="shrink-0 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
+        >
+          엑셀 다운로드
+        </Link>
       </div>
 
       {!loaded.ok ? <AdminDbUnavailableNotice /> : null}

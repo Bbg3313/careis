@@ -1,12 +1,12 @@
+import type { Order, OrderItem } from "@prisma/client";
 import * as XLSX from "xlsx";
 
 import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
-import { getOrders } from "@/lib/orders";
 import { formatDate } from "@/lib/utils";
 
-export async function buildOrdersWorkbook() {
-  const orders = await getOrders();
+export type OrderWithItems = Order & { orderItems: OrderItem[] };
 
+export async function buildOrdersWorkbook(orders: OrderWithItems[]) {
   const rows = orders.flatMap((order) =>
     order.orderItems.map((item) => ({
       주문번호: order.orderNumber,
@@ -47,5 +47,5 @@ export async function buildOrdersWorkbook() {
   return XLSX.write(workbook, {
     type: "buffer",
     bookType: "xlsx",
-  });
+  }) as Buffer;
 }

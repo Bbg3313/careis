@@ -1,6 +1,7 @@
 import { FulfillmentStatus, OrderStatus, PaymentMethod, ProductStatus, type Prisma } from "@prisma/client";
 import { z } from "zod";
 
+import { orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
 import { prismaOrderCreatedAtRange } from "@/lib/admin-orders-date-filter";
 import { prisma } from "@/lib/db";
 import { computeOrderPricing, resolveAppliedPromoCampaign } from "@/lib/promo";
@@ -210,6 +211,93 @@ export async function getOrders(dateQuery?: { from?: string; to?: string }) {
       orderItems: true,
     },
   });
+}
+
+export type OrdersExportFilter = {
+  from?: string;
+  to?: string;
+  /** `ALL`이면 결제 상태로는 제한하지 않음 */
+  status: "ALL" | "PAID" | "PENDING" | "CANCELLED_REFUNDED";
+  /** 결제완료 주문에만 적용. `ALL`이면 배송 단계로는 제한하지 않음 */
+  fulfillment: "ALL" | "AWAITING_SHIP" | "IN_TRANSIT" | "DELIVERED";
+  /** 정규화된 코드 — 레퍼럴·적용 공구·쿠폰 중 하나라도 일치 */
+  inflowCode?: string | null;
+};
+
+/** 엑셀보내기용: 기간·결제·배송·유입 코드 필터 */
+export async function getOrdersForExport(filter: OrdersExportFilter) {
+  const dateWhere = prismaOrderCreatedAtRange(filter.from, filter.to);
+  const inflow = sanitizeReferralCode(filter.inflowCode ?? null);
+
+  const andParts: Prisma.OrderWhereInput[] = [];
+  if (Object.keys(dateWhere).length) {
+    andParts.push(dateWhere as Prisma.OrderWhereInput);
+  }
+
+  if (filter.status === "PAID") {
+    andParts.push({ paymentStatus: OrderStatus.PAID });
+  } else if (filter.status === "PENDING") {
+    andParts.push({ paymentStatus: OrderStatus.PENDING });
+  } else if (filter.status === "CANCELLED_REFUNDED") {
+    andParts.push({ paymentStatus: { in: [OrderStatus.CANCELLED, OrderStatus.REFUNDED] } });
+  }
+
+  if (inflow) {
+    andParts.push({
+      OR: [
+        { referralCode: inflow },
+        { appliedPromoCode: inflow },
+        { couponCode: { equals: inflow, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  const orders = await prisma.order.findMany({
+    where: andParts.length ? { AND: andParts } : undefined,
+    orderBy: { createdAt: "desc" },
+    include: { orderItems: true },
+  });
+
+  if (filter.status !== "PAID" || filter.fulfillment === "ALL") {
+    return orders;
+  }
+
+  return orders.filter((o) => orderMatchesAdminFulfillmentFilter(o, filter.fulfillment));
+}
+
+/** 주문에 한 번이라도 붙은 유입 코드 목록(레퍼럴·공구·쿠폰), 정렬 */
+export async function listDistinctInflowCodesFromOrders(): Promise<string[]> {
+  const [refs, promos, coupons] = await Promise.all([
+    prisma.order.findMany({
+      where: { referralCode: { not: null } },
+      distinct: ["referralCode"],
+      select: { referralCode: true },
+    }),
+    prisma.order.findMany({
+      where: { appliedPromoCode: { not: null } },
+      distinct: ["appliedPromoCode"],
+      select: { appliedPromoCode: true },
+    }),
+    prisma.order.findMany({
+      where: { couponCode: { not: null } },
+      distinct: ["couponCode"],
+      select: { couponCode: true },
+    }),
+  ]);
+
+  const set = new Set<string>();
+  for (const r of refs) {
+    if (r.referralCode) set.add(r.referralCode);
+  }
+  for (const p of promos) {
+    if (p.appliedPromoCode) set.add(p.appliedPromoCode);
+  }
+  for (const c of coupons) {
+    const t = c.couponCode?.trim();
+    if (t) set.add(t.toLowerCase());
+  }
+
+  return Array.from(set).sort((a, b) => a.localeCompare(b));
 }
 
 /** 대시보드 등: 전체 스캔 없이 최근 주문만 */

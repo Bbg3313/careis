@@ -42,12 +42,9 @@ export function AdminChrome({
         <Link href="/admin/promos" className="text-stone-600 hover:text-stone-900">
           공구캠페인
         </Link>
-        <a
-          href="/api/admin/orders/export"
-          className="text-stone-600 hover:text-stone-900"
-        >
+        <Link href="/admin/orders/export" className="text-stone-600 hover:text-stone-900">
           엑셀 다운로드
-        </a>
+        </Link>
         <Link href="/" className="text-stone-400 hover:text-stone-700">
           쇼핑몰
         </Link>
