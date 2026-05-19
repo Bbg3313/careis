@@ -68,8 +68,15 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
 
   return (
     <div className="space-y-10">
-      <div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold text-stone-900">주문 한눈에 보기</h1>
+        <Link
+          href="/admin/orders/export"
+          prefetch={false}
+          className="shrink-0 rounded-full border border-[#b89156]/40 bg-[#faf8f5] px-4 py-2 text-sm font-medium text-stone-800 hover:bg-[#f3efe8]"
+        >
+          주문 엑셀 <span className="font-normal text-stone-500">(조건 선택)</span>
+        </Link>
       </div>
 
       {!loaded.ok ? (

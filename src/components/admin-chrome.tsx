@@ -42,8 +42,12 @@ export function AdminChrome({
         <Link href="/admin/promos" className="text-stone-600 hover:text-stone-900">
           공구캠페인
         </Link>
-        <Link href="/admin/orders/export" className="text-stone-600 hover:text-stone-900">
-          엑셀 다운로드
+        <Link
+          href="/admin/orders/export"
+          className="rounded-full border border-[#b89156]/40 bg-[#faf8f5] px-3 py-1.5 text-stone-800 hover:bg-[#f3efe8]"
+          prefetch={false}
+        >
+          주문 엑셀 <span className="text-stone-500">(조건 선택)</span>
         </Link>
         <Link href="/" className="text-stone-400 hover:text-stone-700">
           쇼핑몰

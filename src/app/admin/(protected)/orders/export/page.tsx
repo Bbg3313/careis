@@ -1,9 +1,14 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { listDistinctInflowCodesFromOrders } from "@/lib/orders";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "주문 엑셀",
+};
 
 function exportApiQueryString(params: Record<string, string | undefined>) {
   const sp = new URLSearchParams();

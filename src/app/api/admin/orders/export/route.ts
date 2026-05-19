@@ -40,10 +40,8 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: "요청 파라미터가 올바르지 않습니다." }, { status: 400 });
   }
 
-  let { from, to, status, fulfillment, inflowCode } = parsed.data;
-  if (status !== "PAID") {
-    fulfillment = "ALL";
-  }
+  const { from, to, status, inflowCode } = parsed.data;
+  const fulfillment = status === "PAID" ? parsed.data.fulfillment : "ALL";
 
   const inflowSanitized = sanitizeReferralCode(inflowCode ?? null);
   if (inflowCode && !inflowSanitized) {

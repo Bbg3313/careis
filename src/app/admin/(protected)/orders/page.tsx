@@ -107,9 +107,10 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         </div>
         <Link
           href="/admin/orders/export"
-          className="shrink-0 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
+          className="shrink-0 rounded-full border border-[#b89156]/40 bg-[#faf8f5] px-4 py-2 text-sm font-medium text-stone-800 hover:bg-[#f3efe8]"
+          prefetch={false}
         >
-          엑셀 다운로드
+          주문 엑셀 <span className="font-normal text-stone-500">(조건)</span>
         </Link>
       </div>
 
