@@ -24,7 +24,7 @@ type GateView =
   | { kind: "server_error" };
 
 /**
- * `?ref=` 또는 레퍼럴 쿠키로 공구 바를 조회합니다.
+ * 현재 URL에 `?ref=`가 있을 때만 공구 바를 조회합니다(쿠키만으로는 표시하지 않음).
  * 활성 기간이면 카운트다운, 아니면 종료·예정·비활성 안내, 코드 미등록 시 안내 막대를 띄웁니다.
  */
 export function PromoCountdownGate() {
