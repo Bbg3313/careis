@@ -9,6 +9,7 @@ import type { ProductSlug } from "@/lib/product-data";
 const patchSchema = z.object({
   isActive: z.boolean().optional(),
   title: z.string().min(1).max(120).optional(),
+  startsAt: z.string().min(1).optional(),
   endsAt: z.string().min(1).optional(),
   discountValue: z.coerce.number().int().positive().optional(),
   productSlugs: z.array(z.enum(["sun-pack", "illuminator"])).min(1).optional(),
@@ -32,6 +33,13 @@ export async function PATCH(request: Request, ctx: Params) {
     if (body.title != null) patch.title = body.title;
     if (body.discountValue != null) patch.discountValue = body.discountValue;
     if (body.productSlugs != null) patch.productSlugs = body.productSlugs as ProductSlug[];
+    if (body.startsAt != null) {
+      const d = floorDateToHour(new Date(body.startsAt));
+      if (Number.isNaN(d.getTime())) {
+        return NextResponse.json({ ok: false, error: "시작일시 형식이 올바르지 않습니다." }, { status: 400 });
+      }
+      patch.startsAt = d;
+    }
     if (body.endsAt != null) {
       const d = floorDateToHour(new Date(body.endsAt));
       if (Number.isNaN(d.getTime())) {

@@ -10,6 +10,5 @@ export const prisma =
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+/** 서버리스·프로덕션에서도 동일 인스턴스 재사용 (미지정 시 요청마다 PrismaClient 생성 → DB max clients 도달) */
+globalForPrisma.prisma = prisma;

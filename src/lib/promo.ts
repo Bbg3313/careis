@@ -169,17 +169,35 @@ export async function createPromoCampaign(input: CreatePromoCampaignInput) {
 
 export async function updatePromoCampaignPartial(
   id: string,
-  patch: Partial<Pick<PromoCampaign, "isActive" | "title" | "endsAt" | "discountValue">> & {
+  patch: Partial<Pick<PromoCampaign, "isActive" | "title" | "startsAt" | "endsAt" | "discountValue">> & {
     productSlugs?: ProductSlug[];
   },
 ) {
+  const existing = await prisma.promoCampaign.findUnique({
+    where: { id },
+    select: { startsAt: true, endsAt: true },
+  });
+  if (!existing) {
+    throw new Error("캠페인을 찾을 수 없습니다.");
+  }
+
+  const nextStarts = patch.startsAt ?? existing.startsAt;
+  const nextEnds = patch.endsAt ?? existing.endsAt;
+  if (nextEnds <= nextStarts) {
+    throw new Error("종료일시는 시작일시보다 이후여야 합니다.");
+  }
+
   const data: Prisma.PromoCampaignUpdateInput = {};
   if (typeof patch.isActive === "boolean") data.isActive = patch.isActive;
   if (patch.title != null) data.title = patch.title.trim();
+  if (patch.startsAt != null) data.startsAt = patch.startsAt;
   if (patch.endsAt != null) data.endsAt = patch.endsAt;
   if (patch.discountValue != null) data.discountValue = patch.discountValue;
   if (patch.productSlugs != null) {
     data.productSlugs = patch.productSlugs as unknown as Prisma.InputJsonValue;
+  }
+  if (Object.keys(data).length === 0) {
+    return prisma.promoCampaign.findUniqueOrThrow({ where: { id } });
   }
   return prisma.promoCampaign.update({
     where: { id },

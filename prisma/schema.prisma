@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // Neon 등: pooler URL 사용 시 세션 한도(예: 15)에 걸리지 않게 Vercel에선 db.ts Prisma 싱글톤 + 짧은 연결 유지
   url      = env("DATABASE_URL")
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 
 import {
   formatPromoDateTimeKoNoSeconds,
@@ -45,6 +45,7 @@ export function AdminPromosPanel() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [editingPeriodId, setEditingPeriodId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoadError(null);
@@ -76,6 +77,7 @@ export function AdminPromosPanel() {
 
   async function toggleActive(c: Campaign) {
     setSaving(true);
+    setLoadError(null);
     try {
       const res = await fetch(`/api/admin/promos/${encodeURIComponent(c.id)}`, {
         method: "PATCH",
@@ -89,6 +91,40 @@ export function AdminPromosPanel() {
       await load();
     } catch (e) {
       setLoadError(e instanceof Error ? e.message : "저장 실패");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function savePeriod(c: Campaign, formData: FormData) {
+    setSaving(true);
+    setLoadError(null);
+    try {
+      const startsAt = localDateAndHourToDatetimeLocal(
+        String(formData.get("editStartsDate") ?? ""),
+        String(formData.get("editStartsHour") ?? ""),
+      );
+      const endsAt = localDateAndHourToDatetimeLocal(
+        String(formData.get("editEndsDate") ?? ""),
+        String(formData.get("editEndsHour") ?? ""),
+      );
+      if (!startsAt || !endsAt) {
+        throw new Error("시작·종료 날짜와 시(정각)를 확인해 주세요.");
+      }
+
+      const res = await fetch(`/api/admin/promos/${encodeURIComponent(c.id)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ startsAt, endsAt }),
+      });
+      const data = (await res.json()) as { ok?: boolean; error?: string };
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error ?? "기간 저장 실패");
+      }
+      setEditingPeriodId(null);
+      await load();
+    } catch (e) {
+      setLoadError(e instanceof Error ? e.message : "기간 저장 실패");
     } finally {
       setSaving(false);
     }
@@ -179,74 +215,179 @@ export function AdminPromosPanel() {
             </tr>
           </thead>
           <tbody>
-            {campaigns.map((c) => (
-              <tr key={c.id} className="border-b border-stone-100 last:border-0">
-                <td className="px-3 py-2 align-middle font-mono text-[13px] text-stone-700">{c.code}</td>
-                <td className="px-3 py-2 align-middle text-[13px] text-stone-700">
-                  <span className="line-clamp-2 break-words" title={c.title}>
-                    {c.title}
-                  </span>
-                </td>
-                <td className="px-3 py-2 align-middle whitespace-nowrap tabular-nums text-[13px] text-stone-700">
-                  {c.discountType === "PERCENT" ? (
-                    <span>{c.discountValue}%</span>
-                  ) : (
-                    <span>
-                      {formatCurrency(c.discountValue)}
-                      <span className="text-stone-500">/개</span>
-                    </span>
-                  )}
-                </td>
-                <td className="px-3 py-2 align-middle whitespace-nowrap text-[13px] text-stone-700">
-                  {formatProductSlugsKo(c.productSlugs)}
-                </td>
-                <td className="px-3 py-2 align-top text-[12px] leading-snug text-stone-700">
-                  <div className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-baseline gap-x-2 gap-y-1.5 tabular-nums">
-                    <span className="text-[11px] font-medium text-stone-400">시작</span>
-                    <span className="min-w-0 break-keep">{formatPromoDateTimeKoNoSeconds(c.startsAt)}</span>
-                    <span className="text-[11px] font-medium text-stone-400">종료</span>
-                    <span className="min-w-0 break-keep">{formatPromoDateTimeKoNoSeconds(c.endsAt)}</span>
-                  </div>
-                </td>
-                <td className="px-3 py-2 align-middle">
-                  <div className="min-w-0 max-w-full">
-                    <PromoReferralLinkCopy baseUrlFromEnv={PUBLIC_SITE_URL} code={c.code} compact />
-                  </div>
-                </td>
-                <td className="px-3 py-2 align-middle">
-                  <div className="flex min-w-0 flex-nowrap items-center gap-x-1.5 text-[12px] text-stone-700">
-                    <span className="shrink-0 whitespace-nowrap tabular-nums">결제 {c.paidCount}건</span>
-                    <span className="shrink-0 text-stone-400" aria-hidden>
-                      ·
-                    </span>
-                    <span className="min-w-0 flex-1 truncate tabular-nums" title={formatCurrency(c.totalPaidAmount)}>
-                      {formatCurrency(c.totalPaidAmount)}
-                    </span>
-                    <Link
-                      href={`/admin/promos/${encodeURIComponent(c.id)}`}
-                      className="shrink-0 whitespace-nowrap text-[11px] font-medium text-[#8b673f] underline-offset-2 hover:underline"
-                    >
-                      상세
-                    </Link>
-                  </div>
-                </td>
-                <td className="px-2 py-2 align-middle">
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={c.isActive}
-                    aria-label={`${c.title} (${c.code}) ${c.isActive ? "비활성화" : "활성화"}`}
-                    disabled={saving}
-                    onClick={() => void toggleActive(c)}
-                    className={`flex h-[22px] w-9 shrink-0 items-center rounded-full p-[3px] transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-1 ${
-                      c.isActive ? "justify-end bg-emerald-500" : "justify-start bg-stone-300"
-                    } ${saving ? "cursor-wait opacity-50" : ""}`}
-                  >
-                    <span className="pointer-events-none h-3.5 w-3.5 rounded-full bg-white shadow-sm ring-1 ring-black/5" />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {campaigns.map((c) => {
+              const startD = new Date(c.startsAt);
+              const endD = new Date(c.endsAt);
+              const editStartDate = toLocalDateInputValue(startD);
+              const editStartHour = String(startD.getHours());
+              const editEndDate = toLocalDateInputValue(endD);
+              const editEndHour = String(endD.getHours());
+
+              return (
+                <Fragment key={c.id}>
+                  <tr className="border-b border-stone-100 last:border-0">
+                    <td className="px-3 py-2 align-middle font-mono text-[13px] text-stone-700">{c.code}</td>
+                    <td className="px-3 py-2 align-middle text-[13px] text-stone-700">
+                      <span className="line-clamp-2 break-words" title={c.title}>
+                        {c.title}
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 align-middle whitespace-nowrap tabular-nums text-[13px] text-stone-700">
+                      {c.discountType === "PERCENT" ? (
+                        <span>{c.discountValue}%</span>
+                      ) : (
+                        <span>
+                          {formatCurrency(c.discountValue)}
+                          <span className="text-stone-500">/개</span>
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 align-middle whitespace-nowrap text-[13px] text-stone-700">
+                      {formatProductSlugsKo(c.productSlugs)}
+                    </td>
+                    <td className="px-3 py-2 align-top text-[12px] leading-snug text-stone-700">
+                      <div className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-baseline gap-x-2 gap-y-1.5 tabular-nums">
+                        <span className="text-[11px] font-medium text-stone-400">시작</span>
+                        <span className="min-w-0 break-keep">{formatPromoDateTimeKoNoSeconds(c.startsAt)}</span>
+                        <span className="text-[11px] font-medium text-stone-400">종료</span>
+                        <span className="min-w-0 break-keep">{formatPromoDateTimeKoNoSeconds(c.endsAt)}</span>
+                      </div>
+                      <button
+                        type="button"
+                        disabled={saving}
+                        onClick={() => setEditingPeriodId((id) => (id === c.id ? null : c.id))}
+                        className="mt-2 text-[11px] font-medium text-[#8b673f] underline-offset-2 hover:underline disabled:opacity-50"
+                      >
+                        {editingPeriodId === c.id ? "기간 수정 닫기" : "기간 수정"}
+                      </button>
+                    </td>
+                    <td className="px-3 py-2 align-middle">
+                      <div className="min-w-0 max-w-full">
+                        <PromoReferralLinkCopy baseUrlFromEnv={PUBLIC_SITE_URL} code={c.code} compact />
+                      </div>
+                    </td>
+                    <td className="px-3 py-2 align-middle">
+                      <div className="flex min-w-0 flex-nowrap items-center gap-x-1.5 text-[12px] text-stone-700">
+                        <span className="shrink-0 whitespace-nowrap tabular-nums">결제 {c.paidCount}건</span>
+                        <span className="shrink-0 text-stone-400" aria-hidden>
+                          ·
+                        </span>
+                        <span className="min-w-0 flex-1 truncate tabular-nums" title={formatCurrency(c.totalPaidAmount)}>
+                          {formatCurrency(c.totalPaidAmount)}
+                        </span>
+                        <Link
+                          href={`/admin/promos/${encodeURIComponent(c.id)}`}
+                          className="shrink-0 whitespace-nowrap text-[11px] font-medium text-[#8b673f] underline-offset-2 hover:underline"
+                        >
+                          상세
+                        </Link>
+                      </div>
+                    </td>
+                    <td className="px-2 py-2 align-middle">
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={c.isActive}
+                        aria-label={`${c.title} (${c.code}) ${c.isActive ? "비활성화" : "활성화"}`}
+                        disabled={saving}
+                        onClick={() => void toggleActive(c)}
+                        className={`flex h-[22px] w-9 shrink-0 items-center rounded-full p-[3px] transition-colors focus-visible:outline focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-1 ${
+                          c.isActive ? "justify-end bg-emerald-500" : "justify-start bg-stone-300"
+                        } ${saving ? "cursor-wait opacity-50" : ""}`}
+                      >
+                        <span className="pointer-events-none h-3.5 w-3.5 rounded-full bg-white shadow-sm ring-1 ring-black/5" />
+                      </button>
+                    </td>
+                  </tr>
+                  {editingPeriodId === c.id ? (
+                    <tr className="border-b border-stone-100 bg-[#faf8f5]">
+                      <td colSpan={8} className="px-4 py-4">
+                        <form
+                          className="flex flex-col gap-4"
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            void savePeriod(c, new FormData(e.currentTarget));
+                          }}
+                        >
+                          <p className="text-xs text-stone-600">시·분은 정각(1시간 단위)으로 저장됩니다. 종료는 시작보다 늦어야 합니다.</p>
+                          <div className="flex flex-wrap items-end gap-4">
+                            <label className="flex flex-col gap-1 text-xs font-medium text-stone-600">
+                              시작일
+                              <input
+                                name="editStartsDate"
+                                type="date"
+                                required
+                                defaultValue={editStartDate}
+                                className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm"
+                              />
+                            </label>
+                            <label className="flex flex-col gap-1 text-xs font-medium text-stone-600">
+                              시작 시각
+                              <select
+                                name="editStartsHour"
+                                required
+                                defaultValue={editStartHour}
+                                className="min-w-[7.5rem] rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm"
+                                aria-label="시작 시각(시)"
+                              >
+                                {Array.from({ length: 24 }, (_, h) => (
+                                  <option key={h} value={String(h)}>
+                                    {String(h).padStart(2, "0")}시 (정각)
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                            <label className="flex flex-col gap-1 text-xs font-medium text-stone-600">
+                              종료일
+                              <input
+                                name="editEndsDate"
+                                type="date"
+                                required
+                                defaultValue={editEndDate}
+                                className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm"
+                              />
+                            </label>
+                            <label className="flex flex-col gap-1 text-xs font-medium text-stone-600">
+                              종료 시각
+                              <select
+                                name="editEndsHour"
+                                required
+                                defaultValue={editEndHour}
+                                className="min-w-[7.5rem] rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm"
+                                aria-label="종료 시각(시)"
+                              >
+                                {Array.from({ length: 24 }, (_, h) => (
+                                  <option key={h} value={String(h)}>
+                                    {String(h).padStart(2, "0")}시 (정각)
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              type="submit"
+                              disabled={saving}
+                              className="rounded-full bg-stone-900 px-4 py-2 text-sm font-medium text-white hover:bg-stone-800 disabled:opacity-50"
+                            >
+                              기간 저장
+                            </button>
+                            <button
+                              type="button"
+                              disabled={saving}
+                              onClick={() => setEditingPeriodId(null)}
+                              className="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 disabled:opacity-50"
+                            >
+                              취소
+                            </button>
+                          </div>
+                        </form>
+                      </td>
+                    </tr>
+                  ) : null}
+                </Fragment>
+              );
+            })}
             {campaigns.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-3 py-8 text-center text-[13px] text-stone-700">
