@@ -5,7 +5,12 @@ import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { buildAdminOrdersExportApiHref } from "@/lib/admin-orders-date-filter";
 import { adminFulfillmentLabel, adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
 import { inflowSummary } from "@/lib/admin-order-inflow";
-import { getOrdersForExport, listDistinctInflowCodesFromOrders, type OrdersExportFilter } from "@/lib/orders";
+import {
+  getOrdersForExport,
+  listDistinctAppliedPromoCodesFromOrders,
+  listDistinctInflowCodesFromOrders,
+  type OrdersExportFilter,
+} from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -24,6 +29,28 @@ function exportApiQueryString(params: Record<string, string | undefined>) {
   }
   const q = sp.toString();
   return q ? `?${q}` : "";
+}
+
+function buildExportTabHref(
+  next: "general" | "promo",
+  q: {
+    from?: string;
+    to?: string;
+    status?: string;
+    fulfillment?: string;
+    inflowCode?: string;
+    preview?: string;
+  },
+) {
+  const p = new URLSearchParams();
+  p.set("tab", next);
+  if (q.from?.trim()) p.set("from", q.from.trim());
+  if (q.to?.trim()) p.set("to", q.to.trim());
+  if (q.status?.trim()) p.set("status", q.status.trim());
+  if (q.fulfillment?.trim()) p.set("fulfillment", q.fulfillment.trim());
+  if (q.inflowCode?.trim()) p.set("inflowCode", q.inflowCode.trim());
+  if (q.preview === "1") p.set("preview", "1");
+  return `/admin/orders/export?${p.toString()}`;
 }
 
 function parseExportFilter(sp: {
@@ -56,6 +83,7 @@ function parseExportFilter(sp: {
 
 type PageProps = {
   searchParams: Promise<{
+    tab?: string;
     from?: string;
     to?: string;
     status?: string;
@@ -68,12 +96,18 @@ type PageProps = {
 export default async function AdminOrdersExportPage({ searchParams }: PageProps) {
   const q = await searchParams;
   const { from, to, status, fulfillment, inflowCode, preview } = q;
+  const tab = q.tab === "promo" ? "promo" : "general";
+  const scope = tab === "promo" ? ("promo" as const) : ("general" as const);
   const showPreview = preview === "1";
 
   let inflowCodes: string[] = [];
+  let appliedPromoCodes: string[] = [];
   let dbOk = true;
   try {
-    inflowCodes = await listDistinctInflowCodesFromOrders();
+    [inflowCodes, appliedPromoCodes] = await Promise.all([
+      listDistinctInflowCodesFromOrders(),
+      listDistinctAppliedPromoCodesFromOrders(),
+    ]);
   } catch {
     dbOk = false;
   }
@@ -83,7 +117,7 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
   let previewOrders: Awaited<ReturnType<typeof getOrdersForExport>> = [];
   if (showPreview && dbOk) {
     try {
-      previewOrders = await getOrdersForExport(filter);
+      previewOrders = await getOrdersForExport({ ...filter, scope });
     } catch {
       previewOrders = [];
     }
@@ -96,6 +130,7 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
         from: filter.from,
         to: filter.to,
         inflowCode: filter.inflowCode ?? undefined,
+        scope,
       })
     : "";
 
@@ -107,17 +142,23 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
         : "ALL"
       : "ALL";
 
+  const codeList = tab === "promo" ? appliedPromoCodes : inflowCodes;
+  const datalistId = tab === "promo" ? "admin-export-applied-promo-codes" : "admin-export-inflow-codes";
+
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-stone-900">주문 엑셀 다운로드</h1>
           <p className="mt-1 max-w-2xl text-sm text-stone-500">
-            조건을 맞춘 뒤 <strong className="font-medium text-stone-700">조회</strong>로 아래 표에 미리 보이는 내용과 동일한 범위가 엑셀로 내려갑니다. 기간·결제만 빠르게 맞추려면{" "}
+            <strong className="font-medium text-stone-700">일반</strong>은 공구 할인이 적용되지 않은 주문만,{" "}
+            <strong className="font-medium text-stone-700">공구</strong>는 캠페인 할인이 적용된 주문만 엑셀로 내려갑니다. 조건을 맞춘 뒤{" "}
+            <strong className="font-medium text-stone-700">조회</strong>로 미리 확인하세요. 기간·결제만 빠르게 맞추려면{" "}
             <Link href="/admin/orders" className="font-medium text-[#8b673f] underline-offset-2 hover:underline">
               주문 목록
             </Link>
-            을 써도 됩니다. 배송 구간은 <strong className="font-medium text-stone-700">결제완료</strong>일 때만 적용됩니다.
+            에서 받는 엑셀은 여전히 <span className="font-medium text-stone-700">해당 목록 조건 전체</span>(일반·공구 구분 없음)입니다. 배송 구간은{" "}
+            <strong className="font-medium text-stone-700">결제완료</strong>일 때만 적용됩니다.
           </p>
         </div>
         <Link
@@ -128,16 +169,49 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
         </Link>
       </div>
 
+      <div className="flex flex-wrap gap-2 border-b border-stone-200 pb-px">
+        <Link
+          href={buildExportTabHref("general", q)}
+          className={`rounded-t-xl px-4 py-2.5 text-sm font-semibold transition ${
+            tab === "general"
+              ? "border border-b-0 border-stone-200 bg-white text-stone-900"
+              : "border border-transparent text-stone-500 hover:text-stone-800"
+          }`}
+        >
+          일반 주문 엑셀
+        </Link>
+        <Link
+          href={buildExportTabHref("promo", q)}
+          className={`rounded-t-xl px-4 py-2.5 text-sm font-semibold transition ${
+            tab === "promo"
+              ? "border border-b-0 border-stone-200 bg-white text-stone-900"
+              : "border border-transparent text-stone-500 hover:text-stone-800"
+          }`}
+        >
+          공구 주문 엑셀
+        </Link>
+      </div>
+
       {!dbOk ? <AdminDbUnavailableNotice /> : null}
 
       <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-stone-900">조건 설정</h2>
         <p className="mt-1 text-xs text-stone-500">
-          기간을 비우면 전체 기간입니다. 먼저 조회로 건수·내용을 확인한 다음 엑셀을 받으세요.
+          {tab === "promo" ? (
+            <>
+              공구 할인이 적용된 주문만 대상입니다. 기간을 비우면 전체 기간입니다. 먼저 조회로 건수·내용을 확인한 다음 엑셀을 받으세요.
+            </>
+          ) : (
+            <>
+              공구 캠페인 할인이 붙지 않은 주문만 대상입니다. 기간을 비우면 전체 기간입니다. 먼저 조회로 건수·내용을 확인한 다음 엑셀을 받으세요.
+            </>
+          )}
         </p>
 
         <form method="get" action="/admin/orders/export" className="mt-6 space-y-5">
+          <input type="hidden" name="tab" value={tab} />
           <input type="hidden" name="preview" value="1" />
+          <input type="hidden" name="scope" value={scope} />
 
           <div className="flex flex-wrap items-end gap-3">
             <label className="flex min-w-[10.5rem] flex-col gap-1 text-xs font-medium text-stone-600">
@@ -190,17 +264,21 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
           </div>
 
           <label className="flex max-w-md flex-col gap-1 text-xs font-medium text-stone-600">
-            유입 코드 (ref / 공구 적용 / 쿠폰 중 일치)
+            {tab === "promo" ? (
+              <>필터 코드 (레퍼럴·적용 공구·쿠폰 중 하나라도 일치 — 공구 주문만 범위 안에서 좁힘)</>
+            ) : (
+              <>유입 코드 (ref / 공구 적용 / 쿠폰 중 일치 — 일반 주문만 범위 안에서 좁힘)</>
+            )}
             <input
               name="inflowCode"
-              list="admin-export-inflow-codes"
+              list={datalistId}
               defaultValue={inflowCode ?? ""}
               placeholder="선택 입력 또는 아래 목록에서 고르기"
               autoComplete="off"
               className="rounded-xl border border-stone-200 bg-white px-3 py-2 font-mono text-sm text-stone-900 outline-none focus:border-[#b89156]/50"
             />
-            <datalist id="admin-export-inflow-codes">
-              {inflowCodes.map((code) => (
+            <datalist id={datalistId}>
+              {codeList.map((code) => (
                 <option key={code} value={code} />
               ))}
             </datalist>
@@ -221,7 +299,7 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
               disabled={!dbOk || !excelHref}
               className="rounded-full bg-[#8b673f] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#755530] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              이 조건으로 엑셀 받기
+              {tab === "promo" ? "이 조건으로 공구 엑셀 받기" : "이 조건으로 일반 엑셀 받기"}
             </button>
           </div>
         </form>
@@ -297,7 +375,8 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
           </div>
           {excelHref ? (
             <p className="text-center text-xs text-stone-500">
-              위 내용이 맞으면 <strong className="text-stone-700">이 조건으로 엑셀 받기</strong>를 누르세요.
+              위 내용이 맞으면{" "}
+              <strong className="text-stone-700">{tab === "promo" ? "이 조건으로 공구 엑셀 받기" : "이 조건으로 일반 엑셀 받기"}</strong>를 누르세요.
             </p>
           ) : null}
         </div>
@@ -308,33 +387,68 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
       ) : null}
 
       <div className="rounded-2xl border border-stone-200 bg-[#faf8f5] p-6">
-        <h2 className="text-lg font-semibold text-stone-900">유입 코드별로 바로 받기</h2>
-        <p className="mt-1 text-sm text-stone-600">
-          결제완료·배송 전체·기간 제한 없이, 해당 코드가 붙은 주문만 내려받습니다. 미리 보려면 위에서 코드를 넣고 조회하세요.
-        </p>
-
-        {inflowCodes.length === 0 ? (
-          <p className="mt-4 text-sm text-stone-500">아직 유입 코드가 붙은 주문이 없습니다.</p>
+        {tab === "promo" ? (
+          <>
+            <h2 className="text-lg font-semibold text-stone-900">공구 코드별로 바로 받기</h2>
+            <p className="mt-1 text-sm text-stone-600">
+              결제완료·배송 전체·기간 제한 없이, 해당 공구 코드가 적용된 주문만 내려받습니다. 위 탭에서 조건을 바꾼 뒤에도 이 링크는 동일하게 동작합니다.
+            </p>
+            {appliedPromoCodes.length === 0 ? (
+              <p className="mt-4 text-sm text-stone-500">아직 공구 할인이 적용된 주문이 없습니다.</p>
+            ) : (
+              <ul className="mt-4 divide-y divide-stone-200 rounded-xl border border-stone-200 bg-white">
+                {appliedPromoCodes.map((code) => (
+                  <li key={code} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
+                    <code className="font-mono text-stone-800">{code}</code>
+                    <a
+                      href={`/api/admin/orders/export${exportApiQueryString({
+                        status: "PAID",
+                        fulfillment: "ALL",
+                        inflowCode: code,
+                        scope: "promo",
+                      })}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-50"
+                    >
+                      이 공구만 엑셀
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         ) : (
-          <ul className="mt-4 divide-y divide-stone-200 rounded-xl border border-stone-200 bg-white">
-            {inflowCodes.map((code) => (
-              <li key={code} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
-                <code className="font-mono text-stone-800">{code}</code>
-                <a
-                  href={`/api/admin/orders/export${exportApiQueryString({
-                    status: "PAID",
-                    fulfillment: "ALL",
-                    inflowCode: code,
-                  })}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-50"
-                >
-                  이 코드만 엑셀
-                </a>
-              </li>
-            ))}
-          </ul>
+          <>
+            <h2 className="text-lg font-semibold text-stone-900">유입 코드별로 바로 받기 (일반 주문만)</h2>
+            <p className="mt-1 text-sm text-stone-600">
+              결제완료·배송 전체·기간 제한 없이, 해당 코드가 붙었고 공구 할인은 적용되지 않은 주문만 내려받습니다.
+            </p>
+            {inflowCodes.length === 0 ? (
+              <p className="mt-4 text-sm text-stone-500">아직 유입 코드가 붙은 주문이 없습니다.</p>
+            ) : (
+              <ul className="mt-4 divide-y divide-stone-200 rounded-xl border border-stone-200 bg-white">
+                {inflowCodes.map((code) => (
+                  <li key={code} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
+                    <code className="font-mono text-stone-800">{code}</code>
+                    <a
+                      href={`/api/admin/orders/export${exportApiQueryString({
+                        status: "PAID",
+                        fulfillment: "ALL",
+                        inflowCode: code,
+                        scope: "general",
+                      })}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 rounded-full border border-stone-300 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-50"
+                    >
+                      이 코드만 엑셀 (일반)
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -13,7 +13,7 @@ function formatKo(iso: string): string {
   });
 }
 
-type State = "ended" | "upcoming" | "disabled";
+type State = "ended" | "upcoming";
 
 export function PromoCampaignNoticeStrip({
   title,
@@ -28,19 +28,10 @@ export function PromoCampaignNoticeStrip({
 }) {
   const label = title.length > 72 ? `${title.slice(0, 70)}…` : title;
 
-  const headline =
-    state === "ended"
-      ? "종료된 공구"
-      : state === "upcoming"
-        ? "시작 전 공구"
-        : "비활성 공구";
+  const headline = state === "ended" ? "종료된 공구" : "시작 전 공구";
 
   const detail =
-    state === "ended"
-      ? `종료 ${formatKo(endsAtIso)}`
-      : state === "upcoming"
-        ? `시작 ${formatKo(startsAtIso)}`
-        : `비활성 · 종료 예정 ${formatKo(endsAtIso)}`;
+    state === "ended" ? `종료 ${formatKo(endsAtIso)}` : `시작 ${formatKo(startsAtIso)}`;
 
   return (
     <div className="relative z-[2] border-b border-[rgba(139,103,63,0.22)] bg-[linear-gradient(90deg,#2a231c_0%,#3a3028_45%,#3a3028_55%,#2a231c_100%)] text-[11px] text-amber-50/95 antialiased sm:text-xs">

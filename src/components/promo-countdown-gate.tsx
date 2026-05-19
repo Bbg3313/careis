@@ -7,7 +7,7 @@ import { PromoCampaignNoticeStrip, PromoRefUnknownStrip } from "@/components/pro
 import { PromoCountdownStrip } from "@/components/promo-countdown-strip";
 import { referralCodeForPromoStrip } from "@/lib/referral-browser";
 
-type StripState = "live" | "ended" | "upcoming" | "disabled";
+type StripState = "live" | "ended" | "upcoming";
 
 type StripCampaign = {
   id: string;
@@ -25,7 +25,7 @@ type GateView =
 
 /**
  * 현재 URL에 `?ref=`가 있을 때만 공구 바를 조회합니다(쿠키만으로는 표시하지 않음).
- * 활성 기간이면 카운트다운, 아니면 종료·예정·비활성 안내, 코드 미등록 시 안내 막대를 띄웁니다.
+ * 활성 기간이면 카운트다운, 아니면 종료·예정 안내, 코드 미등록 시 안내 막대를 띄웁니다. 관리자 비활성(OFF)이면 상단바 없음.
  */
 export function PromoCountdownGate() {
   const searchParams = useSearchParams();
@@ -71,6 +71,10 @@ export function PromoCountdownGate() {
         if (data.ok === false) {
           if (data.reason === "SERVER") {
             setView({ kind: "server_error" });
+            return;
+          }
+          if (data.reason === "INACTIVE") {
+            setView({ kind: "none" });
             return;
           }
           setView({ kind: "unknown", code });

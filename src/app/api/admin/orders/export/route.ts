@@ -16,6 +16,7 @@ const exportQuerySchema = z.object({
     .max(48)
     .optional()
     .transform((s) => (s?.trim() ? s.trim() : undefined)),
+  scope: z.enum(["general", "promo"]).optional(),
 });
 
 function asciiFilename(parts: string[]) {
@@ -40,7 +41,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: "요청 파라미터가 올바르지 않습니다." }, { status: 400 });
   }
 
-  const { from, to, status, inflowCode } = parsed.data;
+  const { from, to, status, inflowCode, scope } = parsed.data;
   const fulfillment = status === "PAID" ? parsed.data.fulfillment : "ALL";
 
   const inflowSanitized = sanitizeReferralCode(inflowCode ?? null);
@@ -54,12 +55,14 @@ export async function GET(request: Request) {
     status,
     fulfillment,
     inflowCode: inflowSanitized,
+    scope,
   });
 
   const buffer = await buildOrdersWorkbook(orders);
 
   const filename = asciiFilename([
     "careis-orders",
+    ...(scope === "general" ? ["general"] : scope === "promo" ? ["promo"] : []),
     status,
     ...(fulfillment !== "ALL" ? [fulfillment] : []),
     ...(inflowSanitized ? [`ref-${inflowSanitized}`] : []),

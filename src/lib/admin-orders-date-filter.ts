@@ -62,6 +62,8 @@ export function buildAdminOrdersExportApiHref(opts: {
   from?: string;
   to?: string;
   inflowCode?: string;
+  /** 생략 시 구분 없음(전체). 엑셀 페이지 탭에서만 넘깁니다. */
+  scope?: "general" | "promo";
 }): string {
   const p = new URLSearchParams();
   const st = opts.status?.trim();
@@ -80,6 +82,9 @@ export function buildAdminOrdersExportApiHref(opts: {
   if (opts.from?.trim()) p.set("from", opts.from.trim());
   if (opts.to?.trim()) p.set("to", opts.to.trim());
   if (opts.inflowCode?.trim()) p.set("inflowCode", opts.inflowCode.trim());
+  if (opts.scope === "general" || opts.scope === "promo") {
+    p.set("scope", opts.scope);
+  }
 
   return `/api/admin/orders/export?${p.toString()}`;
 }

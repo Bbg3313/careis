@@ -222,6 +222,12 @@ export type OrdersExportFilter = {
   fulfillment: "ALL" | "AWAITING_SHIP" | "IN_TRANSIT" | "DELIVERED";
   /** 정규화된 코드 — 레퍼럴·적용 공구·쿠폰 중 하나라도 일치 */
   inflowCode?: string | null;
+  /**
+   * 생략 시 일반·공구 구분 없음(기존 동작).
+   * `general`: 공구 캠페인 할인이 적용되지 않은 주문(`appliedPromoCode` 없음).
+   * `promo`: 공구 할인이 적용된 주문만.
+   */
+  scope?: "general" | "promo";
 };
 
 /** 엑셀보내기용: 기간·결제·배송·유입 코드 필터 */
@@ -250,6 +256,12 @@ export async function getOrdersForExport(filter: OrdersExportFilter) {
         { couponCode: { equals: inflow, mode: "insensitive" } },
       ],
     });
+  }
+
+  if (filter.scope === "general") {
+    andParts.push({ appliedPromoCode: null });
+  } else if (filter.scope === "promo") {
+    andParts.push({ appliedPromoCode: { not: null } });
   }
 
   const orders = await prisma.order.findMany({
@@ -298,6 +310,17 @@ export async function listDistinctInflowCodesFromOrders(): Promise<string[]> {
   }
 
   return Array.from(set).sort((a, b) => a.localeCompare(b));
+}
+
+/** 공구 할인이 적용된 주문에만 등장한 캠페인 코드 목록 */
+export async function listDistinctAppliedPromoCodesFromOrders(): Promise<string[]> {
+  const rows = await prisma.order.findMany({
+    where: { appliedPromoCode: { not: null } },
+    distinct: ["appliedPromoCode"],
+    select: { appliedPromoCode: true },
+  });
+  const out = rows.map((r) => r.appliedPromoCode).filter((c): c is string => Boolean(c));
+  return out.sort((a, b) => a.localeCompare(b));
 }
 
 /** 대시보드 등: 전체 스캔 없이 최근 주문만 */

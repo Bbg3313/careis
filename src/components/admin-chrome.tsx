@@ -43,7 +43,7 @@ export function AdminChrome({
           공구캠페인
         </Link>
         <Link
-          href="/admin/orders/export"
+          href="/admin/orders/export?tab=general"
           className="rounded-full border border-[#b89156]/40 bg-[#faf8f5] px-3 py-1.5 text-stone-800 hover:bg-[#f3efe8]"
           prefetch={false}
         >

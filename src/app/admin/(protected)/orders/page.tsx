@@ -115,7 +115,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
           <p className="mt-1 text-sm text-stone-500">{subtitle}</p>
         </div>
         <Link
-          href="/admin/orders/export"
+          href="/admin/orders/export?tab=general"
           className="shrink-0 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
           prefetch={false}
         >

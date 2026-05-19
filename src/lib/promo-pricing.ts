@@ -44,6 +44,7 @@ export function computeOrderPricing(
   dbProducts: Product[],
   campaign: PromoCampaign | null,
 ): OrderPricingResult {
+  const applied = campaign?.isActive ? campaign : null;
   const lines: OrderPricingLine[] = [];
   let listTotal = 0;
   let totalAmount = 0;
@@ -52,7 +53,7 @@ export function computeOrderPricing(
     const product = dbProducts.find((p) => p.slug === item.productSlug);
     if (!product) continue;
     const listUnitPrice = product.price;
-    const unitPrice = campaign ? unitPriceForSlug(listUnitPrice, item.productSlug, campaign) : listUnitPrice;
+    const unitPrice = applied ? unitPriceForSlug(listUnitPrice, item.productSlug, applied) : listUnitPrice;
     const lineList = listUnitPrice * item.quantity;
     const lineTotal = unitPrice * item.quantity;
     listTotal += lineList;
@@ -70,6 +71,6 @@ export function computeOrderPricing(
     lines,
     listTotal,
     totalAmount,
-    appliedPromo: campaign ? { code: campaign.code, title: campaign.title } : null,
+    appliedPromo: applied ? { code: applied.code, title: applied.title } : null,
   };
 }
