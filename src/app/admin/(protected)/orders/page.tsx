@@ -3,7 +3,7 @@ import Link from "next/link";
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { adminFulfillmentLabel, adminPaymentStatusLabel, orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
-import { buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
+import { buildAdminOrdersExportApiHref, buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
 import { inflowSummary } from "@/lib/admin-order-inflow";
 import { loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
@@ -98,6 +98,15 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
   const subtitle =
     chip && status === "PAID" ? `${statusLabel(status)} · ${chip} · ${orders.length}건` : `${statusLabel(status)} · ${orders.length}건`;
 
+  const exportApiHref = loaded.ok
+    ? buildAdminOrdersExportApiHref({
+        status: status || undefined,
+        fulfillment: fulfillmentEffective,
+        from,
+        to,
+      })
+    : null;
+
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -107,10 +116,10 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         </div>
         <Link
           href="/admin/orders/export"
-          className="shrink-0 rounded-full border border-[#b89156]/40 bg-[#faf8f5] px-4 py-2 text-sm font-medium text-stone-800 hover:bg-[#f3efe8]"
+          className="shrink-0 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
           prefetch={false}
         >
-          주문 엑셀 <span className="font-normal text-stone-500">(조건)</span>
+          엑셀 <span className="font-normal text-stone-500">유입·직접입력</span>
         </Link>
       </div>
 
@@ -225,6 +234,23 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
           </table>
         </div>
       </div>
+
+      {loaded.ok && exportApiHref ? (
+        <div className="flex flex-col gap-3 rounded-2xl border border-stone-200 bg-[#faf8f5] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <p className="text-sm leading-relaxed text-stone-700">
+            위 목록은 조회 조건과 동일하게 <strong className="text-stone-900">{orders.length}건</strong>입니다. 내용을 확인한 뒤
+            아래에서 내려받으면 됩니다.
+          </p>
+          <a
+            href={exportApiHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 rounded-full bg-[#8b673f] px-5 py-2.5 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-[#755530]"
+          >
+            이 조건으로 엑셀 받기
+          </a>
+        </div>
+      ) : null}
     </div>
   );
 }

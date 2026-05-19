@@ -54,3 +54,25 @@ export function buildAdminOrdersHref(opts: { status?: string; fulfillment?: stri
   const q = p.toString();
   return q ? `/admin/orders?${q}` : "/admin/orders";
 }
+
+/** 주문 목록과 동일한 기간·결제·배송 필터로 `/api/admin/orders/export` GET URL */
+export function buildAdminOrdersExportApiHref(opts: { status?: string; fulfillment?: string; from?: string; to?: string }): string {
+  const p = new URLSearchParams();
+  const st = opts.status?.trim();
+  const exportStatus = st === "PAID" || st === "PENDING" || st === "CANCELLED_REFUNDED" ? st : "ALL";
+  p.set("status", exportStatus);
+
+  if (exportStatus === "PAID") {
+    const ful = opts.fulfillment?.trim();
+    if (ful === "AWAITING_SHIP" || ful === "IN_TRANSIT" || ful === "DELIVERED") {
+      p.set("fulfillment", ful);
+    } else {
+      p.set("fulfillment", "ALL");
+    }
+  }
+
+  if (opts.from?.trim()) p.set("from", opts.from.trim());
+  if (opts.to?.trim()) p.set("to", opts.to.trim());
+
+  return `/api/admin/orders/export?${p.toString()}`;
+}

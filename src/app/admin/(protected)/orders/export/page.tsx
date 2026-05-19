@@ -36,9 +36,14 @@ export default async function AdminOrdersExportPage() {
         <div>
           <h1 className="text-2xl font-semibold text-stone-900">주문 엑셀 다운로드</h1>
           <p className="mt-1 max-w-2xl text-sm text-stone-500">
-            조건을 선택한 뒤 다운로드합니다. 배송 구간(배송 전·배송중·배송완료)은{" "}
-            <strong className="font-medium text-stone-700">결제완료</strong> 주문에만 적용됩니다. ref·공구·쿠폰 코드는
-            주문에 저장된 값과 일치하는 건만 포함됩니다.
+            기간·결제·배송만 목록과 똑같이 받으려면{" "}
+            <Link href="/admin/orders" className="font-medium text-[#8b673f] underline-offset-2 hover:underline">
+              주문 목록
+            </Link>
+            에서 조회한 뒤, 표 아래 <strong className="font-medium text-stone-700">이 조건으로 엑셀 받기</strong>를
+            쓰면 됩니다. 이 페이지는 ref·공구 코드 등 <strong className="font-medium text-stone-700">유입 조건</strong>을
+            추가할 때 쓰세요. 배송 구간(배송 전·배송중·배송완료)은{" "}
+            <strong className="font-medium text-stone-700">결제완료</strong> 주문에만 적용됩니다.
           </p>
         </div>
         <Link
