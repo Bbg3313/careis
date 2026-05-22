@@ -41,6 +41,9 @@ export default async function PaymentCheckoutPage({
 
   const tossClientKey = getTossClientKey() ?? "";
   const tossClientKeyIsTest = tossClientKey.startsWith("test_");
+  /** `loadTossPayments` + `payment.requestPayment` 는 결제창(API 개별) 연동만 지원 — *_gck_ 는 결제위젯 전용 */
+  const tossClientKeyIsWidgetKey =
+    tossClientKey.startsWith("live_gck_") || tossClientKey.startsWith("test_gck_");
   const tossSecretConfigured = Boolean(
     process.env.TOSS_SECRET_KEY?.trim() || process.env.TOSS_PAYMENTS_SECRET_KEY?.trim(),
   );
@@ -141,11 +144,22 @@ export default async function PaymentCheckoutPage({
               </a>
             ) : canUseTossCheckout && successUrl && failUrl ? (
               <div className="space-y-3">
-                {tossClientKeyIsTest ? (
+                {tossClientKeyIsWidgetKey ? (
+                  <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-center text-xs leading-6 text-red-950">
+                    지금 키는 <strong>결제위젯용(gck)</strong>입니다. 이 사이트는 토스{" "}
+                    <strong>결제창 SDK</strong>(<code className="text-[10px]">loadTossPayments</code>)를 쓰므로{" "}
+                    <strong>API 개별 연동 클라이언트 키(live_ck_ / test_ck_)</strong>와 짝이 맞는{" "}
+                    <strong>시크릿(live_sk_ / test_sk_)</strong>이 필요합니다. Vercel{" "}
+                    <code className="text-[10px]">TOSS_CLIENT_KEY</code>·<code className="text-[10px]">NEXT_PUBLIC_TOSS_CLIENT_KEY</code>를{" "}
+                    <code className="text-[10px]">live_ck_…</code>로, <code className="text-[10px]">TOSS_SECRET_KEY</code>를{" "}
+                    <code className="text-[10px]">live_sk_…</code>로 바꾼 뒤 재배포하세요.
+                  </p>
+                ) : null}
+                {tossClientKeyIsTest && !tossClientKeyIsWidgetKey ? (
                   <p className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-center text-xs leading-6 text-amber-950">
                     지금 서버에 읽힌 클라이언트 키가 <strong>테스트용(test_)</strong>입니다. 토스 창에도 &quot;실제 결제가 안 되는 테스트&quot;가
                     뜹니다. Vercel 등 <strong>Production 환경변수</strong>에 <code className="text-[10px]">TOSS_CLIENT_KEY</code>·
-                    <code className="text-[10px]">NEXT_PUBLIC_TOSS_CLIENT_KEY</code>를 <strong>live_gck_</strong>(또는 live_ck_)로 맞춘 뒤{" "}
+                    <code className="text-[10px]">NEXT_PUBLIC_TOSS_CLIENT_KEY</code>를 <strong>live_ck_</strong>로 맞춘 뒤{" "}
                     <strong>재배포</strong>하세요. <code className="text-[10px]">TOSS_CLIENT_KEY</code>를 라이브로 두면 빌드에 박힌 예전{" "}
                     <code className="text-[10px]">NEXT_PUBLIC_</code>보다 우선합니다.
                   </p>

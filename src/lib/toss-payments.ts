@@ -7,7 +7,7 @@ export function getTossSecretKey(): string | null {
 
 /**
  * 브라우저·서버 공통 클라이언트 키.
- * 결제창 개별 연동: test_ck_/live_ck_ — 결제위젯: test_gck_/live_gck_ (시크릿 키 세트와 맞춰야 함).
+ * 본 프로젝트 결제창 SDK(`loadTossPayments`)는 API 개별 연동 키(test_ck_/live_ck_)만 지원합니다. *_gck_ 는 결제위젯용이라 사용할 수 없습니다.
  * Vercel 등에서 NEXT_PUBLIC_가 빌드에 비어 박히는 경우를 피하려면 TOSS_CLIENT_KEY에 동일 값을 넣으면
  * 서버(결제 페이지·prepare)가 런타임에 확실히 읽을 수 있습니다.
  */
