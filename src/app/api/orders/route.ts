@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { PaymentMethod } from "@prisma/client";
 
 import { createOrder } from "@/lib/orders";
 
@@ -25,7 +24,6 @@ export async function POST(request: Request) {
       address: String(body.address ?? ""),
       memo: String(body.memo ?? ""),
       couponCode: String(body.couponCode ?? ""),
-      paymentMethod: String(body.paymentMethod ?? "CREDIT_CARD") as PaymentMethod,
       referralCode: body.referralCode ? String(body.referralCode) : null,
     });
 
@@ -33,7 +31,6 @@ export async function POST(request: Request) {
       ok: true,
       orderNumber: order.orderNumber,
       paymentStatus: order.paymentStatus,
-      paymentMethod: order.paymentMethod,
     });
   } catch (error) {
     console.error(error);

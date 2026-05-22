@@ -1,4 +1,3 @@
-import { PaymentMethod } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 import { buildPaymentSession, getRequestOrigin } from "@/lib/payment-gateway";
@@ -26,7 +25,6 @@ export async function POST(request: Request) {
       address: String(body.address ?? ""),
       memo: String(body.memo ?? ""),
       couponCode: String(body.couponCode ?? ""),
-      paymentMethod: String(body.paymentMethod ?? "CREDIT_CARD") as PaymentMethod,
       referralCode: body.referralCode ? String(body.referralCode) : null,
     });
 

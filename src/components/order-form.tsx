@@ -6,7 +6,7 @@ import Script from "next/script";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { paymentMethods, products, type ProductSlug } from "@/lib/product-data";
+import { products, type ProductSlug } from "@/lib/product-data";
 import { productVisuals } from "@/lib/site-assets";
 import { formatKoreanMobileInput } from "@/lib/phone-format";
 import { formatCurrency } from "@/lib/utils";
@@ -118,9 +118,6 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   const [addressDetail, setAddressDetail] = useState("");
   const [memo, setMemo] = useState("");
   const [couponCode, setCouponCode] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<(typeof paymentMethods)[number]["value"]>(
-    "CREDIT_CARD",
-  );
   const [agreements, setAgreements] = useState<AgreementState>({
     terms: false,
     privacy: false,
@@ -304,7 +301,6 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
           address: fullAddress,
           memo,
           couponCode,
-          paymentMethod,
           referralCode: resolvedReferralCode,
         }),
       });
@@ -442,9 +438,7 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
 
         <div>
           <p className="text-sm font-semibold text-stone-900">주문자 정보</p>
-          <p className="mt-2 text-sm text-stone-500">
-            배송에 필요한 정보를 입력하고 결제수단을 선택해주세요.
-          </p>
+          <p className="mt-2 text-sm text-stone-500">배송에 필요한 정보를 입력해주세요.</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -549,35 +543,6 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
             className="min-h-0 w-full resize-y rounded-2xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm leading-6 outline-none"
           />
         </label>
-
-        <div className="space-y-3">
-          <p className="text-sm font-medium text-stone-900">결제수단</p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {paymentMethods.map((method) => (
-              <label
-                key={method.value}
-                className={`rounded-2xl border px-4 py-4 text-sm transition ${
-                  paymentMethod === method.value
-                    ? "border-[#a97d4d] bg-[linear-gradient(135deg,#b89156_0%,#9d7442_100%)] text-white shadow-[0_14px_30px_rgba(145,104,52,0.2)]"
-                    : "border-stone-200 bg-stone-50 text-stone-700"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value={method.value}
-                  checked={paymentMethod === method.value}
-                  onChange={() => setPaymentMethod(method.value)}
-                  className="sr-only"
-                />
-                {method.label}
-              </label>
-            ))}
-          </div>
-          <p className="text-xs leading-6 text-stone-500">
-            네이버페이, 신용카드, 토스페이, 카카오페이 중 원하는 방식으로 결제를 진행할 수 있습니다.
-          </p>
-        </div>
       </section>
 
       <aside className="space-y-6 rounded-[28px] border border-[rgba(116,88,59,0.12)] bg-[#f8f3ec] p-5 md:rounded-[32px] md:p-8">
@@ -784,6 +749,10 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
         </div>
 
         {errorMessage ? <p className="text-sm text-red-600">{errorMessage}</p> : null}
+
+        <p className="text-center text-xs leading-6 text-stone-500">
+          다음 화면에서 토스페이먼츠 결제창이 열리며, 카드·간편결제 등 실제 결제 수단을 그때 선택하시면 됩니다.
+        </p>
 
         <button
           type="submit"

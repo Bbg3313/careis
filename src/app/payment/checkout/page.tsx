@@ -83,8 +83,8 @@ export default async function PaymentCheckoutPage({
             <dd className="text-right text-stone-900">{formatKoreanMobileDisplay(order.phone)}</dd>
           </div>
           <div className="flex justify-between gap-4">
-            <dt>결제수단</dt>
-            <dd className="text-right text-stone-900">{formatPaymentMethod(order.paymentMethod)}</dd>
+            <dt>결제 방식</dt>
+            <dd className="text-right text-stone-900">토스페이먼츠에서 선택</dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt>배송지</dt>
@@ -184,17 +184,3 @@ function safeParsePayload(value: string | null) {
   }
 }
 
-function formatPaymentMethod(value: string) {
-  switch (value) {
-    case "CREDIT_CARD":
-      return "신용카드";
-    case "NAVER_PAY":
-      return "네이버페이";
-    case "TOSS_PAY":
-      return "토스페이";
-    case "KAKAO_PAY":
-      return "카카오페이";
-    default:
-      return value;
-  }
-}

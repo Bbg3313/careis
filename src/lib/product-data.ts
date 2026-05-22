@@ -257,13 +257,6 @@ export const siteHighlights = [
   },
 ];
 
-export const paymentMethods = [
-  { value: "CREDIT_CARD", label: "신용카드" },
-  { value: "NAVER_PAY", label: "네이버페이" },
-  { value: "TOSS_PAY", label: "토스페이" },
-  { value: "KAKAO_PAY", label: "카카오페이" },
-] as const;
-
 export function getProductBySlug(slug: string) {
   return products.find((product) => product.slug === slug);
 }

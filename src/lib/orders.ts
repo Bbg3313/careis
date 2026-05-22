@@ -26,7 +26,8 @@ export const createOrderSchema = z
   address: z.string().min(5).max(120),
   memo: z.string().max(300).optional().or(z.literal("")),
   couponCode: z.string().max(40).optional().or(z.literal("")),
-  paymentMethod: z.nativeEnum(PaymentMethod),
+  /** 주문 단계에서는 고르지 않음. 토스 결제창에서 실제 수단 선택(미입력 시 카드 플로우 기본값). */
+  paymentMethod: z.nativeEnum(PaymentMethod).default(PaymentMethod.CREDIT_CARD),
     referralCode: z.string().optional().nullable(),
   })
   .refine((value) => (value.items?.length ?? 0) > 0 || Boolean(value.productSlug), {
@@ -34,7 +35,7 @@ export const createOrderSchema = z
     path: ["items"],
   });
 
-export type CreateOrderInput = z.infer<typeof createOrderSchema>;
+export type CreateOrderInput = z.input<typeof createOrderSchema>;
 
 type PaymentRequestMetadata = {
   provider: string;
