@@ -6,7 +6,8 @@ export function getTossSecretKey(): string | null {
 }
 
 /**
- * 브라우저·서버 공통 클라이언트 키(test_ck_… / live_ck_…).
+ * 브라우저·서버 공통 클라이언트 키.
+ * 결제창 개별 연동: test_ck_/live_ck_ — 결제위젯: test_gck_/live_gck_ (시크릿 키 세트와 맞춰야 함).
  * Vercel 등에서 NEXT_PUBLIC_가 빌드에 비어 박히는 경우를 피하려면 TOSS_CLIENT_KEY에 동일 값을 넣으면
  * 서버(결제 페이지·prepare)가 런타임에 확실히 읽을 수 있습니다.
  */
@@ -20,6 +21,18 @@ export function getTossClientKey(): string | null {
 
 export function isTossPaymentsConfigured(): boolean {
   return Boolean(getTossSecretKey() && getTossClientKey());
+}
+
+/**
+ * 개발자센터의 웹훅 서명·일부 고보안 API용 보안키(보통 64자리 16진수).
+ * 결제 승인 API에는 `TOSS_SECRET_KEY`(시크릿 키)를 쓰고, 본 값은 웹훅 HMAC 검증 등에 사용합니다.
+ */
+export function getTossWebhookSecurityKey(): string | null {
+  return (
+    process.env.TOSS_WEBHOOK_SECURITY_KEY?.trim() ||
+    process.env.TOSS_SECURITY_KEY?.trim() ||
+    null
+  );
 }
 
 export type TossConfirmResult = Record<string, unknown>;

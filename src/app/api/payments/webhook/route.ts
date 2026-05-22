@@ -2,10 +2,28 @@ import { PaymentMethod } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 import { confirmOrderPayment, failOrderPayment, refundOrderPayment } from "@/lib/orders";
+import { getTossWebhookSecurityKey } from "@/lib/toss-payments";
+import { verifyTossWebhookSignatureIfPresent } from "@/lib/toss-webhook-verify";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const rawBody = await request.text();
+    const securityKey = getTossWebhookSecurityKey();
+    if (securityKey) {
+      const sig = request.headers.get("tosspayments-webhook-signature");
+      const time = request.headers.get("tosspayments-webhook-transmission-time");
+      const verified = verifyTossWebhookSignatureIfPresent({
+        rawBody,
+        transmissionTime: time,
+        signatureHeader: sig,
+        securityKey,
+      });
+      if (!verified.ok) {
+        return NextResponse.json({ ok: false, error: verified.reason }, { status: 401 });
+      }
+    }
+
+    const body = JSON.parse(rawBody) as Record<string, unknown>;
     const eventType = String(body.eventType ?? body.type ?? "");
     const orderNumber = String(body.orderNumber ?? body.orderId ?? "");
 
