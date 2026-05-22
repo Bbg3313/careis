@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   description: "토스페이먼츠 결제창으로 이동하기 전 확인 화면입니다.",
 };
 
+/** 클라이언트 키는 배포 시점 환경변수를 쓰므로 캐시되면 테스트 키가 남을 수 있음 */
+export const dynamic = "force-dynamic";
+
 export default async function PaymentCheckoutPage({
   searchParams,
 }: {
@@ -37,6 +40,7 @@ export default async function PaymentCheckoutPage({
   const failUrl = typeof payload.failUrl === "string" ? payload.failUrl : null;
 
   const tossClientKey = getTossClientKey() ?? "";
+  const tossClientKeyIsTest = tossClientKey.startsWith("test_");
   const tossSecretConfigured = Boolean(
     process.env.TOSS_SECRET_KEY?.trim() || process.env.TOSS_PAYMENTS_SECRET_KEY?.trim(),
   );
@@ -137,6 +141,15 @@ export default async function PaymentCheckoutPage({
               </a>
             ) : canUseTossCheckout && successUrl && failUrl ? (
               <div className="space-y-3">
+                {tossClientKeyIsTest ? (
+                  <p className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-center text-xs leading-6 text-amber-950">
+                    지금 서버에 읽힌 클라이언트 키가 <strong>테스트용(test_)</strong>입니다. 토스 창에도 &quot;실제 결제가 안 되는 테스트&quot;가
+                    뜹니다. Vercel 등 <strong>Production 환경변수</strong>에 <code className="text-[10px]">TOSS_CLIENT_KEY</code>·
+                    <code className="text-[10px]">NEXT_PUBLIC_TOSS_CLIENT_KEY</code>를 <strong>live_gck_</strong>(또는 live_ck_)로 맞춘 뒤{" "}
+                    <strong>재배포</strong>하세요. <code className="text-[10px]">TOSS_CLIENT_KEY</code>를 라이브로 두면 빌드에 박힌 예전{" "}
+                    <code className="text-[10px]">NEXT_PUBLIC_</code>보다 우선합니다.
+                  </p>
+                ) : null}
                 <TossCheckoutButton
                   clientKey={tossClientKey}
                   orderId={order.orderNumber}
