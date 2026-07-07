@@ -87,26 +87,26 @@ export const sunPackDetailAssets = {
     "/images/sunpack-thumb-07.png",
   ],
   /**
-   * 예전 7장 스토리와 동일한 순서: GIF는 2번째·5번째 슬롯(인덱스 1·4) 고정.
+   * DB 비어 있을 때 폴백 — part 컷 5장 + GIF 2장(2·5번째 슬롯).
    */
   storyImages: [
-    { src: "/images/sunpack-detail-scroll-01.png", width: 526, height: 1024 },
+    { src: "/images/sunpack-detail-part-01.png", width: 1080, height: 1920, body: "백탁 없이 투명하게, 끈적임 없이 산뜻하게" },
     {
       src: "/images/sunpack-detail-gif-01.gif",
       width: 600,
       height: 338,
       posterSrc: "/images/sunpack-detail-gif-01.png",
     },
-    { src: "/images/sunpack-priority-03.png", width: 299, height: 1024 },
-    { src: "/images/sunpack-priority-04.png", width: 853, height: 1024 },
+    { src: "/images/sunpack-detail-part-02.png", width: 1080, height: 1920 },
+    { src: "/images/sunpack-detail-part-03.png", width: 1080, height: 1920 },
     {
       src: "/images/sunpack-detail-gif-02.gif",
       width: 600,
       height: 338,
       posterSrc: "/images/sunpack-detail-gif-02.png",
     },
-    { src: "/images/sunpack-priority-06.png", width: 799, height: 1024 },
-    { src: "/images/sunpack-priority-07.png", width: 1005, height: 1024 },
+    { src: "/images/sunpack-detail-part-04.png", width: 1080, height: 1920 },
+    { src: "/images/sunpack-detail-part-05.png", width: 1080, height: 1920 },
   ] satisfies SunPackStorySlide[],
 };
 

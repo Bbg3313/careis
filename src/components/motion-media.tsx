@@ -38,8 +38,14 @@ export function MotionMedia({
       {frames.map((frame, index) => (
         <div
           key={`${alt}-${index}`}
-          className={pairCrossfade ? "motion-frame motion-frame--pair" : "motion-frame"}
-          style={pairCrossfade ? undefined : { animationDelay: `${index * 3.5}s` }}
+          className={
+            pairCrossfade
+              ? "motion-frame motion-frame--pair"
+              : index === 0
+                ? "motion-frame motion-frame--lead"
+                : "motion-frame"
+          }
+          style={pairCrossfade || index === 0 ? undefined : { animationDelay: `${index * 3.5}s` }}
         >
           <Image
             src={frame}

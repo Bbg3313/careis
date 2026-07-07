@@ -141,10 +141,31 @@ button {
   will-change: transform, opacity;
 }
 
-/* 홈 히어로: 줌 제거 + 페이드만 — object-contain과 맞물려 일루미네이터 등 가로·세로 컷이 프레임 밖으로 잘리지 않음 */
 .hero-motion-root .motion-frame {
   transform: scale(1);
   animation: heroCrossfadeMobile 14s ease-in-out infinite;
+  animation-fill-mode: backwards;
+}
+
+/* 첫 프레임은 로드 직후부터 보이게 — 전부 opacity 0에서 시작하면 빈 화면 */
+.hero-motion-root .motion-frame--lead {
+  opacity: 1;
+  animation: heroCrossfadeMobileLead 14s ease-in-out infinite;
+  animation-fill-mode: both;
+}
+
+@keyframes heroCrossfadeMobileLead {
+  0%,
+  26% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  36%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
 }
 
 /* 2프레임만 쓸 때: stagger 없이 상보 키프레임으로 빈 화면 구간 제거 */
@@ -196,7 +217,7 @@ button {
     transform: scale(1);
   }
 
-  8% {
+  4% {
     opacity: 1;
     transform: scale(1);
   }

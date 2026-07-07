@@ -43,6 +43,13 @@ export function HomeVideoBanner() {
   const ambientRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    const preload = document.createElement("link");
+    preload.rel = "preload";
+    preload.as = "video";
+    preload.href = VIDEO_SRC;
+    preload.type = "video/mp4";
+    document.head.appendChild(preload);
+
     const main = mainRef.current;
     const ambient = ambientRef.current;
 
@@ -93,11 +100,11 @@ export function HomeVideoBanner() {
       main?.removeEventListener("canplay", onMainData);
       ambient?.removeEventListener("loadeddata", onAmbientData);
       ambient?.removeEventListener("canplay", onAmbientData);
+      preload.remove();
     };
   }, []);
 
   const videoProps = {
-    src: VIDEO_SRC,
     poster: VIDEO_POSTER,
     autoPlay: true,
     muted: true,
@@ -116,7 +123,9 @@ export function HomeVideoBanner() {
             ref={ambientRef}
             {...videoProps}
             className="h-full w-full scale-[1.06] object-cover opacity-55 blur-2xl"
-          />
+          >
+            <source src={VIDEO_SRC} type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.52)_0%,rgba(226,236,247,0.35)_45%,rgba(210,226,242,0.5)_100%)]" />
         </div>
 
@@ -136,7 +145,9 @@ export function HomeVideoBanner() {
                 ref={mainRef}
                 {...videoProps}
                 className="absolute inset-0 z-[1] h-full w-full object-cover object-center"
-              />
+              >
+                <source src={VIDEO_SRC} type="video/mp4" />
+              </video>
               <div className="pointer-events-none absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(255,255,255,0.1)_0%,transparent_40%,rgba(180,200,228,0.06)_100%)]" />
             </div>
           </div>

@@ -69,11 +69,29 @@ function StoryGifSlide({
   index: number;
   imageAltBase: string;
 }) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const [gifBroken, setGifBroken] = useState(false);
+  const [inView, setInView] = useState(index < 3);
   const poster = slide.posterSrc;
-  const eager = index < 2;
+  const eager = index < 5;
   const loading = eager ? "eager" : "lazy";
   const alt = `${imageAltBase} ${index + 1}`;
+
+  useEffect(() => {
+    const node = rootRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setInView(true);
+        });
+      },
+      { rootMargin: "320px 0px", threshold: 0.01 },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   if (!poster) {
     return (
@@ -86,14 +104,14 @@ function StoryGifSlide({
         className="block h-auto w-full max-w-full select-none"
         loading={loading}
         decoding="async"
-        fetchPriority={index <= 4 ? "high" : "auto"}
+        fetchPriority={index <= 2 ? "high" : "auto"}
         draggable={false}
       />
     );
   }
 
   return (
-    <div className="relative w-full isolate [transform:translateZ(0)]">
+    <div ref={rootRef} className="relative w-full isolate [transform:translateZ(0)]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={poster}
@@ -105,17 +123,18 @@ function StoryGifSlide({
         draggable={false}
         aria-hidden
       />
-      {!gifBroken ? (
+      {inView && !gifBroken ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
+          key={slide.src}
           src={slide.src}
           alt={alt}
           width={slide.width}
           height={slide.height}
           className="pointer-events-none absolute inset-0 block h-full w-full object-contain select-none"
-          loading={loading}
+          loading="eager"
           decoding="async"
-          fetchPriority={index <= 4 ? "high" : "auto"}
+          fetchPriority={index <= 2 ? "high" : "auto"}
           draggable={false}
           onError={() => setGifBroken(true)}
         />
