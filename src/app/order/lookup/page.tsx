@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { customerCancelForm, customerRefundRequestForm, lookupOrderForm } from "./actions";
+import { customerCancelForm, customerRefundRequestForm } from "./actions";
+import { OrderLookupResultScroll } from "@/components/order-lookup-result-scroll";
 import { adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
 import {
   lookupCustomerOrder,
   lookupCustomerOrdersByNameAndPhone,
+  normalizeKoreanPhoneDigits,
   type CustomerOrderView,
 } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
@@ -106,7 +108,7 @@ function OrderDetailCard({
             </label>
             <button
               type="submit"
-              className="rounded-full bg-red-800 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-900"
+              className="w-full rounded-full bg-red-800 px-5 py-3 text-sm font-semibold text-white hover:bg-red-900 sm:w-auto"
             >
               {order.paymentStatus === "PAID" ? "결제 취소하기" : "주문 취소하기"}
             </button>
@@ -137,7 +139,7 @@ function OrderDetailCard({
             </label>
             <button
               type="submit"
-              className="rounded-full bg-amber-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-amber-950"
+              className="w-full rounded-full bg-amber-900 px-5 py-3 text-sm font-semibold text-white hover:bg-amber-950 sm:w-auto"
             >
               환불 요청 남기기
             </button>
@@ -170,21 +172,47 @@ export default async function OrderLookupPage({
   const orderNumber = q.orderNumber?.trim() ?? "";
   const phone = q.phone?.trim() ?? "";
   const customerName = q.customerName?.trim() ?? "";
-  const error = q.error?.trim() || null;
   const ok = q.ok?.trim() || null;
 
-  const list =
-    customerName && phone ? await lookupCustomerOrdersByNameAndPhone(customerName, phone) : [];
+  let error = q.error?.trim() || null;
+  let list: CustomerOrderView[] = [];
+  let selected: CustomerOrderView | null = null;
+  let lookupFailed = false;
 
-  const selected =
-    orderNumber && customerName && phone
-      ? await lookupCustomerOrder(orderNumber, phone, customerName)
-      : list.length === 1
-        ? list[0]!
-        : null;
+  const triedLookup = Boolean(customerName || phone || orderNumber);
+
+  if (triedLookup) {
+    if (customerName.replace(/\s+/g, "").length < 2) {
+      error = error || "주문자 이름을 입력해 주세요.";
+    } else if (normalizeKoreanPhoneDigits(phone).length < 10) {
+      error = error || "휴대폰 번호를 확인해 주세요. (예: 010-1234-5678)";
+    } else {
+      try {
+        list = await lookupCustomerOrdersByNameAndPhone(customerName, phone);
+        if (orderNumber) {
+          selected = await lookupCustomerOrder(orderNumber, phone, customerName);
+          if (!selected) {
+            error = error || "선택한 주문을 찾을 수 없습니다. 다시 조회해 주세요.";
+          }
+        } else if (list.length === 1) {
+          selected = list[0]!;
+        } else if (list.length === 0) {
+          error = error || "일치하는 주문이 없습니다. 주문 시 입력한 이름·연락처를 확인해 주세요.";
+        }
+      } catch (e) {
+        console.error("[order/lookup] lookup failed", e);
+        lookupFailed = true;
+        error = error || "주문 조회 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.";
+      }
+    }
+  }
+
+  const showResult = Boolean(selected) || (!selected && list.length > 1);
 
   return (
     <div className="space-y-8 pb-24">
+      <OrderLookupResultScroll active={showResult && !lookupFailed} />
+
       <section className="space-y-2.5 rounded-[40px] bg-[linear-gradient(145deg,#fbf3eb_0%,#eef3fa_100%)] p-6 shadow-[0_24px_80px_rgba(73,53,26,0.05)] sm:p-8 md:p-12">
         <p className="text-[11px] uppercase tracking-[0.28em] text-stone-500 sm:text-xs">Order Lookup</p>
         <h1 className="display-font text-[2rem] font-semibold leading-tight text-stone-900 sm:text-5xl">
@@ -212,15 +240,17 @@ export default async function OrderLookupPage({
 
       <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 className="text-sm font-semibold text-stone-900">주문 찾기</h2>
-        <form action={lookupOrderForm} className="mt-4 grid gap-4 sm:grid-cols-2">
+        {/* GET: 서버 액션 없이 동작 — 모바일 Safari에서도 안정적 */}
+        <form method="get" action="/order/lookup" className="mt-4 grid gap-4 sm:grid-cols-2">
           <label className="block text-sm">
             <span className="text-stone-600">주문자 이름</span>
             <input
               name="customerName"
               required
+              autoComplete="name"
               defaultValue={customerName}
               placeholder="주문 시 입력한 이름"
-              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-[#b89156]"
+              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-3 text-base text-stone-900 outline-none focus:border-[#b89156] sm:text-sm"
             />
           </label>
           <label className="block text-sm">
@@ -228,56 +258,62 @@ export default async function OrderLookupPage({
             <input
               name="phone"
               required
+              autoComplete="tel"
               defaultValue={phone}
               placeholder="010-0000-0000"
               inputMode="tel"
-              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-[#b89156]"
+              className="mt-1 w-full rounded-xl border border-stone-200 px-3 py-3 text-base text-stone-900 outline-none focus:border-[#b89156] sm:text-sm"
             />
           </label>
           <div className="sm:col-span-2">
-            <button type="submit" className="btn-luxe-primary rounded-full px-6 py-2.5 text-sm font-semibold">
+            <button
+              type="submit"
+              className="btn-luxe-primary w-full rounded-full px-6 py-3.5 text-sm font-semibold sm:w-auto sm:py-2.5"
+            >
               조회하기
             </button>
           </div>
         </form>
       </section>
 
-      {!selected && list.length > 1 ? (
-        <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-sm font-semibold text-stone-900">주문 {list.length}건</h2>
-          <p className="mt-1 text-sm text-stone-500">확인할 주문을 선택해 주세요.</p>
-          <ul className="mt-4 divide-y divide-stone-100">
-            {list.map((order) => (
-              <li key={order.orderNumber}>
-                <Link
-                  href={`/order/lookup?${new URLSearchParams({
-                    customerName,
-                    phone,
-                    orderNumber: order.orderNumber,
-                  }).toString()}`}
-                  className="flex flex-wrap items-center justify-between gap-3 py-4 text-sm transition hover:bg-stone-50"
-                >
-                  <div>
-                    <p className="font-medium text-[#8b673f]">{order.orderNumber}</p>
-                    <p className="mt-1 text-stone-600">
-                      {formatDate(order.createdAt)} ·{" "}
-                      {order.items.map((item) => `${item.name}×${item.quantity}`).join(", ")}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-stone-800">
-                      {adminPaymentStatusLabel(order.paymentStatus)} · {order.fulfillmentLabel}
-                    </p>
-                    <p className="mt-1 font-medium text-stone-900">{formatCurrency(order.totalAmount)}</p>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+      <div id="lookup-result" className="scroll-mt-28 space-y-6">
+        {!selected && list.length > 1 ? (
+          <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
+            <h2 className="text-sm font-semibold text-stone-900">주문 {list.length}건</h2>
+            <p className="mt-1 text-sm text-stone-500">확인할 주문을 선택해 주세요.</p>
+            <ul className="mt-4 divide-y divide-stone-100">
+              {list.map((order) => (
+                <li key={order.orderNumber}>
+                  <Link
+                    href={`/order/lookup?${new URLSearchParams({
+                      customerName,
+                      phone,
+                      orderNumber: order.orderNumber,
+                    }).toString()}`}
+                    className="flex flex-wrap items-center justify-between gap-3 py-4 text-sm transition hover:bg-stone-50"
+                  >
+                    <div>
+                      <p className="font-medium text-[#8b673f]">{order.orderNumber}</p>
+                      <p className="mt-1 text-stone-600">
+                        {formatDate(order.createdAt)} ·{" "}
+                        {order.items.map((item) => `${item.name}×${item.quantity}`).join(", ")}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-stone-800">
+                        {adminPaymentStatusLabel(order.paymentStatus)} · {order.fulfillmentLabel}
+                      </p>
+                      <p className="mt-1 font-medium text-stone-900">{formatCurrency(order.totalAmount)}</p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
-      {selected ? <OrderDetailCard order={selected} phone={phone} customerName={customerName} /> : null}
+        {selected ? <OrderDetailCard order={selected} phone={phone} customerName={customerName} /> : null}
+      </div>
 
       <p className="text-center text-sm text-stone-500">
         <Link href="/order" className="text-[#8b673f] underline-offset-2 hover:underline">
