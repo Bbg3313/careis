@@ -1,9 +1,11 @@
 import { FulfillmentStatus } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { cancelOrderPaymentForm, markOrderDeliveredForm, saveOrderAdminForm } from "./actions";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { StatusConfirmDialog } from "@/components/status-confirm-dialog";
 import { adminFulfillmentLabel, adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
 import { loadAdminOrderByNumber, SWEET_TRACKER_DETAIL_MIN_INTERVAL_MS, syncOrderDeliveryFromSweetTracker } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
@@ -77,11 +79,15 @@ export default async function AdminOrderDetailPage({
         </div>
       </div>
 
-      {cancelOk ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-950">
-          주문 취소가 반영되었습니다. 결제완료 건은 토스 결제 취소(환불)까지 처리됩니다.
-        </div>
-      ) : null}
+      <Suspense fallback={null}>
+        <StatusConfirmDialog
+          open={cancelOk}
+          title="취소가 완료되었습니다"
+          message={`${order.orderNumber} 주문이 취소 처리되었습니다. 결제완료 건은 토스 결제 취소(환불)까지 반영됩니다.`}
+          clearParam="cancelOk"
+          confirmLabel="확인"
+        />
+      </Suspense>
       {cancelError ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-950">{cancelError}</div>
       ) : null}

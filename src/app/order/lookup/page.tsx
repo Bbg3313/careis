@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { OrderLookupResultScroll } from "@/components/order-lookup-result-scroll";
+import { StatusConfirmDialog } from "@/components/status-confirm-dialog";
 import { adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
 import {
   lookupCustomerOrder,
@@ -226,16 +228,23 @@ export default async function OrderLookupPage({
       {error ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-950">{error}</div>
       ) : null}
-      {ok === "cancelled" ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-950">
-          주문이 취소되었습니다. 결제완료 건은 결제 취소(환불)가 함께 진행됩니다.
-        </div>
-      ) : null}
-      {ok === "requested" ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-950">
-          환불·취소 요청이 접수되었습니다. 평일 운영시간에 확인 후 연락드립니다.
-        </div>
-      ) : null}
+
+      <Suspense fallback={null}>
+        <StatusConfirmDialog
+          open={ok === "cancelled"}
+          title="취소가 완료되었습니다"
+          message="주문이 취소 처리되었습니다. 결제완료 건은 결제 취소(환불)까지 반영됩니다. 카드사·결제수단에 따라 환불 반영까지 며칠 걸릴 수 있습니다."
+          clearParam="ok"
+          confirmLabel="확인"
+        />
+        <StatusConfirmDialog
+          open={ok === "requested"}
+          title="환불·취소 요청이 접수되었습니다"
+          message="요청이 정상적으로 접수되었습니다. 평일 운영시간에 확인 후 연락드립니다."
+          clearParam="ok"
+          confirmLabel="확인"
+        />
+      </Suspense>
 
       <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 className="text-sm font-semibold text-stone-900">주문 찾기</h2>
