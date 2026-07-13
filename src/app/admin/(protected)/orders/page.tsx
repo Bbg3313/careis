@@ -1,14 +1,14 @@
-import Link from "next/link";
-
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
+import { AdminOrdersShipmentTable, type AdminOrdersShipmentRow } from "@/components/admin-orders-shipment-table";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
-import { adminOrderProgressLabel } from "@/lib/admin-fulfillment";
+import { adminOrderProgressLabel, isPaidOrderAwaitingShipment } from "@/lib/admin-fulfillment";
 import { buildAdminOrdersExportApiHref, buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
 import { parseAdminOrdersListSearch } from "@/lib/admin-order-search";
 import { inflowSummary } from "@/lib/admin-order-inflow";
 import { ADMIN_ORDER_LIST_TAKE, loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -117,6 +117,21 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
       })
     : null;
 
+  const tableRows: AdminOrdersShipmentRow[] = orders.map((order) => ({
+    id: order.id,
+    orderNumber: order.orderNumber,
+    createdAtLabel: formatDate(order.createdAt),
+    productSummary: order.orderItems.map((item) => `${item.productNameSnapshot}×${item.quantity}`).join(", "),
+    customerName: order.customerName,
+    phoneDisplay: formatKoreanMobileDisplay(order.phone),
+    progressLabel: adminOrderProgressLabel(order),
+    inflow: inflowSummary(order),
+    totalAmount: order.totalAmount,
+    canRegisterShipment: isPaidOrderAwaitingShipment(order),
+    trackingCarrierCode: order.trackingCarrierCode ?? "",
+    trackingNumber: order.trackingNumber ?? "",
+  }));
+
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -168,7 +183,8 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
 
       <div className="space-y-2">
         <p className="text-[11px] text-stone-500">
-          배송 단계는 <span className="font-medium text-stone-700">결제완료</span> 주문만 해당합니다. 아래를 누르면 결제완료 목록으로 바뀌며 단계별로 좁혀집니다.
+          배송 단계는 <span className="font-medium text-stone-700">결제완료</span> 주문만 해당합니다. 아래를 누르면
+          결제완료 목록으로 바뀌며 단계별로 좁혀집니다.
         </p>
         <div className="flex flex-wrap gap-2">
           {fulfillmentTabs.map((tab) => {
@@ -208,66 +224,10 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         </p>
       ) : null}
 
-      <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-[#faf8f5] text-xs text-stone-600">
-              <tr>
-                <th className="px-4 py-3 font-medium">주문번호</th>
-                <th className="px-4 py-3 font-medium">일시</th>
-                <th className="px-4 py-3 font-medium">상품</th>
-                <th className="px-4 py-3 font-medium">고객</th>
-                <th className="min-w-[10rem] px-4 py-3 font-medium">진행</th>
-                <th className="px-4 py-3 font-medium">레퍼럴·공구</th>
-                <th className="px-4 py-3 font-medium text-right">금액</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-stone-500">
-                    {parsedSearch ? "검색 조건과 일치하는 주문이 없습니다." : "표시할 주문이 없습니다."}
-                  </td>
-                </tr>
-              ) : (
-                orders.map((order) => (
-                  <tr key={order.id} className="border-t border-stone-100">
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/admin/orders/${encodeURIComponent(order.orderNumber)}`}
-                        className="font-medium text-[#8b673f] hover:underline"
-                      >
-                        {order.orderNumber}
-                      </Link>
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-stone-600">{formatDate(order.createdAt)}</td>
-                    <td className="max-w-[200px] px-4 py-3 text-stone-600">
-                      <span className="line-clamp-2">
-                        {order.orderItems.map((item) => `${item.productNameSnapshot}×${item.quantity}`).join(", ")}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-stone-600">
-                      <div>{order.customerName}</div>
-                      <div className="text-xs text-stone-400">{formatKoreanMobileDisplay(order.phone)}</div>
-                    </td>
-                    <td className="px-4 py-3 text-stone-800">
-                      <span className="text-[13px] font-medium leading-snug">{adminOrderProgressLabel(order)}</span>
-                    </td>
-                    <td className="max-w-[160px] px-4 py-3">
-                      <div className="truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
-                        {inflowSummary(order)}
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-right font-medium text-stone-900">
-                      {formatCurrency(order.totalAmount)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <AdminOrdersShipmentTable
+        orders={tableRows}
+        emptyMessage={parsedSearch ? "검색 조건과 일치하는 주문이 없습니다." : "표시할 주문이 없습니다."}
+      />
 
       {loaded.ok && exportApiHref ? (
         <div className="flex flex-col gap-3 rounded-2xl border border-stone-200 bg-[#faf8f5] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
@@ -279,10 +239,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                 — 표에는 최신 <strong>{orders.length}건</strong>만 표시됩니다.
               </>
             ) : (
-              <>
-                {" "}
-                — 아래 표와 동일합니다.
-              </>
+              <> — 아래 표와 동일합니다.</>
             )}{" "}
             엑셀은 기간·결제·배송만 반영됩니다(검색 미적용).
             {parsedSearch ? (

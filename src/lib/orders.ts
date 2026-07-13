@@ -7,6 +7,7 @@ import { prismaOrderCreatedAtRange } from "@/lib/admin-orders-date-filter";
 import { prisma } from "@/lib/db";
 import { computeOrderPricing, resolveAppliedPromoCampaign } from "@/lib/promo";
 import { fetchSweetTrackerDeliveryComplete } from "@/lib/sweet-tracker";
+import { SWEET_TRACKER_CARRIER_OPTIONS } from "@/lib/sweet-tracker-carriers";
 import { getProductBySlug } from "@/lib/product-data";
 import { sanitizeReferralCode } from "@/lib/referral";
 import { cancelTossPaymentOnServer } from "@/lib/toss-payments";
@@ -190,6 +191,8 @@ const adminOrdersListSelect = {
   phone: true,
   paymentStatus: true,
   fulfillmentStatus: true,
+  carrier: true,
+  trackingCarrierCode: true,
   trackingNumber: true,
   totalAmount: true,
   referralCode: true,
@@ -556,6 +559,83 @@ export async function updateOrderAdminFields(
     },
     include: { orderItems: true },
   });
+}
+
+function carrierLabelFromCode(code: string) {
+  return SWEET_TRACKER_CARRIER_OPTIONS.find((c) => c.code === code)?.label ?? code;
+}
+
+const registerShipmentItemSchema = z.object({
+  orderNumber: z.string().min(1).max(40),
+  trackingCarrierCode: z.string().min(1).max(8),
+  trackingNumber: z.string().min(1).max(80),
+});
+
+/**
+ * 목록에서 체크한 주문에 택배사·운송장을 등록하고 배송중(IN_TRANSIT)으로 전환.
+ */
+export async function registerOrderShipments(
+  items: Array<z.infer<typeof registerShipmentItemSchema>>,
+): Promise<{ registered: string[]; errors: string[] }> {
+  const registered: string[] = [];
+  const errors: string[] = [];
+
+  for (const raw of items) {
+    let parsed: z.infer<typeof registerShipmentItemSchema>;
+    try {
+      parsed = registerShipmentItemSchema.parse(raw);
+    } catch {
+      errors.push("입력값이 올바르지 않은 주문이 있습니다.");
+      continue;
+    }
+
+    const orderNumber = parsed.orderNumber.trim();
+    const trackingCarrierCode = parsed.trackingCarrierCode.trim();
+    const trackingNumber = parsed.trackingNumber.trim();
+    const carrier = carrierLabelFromCode(trackingCarrierCode);
+
+    try {
+      const existing = await prisma.order.findUnique({
+        where: { orderNumber },
+        select: {
+          paymentStatus: true,
+          fulfillmentStatus: true,
+          shippedAt: true,
+        },
+      });
+      if (!existing) {
+        errors.push(`${orderNumber}: 주문을 찾을 수 없습니다.`);
+        continue;
+      }
+      if (existing.paymentStatus !== OrderStatus.PAID) {
+        errors.push(`${orderNumber}: 결제완료 주문만 송장 등록할 수 있습니다.`);
+        continue;
+      }
+      if (existing.fulfillmentStatus === FulfillmentStatus.DELIVERED) {
+        errors.push(`${orderNumber}: 이미 배송완료된 주문입니다.`);
+        continue;
+      }
+
+      await prisma.order.update({
+        where: { orderNumber },
+        data: {
+          carrier,
+          trackingNumber,
+          trackingCarrierCode,
+          fulfillmentStatus: FulfillmentStatus.IN_TRANSIT,
+          shippedAt: existing.shippedAt ?? new Date(),
+        },
+      });
+      registered.push(orderNumber);
+
+      void syncOrderDeliveryFromSweetTracker(orderNumber, { ignoreInterval: true }).catch(() => null);
+    } catch (e) {
+      const message = e instanceof Error ? e.message : "송장 등록 실패";
+      errors.push(`${orderNumber}: ${message}`);
+    }
+  }
+
+  return { registered, errors };
 }
 
 export async function markAdminOrderDelivered(orderNumber: string) {
