@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { customerCancelForm, customerRefundRequestForm } from "./actions";
 import { OrderLookupResultScroll } from "@/components/order-lookup-result-scroll";
 import { adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
 import {
@@ -93,7 +92,7 @@ function OrderDetailCard({
               ? "아직 발송 전이라 결제 취소(환불)가 바로 진행됩니다."
               : "결제대기 주문이므로 주문만 취소됩니다."}
           </p>
-          <form action={customerCancelForm} className="mt-4 space-y-3">
+          <form method="post" action="/order/lookup/cancel" className="mt-4 space-y-3">
             <input type="hidden" name="orderNumber" value={order.orderNumber} />
             <input type="hidden" name="phone" value={phone} />
             <input type="hidden" name="customerName" value={customerName} />
@@ -123,7 +122,7 @@ function OrderDetailCard({
             이미 발송되었거나 배송 중이어서 바로 자동 환불은 되지 않습니다. 요청을 남기시면 관리자가 확인 후
             처리합니다.
           </p>
-          <form action={customerRefundRequestForm} className="mt-4 space-y-3">
+          <form method="post" action="/order/lookup/refund-request" className="mt-4 space-y-3">
             <input type="hidden" name="orderNumber" value={order.orderNumber} />
             <input type="hidden" name="phone" value={phone} />
             <input type="hidden" name="customerName" value={customerName} />
