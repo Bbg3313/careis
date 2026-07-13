@@ -175,7 +175,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
           className="shrink-0 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50"
           prefetch={false}
         >
-          엑셀 <span className="font-normal text-stone-500">유입·직접입력</span>
+          주문 엑셀
         </Link>
       </div>
 
