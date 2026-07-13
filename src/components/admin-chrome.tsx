@@ -33,6 +33,9 @@ export function AdminChrome({
         <Link href="/admin" className="text-stone-900">
           대시보드
         </Link>
+        <Link href="/admin/sales" className="text-stone-600 hover:text-stone-900">
+          매출
+        </Link>
         <Link href="/admin/orders" className="text-stone-600 hover:text-stone-900">
           주문 목록
         </Link>

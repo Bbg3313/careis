@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 type Props = {
-  action: "/admin/orders" | "/admin";
+  action: "/admin/orders" | "/admin" | "/admin/sales";
   status?: string;
   fulfillment?: string;
   queue?: string;

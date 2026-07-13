@@ -856,6 +856,116 @@ export async function getOrderStats(dateQuery?: { from?: string; to?: string }) 
   };
 }
 
+export type AdminSalesProductRow = {
+  sku: string;
+  name: string;
+  quantity: number;
+  revenue: number;
+};
+
+export type AdminSalesSummary = {
+  period: {
+    paidOrderCount: number;
+    paidRevenue: number;
+    unitsSold: number;
+    refundedOrderCount: number;
+    refundedAmount: number;
+  };
+  lifetime: {
+    paidOrderCount: number;
+    paidRevenue: number;
+  };
+  products: AdminSalesProductRow[];
+};
+
+/** 결제완료(PAID) 기준 매출·상품 판매량. 기간은 주문 createdAt(KST 일 단위). */
+export async function getAdminSalesSummary(dateQuery?: {
+  from?: string;
+  to?: string;
+}): Promise<AdminSalesSummary> {
+  const dateWhere = prismaOrderCreatedAtRange(dateQuery?.from, dateQuery?.to);
+  const periodBase = (Object.keys(dateWhere).length ? dateWhere : {}) as Prisma.OrderWhereInput;
+  const periodPaid: Prisma.OrderWhereInput = { ...periodBase, paymentStatus: OrderStatus.PAID };
+  const periodRefunded: Prisma.OrderWhereInput = { ...periodBase, paymentStatus: OrderStatus.REFUNDED };
+
+  const [periodAgg, lifetimeAgg, refundAgg, items] = await Promise.all([
+    prisma.order.aggregate({
+      where: periodPaid,
+      _sum: { totalAmount: true },
+      _count: { _all: true },
+    }),
+    prisma.order.aggregate({
+      where: { paymentStatus: OrderStatus.PAID },
+      _sum: { totalAmount: true },
+      _count: { _all: true },
+    }),
+    prisma.order.aggregate({
+      where: periodRefunded,
+      _sum: { totalAmount: true },
+      _count: { _all: true },
+    }),
+    prisma.orderItem.findMany({
+      where: { order: periodPaid },
+      select: {
+        sku: true,
+        productNameSnapshot: true,
+        quantity: true,
+        unitPrice: true,
+      },
+    }),
+  ]);
+
+  const bySku = new Map<string, AdminSalesProductRow>();
+  let unitsSold = 0;
+  for (const item of items) {
+    unitsSold += item.quantity;
+    const key = item.sku || item.productNameSnapshot;
+    const prev = bySku.get(key);
+    const line = item.unitPrice * item.quantity;
+    if (prev) {
+      prev.quantity += item.quantity;
+      prev.revenue += line;
+    } else {
+      bySku.set(key, {
+        sku: item.sku,
+        name: item.productNameSnapshot,
+        quantity: item.quantity,
+        revenue: line,
+      });
+    }
+  }
+
+  const products = [...bySku.values()].sort((a, b) => b.quantity - a.quantity || b.revenue - a.revenue);
+
+  return {
+    period: {
+      paidOrderCount: periodAgg._count._all,
+      paidRevenue: periodAgg._sum.totalAmount ?? 0,
+      unitsSold,
+      refundedOrderCount: refundAgg._count._all,
+      refundedAmount: refundAgg._sum.totalAmount ?? 0,
+    },
+    lifetime: {
+      paidOrderCount: lifetimeAgg._count._all,
+      paidRevenue: lifetimeAgg._sum.totalAmount ?? 0,
+    },
+    products,
+  };
+}
+
+export async function loadAdminSalesSummary(dateQuery?: { from?: string; to?: string }): Promise<
+  | { ok: true; summary: AdminSalesSummary }
+  | { ok: false }
+> {
+  try {
+    const summary = await getAdminSalesSummary(dateQuery);
+    return { ok: true, summary };
+  } catch (error) {
+    console.error("[orders] admin sales summary failed", error);
+    return { ok: false };
+  }
+}
+
 export async function setOrderPaymentRequested(orderNumber: string, metadata: PaymentRequestMetadata) {
   return prisma.order.update({
     where: { orderNumber },
