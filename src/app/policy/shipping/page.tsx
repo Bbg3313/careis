@@ -35,7 +35,7 @@ export default function ShippingPage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">2. 교환 및 반품 접수</h2>
-            <p>단순 변심에 의한 교환 및 반품은 상품 수령일로부터 7일 이내 고객센터를 통해 접수할 수 있습니다.</p>
+            <p>단순 변심에 의한 교환 및 반품은 상품 수령일로부터 7일 이내 고객센터 또는 주문 취소·환불 페이지를 통해 접수할 수 있습니다.</p>
             <p>제품 하자, 오배송, 배송 중 파손의 경우 확인 후 교환 또는 반품 절차를 별도로 안내합니다.</p>
             <p>
               교환/반품 접수 전 고객센터 {BUSINESS_INFO.customerServicePhone} 또는 {BUSINESS_INFO.email}으로 먼저
@@ -52,9 +52,19 @@ export default function ShippingPage() {
 
           <section className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">4. 환불 안내</h2>
+            <p>
+              <strong className="font-semibold text-stone-800">발송 전</strong> 결제 취소는 결제 금액이 전액
+              환불되며, 배송비 차감이 없습니다.
+            </p>
+            <p>
+              <strong className="font-semibold text-stone-800">발송 후 · 단순 변심</strong> 환불 시 배송비{" "}
+              <strong className="font-semibold text-stone-800">6,000원</strong>이 차감된 금액이 환불됩니다.
+            </p>
+            <p>
+              상품 하자·오배송·배송 중 파손은 확인 후 전액 환불(또는 교환)으로 처리할 수 있습니다.
+            </p>
             <p>반품 상품이 회수되어 상태 확인이 완료되면 결제수단별 환불 절차가 진행됩니다.</p>
             <p>환불 반영 시점은 카드사, 간편결제사, 금융기관 정책에 따라 다를 수 있습니다.</p>
-            <p>배송비 차감, 왕복 배송비, 부분 취소 가능 여부 등 세부 비용은 실제 운영 정책 확정 후 주문 단계에서 최종 고지됩니다.</p>
           </section>
 
           <section className="space-y-3">

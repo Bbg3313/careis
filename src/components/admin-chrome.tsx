@@ -62,11 +62,13 @@ export function AdminChrome({
           const className = item.pill
             ? `rounded-full border px-3 py-1.5 transition ${
                 active
-                  ? "border-[#8b673f] bg-[#8b673f] text-white"
+                  ? "border-[#8b673f] bg-[#8b673f] !text-white hover:!text-white visited:!text-white"
                   : "border-[#b89156]/40 bg-[#faf8f5] text-stone-800 hover:bg-[#f3efe8]"
               }`
             : `rounded-full px-3 py-1.5 transition ${
-                active ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
+                active
+                  ? "bg-[#8b673f] !text-white hover:!text-white visited:!text-white"
+                  : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
               }`;
           return (
             <Link

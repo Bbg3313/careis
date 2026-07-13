@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { customerRequestCancelOrRefund } from "@/lib/orders";
+import { parseRefundReasonCategory } from "@/lib/refund-policy";
 
 export const runtime = "nodejs";
 
@@ -21,9 +22,10 @@ export async function POST(request: Request) {
   const phone = String(form.get("phone") ?? "").trim();
   const customerName = String(form.get("customerName") ?? "").trim();
   const reason = String(form.get("reason") ?? "").trim();
+  const category = parseRefundReasonCategory(form.get("refundCategory"));
 
   try {
-    await customerRequestCancelOrRefund(orderNumber, phone, customerName, reason);
+    await customerRequestCancelOrRefund(orderNumber, phone, customerName, reason, category);
   } catch (e) {
     const message = e instanceof Error ? e.message : "요청 접수에 실패했습니다.";
     return redirectLookup(request, { customerName, phone, orderNumber, error: message });

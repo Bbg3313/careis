@@ -57,7 +57,7 @@ export function AdminOrdersDateFilterForm({
         </label>
         <button
           type="submit"
-          className="rounded-full bg-stone-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-stone-800"
+          className="rounded-full bg-[#8b673f] px-4 py-2 text-sm font-medium !text-white transition hover:bg-[#6f5232]"
         >
           조회
         </button>

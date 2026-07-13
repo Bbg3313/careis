@@ -30,5 +30,6 @@ export async function POST(request: Request) {
   }
 
   revalidatePath("/order/lookup");
-  return redirectLookup(request, { customerName, phone, orderNumber, ok: "cancelled" });
+  // 취소 후 주문은 목록에서 빠지므로 orderNumber 없이 완료 안내만
+  return redirectLookup(request, { customerName, phone, ok: "cancelled" });
 }

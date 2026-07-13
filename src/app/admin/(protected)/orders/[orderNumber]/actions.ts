@@ -50,6 +50,8 @@ export async function cancelOrderPaymentForm(orderNumber: string, formData: Form
 
   const reason = String(formData.get("cancelReason") ?? "").trim();
   const confirmText = String(formData.get("confirmCancel") ?? "").trim();
+  const refundMode = String(formData.get("refundMode") ?? "").trim();
+  const deductChangeOfMindFee = refundMode === "change_of_mind";
 
   if (confirmText !== "취소") {
     redirect(
@@ -60,7 +62,7 @@ export async function cancelOrderPaymentForm(orderNumber: string, formData: Form
   }
 
   try {
-    await adminCancelOrder(orderNumber, { reason });
+    await adminCancelOrder(orderNumber, { reason, deductChangeOfMindFee });
   } catch (e) {
     const message = e instanceof Error ? e.message : "주문 취소에 실패했습니다.";
     redirect(orderDetailPath(orderNumber, { cancelError: message }));

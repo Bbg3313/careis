@@ -58,7 +58,7 @@ export default async function OrderCompletePage({
             제품 계속 보기
           </Link>
           <Link href="/order/lookup" className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold">
-            주문 조회·취소
+            주문 취소·환불
           </Link>
           <Link href="/order" className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold">
             다시 주문하기

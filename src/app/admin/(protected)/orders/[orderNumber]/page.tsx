@@ -6,9 +6,14 @@ import { Suspense } from "react";
 import { cancelOrderPaymentForm, deleteOrderForm, markOrderDeliveredForm, saveOrderAdminForm } from "./actions";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { StatusConfirmDialog } from "@/components/status-confirm-dialog";
-import { adminFulfillmentLabel, adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
+import { adminFulfillmentLabel, adminPaymentStatusLabel, isPaidOrderAwaitingShipment } from "@/lib/admin-fulfillment";
 import { loadAdminOrderByNumber, SWEET_TRACKER_DETAIL_MIN_INTERVAL_MS, syncOrderDeliveryFromSweetTracker } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
+import {
+  CHANGE_OF_MIND_SHIPPING_FEE,
+  formatChangeOfMindShippingFee,
+  refundAmountAfterChangeOfMindFee,
+} from "@/lib/refund-policy";
 import { trackingLookupUrl } from "@/lib/tracking-url";
 import { SWEET_TRACKER_CARRIER_OPTIONS } from "@/lib/sweet-tracker-carriers";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -64,6 +69,11 @@ export default async function AdminOrderDetailPage({
     Boolean(order.trackingNumber?.trim());
   const canCancelOrder = order.paymentStatus === "PAID" || order.paymentStatus === "PENDING";
   const canDeleteOrder = order.paymentStatus !== "PAID";
+  const awaitingShipment = isPaidOrderAwaitingShipment(order);
+  const changeOfMindRefund = refundAmountAfterChangeOfMindFee(order.totalAmount);
+  const preferChangeOfMind =
+    Boolean(order.customerCancelReason?.includes("단순 변심")) ||
+    Boolean(order.customerCancelReason?.includes("배송비"));
 
   return (
     <div className="space-y-8">
@@ -287,16 +297,57 @@ export default async function AdminOrderDetailPage({
           <h2 className="text-sm font-semibold text-red-950">주문·결제 취소</h2>
           <p className="mt-1 text-xs leading-6 text-red-950/80">
             {order.paymentStatus === "PAID"
-              ? "결제완료 주문은 토스페이먼츠에 결제 취소를 요청한 뒤, 주문 상태를 환불로 바꿉니다. 이미 발송된 건은 회수·재고를 별도로 확인하세요."
+              ? awaitingShipment
+                ? "발송 전 주문입니다. 결제 금액이 전액 취소됩니다."
+                : `발송 후 주문입니다. 단순 변심이면 배송비 ${formatChangeOfMindShippingFee()}을 차감한 부분 취소를 선택하세요. 이미 발송된 건은 회수·재고를 별도로 확인하세요.`
               : "결제대기 주문은 PG 취소 없이 주문만 취소 처리합니다."}
           </p>
           <form action={cancelOrderPaymentForm.bind(null, order.orderNumber)} className="mt-5 space-y-4">
+            {order.paymentStatus === "PAID" && !awaitingShipment ? (
+              <fieldset className="space-y-2 text-sm">
+                <legend className="font-medium text-stone-800">환불 방식</legend>
+                <label className="flex cursor-pointer items-start gap-2 rounded-xl border border-red-200 bg-white px-3 py-3">
+                  <input
+                    type="radio"
+                    name="refundMode"
+                    value="change_of_mind"
+                    defaultChecked={preferChangeOfMind || !order.customerCancelReason}
+                    className="mt-1"
+                  />
+                  <span>
+                    <span className="font-medium text-stone-900">단순 변심 · 배송비 차감</span>
+                    <span className="mt-0.5 block text-xs text-stone-600">
+                      {CHANGE_OF_MIND_SHIPPING_FEE.toLocaleString("ko-KR")}원 차감 → 환불{" "}
+                      {formatCurrency(changeOfMindRefund)}
+                    </span>
+                  </span>
+                </label>
+                <label className="flex cursor-pointer items-start gap-2 rounded-xl border border-red-200 bg-white px-3 py-3">
+                  <input
+                    type="radio"
+                    name="refundMode"
+                    value="full"
+                    defaultChecked={!preferChangeOfMind && Boolean(order.customerCancelReason)}
+                    className="mt-1"
+                  />
+                  <span>
+                    <span className="font-medium text-stone-900">전액 환불</span>
+                    <span className="mt-0.5 block text-xs text-stone-600">
+                      하자·오배송 등 · {formatCurrency(order.totalAmount)}
+                    </span>
+                  </span>
+                </label>
+              </fieldset>
+            ) : order.paymentStatus === "PAID" ? (
+              <input type="hidden" name="refundMode" value="full" />
+            ) : null}
             <label className="block text-sm">
               <span className="text-stone-700">취소 사유</span>
               <input
                 name="cancelReason"
                 required
                 maxLength={200}
+                defaultValue={order.customerCancelReason?.replace(/^\[.*?\]\s*/, "") || ""}
                 placeholder="예: 고객 취소 요청"
                 className="mt-1 w-full rounded-xl border border-red-200 bg-white px-3 py-2 text-stone-900 outline-none focus:border-red-400"
               />

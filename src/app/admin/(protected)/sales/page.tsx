@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
+import { AdminSalesDailyChart, AdminSalesProductChart } from "@/components/admin-sales-charts";
 import { loadAdminSalesSummary } from "@/lib/orders";
 import { formatCurrency } from "@/lib/utils";
 
@@ -34,6 +35,12 @@ function buildSalesHref(from?: string, to?: string) {
   return qs ? `/admin/sales?${qs}` : "/admin/sales";
 }
 
+function presetClass(active: boolean) {
+  return active
+    ? "rounded-full bg-[#8b673f] px-4 py-2 text-sm font-medium !text-white hover:!text-white visited:!text-white"
+    : "rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50";
+}
+
 function MoneyCard({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
     <div className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
@@ -50,10 +57,11 @@ export default async function AdminSalesPage({ searchParams }: PageProps) {
 
   const today = kstYmd();
   const monthStart = kstMonthStartYmd();
-  const periodLabel =
-    from || to
-      ? `${from || "처음부터"} ~ ${to || "오늘"}`
-      : "전체 기간";
+  const isAll = !from && !to;
+  const isToday = from === today && to === today;
+  const isMonth = from === monthStart && to === today;
+  const periodLabel = from || to ? `${from || "처음부터"} ~ ${to || "오늘"}` : "전체 기간";
+  const chartCaption = isAll ? "최근 30일 · 결제완료" : `${periodLabel} · 결제완료`;
 
   const empty = {
     period: {
@@ -65,6 +73,7 @@ export default async function AdminSalesPage({ searchParams }: PageProps) {
     },
     lifetime: { paidOrderCount: 0, paidRevenue: 0 },
     products: [] as Array<{ sku: string; name: string; quantity: number; revenue: number }>,
+    daily: [] as Array<{ day: string; revenue: number; orderCount: number }>,
   };
 
   const summary = loaded.ok ? loaded.summary : empty;
@@ -74,9 +83,7 @@ export default async function AdminSalesPage({ searchParams }: PageProps) {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-stone-900">매출 확인</h1>
-          <p className="mt-1 text-sm text-stone-500">
-            결제완료 주문 기준 · {periodLabel}
-          </p>
+          <p className="mt-1 text-sm text-stone-500">결제완료 주문 기준 · {periodLabel}</p>
         </div>
         <Link
           href="/admin"
@@ -89,34 +96,13 @@ export default async function AdminSalesPage({ searchParams }: PageProps) {
       {!loaded.ok ? <AdminDbUnavailableNotice /> : null}
 
       <div className="flex flex-wrap gap-2">
-        <Link
-          href={buildSalesHref()}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-            !from && !to
-              ? "bg-stone-900 text-white"
-              : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
-          }`}
-        >
+        <Link href={buildSalesHref()} className={presetClass(isAll)}>
           전체
         </Link>
-        <Link
-          href={buildSalesHref(today, today)}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-            from === today && to === today
-              ? "bg-stone-900 text-white"
-              : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
-          }`}
-        >
+        <Link href={buildSalesHref(today, today)} className={presetClass(isToday)}>
           오늘
         </Link>
-        <Link
-          href={buildSalesHref(monthStart, today)}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-            from === monthStart && to === today
-              ? "bg-stone-900 text-white"
-              : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
-          }`}
-        >
+        <Link href={buildSalesHref(monthStart, today)} className={presetClass(isMonth)}>
           이번 달
         </Link>
       </div>
@@ -151,6 +137,11 @@ export default async function AdminSalesPage({ searchParams }: PageProps) {
             hint={`${summary.period.refundedOrderCount}건 (참고)`}
           />
         </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <AdminSalesDailyChart daily={summary.daily} caption={chartCaption} />
+        <AdminSalesProductChart products={summary.products} />
       </div>
 
       <div>
