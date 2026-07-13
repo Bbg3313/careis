@@ -11,6 +11,7 @@ import { SWEET_TRACKER_CARRIER_OPTIONS } from "@/lib/sweet-tracker-carriers";
 import { getProductBySlug } from "@/lib/product-data";
 import { sanitizeReferralCode } from "@/lib/referral";
 import { cancelTossPaymentOnServer } from "@/lib/toss-payments";
+import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 
 const orderItemSchema = z.object({
   productSlug: z.enum(["sun-pack", "illuminator"]),
@@ -122,8 +123,8 @@ export async function createOrder(input: CreateOrderInput) {
   return prisma.order.create({
     data: {
       orderNumber: createOrderNumber(),
-      customerName: parsed.customerName,
-      phone: parsed.phone,
+      customerName: parsed.customerName.trim(),
+      phone: formatKoreanMobileDisplay(parsed.phone),
       postalCode: parsed.postalCode,
       address: parsed.address,
       memo: parsed.memo || null,
@@ -1027,10 +1028,30 @@ function digitsOnlyPhone(value: string) {
   return value.replace(/\D/g, "");
 }
 
+/** 한국 휴대폰 숫자만 정규화 (+82 → 0…, 하이픈/공백 제거) */
+export function normalizeKoreanPhoneDigits(value: string) {
+  let d = digitsOnlyPhone(value);
+  if (d.startsWith("82") && d.length >= 11) {
+    d = `0${d.slice(2)}`;
+  }
+  return d;
+}
+
 function phonesMatch(stored: string, input: string) {
-  const a = digitsOnlyPhone(stored);
-  const b = digitsOnlyPhone(input);
-  return a.length >= 8 && b.length >= 8 && a === b;
+  const a = normalizeKoreanPhoneDigits(stored);
+  const b = normalizeKoreanPhoneDigits(input);
+  if (a.length < 10 || b.length < 10) return false;
+  return a === b || a.endsWith(b.slice(-10)) || b.endsWith(a.slice(-10));
+}
+
+function normalizeCustomerName(value: string) {
+  return value.trim().replace(/\s+/g, "").toLowerCase();
+}
+
+function namesMatch(stored: string, input: string) {
+  const a = normalizeCustomerName(stored);
+  const b = normalizeCustomerName(input);
+  return a.length >= 2 && b.length >= 2 && a === b;
 }
 
 export type CustomerOrderView = {
@@ -1086,16 +1107,71 @@ function toCustomerOrderView(
   };
 }
 
-/** 비회원 주문 조회: 주문번호 + 연락처(숫자 일치) */
-export async function lookupCustomerOrder(orderNumber: string, phone: string): Promise<CustomerOrderView | null> {
+function customerIdentityOk(
+  order: { phone: string; customerName: string },
+  phone: string,
+  customerName: string,
+) {
+  return phonesMatch(order.phone, phone) && namesMatch(order.customerName, customerName);
+}
+
+/**
+ * 비회원 주문 조회: 주문자 이름 + 연락처.
+ * 주문번호 없이 최근 주문 목록을 반환합니다.
+ */
+export async function lookupCustomerOrdersByNameAndPhone(
+  customerName: string,
+  phone: string,
+): Promise<CustomerOrderView[]> {
+  const name = customerName.trim();
+  const phoneDigits = normalizeKoreanPhoneDigits(phone);
+  if (normalizeCustomerName(name).length < 2 || phoneDigits.length < 10) return [];
+
+  const phoneTail = phoneDigits.slice(-10);
+  const matched = await prisma.$queryRaw<Array<{ orderNumber: string }>>`
+    SELECT "orderNumber"
+    FROM "Order"
+    WHERE
+      right(
+        CASE
+          WHEN regexp_replace("phone", '[^0-9]', '', 'g') LIKE '82%'
+            THEN '0' || substring(regexp_replace("phone", '[^0-9]', '', 'g') from 3)
+          ELSE regexp_replace("phone", '[^0-9]', '', 'g')
+        END,
+        10
+      ) = ${phoneTail}
+    ORDER BY "createdAt" DESC
+    LIMIT 40
+  `;
+
+  if (matched.length === 0) return [];
+
+  const orders = await prisma.order.findMany({
+    where: { orderNumber: { in: matched.map((row) => row.orderNumber) } },
+    include: { orderItems: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return orders.filter((order) => namesMatch(order.customerName, name)).map(toCustomerOrderView);
+}
+
+/** 단일 주문 조회 (이름+연락처 검증) */
+export async function lookupCustomerOrder(
+  orderNumber: string,
+  phone: string,
+  customerName: string,
+): Promise<CustomerOrderView | null> {
   const number = orderNumber.trim();
-  if (!number || digitsOnlyPhone(phone).length < 8) return null;
+  const name = customerName.trim();
+  if (!number || normalizeKoreanPhoneDigits(phone).length < 10 || normalizeCustomerName(name).length < 2) {
+    return null;
+  }
 
   const order = await prisma.order.findUnique({
     where: { orderNumber: number },
     include: { orderItems: true },
   });
-  if (!order || !phonesMatch(order.phone, phone)) return null;
+  if (!order || !customerIdentityOk(order, phone, name)) return null;
   return toCustomerOrderView(order);
 }
 
@@ -1104,10 +1180,15 @@ export async function lookupCustomerOrder(orderNumber: string, phone: string): P
  * - PENDING → CANCELLED
  * - PAID + 발송 전 → 토스 취소 후 REFUNDED
  */
-export async function customerCancelOrder(orderNumber: string, phone: string, reason: string) {
-  const view = await lookupCustomerOrder(orderNumber, phone);
+export async function customerCancelOrder(
+  orderNumber: string,
+  phone: string,
+  customerName: string,
+  reason: string,
+) {
+  const view = await lookupCustomerOrder(orderNumber, phone, customerName);
   if (!view) {
-    throw new Error("주문번호 또는 연락처가 올바르지 않습니다.");
+    throw new Error("주문자 이름 또는 연락처가 올바르지 않습니다.");
   }
   if (!view.canCancelNow) {
     throw new Error("지금은 즉시 취소할 수 없습니다. 환불 요청을 남겨 주세요.");
@@ -1118,7 +1199,12 @@ export async function customerCancelOrder(orderNumber: string, phone: string, re
 }
 
 /** 발송 후 등: 관리자 확인용 환불·취소 요청만 접수 */
-export async function customerRequestCancelOrRefund(orderNumber: string, phone: string, reason: string) {
+export async function customerRequestCancelOrRefund(
+  orderNumber: string,
+  phone: string,
+  customerName: string,
+  reason: string,
+) {
   const cleaned = reason.trim().slice(0, 300);
   if (!cleaned) {
     throw new Error("요청 사유를 입력해 주세요.");
@@ -1128,8 +1214,8 @@ export async function customerRequestCancelOrRefund(orderNumber: string, phone: 
     where: { orderNumber: orderNumber.trim() },
     include: { orderItems: true },
   });
-  if (!order || !phonesMatch(order.phone, phone)) {
-    throw new Error("주문번호 또는 연락처가 올바르지 않습니다.");
+  if (!order || !customerIdentityOk(order, phone, customerName)) {
+    throw new Error("주문자 이름 또는 연락처가 올바르지 않습니다.");
   }
   if (order.paymentStatus !== OrderStatus.PAID) {
     throw new Error("결제완료 주문만 환불 요청이 가능합니다.");

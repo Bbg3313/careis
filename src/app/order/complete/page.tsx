@@ -57,18 +57,9 @@ export default async function OrderCompletePage({
           <Link href="/products" className="btn-luxe-primary rounded-full px-5 py-3 text-sm font-semibold">
             제품 계속 보기
           </Link>
-          {params.orderNumber ? (
-            <Link
-              href={`/order/lookup?orderNumber=${encodeURIComponent(params.orderNumber)}`}
-              className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold"
-            >
-              주문 조회·취소
-            </Link>
-          ) : (
-            <Link href="/order/lookup" className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold">
-              주문 조회·취소
-            </Link>
-          )}
+          <Link href="/order/lookup" className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold">
+            주문 조회·취소
+          </Link>
           <Link href="/order" className="btn-luxe-secondary rounded-full px-5 py-3 text-sm font-semibold">
             다시 주문하기
           </Link>
