@@ -27,16 +27,30 @@ type Campaign = {
   totalPaidAmount: number;
 };
 
-const PRODUCT_SLUG_LABEL_KO: Record<string, string> = {
-  "sun-pack": "썬팩",
+function campaignPeriodState(startsAt: string, endsAt: string, now: Date): "live" | "upcoming" | "ended" {
+  const start = new Date(startsAt);
+  const end = new Date(endsAt);
+  if (start > now) return "upcoming";
+  if (end < now) return "ended";
+  return "live";
+}
+
+const PERIOD_BADGE: Record<"live" | "upcoming" | "ended", { label: string; className: string }> = {
+  live: { label: "진행중", className: "bg-emerald-100 text-emerald-800" },
+  upcoming: { label: "예정", className: "bg-amber-100 text-amber-900" },
+  ended: { label: "종료", className: "bg-stone-200 text-stone-600" },
+};
+
+const PRODUCT_SLUG_LABEL_KO: Record<"sun-pack" | "illuminator", string> = {
+  "sun-pack": "선팩",
   illuminator: "일루미네이터",
 };
 
 function formatProductSlugsKo(slugs: unknown): string {
   if (!Array.isArray(slugs)) return "—";
   const parts = slugs
-    .filter((s): s is string => s === "sun-pack" || s === "illuminator")
-    .map((s) => PRODUCT_SLUG_LABEL_KO[s] ?? s);
+    .filter((s): s is "sun-pack" | "illuminator" => s === "sun-pack" || s === "illuminator")
+    .map((s) => PRODUCT_SLUG_LABEL_KO[s]);
   return parts.length > 0 ? parts.join(" · ") : "—";
 }
 
@@ -149,7 +163,7 @@ export function AdminPromosPanel() {
       const body = {
         code: String(formData.get("code") ?? "").trim(),
         title: String(formData.get("title") ?? "").trim(),
-        discountType: String(formData.get("discountType") ?? "PERCENT"),
+        discountType: String(formData.get("discountType") ?? "FIXED_PER_UNIT"),
         discountValue: Number(formData.get("discountValue") ?? 0),
         productSlugs: ["sun-pack", "illuminator"].filter((slug) => formData.get(`p_${slug}`) === "on"),
         startsAt,
@@ -220,11 +234,21 @@ export function AdminPromosPanel() {
               const editStartHour = editStart.hour;
               const editEndDate = editEnd.date;
               const editEndHour = editEnd.hour;
+              const period = campaignPeriodState(c.startsAt, c.endsAt, now);
+              const periodBadge = PERIOD_BADGE[period];
 
               return (
                 <Fragment key={c.id}>
                   <tr className="border-b border-stone-100 last:border-0">
-                    <td className="px-3 py-2 align-middle font-mono text-[13px] text-stone-700">{c.code}</td>
+                    <td className="px-3 py-2 align-middle font-mono text-[13px] text-stone-700">
+                      <div className="flex flex-col gap-1">
+                        <span>{c.code}</span>
+                        <span className={`inline-flex w-fit rounded-full px-2 py-0.5 text-[10px] font-semibold ${periodBadge.className}`}>
+                          {periodBadge.label}
+                          {!c.isActive ? " · 비활성" : ""}
+                        </span>
+                      </div>
+                    </td>
                     <td className="px-3 py-2 align-middle text-[13px] text-stone-700">
                       <span className="line-clamp-2 break-words" title={c.title}>
                         {c.title}
@@ -429,14 +453,14 @@ export function AdminPromosPanel() {
           </label>
           <label className="space-y-1 text-sm text-stone-700">
             <span>할인 유형</span>
-            <select name="discountType" className="w-full rounded-xl border border-stone-200 px-3 py-2">
-              <option value="PERCENT">정률 (%)</option>
+            <select name="discountType" defaultValue="FIXED_PER_UNIT" className="w-full rounded-xl border border-stone-200 px-3 py-2">
               <option value="FIXED_PER_UNIT">정액 (원/1개)</option>
+              <option value="PERCENT">정률 (%)</option>
             </select>
           </label>
           <label className="space-y-1 text-sm text-stone-700">
             <span>할인 값</span>
-            <input name="discountValue" type="number" required min={1} className="w-full rounded-xl border border-stone-200 px-3 py-2" placeholder="10" />
+            <input name="discountValue" type="number" required min={1} className="w-full rounded-xl border border-stone-200 px-3 py-2" placeholder="10000" />
           </label>
           <fieldset className="md:col-span-2">
             <legend className="text-sm text-stone-700">적용 상품</legend>

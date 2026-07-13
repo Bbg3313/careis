@@ -1,13 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
+import { StorefrontOrderLink } from "@/components/storefront-order-link";
 import type { ProductContent } from "@/lib/product-data";
+import type { StorefrontPromoOffer } from "@/lib/promo-pricing";
 import { productVisuals } from "@/lib/site-assets";
 import { formatCurrency } from "@/lib/utils";
 
-export function ProductCard({ product }: { product: ProductContent }) {
+export function ProductCard({
+  product,
+  promoOffer = null,
+}: {
+  product: ProductContent;
+  promoOffer?: StorefrontPromoOffer | null;
+}) {
   const isWarm = product.theme === "warm";
   const visual = productVisuals[product.slug];
+  const detailHref = `/products/${product.slug}`;
 
   return (
     <article
@@ -52,14 +62,33 @@ export function ProductCard({ product }: { product: ProductContent }) {
             </span>
           ))}
         </div>
-        <div className="flex items-center justify-between pt-4">
-          <p className="text-lg font-semibold text-stone-900">{formatCurrency(product.price)}</p>
-          <Link
-            href={`/products/${product.slug}`}
-            className="btn-luxe-primary rounded-full px-5 py-2.5 text-sm font-medium"
+        <div className="flex items-center justify-between gap-3 pt-4">
+          {promoOffer ? (
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-stone-400 line-through tabular-nums">
+                {formatCurrency(promoOffer.listPrice)}
+              </p>
+              <p className="text-lg font-semibold tabular-nums text-[#8b673f]">
+                {formatCurrency(promoOffer.salePrice)}
+              </p>
+            </div>
+          ) : (
+            <p className="text-lg font-semibold text-stone-900">{formatCurrency(product.price)}</p>
+          )}
+          <Suspense
+            fallback={
+              <Link href={detailHref} className="btn-luxe-primary rounded-full px-5 py-2.5 text-sm font-medium">
+                상세 보기
+              </Link>
+            }
           >
-            상세 보기
-          </Link>
+            <StorefrontOrderLink
+              href={detailHref}
+              className="btn-luxe-primary shrink-0 rounded-full px-5 py-2.5 text-sm font-medium"
+            >
+              상세 보기
+            </StorefrontOrderLink>
+          </Suspense>
         </div>
       </div>
     </article>

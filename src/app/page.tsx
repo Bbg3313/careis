@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { FeatureBannerSlider } from "@/components/feature-banner-slider";
 import { HomeVideoBanner } from "@/components/home-video-banner";
 import { MotionMedia } from "@/components/motion-media";
+import { StorefrontOrderLink } from "@/components/storefront-order-link";
 import { products } from "@/lib/product-data";
 import { homeVisuals, productVisuals } from "@/lib/site-assets";
 import { DEFAULT_DESCRIPTION, DEFAULT_OG_IMAGE_PATH, SITE_NAME, SITE_TAGLINE } from "@/lib/site-seo";
@@ -79,13 +81,25 @@ export default function HomePage() {
             </div>
 
             <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:flex-wrap sm:gap-4 sm:pt-2">
-              <Link
-                href="/order"
-                className="btn-luxe-primary inline-flex w-full items-center justify-center gap-2 px-8 py-4 text-[13px] tracking-[0.1em] sm:w-auto"
+              <Suspense
+                fallback={
+                  <Link
+                    href="/order"
+                    className="btn-luxe-primary inline-flex w-full items-center justify-center gap-2 px-8 py-4 text-[13px] tracking-[0.1em] sm:w-auto"
+                  >
+                    구매하러 가기
+                    <ArrowAccent />
+                  </Link>
+                }
               >
-                구매하러 가기
-                <ArrowAccent />
-              </Link>
+                <StorefrontOrderLink
+                  href="/order"
+                  className="btn-luxe-primary inline-flex w-full items-center justify-center gap-2 px-8 py-4 text-[13px] tracking-[0.1em] sm:w-auto"
+                >
+                  구매하러 가기
+                  <ArrowAccent />
+                </StorefrontOrderLink>
+              </Suspense>
               <Link
                 href="/products"
                 className="inline-flex w-full items-center justify-center border border-black/15 px-8 py-4 text-[13px] tracking-[0.1em] text-stone-900 transition hover:border-black/40 sm:w-auto"
@@ -344,13 +358,25 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <Link
-                  href="/products/sun-pack"
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 border border-black/20 bg-white/80 px-8 py-3 text-[13px] tracking-[0.1em] text-stone-900 transition hover:bg-white sm:w-auto md:mt-8"
+                <Suspense
+                  fallback={
+                    <Link
+                      href="/products/sun-pack"
+                      className="mt-5 inline-flex w-full items-center justify-center gap-2 border border-black/20 bg-white/80 px-8 py-3 text-[13px] tracking-[0.1em] text-stone-900 transition hover:bg-white sm:w-auto md:mt-8"
+                    >
+                      자세히 보기
+                      <ArrowAccent />
+                    </Link>
+                  }
                 >
-                  자세히 보기
-                  <ArrowAccent />
-                </Link>
+                  <StorefrontOrderLink
+                    href="/products/sun-pack"
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2 border border-black/20 bg-white/80 px-8 py-3 text-[13px] tracking-[0.1em] text-stone-900 transition hover:bg-white sm:w-auto md:mt-8"
+                  >
+                    자세히 보기
+                    <ArrowAccent />
+                  </StorefrontOrderLink>
+                </Suspense>
               </div>
             </article>
 
@@ -394,13 +420,25 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <Link
-                  href="/products/illuminator"
-                  className="mt-5 inline-flex w-full items-center justify-center gap-2 border border-white/20 bg-white/10 px-8 py-3 text-[13px] tracking-[0.1em] text-white transition hover:bg-white/15 sm:w-auto md:mt-8"
+                <Suspense
+                  fallback={
+                    <Link
+                      href="/products/illuminator"
+                      className="mt-5 inline-flex w-full items-center justify-center gap-2 border border-white/20 bg-white/10 px-8 py-3 text-[13px] tracking-[0.1em] text-white transition hover:bg-white/15 sm:w-auto md:mt-8"
+                    >
+                      자세히 보기
+                      <ArrowAccent />
+                    </Link>
+                  }
                 >
-                  자세히 보기
-                  <ArrowAccent />
-                </Link>
+                  <StorefrontOrderLink
+                    href="/products/illuminator"
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2 border border-white/20 bg-white/10 px-8 py-3 text-[13px] tracking-[0.1em] text-white transition hover:bg-white/15 sm:w-auto md:mt-8"
+                  >
+                    자세히 보기
+                    <ArrowAccent />
+                  </StorefrontOrderLink>
+                </Suspense>
               </div>
             </article>
               </div>
@@ -435,12 +473,23 @@ export default function HomePage() {
             </p>
 
             <div className="pt-6 md:pt-10">
-              <Link
-                href="/order"
-                className="btn-luxe-primary inline-flex w-full max-w-md items-center justify-center px-8 py-4 text-[14px] tracking-[0.1em] md:px-12 md:py-5"
+              <Suspense
+                fallback={
+                  <Link
+                    href="/order"
+                    className="btn-luxe-primary inline-flex w-full max-w-md items-center justify-center px-8 py-4 text-[14px] tracking-[0.1em] md:px-12 md:py-5"
+                  >
+                    구매 페이지로 이동하기
+                  </Link>
+                }
               >
-                구매 페이지로 이동하기
-              </Link>
+                <StorefrontOrderLink
+                  href="/order"
+                  className="btn-luxe-primary inline-flex w-full max-w-md items-center justify-center px-8 py-4 text-[14px] tracking-[0.1em] md:px-12 md:py-5"
+                >
+                  구매 페이지로 이동하기
+                </StorefrontOrderLink>
+              </Suspense>
               <p className="mt-4 text-[12px] text-stone-500">원하는 제품을 고른 뒤 바로 주문할 수 있도록 간편 결제 환경을 준비했습니다.</p>
             </div>
 
@@ -554,13 +603,25 @@ export default function HomePage() {
             </div>
 
             <div className="pt-6 md:pt-10">
-              <Link
-                href="/order"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[rgba(184,145,86,0.35)] bg-[linear-gradient(135deg,#f6e8d4_0%,#d2aa73_52%,#b89156_100%)] px-10 py-4 text-[13px] font-medium tracking-[0.06em] text-stone-900 shadow-[0_14px_36px_rgba(184,145,86,0.22)] transition hover:brightness-[1.03] sm:w-auto"
+              <Suspense
+                fallback={
+                  <Link
+                    href="/order"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[rgba(184,145,86,0.35)] bg-[linear-gradient(135deg,#f6e8d4_0%,#d2aa73_52%,#b89156_100%)] px-10 py-4 text-[13px] font-medium tracking-[0.06em] text-stone-900 shadow-[0_14px_36px_rgba(184,145,86,0.22)] transition hover:brightness-[1.03] sm:w-auto"
+                  >
+                    추천 코드와 함께 주문하기
+                    <ArrowAccent />
+                  </Link>
+                }
               >
-                추천 코드와 함께 주문하기
-                <ArrowAccent />
-              </Link>
+                <StorefrontOrderLink
+                  href="/order"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[rgba(184,145,86,0.35)] bg-[linear-gradient(135deg,#f6e8d4_0%,#d2aa73_52%,#b89156_100%)] px-10 py-4 text-[13px] font-medium tracking-[0.06em] text-stone-900 shadow-[0_14px_36px_rgba(184,145,86,0.22)] transition hover:brightness-[1.03] sm:w-auto"
+                >
+                  추천 코드와 함께 주문하기
+                  <ArrowAccent />
+                </StorefrontOrderLink>
+              </Suspense>
             </div>
 
             <p className="mt-5 text-[11px] leading-relaxed text-stone-500 md:mt-8">

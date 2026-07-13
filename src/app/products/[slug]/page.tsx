@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { ProductDetailPage } from "@/components/product-detail-page";
 import { getMergedStorySlides } from "@/lib/product-detail-slides";
 import { getProductBySlug, products } from "@/lib/product-data";
+import { findActivePromoByCode } from "@/lib/promo";
+import { buildStorefrontPromoOffer } from "@/lib/promo-pricing";
+import { getReferralCodeFromCookie } from "@/lib/referral";
 import { sanitizeReferralCode } from "@/lib/referral-code";
 import { productVisuals } from "@/lib/site-assets";
 import { DEFAULT_KEYWORDS, SITE_NAME } from "@/lib/site-seo";
@@ -62,14 +65,26 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
   const { ref } = await searchParams;
-  const referralRef = sanitizeReferralCode(ref ?? null);
+  const referralRef =
+    sanitizeReferralCode(ref ?? null) ?? sanitizeReferralCode(await getReferralCodeFromCookie());
   const product = getProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  const sunPackStorySlides = await getMergedStorySlides(product.slug);
+  const [sunPackStorySlides, campaign] = await Promise.all([
+    getMergedStorySlides(product.slug),
+    findActivePromoByCode(referralRef),
+  ]);
+  const promoOffer = buildStorefrontPromoOffer(product.price, product.slug, campaign);
 
-  return <ProductDetailPage product={product} sunPackStorySlides={sunPackStorySlides} referralRef={referralRef} />;
+  return (
+    <ProductDetailPage
+      product={product}
+      sunPackStorySlides={sunPackStorySlides}
+      referralRef={referralRef}
+      promoOffer={promoOffer}
+    />
+  );
 }

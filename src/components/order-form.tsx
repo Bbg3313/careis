@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { products, type ProductSlug } from "@/lib/product-data";
+import { referralCodeFromStoredSession } from "@/lib/referral-browser";
 import { productVisuals } from "@/lib/site-assets";
 import { formatKoreanMobileInput } from "@/lib/phone-format";
 import { formatCurrency } from "@/lib/utils";
@@ -231,7 +232,8 @@ export function OrderForm({ referralCode, initialItems = [] }: OrderFormProps) {
   );
 
   useEffect(() => {
-    setResolvedReferralCode(referralCode);
+    // URL에 ref가 없어도 `/?ref=` 방문으로 남은 쿠키·localStorage를 쓴다.
+    setResolvedReferralCode(referralCode ?? referralCodeFromStoredSession());
   }, [referralCode]);
 
   useEffect(() => {

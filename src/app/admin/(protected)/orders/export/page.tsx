@@ -134,7 +134,8 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
       })
     : "";
 
-  const statusDefault = status?.trim() || "PAID";
+  /** 결제완료만 기본이면 대기 주문만 있을 때 빈 엑셀이 내려가 ‘안 된다’로 오해하기 쉬움 → 전체 기본 */
+  const statusDefault = status?.trim() || "ALL";
   const fulfillmentDefault =
     statusDefault === "PAID"
       ? fulfillment?.trim() && ["AWAITING_SHIP", "IN_TRANSIT", "DELIVERED"].includes(fulfillment.trim())
@@ -242,10 +243,10 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
                 defaultValue={statusDefault}
                 className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none focus:border-[#b89156]/50"
               >
-                <option value="PAID">결제완료</option>
-                <option value="PENDING">결제대기</option>
-                <option value="CANCELLED_REFUNDED">취소·환불</option>
                 <option value="ALL">전체</option>
+                <option value="PENDING">결제대기</option>
+                <option value="PAID">결제완료</option>
+                <option value="CANCELLED_REFUNDED">취소·환불</option>
               </select>
             </label>
             <label className="flex flex-col gap-1 text-xs font-medium text-stone-600">
@@ -296,12 +297,16 @@ export default async function AdminOrdersExportPage({ searchParams }: PageProps)
               formAction="/api/admin/orders/export"
               formTarget="_blank"
               formNoValidate
-              disabled={!dbOk || !excelHref}
+              disabled={!dbOk}
               className="rounded-full bg-[#8b673f] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#755530] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {tab === "promo" ? "이 조건으로 공구 엑셀 받기" : "이 조건으로 일반 엑셀 받기"}
             </button>
           </div>
+          <p className="text-xs leading-relaxed text-stone-500">
+            결제완료만 선택했는데 결제 완료 주문이 없으면 <strong className="font-medium text-stone-700">빈 엑셀</strong>이 내려갑니다.
+            지금은 결제대기가 많으니 기본값 <strong className="font-medium text-stone-700">전체</strong>로 받은 뒤, 필요하면 결제완료만 다시 조회하세요.
+          </p>
         </form>
       </div>
 

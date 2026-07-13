@@ -7,7 +7,7 @@ export function parseCampaignProductSlugs(json: unknown): ProductSlug[] {
   return json.filter((x): x is ProductSlug => x === "sun-pack" || x === "illuminator");
 }
 
-function unitPriceForSlug(listPrice: number, slug: ProductSlug, campaign: PromoCampaign): number {
+export function unitPriceForSlug(listPrice: number, slug: ProductSlug, campaign: PromoCampaign): number {
   const allowed = parseCampaignProductSlugs(campaign.productSlugs);
   if (!allowed.includes(slug)) {
     return listPrice;
@@ -22,6 +22,32 @@ function unitPriceForSlug(listPrice: number, slug: ProductSlug, campaign: PromoC
   const off = campaign.discountValue;
   if (off < 0) return listPrice;
   return Math.max(0, listPrice - off);
+}
+
+/** 상세·목록 등 스토어프론트에 보여줄 공구 할인가 */
+export type StorefrontPromoOffer = {
+  code: string;
+  title: string;
+  listPrice: number;
+  salePrice: number;
+  discountAmount: number;
+};
+
+export function buildStorefrontPromoOffer(
+  listPrice: number,
+  slug: ProductSlug,
+  campaign: PromoCampaign | null | undefined,
+): StorefrontPromoOffer | null {
+  if (!campaign?.isActive) return null;
+  const salePrice = unitPriceForSlug(listPrice, slug, campaign);
+  if (salePrice >= listPrice) return null;
+  return {
+    code: campaign.code,
+    title: campaign.title,
+    listPrice,
+    salePrice,
+    discountAmount: listPrice - salePrice,
+  };
 }
 
 export type OrderPricingLine = {

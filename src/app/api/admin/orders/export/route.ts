@@ -9,7 +9,7 @@ import { sanitizeReferralCode } from "@/lib/referral-code";
 const exportQuerySchema = z.object({
   from: z.string().max(16).optional(),
   to: z.string().max(16).optional(),
-  status: z.enum(["ALL", "PAID", "PENDING", "CANCELLED_REFUNDED"]).default("PAID"),
+  status: z.enum(["ALL", "PAID", "PENDING", "CANCELLED_REFUNDED"]).default("ALL"),
   fulfillment: z.enum(["ALL", "AWAITING_SHIP", "IN_TRANSIT", "DELIVERED"]).default("ALL"),
   inflowCode: z
     .string()

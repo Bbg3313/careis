@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { OrderForm } from "@/components/order-form";
 import { getProductBySlug } from "@/lib/product-data";
+import { getReferralCodeFromCookie } from "@/lib/referral";
 import { sanitizeReferralCode } from "@/lib/referral-code";
 import { noIndexPageMetadata } from "@/lib/site-seo";
 
@@ -24,7 +25,9 @@ export default async function OrderPage({
     redirect("/products");
   }
 
-  const referralCode = sanitizeReferralCode(params.ref ?? null);
+  /** URL `?ref=` 우선, 없으면 홈 등에서 저장해 둔 레퍼럴 쿠키 */
+  const referralCode =
+    sanitizeReferralCode(params.ref ?? null) ?? sanitizeReferralCode(await getReferralCodeFromCookie());
   const quantity = Math.max(1, Number(params.qty ?? "1"));
 
   return (

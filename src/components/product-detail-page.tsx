@@ -4,11 +4,13 @@ import { Suspense } from "react";
 import { DetailAccordionItem } from "@/components/detail-accordion-item";
 import { IlluminatorDetailStory } from "@/components/illuminator-detail-story";
 import { MobileProductStickyCta } from "@/components/mobile-product-sticky-cta";
+import { ProductStorefrontPrice } from "@/components/product-storefront-price";
 import { SunPackDetailGallery } from "@/components/sun-pack-detail-gallery";
 import { SunPackStorySlide as SunPackStorySlideView } from "@/components/sun-pack-story-slide";
 import { SunPackDetailTabs } from "@/components/sun-pack-detail-tabs";
 import { appendPromoRefToHref } from "@/lib/referral-code";
 import type { ProductContent } from "@/lib/product-data";
+import type { StorefrontPromoOffer } from "@/lib/promo-pricing";
 import { BUSINESS_INFO, exchangeReturnAddressWithTrade } from "@/lib/business-info";
 import { splitParagraphs } from "@/lib/text-paragraphs";
 import {
@@ -19,16 +21,17 @@ import {
   SUN_PACK_DETAIL_MAX_WIDTH_PX,
   type SunPackStorySlide,
 } from "@/lib/site-assets";
-import { formatCurrency } from "@/lib/utils";
 
 export function ProductDetailPage({
   product,
   sunPackStorySlides,
   referralRef = null,
+  promoOffer = null,
 }: {
   product: ProductContent;
   sunPackStorySlides?: SunPackStorySlide[];
   referralRef?: string | null;
+  promoOffer?: StorefrontPromoOffer | null;
 }) {
   const visual = productVisuals[product.slug];
 
@@ -39,6 +42,7 @@ export function ProductDetailPage({
         visual={visual}
         storySlides={sunPackStorySlides ?? sunPackDetailAssets.storyImages}
         referralRef={referralRef}
+        promoOffer={promoOffer}
       />
     );
   }
@@ -50,6 +54,7 @@ export function ProductDetailPage({
         visual={visual as (typeof productVisuals)["illuminator"]}
         storySlides={sunPackStorySlides ?? []}
         referralRef={referralRef}
+        promoOffer={promoOffer}
       />
     );
   }
@@ -62,11 +67,13 @@ function IlluminatorDetailPage({
   visual,
   storySlides,
   referralRef = null,
+  promoOffer = null,
 }: {
   product: ProductContent;
   visual: (typeof productVisuals)["illuminator"];
   storySlides: SunPackStorySlide[];
   referralRef?: string | null;
+  promoOffer?: StorefrontPromoOffer | null;
 }) {
   const purchaseAsideBody = (
     <>
@@ -91,7 +98,9 @@ function IlluminatorDetailPage({
         </div>
         <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
           <dt className="text-stone-500">판매가</dt>
-          <dd className="text-xl font-semibold text-stone-900">{formatCurrency(product.price)}</dd>
+          <dd>
+            <ProductStorefrontPrice listPrice={product.price} offer={promoOffer} />
+          </dd>
         </div>
         <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
           <dt className="text-stone-500">배송방법</dt>
@@ -104,9 +113,9 @@ function IlluminatorDetailPage({
       </dl>
 
       <div className="rounded-[18px] bg-slate-50 p-5">
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-sm text-stone-500">총 상품금액</span>
-          <strong className="text-2xl font-semibold text-stone-900">{formatCurrency(product.price)}</strong>
+        <div className="flex items-start justify-between gap-4">
+          <span className="pt-1 text-sm text-stone-500">총 상품금액</span>
+          <ProductStorefrontPrice listPrice={product.price} offer={promoOffer} size="xl" />
         </div>
       </div>
 
@@ -198,7 +207,7 @@ function IlluminatorDetailPage({
       </div>
 
       <Suspense fallback={null}>
-        <MobileProductStickyCta product={product} />
+        <MobileProductStickyCta product={product} referralRef={referralRef} promoOffer={promoOffer} />
       </Suspense>
     </div>
   );
@@ -323,11 +332,13 @@ function SunPackDetailPage({
   visual,
   storySlides,
   referralRef = null,
+  promoOffer = null,
 }: {
   product: ProductContent;
   visual: (typeof productVisuals)["sun-pack"];
   storySlides: SunPackStorySlide[];
   referralRef?: string | null;
+  promoOffer?: StorefrontPromoOffer | null;
 }) {
   const purchaseAsideBody = (
     <>
@@ -352,7 +363,9 @@ function SunPackDetailPage({
         </div>
         <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
           <dt className="text-stone-500">판매가</dt>
-          <dd className="text-xl font-semibold text-stone-900">{formatCurrency(product.price)}</dd>
+          <dd>
+            <ProductStorefrontPrice listPrice={product.price} offer={promoOffer} />
+          </dd>
         </div>
         <div className="grid grid-cols-[110px_1fr] gap-4 border-b border-stone-100 pb-4">
           <dt className="text-stone-500">배송방법</dt>
@@ -365,9 +378,9 @@ function SunPackDetailPage({
       </dl>
 
       <div className="rounded-[18px] bg-[#f8f5ef] p-5">
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-sm text-stone-500">총 상품금액</span>
-          <strong className="text-2xl font-semibold text-stone-900">{formatCurrency(product.price)}</strong>
+        <div className="flex items-start justify-between gap-4">
+          <span className="pt-1 text-sm text-stone-500">총 상품금액</span>
+          <ProductStorefrontPrice listPrice={product.price} offer={promoOffer} size="xl" />
         </div>
       </div>
 
@@ -445,7 +458,7 @@ function SunPackDetailPage({
       </div>
 
       <Suspense fallback={null}>
-        <MobileProductStickyCta product={product} />
+        <MobileProductStickyCta product={product} referralRef={referralRef} promoOffer={promoOffer} />
       </Suspense>
     </div>
   );

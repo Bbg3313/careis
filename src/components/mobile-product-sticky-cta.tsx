@@ -6,7 +6,8 @@ import { createPortal } from "react-dom";
 import { useLayoutEffect, useMemo, useState } from "react";
 
 import type { ProductContent } from "@/lib/product-data";
-import { referralCodeFromUrlForStorefront } from "@/lib/referral-browser";
+import type { StorefrontPromoOffer } from "@/lib/promo-pricing";
+import { resolveStorefrontReferralCode } from "@/lib/referral-browser";
 import { appendPromoRefToHref } from "@/lib/referral-code";
 import { formatCurrency } from "@/lib/utils";
 
@@ -29,12 +30,23 @@ function primaryCtaClasses(theme: ProductContent["theme"]) {
  * viewport 기준 하단 고정. `main` 안에 두면 부모 transform/overflow에 묶일 수 있어
  * `document.body`로 포털해 모바일에서도 항상 최상단 레이어에 붙습니다.
  */
-export function MobileProductStickyCta({ product }: { product: ProductContent }) {
+export function MobileProductStickyCta({
+  product,
+  referralRef = null,
+  promoOffer = null,
+}: {
+  product: ProductContent;
+  referralRef?: string | null;
+  promoOffer?: StorefrontPromoOffer | null;
+}) {
   const searchParams = useSearchParams();
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
-  const refCode = useMemo(() => referralCodeFromUrlForStorefront(searchParams), [searchParams]);
-  const hasReferral = Boolean(refCode);
+  const refCode = useMemo(
+    () => resolveStorefrontReferralCode(searchParams, referralRef),
+    [searchParams, referralRef],
+  );
+  const hasPromoPrice = Boolean(promoOffer);
 
   useLayoutEffect(() => {
     setPortalTarget(document.body);
@@ -48,20 +60,19 @@ export function MobileProductStickyCta({ product }: { product: ProductContent })
     () => appendPromoRefToHref(`/cart?product=${product.slug}`, refCode),
     [product.slug, refCode],
   );
-  const pct = hasReferral ? product.promoMaxDiscountPercent : undefined;
-  const primaryLine =
-    hasReferral && pct != null && pct > 0
-      ? `최대 ${pct}% 할인받고 구매하기`
-      : hasReferral
-        ? "캠페인·공구 링크로 구매하기"
-        : "지금 바로 구매하기";
 
-  const promoNote =
-    hasReferral && product.promoMaxDiscountNote
-      ? product.promoMaxDiscountNote
-      : hasReferral
-        ? "* 결제 단계에서 캠페인 조건이 안내된 대로 적용됩니다."
-        : null;
+  const displayPrice = promoOffer?.salePrice ?? product.price;
+  const primaryLine = hasPromoPrice
+    ? `${formatCurrency(promoOffer!.discountAmount)} 할인받고 구매하기`
+    : refCode
+      ? "캠페인·공구 링크로 구매하기"
+      : "지금 바로 구매하기";
+
+  const promoNote = hasPromoPrice
+    ? `* 정가 ${formatCurrency(promoOffer!.listPrice)} → 할인가 ${formatCurrency(promoOffer!.salePrice)}`
+    : refCode
+      ? "* 결제 단계에서 캠페인 조건이 안내된 대로 적용됩니다."
+      : null;
 
   const bar = (
     <div
@@ -74,9 +85,20 @@ export function MobileProductStickyCta({ product }: { product: ProductContent })
         <div className="flex min-w-0 items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-[12px] font-medium text-stone-500">{product.name}</p>
-            <p className="mt-0.5 text-xl font-bold tabular-nums tracking-tight text-stone-900">
-              {formatCurrency(product.price)}
-            </p>
+            {hasPromoPrice ? (
+              <div className="mt-0.5 flex flex-wrap items-baseline gap-x-2">
+                <span className="text-sm font-medium text-stone-400 line-through tabular-nums">
+                  {formatCurrency(promoOffer!.listPrice)}
+                </span>
+                <span className="text-xl font-bold tabular-nums tracking-tight text-[#8b673f]">
+                  {formatCurrency(displayPrice)}
+                </span>
+              </div>
+            ) : (
+              <p className="mt-0.5 text-xl font-bold tabular-nums tracking-tight text-stone-900">
+                {formatCurrency(displayPrice)}
+              </p>
+            )}
           </div>
           <Link
             href={cartHref}

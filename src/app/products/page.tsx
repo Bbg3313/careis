@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 
 import { ProductCard } from "@/components/product-card";
 import { products } from "@/lib/product-data";
+import { findActivePromoByCode } from "@/lib/promo";
+import { buildStorefrontPromoOffer } from "@/lib/promo-pricing";
+import { getReferralCodeFromCookie } from "@/lib/referral";
+import { sanitizeReferralCode } from "@/lib/referral-code";
 import { SITE_NAME } from "@/lib/site-seo";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "제품",
@@ -18,7 +24,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ref?: string }>;
+}) {
+  const { ref } = await searchParams;
+  const referralRef =
+    sanitizeReferralCode(ref ?? null) ?? sanitizeReferralCode(await getReferralCodeFromCookie());
+  const campaign = await findActivePromoByCode(referralRef);
+
   return (
     <div className="space-y-12 pb-24">
       <section className="space-y-4 rounded-[28px] bg-[linear-gradient(145deg,#fff8f1_0%,#eff3fb_100%)] p-8 shadow-[0_24px_80px_rgba(73,53,26,0.06)] md:rounded-[40px] md:p-12">
@@ -34,7 +49,11 @@ export default function ProductsPage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         {products.map((product) => (
-          <ProductCard key={product.slug} product={product} />
+          <ProductCard
+            key={product.slug}
+            product={product}
+            promoOffer={buildStorefrontPromoOffer(product.price, product.slug, campaign)}
+          />
         ))}
       </div>
     </div>

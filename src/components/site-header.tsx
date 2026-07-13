@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import { PromoCountdownGate } from "@/components/promo-countdown-gate";
 import { SiteLogo } from "@/components/site-logo";
+import { StorefrontOrderLink } from "@/components/storefront-order-link";
 
 const navItems = [
   { href: "/#brand", label: "BRAND" },
@@ -49,12 +50,23 @@ export function SiteHeader({ showStorefrontPromoGate = false }: { showStorefront
                 </Link>
               ))}
             </div>
-            <Link
-              href="/order"
-              className="btn-luxe-primary hidden shrink-0 whitespace-nowrap px-5 py-2.5 text-[12px] tracking-[0.1em] lg:inline-flex"
+            <Suspense
+              fallback={
+                <Link
+                  href="/order"
+                  className="btn-luxe-primary hidden shrink-0 whitespace-nowrap px-5 py-2.5 text-[12px] tracking-[0.1em] lg:inline-flex"
+                >
+                  구매하기
+                </Link>
+              }
             >
-              구매하기
-            </Link>
+              <StorefrontOrderLink
+                href="/order"
+                className="btn-luxe-primary hidden shrink-0 whitespace-nowrap px-5 py-2.5 text-[12px] tracking-[0.1em] lg:inline-flex"
+              >
+                구매하기
+              </StorefrontOrderLink>
+            </Suspense>
           </nav>
         </div>
       </div>
