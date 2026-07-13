@@ -1,6 +1,7 @@
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
 import { AdminOrdersShipmentTable, type AdminOrdersShipmentRow } from "@/components/admin-orders-shipment-table";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
+import { StatusConfirmDialog } from "@/components/status-confirm-dialog";
 import { adminOrderProgressLabel, isPaidOrderAwaitingShipment } from "@/lib/admin-fulfillment";
 import { buildAdminOrdersExportApiHref, buildAdminOrdersHref } from "@/lib/admin-orders-date-filter";
 import { parseAdminOrdersListSearch } from "@/lib/admin-order-search";
@@ -9,6 +10,7 @@ import { ADMIN_ORDER_LIST_TAKE, loadAdminOrdersList } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
+import { Suspense } from "react";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +23,7 @@ type PageProps = {
     to?: string;
     searchBy?: string;
     q?: string;
+    deleted?: string;
   }>;
 };
 
@@ -52,8 +55,9 @@ function fulfillmentChipLabel(fulfillment: string | undefined) {
 }
 
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
-  const { status, fulfillment, queue: queueRaw, from, to, searchBy, q } = await searchParams;
+  const { status, fulfillment, queue: queueRaw, from, to, searchBy, q, deleted: deletedRaw } = await searchParams;
   const queue = queueRaw === "cancelRequest" ? "cancelRequest" : undefined;
+  const deletedOrderNumber = deletedRaw?.trim() || "";
   const loaded = await loadAdminOrdersList({ from, to, status, fulfillment, queue, searchBy, q });
 
   const orders = loaded.ok ? loaded.orders : [];
@@ -147,6 +151,20 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-8">
+      <Suspense fallback={null}>
+        <StatusConfirmDialog
+          open={Boolean(deletedOrderNumber)}
+          title="주문이 삭제되었습니다"
+          message={
+            deletedOrderNumber
+              ? `${deletedOrderNumber} 주문이 목록에서 완전히 삭제되었습니다. 복구할 수 없습니다.`
+              : "주문이 삭제되었습니다."
+          }
+          clearParam="deleted"
+          confirmLabel="확인"
+        />
+      </Suspense>
+
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-stone-900">주문 목록</h1>

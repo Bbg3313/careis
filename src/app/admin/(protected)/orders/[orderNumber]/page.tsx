@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import { cancelOrderPaymentForm, markOrderDeliveredForm, saveOrderAdminForm } from "./actions";
+import { cancelOrderPaymentForm, deleteOrderForm, markOrderDeliveredForm, saveOrderAdminForm } from "./actions";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
 import { StatusConfirmDialog } from "@/components/status-confirm-dialog";
 import { adminFulfillmentLabel, adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
@@ -20,13 +20,14 @@ export default async function AdminOrderDetailPage({
   searchParams,
 }: {
   params: Promise<{ orderNumber: string }>;
-  searchParams: Promise<{ cancelError?: string; cancelOk?: string }>;
+  searchParams: Promise<{ cancelError?: string; cancelOk?: string; deleteError?: string }>;
 }) {
   const { orderNumber: raw } = await params;
   const q = await searchParams;
   const orderNumber = decodeURIComponent(raw);
   const cancelError = q.cancelError?.trim() || null;
   const cancelOk = q.cancelOk === "1";
+  const deleteError = q.deleteError?.trim() || null;
   const loaded = await loadAdminOrderByNumber(orderNumber);
   if (!loaded.ok) {
     return (
@@ -62,6 +63,7 @@ export default async function AdminOrderDetailPage({
     order.fulfillmentStatus !== FulfillmentStatus.DELIVERED &&
     Boolean(order.trackingNumber?.trim());
   const canCancelOrder = order.paymentStatus === "PAID" || order.paymentStatus === "PENDING";
+  const canDeleteOrder = order.paymentStatus !== "PAID";
 
   return (
     <div className="space-y-8">
@@ -90,6 +92,9 @@ export default async function AdminOrderDetailPage({
       </Suspense>
       {cancelError ? (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-950">{cancelError}</div>
+      ) : null}
+      {deleteError ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-950">{deleteError}</div>
       ) : null}
       {order.customerCancelRequestedAt ? (
         <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
@@ -317,6 +322,40 @@ export default async function AdminOrderDetailPage({
           </form>
         </section>
       ) : null}
+
+      {canDeleteOrder ? (
+        <section className="rounded-2xl border border-stone-300 bg-stone-50 p-6 shadow-sm">
+          <h2 className="text-sm font-semibold text-stone-900">주문 삭제</h2>
+          <p className="mt-1 text-xs leading-6 text-stone-600">
+            목록·통계에서 이 주문을 <strong className="font-medium text-stone-800">완전히 삭제</strong>합니다. 복구할 수
+            없습니다. 결제완료 주문은 먼저 결제 취소(환불)한 뒤에만 삭제할 수 있습니다.
+          </p>
+          <form action={deleteOrderForm.bind(null, order.orderNumber)} className="mt-5 space-y-4">
+            <label className="block text-sm">
+              <span className="text-stone-700">
+                확인 — 아래 칸에 <strong className="font-semibold">삭제</strong> 라고 입력
+              </span>
+              <input
+                name="confirmDelete"
+                required
+                autoComplete="off"
+                placeholder="삭제"
+                className="mt-1 w-full max-w-xs rounded-xl border border-stone-300 bg-white px-3 py-2 text-stone-900 outline-none focus:border-stone-500"
+              />
+            </label>
+            <button
+              type="submit"
+              className="rounded-full bg-stone-900 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-stone-800"
+            >
+              주문 영구 삭제
+            </button>
+          </form>
+        </section>
+      ) : (
+        <section className="rounded-2xl border border-dashed border-stone-200 bg-white p-6 text-sm text-stone-500">
+          결제완료 주문은 삭제할 수 없습니다. 위에서 결제 취소(환불)한 뒤 삭제해 주세요.
+        </section>
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { requireAdminUser } from "@/lib/admin-auth";
 import {
   adminCancelOrder,
+  adminDeleteOrder,
   markAdminOrderDelivered,
   syncOrderDeliveryFromSweetTracker,
   updateOrderAdminFields,
@@ -69,4 +70,28 @@ export async function cancelOrderPaymentForm(orderNumber: string, formData: Form
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${encodeURIComponent(orderNumber)}`);
   redirect(orderDetailPath(orderNumber, { cancelOk: "1" }));
+}
+
+export async function deleteOrderForm(orderNumber: string, formData: FormData) {
+  await requireAdminUser();
+
+  const confirmText = String(formData.get("confirmDelete") ?? "").trim();
+  if (confirmText !== "삭제") {
+    redirect(
+      orderDetailPath(orderNumber, {
+        deleteError: "확인을 위해 입력란에 「삭제」라고 적어 주세요.",
+      }),
+    );
+  }
+
+  try {
+    await adminDeleteOrder(orderNumber);
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "주문 삭제에 실패했습니다.";
+    redirect(orderDetailPath(orderNumber, { deleteError: message }));
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/orders");
+  redirect(`/admin/orders?deleted=${encodeURIComponent(orderNumber)}`);
 }

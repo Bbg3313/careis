@@ -1061,6 +1061,26 @@ export async function adminCancelOrder(
   return { order: refunded, alreadyDone: false };
 }
 
+/**
+ * 관리자 주문 삭제(하드 삭제). OrderItem은 cascade.
+ * 결제완료(PAID)는 환불·취소 후만 삭제 가능 — 실결제 건 실수 삭제 방지.
+ */
+export async function adminDeleteOrder(orderNumber: string) {
+  const order = await prisma.order.findUnique({
+    where: { orderNumber },
+    select: { orderNumber: true, paymentStatus: true },
+  });
+  if (!order) {
+    throw new Error("주문을 찾을 수 없습니다.");
+  }
+  if (order.paymentStatus === OrderStatus.PAID) {
+    throw new Error("결제완료 주문은 먼저 결제 취소(환불)한 뒤 삭제할 수 있습니다.");
+  }
+
+  await prisma.order.delete({ where: { orderNumber } });
+  return { orderNumber: order.orderNumber };
+}
+
 function digitsOnlyPhone(value: string) {
   return value.replace(/\D/g, "");
 }
