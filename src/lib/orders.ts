@@ -195,6 +195,8 @@ const adminOrdersListSelect = {
   carrier: true,
   trackingCarrierCode: true,
   trackingNumber: true,
+  customerCancelRequestedAt: true,
+  customerCancelReason: true,
   totalAmount: true,
   referralCode: true,
   appliedPromoCode: true,
@@ -231,11 +233,19 @@ const awaitingShipInPaidWhere: Prisma.OrderWhereInput = {
   AND: [{ NOT: { fulfillmentStatus: FulfillmentStatus.DELIVERED } }, { NOT: inTransitOrHasTrackingWhere }],
 };
 
+/** 고객이 남긴 환불·취소 요청 대기 (관리자 미처리) */
+export const pendingCustomerCancelRequestWhere: Prisma.OrderWhereInput = {
+  customerCancelRequestedAt: { not: null },
+  paymentStatus: OrderStatus.PAID,
+};
+
 function buildAdminOrdersListWhere(input: {
   from?: string;
   to?: string;
   status?: string;
   fulfillment?: string;
+  /** `cancelRequest`이면 고객 환불요청 대기만 */
+  queue?: string;
   search: ReturnType<typeof parseAdminOrdersListSearch>;
 }): Prisma.OrderWhereInput {
   const and: Prisma.OrderWhereInput[] = [];
@@ -244,30 +254,34 @@ function buildAdminOrdersListWhere(input: {
     and.push(dateWhere as Prisma.OrderWhereInput);
   }
 
-  const st = input.status?.trim();
-  if (st === "PAID") {
-    and.push({ paymentStatus: OrderStatus.PAID });
-  } else if (st === "PENDING") {
-    and.push({ paymentStatus: OrderStatus.PENDING });
-  } else if (st === "CANCELLED_REFUNDED") {
-    and.push({ paymentStatus: { in: [OrderStatus.CANCELLED, OrderStatus.REFUNDED] } });
-  }
+  if (input.queue === "cancelRequest") {
+    and.push(pendingCustomerCancelRequestWhere);
+  } else {
+    const st = input.status?.trim();
+    if (st === "PAID") {
+      and.push({ paymentStatus: OrderStatus.PAID });
+    } else if (st === "PENDING") {
+      and.push({ paymentStatus: OrderStatus.PENDING });
+    } else if (st === "CANCELLED_REFUNDED") {
+      and.push({ paymentStatus: { in: [OrderStatus.CANCELLED, OrderStatus.REFUNDED] } });
+    }
 
-  if (st === "PAID") {
-    const ful = input.fulfillment?.trim();
-    if (ful && ful !== "ALL") {
-      if (ful === "DELIVERED") {
-        and.push({ fulfillmentStatus: FulfillmentStatus.DELIVERED });
-      } else if (ful === "IN_TRANSIT") {
-        and.push({
-          NOT: { fulfillmentStatus: FulfillmentStatus.DELIVERED },
-          OR: [
-            { fulfillmentStatus: FulfillmentStatus.IN_TRANSIT },
-            nonEmptyTrackingWhere,
-          ],
-        });
-      } else if (ful === "AWAITING_SHIP") {
-        and.push(awaitingShipInPaidWhere);
+    if (st === "PAID") {
+      const ful = input.fulfillment?.trim();
+      if (ful && ful !== "ALL") {
+        if (ful === "DELIVERED") {
+          and.push({ fulfillmentStatus: FulfillmentStatus.DELIVERED });
+        } else if (ful === "IN_TRANSIT") {
+          and.push({
+            NOT: { fulfillmentStatus: FulfillmentStatus.DELIVERED },
+            OR: [
+              { fulfillmentStatus: FulfillmentStatus.IN_TRANSIT },
+              nonEmptyTrackingWhere,
+            ],
+          });
+        } else if (ful === "AWAITING_SHIP") {
+          and.push(awaitingShipInPaidWhere);
+        }
       }
     }
   }
@@ -286,6 +300,7 @@ export async function loadAdminOrdersList(params: {
   to?: string;
   status?: string;
   fulfillment?: string;
+  queue?: string;
   searchBy?: string;
   q?: string;
 }): Promise<
@@ -294,19 +309,22 @@ export async function loadAdminOrdersList(params: {
       orders: AdminOrderListRow[];
       totalMatching: number;
       fulfillmentStats: { all: number; awaiting: number; inTransit: number; delivered: number };
+      cancelRequestCount: number;
       listCapped: boolean;
     }
   | { ok: false }
 > {
   try {
     const search = parseAdminOrdersListSearch(params.searchBy, params.q);
-    const fulfillmentEffective = params.status === "PAID" ? params.fulfillment : undefined;
+    const queue = params.queue === "cancelRequest" ? "cancelRequest" : undefined;
+    const fulfillmentEffective = !queue && params.status === "PAID" ? params.fulfillment : undefined;
 
     const listWhere = buildAdminOrdersListWhere({
       from: params.from,
       to: params.to,
-      status: params.status,
+      status: queue ? undefined : params.status,
       fulfillment: fulfillmentEffective,
+      queue,
       search,
     });
 
@@ -321,19 +339,25 @@ export async function loadAdminOrdersList(params: {
     });
     const awaitingCountWhere = mergeOrderWhere(paidBase, awaitingShipInPaidWhere);
 
-    const [totalMatching, orders, paidAll, awaitingCnt, inTransitCnt, deliveredCnt] = await Promise.all([
-      prisma.order.count({ where: listWhere }),
-      prisma.order.findMany({
-        where: listWhere,
-        select: adminOrdersListSelect,
-        orderBy: { createdAt: "desc" },
-        take: ADMIN_ORDER_LIST_TAKE,
-      }),
-      prisma.order.count({ where: paidBase }),
-      prisma.order.count({ where: awaitingCountWhere }),
-      prisma.order.count({ where: inTransitCountWhere }),
-      prisma.order.count({ where: deliveredWhere }),
-    ]);
+    const [totalMatching, orders, paidAll, awaitingCnt, inTransitCnt, deliveredCnt, cancelRequestCount] =
+      await Promise.all([
+        prisma.order.count({ where: listWhere }),
+        prisma.order.findMany({
+          where: listWhere,
+          select: adminOrdersListSelect,
+          orderBy:
+            queue === "cancelRequest"
+              ? [{ customerCancelRequestedAt: "desc" }, { createdAt: "desc" }]
+              : { createdAt: "desc" },
+          take: ADMIN_ORDER_LIST_TAKE,
+        }),
+        prisma.order.count({ where: paidBase }),
+        prisma.order.count({ where: awaitingCountWhere }),
+        prisma.order.count({ where: inTransitCountWhere }),
+        prisma.order.count({ where: deliveredWhere }),
+        // 대시보드·배지용: 기간과 무관하게 미처리 요청 전체
+        prisma.order.count({ where: pendingCustomerCancelRequestWhere }),
+      ]);
 
     return {
       ok: true,
@@ -345,6 +369,7 @@ export async function loadAdminOrdersList(params: {
         inTransit: inTransitCnt,
         delivered: deliveredCnt,
       },
+      cancelRequestCount,
       listCapped: totalMatching > ADMIN_ORDER_LIST_TAKE,
     };
   } catch (error) {
@@ -798,7 +823,7 @@ export async function getOrderStats(dateQuery?: { from?: string; to?: string }) 
     ...notDelivered,
     OR: [{ fulfillmentStatus: FulfillmentStatus.IN_TRANSIT }, NON_EMPTY_TRACK],
   };
-  const [all, pending, paid, cancelled, refunded, paidDelivered, paidInTransit, paidAwaitingShip] =
+  const [all, pending, paid, cancelled, refunded, paidDelivered, paidInTransit, paidAwaitingShip, cancelRequestPending] =
     await Promise.all([
       prisma.order.count({ where: base }),
       prisma.order.count({ where: { ...base, paymentStatus: OrderStatus.PENDING } }),
@@ -815,8 +840,20 @@ export async function getOrderStats(dateQuery?: { from?: string; to?: string }) 
           NOT: { OR: [{ fulfillmentStatus: FulfillmentStatus.IN_TRANSIT }, NON_EMPTY_TRACK] },
         },
       }),
+      // 미처리 요청은 기간 필터와 무관하게 전체 카운트
+      prisma.order.count({ where: pendingCustomerCancelRequestWhere }),
     ]);
-  return { all, pending, paid, cancelled, refunded, paidAwaitingShip, paidInTransit, paidDelivered };
+  return {
+    all,
+    pending,
+    paid,
+    cancelled,
+    refunded,
+    paidAwaitingShip,
+    paidInTransit,
+    paidDelivered,
+    cancelRequestPending,
+  };
 }
 
 export async function setOrderPaymentRequested(orderNumber: string, metadata: PaymentRequestMetadata) {

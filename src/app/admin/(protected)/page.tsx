@@ -49,6 +49,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
         paidAwaitingShip: 0,
         paidInTransit: 0,
         paidDelivered: 0,
+        cancelRequestPending: 0,
       };
   const recent = loaded.ok ? loaded.orders : [];
 
@@ -92,7 +93,7 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
 
       <div>
         <h2 className="mb-3 text-base font-semibold text-stone-900">주문 요약</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <StatCard label="전체" value={stats.all} href={buildAdminOrdersHref({ from, to })} />
           <StatCard label="결제 완료" value={stats.paid} href={buildAdminOrdersHref({ status: "PAID", from, to })} />
           <StatCard label="결제 대기" value={stats.pending} href={buildAdminOrdersHref({ status: "PENDING", from, to })} />
@@ -100,6 +101,11 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
             label="취소·환불"
             value={stats.cancelled + stats.refunded}
             href={buildAdminOrdersHref({ status: "CANCELLED_REFUNDED", from, to })}
+          />
+          <StatCard
+            label="환불요청 대기"
+            value={stats.cancelRequestPending}
+            href={buildAdminOrdersHref({ queue: "cancelRequest" })}
           />
         </div>
       </div>

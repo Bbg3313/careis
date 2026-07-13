@@ -16,6 +16,7 @@ type PageProps = {
   searchParams: Promise<{
     status?: string;
     fulfillment?: string;
+    queue?: string;
     from?: string;
     to?: string;
     searchBy?: string;
@@ -23,7 +24,8 @@ type PageProps = {
   }>;
 };
 
-function statusLabel(status: string | undefined) {
+function statusLabel(status: string | undefined, queue: string | undefined) {
+  if (queue === "cancelRequest") return "환불요청 대기";
   switch (status) {
     case "PAID":
       return "결제 완료";
@@ -50,25 +52,29 @@ function fulfillmentChipLabel(fulfillment: string | undefined) {
 }
 
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
-  const { status, fulfillment, from, to, searchBy, q } = await searchParams;
-  const loaded = await loadAdminOrdersList({ from, to, status, fulfillment, searchBy, q });
+  const { status, fulfillment, queue: queueRaw, from, to, searchBy, q } = await searchParams;
+  const queue = queueRaw === "cancelRequest" ? "cancelRequest" : undefined;
+  const loaded = await loadAdminOrdersList({ from, to, status, fulfillment, queue, searchBy, q });
 
   const orders = loaded.ok ? loaded.orders : [];
   const totalMatching = loaded.ok ? loaded.totalMatching : 0;
   const fulfillmentStats = loaded.ok
     ? loaded.fulfillmentStats
     : { all: 0, awaiting: 0, inTransit: 0, delivered: 0 };
+  const cancelRequestCount = loaded.ok ? loaded.cancelRequestCount : 0;
   const listCapped = loaded.ok ? loaded.listCapped : false;
 
   const parsedSearch = parseAdminOrdersListSearch(searchBy, q);
   const searchHrefOpts = parsedSearch ? { searchBy: parsedSearch.by, q: parsedSearch.needle } : {};
 
-  const fulfillmentEffective = status === "PAID" ? fulfillment : undefined;
+  const fulfillmentEffective = !queue && status === "PAID" ? fulfillment : undefined;
 
-  const clearOrdersHref = buildAdminOrdersHref({
-    status: status || undefined,
-    fulfillment: fulfillmentEffective || undefined,
-  });
+  const clearOrdersHref = queue
+    ? buildAdminOrdersHref({ queue: "cancelRequest" })
+    : buildAdminOrdersHref({
+        status: status || undefined,
+        fulfillment: fulfillmentEffective || undefined,
+      });
 
   const tabs = [
     { href: buildAdminOrdersHref({ from, to, ...searchHrefOpts }), label: "전체", key: "" },
@@ -104,9 +110,11 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
   const searchNote = parsedSearch ? " · 검색 적용" : "";
   const capNote = listCapped ? ` · 최신 ${ADMIN_ORDER_LIST_TAKE}건만 표시` : "";
   const subtitle =
-    chip && status === "PAID"
-      ? `${statusLabel(status)} · ${chip} · ${totalMatching}건${searchNote}${capNote}`
-      : `${statusLabel(status)} · ${totalMatching}건${searchNote}${capNote}`;
+    queue === "cancelRequest"
+      ? `고객 환불·취소 요청 대기 · ${totalMatching}건${searchNote}${capNote}`
+      : chip && status === "PAID"
+        ? `${statusLabel(status, queue)} · ${chip} · ${totalMatching}건${searchNote}${capNote}`
+        : `${statusLabel(status, queue)} · ${totalMatching}건${searchNote}${capNote}`;
 
   const exportApiHref = loaded.ok
     ? buildAdminOrdersExportApiHref({
@@ -130,6 +138,11 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
     canRegisterShipment: isPaidOrderAwaitingShipment(order),
     trackingCarrierCode: order.trackingCarrierCode ?? "",
     trackingNumber: order.trackingNumber ?? "",
+    cancelRequested: Boolean(order.customerCancelRequestedAt),
+    cancelRequestReason: order.customerCancelReason ?? "",
+    cancelRequestedAtLabel: order.customerCancelRequestedAt
+      ? formatDate(order.customerCancelRequestedAt)
+      : "",
   }));
 
   return (
@@ -150,10 +163,23 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
 
       {!loaded.ok ? <AdminDbUnavailableNotice /> : null}
 
+      {cancelRequestCount > 0 && queue !== "cancelRequest" ? (
+        <Link
+          href={buildAdminOrdersHref({ queue: "cancelRequest", from, to, ...searchHrefOpts })}
+          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950 transition hover:bg-amber-100/80"
+        >
+          <span>
+            고객 <strong>환불·취소 요청</strong>이 <strong>{cancelRequestCount}건</strong> 대기 중입니다.
+          </span>
+          <span className="font-medium text-amber-900 underline-offset-2 hover:underline">대기함 보기 →</span>
+        </Link>
+      ) : null}
+
       <AdminOrdersDateFilterForm
         action="/admin/orders"
-        status={status}
+        status={queue ? undefined : status}
         fulfillment={fulfillmentEffective}
+        queue={queue}
         defaultFrom={from}
         defaultTo={to}
         showOrderSearch
@@ -163,8 +189,21 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
       />
 
       <div className="flex flex-wrap gap-2">
+        <Link
+          href={buildAdminOrdersHref({ queue: "cancelRequest", from, to, ...searchHrefOpts })}
+          className={`inline-flex items-baseline gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition ${
+            queue === "cancelRequest"
+              ? "bg-amber-800 !text-white hover:!text-white visited:!text-white"
+              : "border border-amber-300 bg-amber-50 text-amber-950 hover:bg-amber-100"
+          }`}
+        >
+          <span>환불요청 대기</span>
+          <span className={`tabular-nums ${queue === "cancelRequest" ? "text-white/90" : "text-amber-800"}`}>
+            {cancelRequestCount}
+          </span>
+        </Link>
         {tabs.map((tab) => {
-          const active = (status ?? "") === tab.key || (!status && tab.key === "");
+          const active = !queue && ((status ?? "") === tab.key || (!status && tab.key === ""));
           return (
             <Link
               key={tab.key}
@@ -181,41 +220,48 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         })}
       </div>
 
-      <div className="space-y-2">
-        <p className="text-[11px] text-stone-500">
-          배송 단계는 <span className="font-medium text-stone-700">결제완료</span> 주문만 해당합니다. 아래를 누르면
-          결제완료 목록으로 바뀌며 단계별로 좁혀집니다.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {fulfillmentTabs.map((tab) => {
-            const active =
-              status === "PAID" &&
-              ((fulfillmentEffective ?? "") === tab.key || (!fulfillmentEffective && tab.key === ""));
-            const count =
-              tab.key === ""
-                ? fulfillmentStats.all
-                : tab.key === "AWAITING_SHIP"
-                  ? fulfillmentStats.awaiting
-                  : tab.key === "IN_TRANSIT"
-                    ? fulfillmentStats.inTransit
-                    : fulfillmentStats.delivered;
-            return (
-              <Link
-                key={tab.key || "all"}
-                href={tab.href}
-                className={`inline-flex items-baseline gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                  active
-                    ? "bg-[#8b673f] !text-white hover:!text-white visited:!text-white"
-                    : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span className={`tabular-nums ${active ? "text-white/90" : "text-stone-500"}`}>{count}건</span>
-              </Link>
-            );
-          })}
+      {!queue ? (
+        <div className="space-y-2">
+          <p className="text-[11px] text-stone-500">
+            배송 단계는 <span className="font-medium text-stone-700">결제완료</span> 주문만 해당합니다. 아래를 누르면
+            결제완료 목록으로 바뀌며 단계별로 좁혀집니다.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {fulfillmentTabs.map((tab) => {
+              const active =
+                status === "PAID" &&
+                ((fulfillmentEffective ?? "") === tab.key || (!fulfillmentEffective && tab.key === ""));
+              const count =
+                tab.key === ""
+                  ? fulfillmentStats.all
+                  : tab.key === "AWAITING_SHIP"
+                    ? fulfillmentStats.awaiting
+                    : tab.key === "IN_TRANSIT"
+                      ? fulfillmentStats.inTransit
+                      : fulfillmentStats.delivered;
+              return (
+                <Link
+                  key={tab.key || "all"}
+                  href={tab.href}
+                  className={`inline-flex items-baseline gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                    active
+                      ? "bg-[#8b673f] !text-white hover:!text-white visited:!text-white"
+                      : "border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  <span className={`tabular-nums ${active ? "text-white/90" : "text-stone-500"}`}>{count}건</span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      ) : (
+        <p className="rounded-xl border border-amber-200 bg-amber-50/80 px-4 py-3 text-sm text-amber-950">
+          고객이 남긴 환불·취소 요청만 모았습니다. 주문번호를 눌러 상세에서 결제 취소를 처리하면 대기함에서
+          사라집니다.
+        </p>
+      )}
 
       {listCapped ? (
         <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
@@ -226,10 +272,16 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
 
       <AdminOrdersShipmentTable
         orders={tableRows}
-        emptyMessage={parsedSearch ? "검색 조건과 일치하는 주문이 없습니다." : "표시할 주문이 없습니다."}
+        emptyMessage={
+          queue === "cancelRequest"
+            ? "대기 중인 환불·취소 요청이 없습니다."
+            : parsedSearch
+              ? "검색 조건과 일치하는 주문이 없습니다."
+              : "표시할 주문이 없습니다."
+        }
       />
 
-      {loaded.ok && exportApiHref ? (
+      {loaded.ok && exportApiHref && !queue ? (
         <div className="flex flex-col gap-3 rounded-2xl border border-stone-200 bg-[#faf8f5] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <p className="text-sm leading-relaxed text-stone-700">
             조건 일치 <strong className="text-stone-900">{totalMatching}건</strong>

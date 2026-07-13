@@ -48,6 +48,8 @@ export function prismaOrderCreatedAtRange(fromRaw?: string, toRaw?: string): Pri
 export function buildAdminOrdersHref(opts: {
   status?: string;
   fulfillment?: string;
+  /** 고객 환불·취소 요청 대기함 */
+  queue?: "cancelRequest";
   from?: string;
   to?: string;
   /** 주문 목록 검색(완전 일치). `q`가 있을 때만 넘깁니다. */
@@ -55,8 +57,12 @@ export function buildAdminOrdersHref(opts: {
   q?: string;
 }): string {
   const p = new URLSearchParams();
-  if (opts.status) p.set("status", opts.status);
-  if (opts.fulfillment?.trim()) p.set("fulfillment", opts.fulfillment.trim());
+  if (opts.queue === "cancelRequest") {
+    p.set("queue", "cancelRequest");
+  } else {
+    if (opts.status) p.set("status", opts.status);
+    if (opts.fulfillment?.trim()) p.set("fulfillment", opts.fulfillment.trim());
+  }
   if (opts.from?.trim()) p.set("from", opts.from.trim());
   if (opts.to?.trim()) p.set("to", opts.to.trim());
   const qv = opts.q?.trim();

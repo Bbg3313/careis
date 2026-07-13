@@ -21,6 +21,9 @@ export type AdminOrdersShipmentRow = {
   canRegisterShipment: boolean;
   trackingCarrierCode: string;
   trackingNumber: string;
+  cancelRequested?: boolean;
+  cancelRequestReason?: string;
+  cancelRequestedAtLabel?: string;
 };
 
 type RowDraft = {
@@ -240,7 +243,16 @@ export function AdminOrdersShipmentTable({ orders, emptyMessage }: Props) {
                         <div>{order.customerName}</div>
                         <div>{order.phoneDisplay}</div>
                       </td>
-                      <td className="px-3 py-3 align-middle">{order.progressLabel}</td>
+                      <td className="px-3 py-3 align-middle">
+                        <div>{order.progressLabel}</div>
+                        {order.cancelRequested ? (
+                          <p className="mt-1 text-sm text-amber-800">
+                            환불요청
+                            {order.cancelRequestedAtLabel ? ` · ${order.cancelRequestedAtLabel}` : ""}
+                            {order.cancelRequestReason ? ` · ${order.cancelRequestReason}` : ""}
+                          </p>
+                        ) : null}
+                      </td>
                       <td className="px-3 py-3 align-middle">
                         {order.canRegisterShipment ? (
                           <select

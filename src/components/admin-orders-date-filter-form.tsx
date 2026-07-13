@@ -4,6 +4,7 @@ type Props = {
   action: "/admin/orders" | "/admin";
   status?: string;
   fulfillment?: string;
+  queue?: string;
   defaultFrom?: string;
   defaultTo?: string;
   /** `/admin/orders` 전용: 주문번호·이름·연락처 완전 일치 검색 */
@@ -17,6 +18,7 @@ export function AdminOrdersDateFilterForm({
   action,
   status,
   fulfillment,
+  queue,
   defaultFrom,
   defaultTo,
   showOrderSearch = false,
@@ -32,8 +34,9 @@ export function AdminOrdersDateFilterForm({
   return (
     <form method="get" action={action} className="space-y-4 rounded-2xl border border-stone-200 bg-[#faf8f5] px-4 py-3">
       <div className="flex flex-wrap items-end gap-3">
-        {status ? <input type="hidden" name="status" value={status} /> : null}
-        {fulfillment ? <input type="hidden" name="fulfillment" value={fulfillment} /> : null}
+        {queue === "cancelRequest" ? <input type="hidden" name="queue" value="cancelRequest" /> : null}
+        {!queue && status ? <input type="hidden" name="status" value={status} /> : null}
+        {!queue && fulfillment ? <input type="hidden" name="fulfillment" value={fulfillment} /> : null}
         <label className="flex min-w-[10.5rem] flex-col gap-1 text-xs font-medium text-stone-600">
           시작일
           <input
