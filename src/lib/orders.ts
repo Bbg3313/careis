@@ -182,7 +182,7 @@ export async function loadAdminOrdersOverview(dateQuery?: { from?: string; to?: 
 }
 
 /** 관리자 주문 목록: 한 번에 가져오는 행 상한(응답 속도). 총건수는 `totalMatching`. */
-export const ADMIN_ORDER_LIST_TAKE = 300;
+export const ADMIN_ORDER_LIST_TAKE = 80;
 
 const adminOrdersListSelect = {
   id: true,
@@ -329,6 +329,8 @@ export async function loadAdminOrdersList(params: {
     });
 
     const paidBase = buildAdminPaidDateBaseWhere(params.from, params.to);
+    const needFulfillmentStats = queue !== "cancelRequest";
+
     const deliveredWhere = mergeOrderWhere(paidBase, { fulfillmentStatus: FulfillmentStatus.DELIVERED });
     const inTransitCountWhere = mergeOrderWhere(paidBase, {
       NOT: { fulfillmentStatus: FulfillmentStatus.DELIVERED },
@@ -339,7 +341,7 @@ export async function loadAdminOrdersList(params: {
     });
     const awaitingCountWhere = mergeOrderWhere(paidBase, awaitingShipInPaidWhere);
 
-    const [totalMatching, orders, paidAll, awaitingCnt, inTransitCnt, deliveredCnt, cancelRequestCount] =
+    const [totalMatching, orders, cancelRequestCount, paidAll, awaitingCnt, inTransitCnt, deliveredCnt] =
       await Promise.all([
         prisma.order.count({ where: listWhere }),
         prisma.order.findMany({
@@ -351,12 +353,11 @@ export async function loadAdminOrdersList(params: {
               : { createdAt: "desc" },
           take: ADMIN_ORDER_LIST_TAKE,
         }),
-        prisma.order.count({ where: paidBase }),
-        prisma.order.count({ where: awaitingCountWhere }),
-        prisma.order.count({ where: inTransitCountWhere }),
-        prisma.order.count({ where: deliveredWhere }),
-        // 대시보드·배지용: 기간과 무관하게 미처리 요청 전체
         prisma.order.count({ where: pendingCustomerCancelRequestWhere }),
+        needFulfillmentStats ? prisma.order.count({ where: paidBase }) : Promise.resolve(0),
+        needFulfillmentStats ? prisma.order.count({ where: awaitingCountWhere }) : Promise.resolve(0),
+        needFulfillmentStats ? prisma.order.count({ where: inTransitCountWhere }) : Promise.resolve(0),
+        needFulfillmentStats ? prisma.order.count({ where: deliveredWhere }) : Promise.resolve(0),
       ]);
 
     return {
@@ -508,8 +509,19 @@ export async function getRecentOrdersForAdmin(limit: number, dateQuery?: { from?
     where: Object.keys(dateWhere).length ? (dateWhere as Prisma.OrderWhereInput) : undefined,
     orderBy: { createdAt: "desc" },
     take: limit,
-    include: {
-      orderItems: true,
+    select: {
+      id: true,
+      orderNumber: true,
+      createdAt: true,
+      customerName: true,
+      phone: true,
+      paymentStatus: true,
+      fulfillmentStatus: true,
+      trackingNumber: true,
+      totalAmount: true,
+      referralCode: true,
+      appliedPromoCode: true,
+      couponCode: true,
     },
   });
 }

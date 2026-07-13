@@ -1,10 +1,12 @@
 import type { User } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { cache } from "react";
 
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { hasPublicSupabaseEnv } from "@/lib/supabase/env-public";
 
-export async function getAdminSessionUser() {
+/** 동일 요청 내 레이아웃·페이지에서 세션을 중복 조회하지 않음 */
+export const getAdminSessionUser = cache(async () => {
   if (!hasPublicSupabaseEnv()) {
     return null;
   }
@@ -14,7 +16,7 @@ export async function getAdminSessionUser() {
     data: { user },
   } = await supabase.auth.getUser();
   return user;
-}
+});
 
 export function assertAllowedAdminEmail(user: User) {
   const raw = process.env.ADMIN_ALLOWED_EMAILS?.trim();

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { AdminDashboardPromoLinks } from "@/components/admin-dashboard-promo-links";
 import { AdminOrdersDateFilterForm } from "@/components/admin-orders-date-filter-form";
@@ -21,6 +22,7 @@ function StatCard({ label, value, href }: { label: string; value: number; href: 
   return (
     <Link
       href={href}
+      prefetch
       className="flex flex-col rounded-2xl border border-stone-200 bg-white p-5 shadow-sm transition hover:border-[#b89156]/40 hover:shadow-md"
     >
       <p className="text-left text-xs font-medium tracking-wide text-stone-500 normal-case">{label}</p>
@@ -29,29 +31,11 @@ function StatCard({ label, value, href }: { label: string; value: number; href: 
   );
 }
 
-export default async function AdminDashboardPage({ searchParams }: DashboardPageProps) {
-  const { from, to } = await searchParams;
-
-  const [loaded, promoRows, promoPaidByCode] = await Promise.all([
-    loadAdminOrdersOverview({ from, to }),
+async function PromoSection() {
+  const [promoRows, promoPaidByCode] = await Promise.all([
     listPromoCampaignsAdmin().catch(() => [] as Awaited<ReturnType<typeof listPromoCampaignsAdmin>>),
     aggregatePaidOrdersByAppliedPromoCode(),
   ]);
-
-  const stats = loaded.ok
-    ? loaded.stats
-    : {
-        all: 0,
-        pending: 0,
-        paid: 0,
-        cancelled: 0,
-        refunded: 0,
-        paidAwaitingShip: 0,
-        paidInTransit: 0,
-        paidDelivered: 0,
-        cancelRequestPending: 0,
-      };
-  const recent = loaded.ok ? loaded.orders : [];
 
   const promoLinkRows = promoRows.slice(0, 12).map((r) => {
     const agg = promoPaidByCode.get(r.code) ?? { paidCount: 0, totalPaidAmount: 0 };
@@ -68,19 +52,54 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
   return (
+    <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 px-5 py-4">
+        <div>
+          <h2 className="text-sm font-semibold text-stone-900">공구 유입 링크</h2>
+        </div>
+        <Link href="/admin/promos" prefetch className="text-xs font-medium text-[#8b673f] hover:underline">
+          공구캠페인
+        </Link>
+      </div>
+      <AdminDashboardPromoLinks baseUrlFromEnv={siteUrl} campaigns={promoLinkRows} />
+    </section>
+  );
+}
+
+export default async function AdminDashboardPage({ searchParams }: DashboardPageProps) {
+  const { from, to } = await searchParams;
+  const loaded = await loadAdminOrdersOverview({ from, to });
+
+  const stats = loaded.ok
+    ? loaded.stats
+    : {
+        all: 0,
+        pending: 0,
+        paid: 0,
+        cancelled: 0,
+        refunded: 0,
+        paidAwaitingShip: 0,
+        paidInTransit: 0,
+        paidDelivered: 0,
+        cancelRequestPending: 0,
+      };
+  const recent = loaded.ok ? loaded.orders : [];
+
+  return (
     <div className="space-y-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold text-stone-900">주문 한눈에 보기</h1>
         <div className="flex flex-wrap gap-2">
           <Link
             href="/admin/sales"
+            prefetch
             className="shrink-0 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-800 hover:bg-stone-50"
           >
             매출 확인
           </Link>
           <Link
             href="/admin/orders/export?tab=general"
-            prefetch={false}
+            prefetch
             className="shrink-0 rounded-full border border-[#b89156]/40 bg-[#faf8f5] px-4 py-2 text-sm font-medium text-stone-800 hover:bg-[#f3efe8]"
           >
             주문 엑셀
@@ -88,16 +107,9 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
         </div>
       </div>
 
-      {!loaded.ok ? (
-        <AdminDbUnavailableNotice />
-      ) : null}
+      {!loaded.ok ? <AdminDbUnavailableNotice /> : null}
 
-      <AdminOrdersDateFilterForm
-        action="/admin"
-        defaultFrom={from}
-        defaultTo={to}
-        clearHref="/admin"
-      />
+      <AdminOrdersDateFilterForm action="/admin" defaultFrom={from} defaultTo={to} clearHref="/admin" />
 
       <div>
         <h2 className="mb-3 text-base font-semibold text-stone-900">주문 요약</h2>
@@ -139,22 +151,22 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
         </div>
       </div>
 
-      <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 px-5 py-4">
-          <div>
-            <h2 className="text-sm font-semibold text-stone-900">공구 유입 링크</h2>
-          </div>
-          <Link href="/admin/promos" className="text-xs font-medium text-[#8b673f] hover:underline">
-            공구캠페인
-          </Link>
-        </div>
-        <AdminDashboardPromoLinks baseUrlFromEnv={siteUrl} campaigns={promoLinkRows} />
-      </section>
+      <Suspense
+        fallback={
+          <div className="h-40 animate-pulse rounded-2xl border border-stone-100 bg-stone-50" aria-hidden />
+        }
+      >
+        <PromoSection />
+      </Suspense>
 
       <section className="rounded-2xl border border-stone-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-stone-100 px-5 py-4">
           <h2 className="text-sm font-semibold text-stone-900">최근 주문</h2>
-          <Link href={buildAdminOrdersHref({ from, to })} className="text-xs font-medium text-[#8b673f] hover:underline">
+          <Link
+            href={buildAdminOrdersHref({ from, to })}
+            prefetch
+            className="text-xs font-medium text-[#8b673f] hover:underline"
+          >
             전체 보기
           </Link>
         </div>
@@ -182,23 +194,35 @@ export default async function AdminDashboardPage({ searchParams }: DashboardPage
                 recent.map((order) => (
                   <tr key={order.id} className="border-t border-stone-100">
                     <td className="align-top px-5 py-3">
-                      <Link href={`/admin/orders/${encodeURIComponent(order.orderNumber)}`} className="font-medium text-[#8b673f] hover:underline">
+                      <Link
+                        href={`/admin/orders/${encodeURIComponent(order.orderNumber)}`}
+                        prefetch
+                        className="font-medium text-[#8b673f] hover:underline"
+                      >
                         {order.orderNumber}
                       </Link>
                     </td>
-                    <td className="align-top whitespace-nowrap px-5 py-3 tabular-nums text-stone-600">{formatDate(order.createdAt)}</td>
+                    <td className="align-top whitespace-nowrap px-5 py-3 tabular-nums text-stone-600">
+                      {formatDate(order.createdAt)}
+                    </td>
                     <td className="align-top px-5 py-3 text-stone-600">
                       <div>{order.customerName}</div>
                       <div className="text-xs text-stone-400">{formatKoreanMobileDisplay(order.phone)}</div>
                     </td>
-                    <td className="align-top whitespace-nowrap px-5 py-3 text-stone-700">{adminPaymentStatusLabel(order.paymentStatus)}</td>
-                    <td className="align-top whitespace-nowrap px-5 py-3 text-stone-700">{adminFulfillmentLabel(order)}</td>
+                    <td className="align-top whitespace-nowrap px-5 py-3 text-stone-700">
+                      {adminPaymentStatusLabel(order.paymentStatus)}
+                    </td>
+                    <td className="align-top whitespace-nowrap px-5 py-3 text-stone-700">
+                      {adminFulfillmentLabel(order)}
+                    </td>
                     <td className="align-top px-5 py-3">
                       <div className="max-w-[200px] truncate font-mono text-xs text-stone-700" title={inflowSummary(order)}>
                         {inflowSummary(order)}
                       </div>
                     </td>
-                    <td className="align-top whitespace-nowrap px-5 py-3 text-right font-medium tabular-nums text-stone-900">{formatCurrency(order.totalAmount)}</td>
+                    <td className="align-top whitespace-nowrap px-5 py-3 text-right font-medium tabular-nums text-stone-900">
+                      {formatCurrency(order.totalAmount)}
+                    </td>
                   </tr>
                 ))
               )}
