@@ -1,47 +1,69 @@
-import type { Order, OrderItem } from "@prisma/client";
+import type { Order, OrderItem, PaymentMethod } from "@prisma/client";
 import * as XLSX from "xlsx";
 
-import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
+import { adminFulfillmentLabel, adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
 import { formatDate } from "@/lib/utils";
 
 export type OrderWithItems = Order & { orderItems: OrderItem[] };
+
+const EXPORT_HEADERS = [
+  "주문번호",
+  "주문일시",
+  "주문상태",
+  "결제수단",
+  "배송단계",
+  "상품명",
+  "수량",
+  "단가",
+  "주문금액",
+  "레퍼럴코드",
+  "고객명",
+  "연락처",
+  "우편번호",
+  "주소",
+  "요청사항",
+] as const;
+
+function paymentMethodLabel(method: PaymentMethod): string {
+  switch (method) {
+    case "CREDIT_CARD":
+      return "신용카드";
+    case "NAVER_PAY":
+      return "네이버페이";
+    case "TOSS_PAY":
+      return "토스페이";
+    case "KAKAO_PAY":
+      return "카카오페이";
+    default:
+      return String(method);
+  }
+}
 
 export async function buildOrdersWorkbook(orders: OrderWithItems[]) {
   const rows = orders.flatMap((order) =>
     order.orderItems.map((item) => ({
       주문번호: order.orderNumber,
       주문일시: formatDate(order.createdAt),
-      주문상태: order.paymentStatus,
-      결제수단: order.paymentMethod,
-      PG사: order.paymentProvider ?? "",
-      결제참조값: order.paymentReference ?? "",
+      주문상태: adminPaymentStatusLabel(order.paymentStatus),
+      결제수단: paymentMethodLabel(order.paymentMethod),
+      배송단계: adminFulfillmentLabel(order),
+      상품명: item.productNameSnapshot,
+      수량: item.quantity,
+      단가: item.unitPrice,
+      주문금액: item.unitPrice * item.quantity,
+      레퍼럴코드: order.referralCode ?? "",
       고객명: order.customerName,
       연락처: order.phone,
       우편번호: order.postalCode,
       주소: order.address,
-      택배사: order.carrier ?? "",
-      스마트택배코드: order.trackingCarrierCode ?? "",
-      운송장번호: order.trackingNumber ?? "",
-      발송일시: order.shippedAt ? formatDate(order.shippedAt) : "",
-      관리자메모: order.adminNote ?? "",
-      배송단계: adminFulfillmentLabel(order),
-      배송완료일시: order.deliveredAt ? formatDate(order.deliveredAt) : "",
-      상품명: item.productNameSnapshot,
-      SKU: item.sku,
-      수량: item.quantity,
-      단가: item.unitPrice,
-      주문금액: order.totalAmount,
-      레퍼럴코드: order.referralCode ?? "",
-      적용프로모: order.appliedPromoCode ?? "",
-      쿠폰코드: order.couponCode ?? "",
-      결제실패코드: order.paymentFailureCode ?? "",
-      결제실패메시지: order.paymentFailureMessage ?? "",
       요청사항: order.memo ?? "",
     })),
   );
 
   const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(rows);
+  const worksheet = XLSX.utils.json_to_sheet(rows, {
+    header: [...EXPORT_HEADERS],
+  });
   XLSX.utils.book_append_sheet(workbook, worksheet, "orders");
 
   return XLSX.write(workbook, {

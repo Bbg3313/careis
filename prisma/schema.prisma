@@ -93,6 +93,9 @@ model Order {
   deliveredAt       DateTime?
   /** 관리자 메모 (고객 비노출) */
   adminNote          String?
+  /** 고객이 발송 후 등에 남긴 취소·환불 요청 */
+  customerCancelRequestedAt DateTime?
+  customerCancelReason      String?
   /** 스마트택배 조회 마지막 시각 (조회 한도·부하 완화) */
   lastSweetTrackerPollAt DateTime?
   createdAt      DateTime      @default(now())

@@ -2,9 +2,9 @@ import { FulfillmentStatus } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { markOrderDeliveredForm, saveOrderAdminForm } from "./actions";
+import { cancelOrderPaymentForm, markOrderDeliveredForm, saveOrderAdminForm } from "./actions";
 import { AdminDbUnavailableNotice } from "@/components/admin-db-unavailable";
-import { adminFulfillmentLabel } from "@/lib/admin-fulfillment";
+import { adminFulfillmentLabel, adminPaymentStatusLabel } from "@/lib/admin-fulfillment";
 import { loadAdminOrderByNumber, SWEET_TRACKER_DETAIL_MIN_INTERVAL_MS, syncOrderDeliveryFromSweetTracker } from "@/lib/orders";
 import { formatKoreanMobileDisplay } from "@/lib/phone-format";
 import { trackingLookupUrl } from "@/lib/tracking-url";
@@ -13,9 +13,18 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminOrderDetailPage({ params }: { params: Promise<{ orderNumber: string }> }) {
+export default async function AdminOrderDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ orderNumber: string }>;
+  searchParams: Promise<{ cancelError?: string; cancelOk?: string }>;
+}) {
   const { orderNumber: raw } = await params;
+  const q = await searchParams;
   const orderNumber = decodeURIComponent(raw);
+  const cancelError = q.cancelError?.trim() || null;
+  const cancelOk = q.cancelOk === "1";
   const loaded = await loadAdminOrderByNumber(orderNumber);
   if (!loaded.ok) {
     return (
@@ -50,6 +59,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
     order.paymentStatus === "PAID" &&
     order.fulfillmentStatus !== FulfillmentStatus.DELIVERED &&
     Boolean(order.trackingNumber?.trim());
+  const canCancelOrder = order.paymentStatus === "PAID" || order.paymentStatus === "PENDING";
 
   return (
     <div className="space-y-8">
@@ -66,6 +76,27 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
           <p className="text-xl font-semibold text-stone-900">{formatCurrency(order.totalAmount)}</p>
         </div>
       </div>
+
+      {cancelOk ? (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-950">
+          주문 취소가 반영되었습니다. 결제완료 건은 토스 결제 취소(환불)까지 처리됩니다.
+        </div>
+      ) : null}
+      {cancelError ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-950">{cancelError}</div>
+      ) : null}
+      {order.customerCancelRequestedAt ? (
+        <div className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          <p className="font-medium">고객 환불·취소 요청이 접수되어 있습니다.</p>
+          <p className="mt-1 text-amber-900/85">
+            요청 시각: {formatDate(order.customerCancelRequestedAt)}
+            {order.customerCancelReason ? ` · 사유: ${order.customerCancelReason}` : null}
+          </p>
+          <p className="mt-1 text-xs text-amber-900/70">
+            아래에서 결제 취소를 진행하면 요청이 처리된 것으로 정리됩니다.
+          </p>
+        </div>
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
@@ -99,7 +130,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
           <dl className="mt-4 space-y-3 text-sm">
             <div className="flex justify-between gap-4">
               <dt className="text-stone-500">상태</dt>
-              <dd className="font-medium text-stone-900">{order.paymentStatus}</dd>
+              <dd className="font-medium text-stone-900">{adminPaymentStatusLabel(order.paymentStatus)}</dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt className="text-stone-500">배송 단계</dt>
@@ -239,6 +270,47 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
           </form>
         ) : null}
       </section>
+
+      {canCancelOrder ? (
+        <section className="rounded-2xl border border-red-200/80 bg-red-50/40 p-6 shadow-sm">
+          <h2 className="text-sm font-semibold text-red-950">주문·결제 취소</h2>
+          <p className="mt-1 text-xs leading-6 text-red-950/80">
+            {order.paymentStatus === "PAID"
+              ? "결제완료 주문은 토스페이먼츠에 결제 취소를 요청한 뒤, 주문 상태를 환불로 바꿉니다. 이미 발송된 건은 회수·재고를 별도로 확인하세요."
+              : "결제대기 주문은 PG 취소 없이 주문만 취소 처리합니다."}
+          </p>
+          <form action={cancelOrderPaymentForm.bind(null, order.orderNumber)} className="mt-5 space-y-4">
+            <label className="block text-sm">
+              <span className="text-stone-700">취소 사유</span>
+              <input
+                name="cancelReason"
+                required
+                maxLength={200}
+                placeholder="예: 고객 취소 요청"
+                className="mt-1 w-full rounded-xl border border-red-200 bg-white px-3 py-2 text-stone-900 outline-none focus:border-red-400"
+              />
+            </label>
+            <label className="block text-sm">
+              <span className="text-stone-700">
+                확인 — 아래 칸에 <strong className="font-semibold">취소</strong> 라고 입력
+              </span>
+              <input
+                name="confirmCancel"
+                required
+                autoComplete="off"
+                placeholder="취소"
+                className="mt-1 w-full max-w-xs rounded-xl border border-red-200 bg-white px-3 py-2 text-stone-900 outline-none focus:border-red-400"
+              />
+            </label>
+            <button
+              type="submit"
+              className="rounded-full bg-red-800 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-red-900"
+            >
+              {order.paymentStatus === "PAID" ? "결제 취소 · 환불 처리" : "주문 취소"}
+            </button>
+          </form>
+        </section>
+      ) : null}
     </div>
   );
 }

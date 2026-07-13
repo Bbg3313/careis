@@ -1,4 +1,5 @@
 const TOSS_CONFIRM_URL = "https://api.tosspayments.com/v1/payments/confirm";
+const TOSS_API_BASE = "https://api.tosspayments.com";
 
 /** 서버 전용 시크릿 키 (test_sk_… / live_sk_…) */
 export function getTossSecretKey(): string | null {
@@ -35,6 +36,10 @@ export function getTossWebhookSecurityKey(): string | null {
   );
 }
 
+function tossAuthorizationHeader(secret: string) {
+  return `Basic ${Buffer.from(`${secret}:`).toString("base64")}`;
+}
+
 export type TossConfirmResult = Record<string, unknown>;
 
 /**
@@ -51,11 +56,10 @@ export async function confirmTossPaymentOnServer(params: {
     throw new Error("TOSS_SECRET_KEY(또는 TOSS_PAYMENTS_SECRET_KEY)가 설정되지 않았습니다.");
   }
 
-  const authorization = `Basic ${Buffer.from(`${secret}:`).toString("base64")}`;
   const response = await fetch(TOSS_CONFIRM_URL, {
     method: "POST",
     headers: {
-      Authorization: authorization,
+      Authorization: tossAuthorizationHeader(secret),
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -74,6 +78,62 @@ export async function confirmTossPaymentOnServer(params: {
         : typeof data.code === "string"
           ? data.code
           : "토스 결제 승인에 실패했습니다.";
+    throw new Error(msg);
+  }
+
+  return data;
+}
+
+/**
+ * 승인된 결제 전액(또는 부분) 취소.
+ * @see https://docs.tosspayments.com/guides/v2/cancel-payment
+ */
+export async function cancelTossPaymentOnServer(params: {
+  paymentKey: string;
+  cancelReason: string;
+  /** 생략 시 전액 취소 */
+  cancelAmount?: number;
+  idempotencyKey?: string;
+}): Promise<TossConfirmResult> {
+  const secret = getTossSecretKey();
+  if (!secret) {
+    throw new Error("TOSS_SECRET_KEY(또는 TOSS_PAYMENTS_SECRET_KEY)가 설정되지 않았습니다.");
+  }
+
+  const reason = params.cancelReason.trim().slice(0, 200);
+  if (!reason) {
+    throw new Error("결제 취소 사유를 입력해 주세요.");
+  }
+
+  const paymentKey = encodeURIComponent(params.paymentKey.trim());
+  const headers: Record<string, string> = {
+    Authorization: tossAuthorizationHeader(secret),
+    "Content-Type": "application/json",
+  };
+  if (params.idempotencyKey?.trim()) {
+    headers["Idempotency-Key"] = params.idempotencyKey.trim().slice(0, 300);
+  }
+
+  const body: Record<string, string | number> = { cancelReason: reason };
+  if (typeof params.cancelAmount === "number" && Number.isFinite(params.cancelAmount)) {
+    body.cancelAmount = params.cancelAmount;
+  }
+
+  const response = await fetch(`${TOSS_API_BASE}/v1/payments/${paymentKey}/cancel`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+  });
+
+  const data = (await response.json()) as TossConfirmResult & { message?: string; code?: string };
+
+  if (!response.ok) {
+    const msg =
+      typeof data.message === "string"
+        ? data.message
+        : typeof data.code === "string"
+          ? data.code
+          : "토스 결제 취소에 실패했습니다.";
     throw new Error(msg);
   }
 

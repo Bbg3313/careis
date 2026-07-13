@@ -72,6 +72,9 @@ export function SiteFooter() {
                 Support
               </p>
               <div className="space-y-1.5 text-[12px] text-white/60 md:space-y-3 md:text-[13px]">
+                <Link href="/order/lookup" className="block transition hover:text-white">
+                  주문 조회·취소
+                </Link>
                 <Link href="/order" className="block transition hover:text-white">
                   레퍼럴 구매
                 </Link>

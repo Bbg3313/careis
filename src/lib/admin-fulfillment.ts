@@ -59,3 +59,17 @@ export function adminFulfillmentLabel(row: FulfillmentRow): string {
   if (row.trackingNumber?.trim()) return "배송중";
   return "배송전";
 }
+
+/**
+ * 결제완료 주문이 아직 발송 전인지.
+ * - 배송완료·배송중이면 발송 후
+ * - 운송장이 있으면 발송 후(배송중으로 봄)
+ * - 그 외(발송준비/AWAITING_SHIP)는 발송 전
+ */
+export function isPaidOrderAwaitingShipment(row: FulfillmentRow): boolean {
+  if (row.paymentStatus !== OrderStatus.PAID) return false;
+  if (row.fulfillmentStatus === FulfillmentStatus.DELIVERED) return false;
+  if (row.fulfillmentStatus === FulfillmentStatus.IN_TRANSIT) return false;
+  if (row.trackingNumber?.trim()) return false;
+  return true;
+}

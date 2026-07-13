@@ -1,7 +1,7 @@
 import { FulfillmentStatus, OrderStatus, PaymentMethod, ProductStatus, type Prisma } from "@prisma/client";
 import { z } from "zod";
 
-import { orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
+import { adminFulfillmentLabel, isPaidOrderAwaitingShipment, orderMatchesAdminFulfillmentFilter } from "@/lib/admin-fulfillment";
 import { adminOrderSearchToPrismaWhere, parseAdminOrdersListSearch } from "@/lib/admin-order-search";
 import { prismaOrderCreatedAtRange } from "@/lib/admin-orders-date-filter";
 import { prisma } from "@/lib/db";
@@ -9,6 +9,7 @@ import { computeOrderPricing, resolveAppliedPromoCampaign } from "@/lib/promo";
 import { fetchSweetTrackerDeliveryComplete } from "@/lib/sweet-tracker";
 import { getProductBySlug } from "@/lib/product-data";
 import { sanitizeReferralCode } from "@/lib/referral";
+import { cancelTossPaymentOnServer } from "@/lib/toss-payments";
 
 const orderItemSchema = z.object({
   productSlug: z.enum(["sun-pack", "illuminator"]),
@@ -824,6 +825,17 @@ export async function failOrderPayment(input: PaymentFailureInput) {
 }
 
 export async function refundOrderPayment(orderNumber: string, payload?: string | null) {
+  const existing = await prisma.order.findUnique({
+    where: { orderNumber },
+    include: { orderItems: true },
+  });
+  if (!existing) {
+    throw new Error("주문 정보를 찾을 수 없습니다.");
+  }
+  if (existing.paymentStatus === OrderStatus.REFUNDED) {
+    return existing;
+  }
+
   return prisma.order.update({
     where: { orderNumber },
     data: {
@@ -839,6 +851,226 @@ export async function refundOrderPayment(orderNumber: string, payload?: string |
       orderItems: true,
     },
   });
+}
+
+/**
+ * 관리자 주문 취소.
+ * - PENDING: PG 없이 CANCELLED
+ * - PAID: 토스 결제 취소 후 REFUNDED
+ * - 이미 CANCELLED/REFUNDED: 그대로 반환
+ */
+export async function adminCancelOrder(
+  orderNumber: string,
+  options: { reason: string },
+): Promise<{ order: Awaited<ReturnType<typeof refundOrderPayment>>; alreadyDone: boolean }> {
+  const reason = options.reason.trim().slice(0, 200);
+  if (!reason) {
+    throw new Error("취소 사유를 입력해 주세요.");
+  }
+
+  const order = await prisma.order.findUnique({
+    where: { orderNumber },
+    include: { orderItems: true },
+  });
+  if (!order) {
+    throw new Error("주문 정보를 찾을 수 없습니다.");
+  }
+
+  if (order.paymentStatus === OrderStatus.REFUNDED || order.paymentStatus === OrderStatus.CANCELLED) {
+    return { order, alreadyDone: true };
+  }
+
+  if (order.paymentStatus === OrderStatus.PENDING) {
+    const cancelled = await prisma.order.update({
+      where: { orderNumber },
+      data: {
+        paymentStatus: OrderStatus.CANCELLED,
+        cancelledAt: new Date(),
+        paymentFailureCode: "ADMIN_CANCEL",
+        paymentFailureMessage: reason,
+        fulfillmentStatus: null,
+        deliveredAt: null,
+        trackingCarrierCode: null,
+        lastSweetTrackerPollAt: null,
+        customerCancelRequestedAt: null,
+        customerCancelReason: null,
+        adminNote: [order.adminNote?.trim(), `[관리자 취소] ${reason}`].filter(Boolean).join("\n"),
+      },
+      include: { orderItems: true },
+    });
+    return { order: cancelled, alreadyDone: false };
+  }
+
+  if (order.paymentStatus !== OrderStatus.PAID) {
+    throw new Error("이 주문 상태에서는 취소할 수 없습니다.");
+  }
+
+  const paymentKey = (order.paymentToken ?? order.paymentReference)?.trim();
+  if (!paymentKey) {
+    throw new Error("결제키(paymentKey)가 없어 토스 취소를 진행할 수 없습니다. 토스 대시보드에서 직접 취소 후 상태를 맞춰 주세요.");
+  }
+
+  const tossResult = await cancelTossPaymentOnServer({
+    paymentKey,
+    cancelReason: reason,
+    idempotencyKey: `admin-cancel-${order.orderNumber}`,
+  });
+
+  const payload = JSON.stringify({
+    source: "admin_cancel",
+    reason,
+    cancelledAt: new Date().toISOString(),
+    toss: tossResult,
+  });
+
+  const refunded = await prisma.order.update({
+    where: { orderNumber },
+    data: {
+      paymentStatus: OrderStatus.REFUNDED,
+      refundedAt: new Date(),
+      paymentPayload: payload,
+      fulfillmentStatus: null,
+      deliveredAt: null,
+      trackingCarrierCode: null,
+      lastSweetTrackerPollAt: null,
+      customerCancelRequestedAt: null,
+      customerCancelReason: null,
+      adminNote: [order.adminNote?.trim(), `[관리자 결제취소] ${reason}`].filter(Boolean).join("\n"),
+    },
+    include: { orderItems: true },
+  });
+
+  return { order: refunded, alreadyDone: false };
+}
+
+function digitsOnlyPhone(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+function phonesMatch(stored: string, input: string) {
+  const a = digitsOnlyPhone(stored);
+  const b = digitsOnlyPhone(input);
+  return a.length >= 8 && b.length >= 8 && a === b;
+}
+
+export type CustomerOrderView = {
+  orderNumber: string;
+  createdAt: Date;
+  paymentStatus: OrderStatus;
+  fulfillmentLabel: string;
+  awaitingShipment: boolean;
+  totalAmount: number;
+  customerName: string;
+  phone: string;
+  address: string;
+  postalCode: string;
+  items: Array<{ name: string; quantity: number; lineTotal: number }>;
+  customerCancelRequestedAt: Date | null;
+  customerCancelReason: string | null;
+  canCancelNow: boolean;
+  canRequestRefund: boolean;
+};
+
+function toCustomerOrderView(
+  order: Prisma.OrderGetPayload<{ include: { orderItems: true } }>,
+): CustomerOrderView {
+  const awaitingShipment = isPaidOrderAwaitingShipment(order);
+  const canCancelNow =
+    order.paymentStatus === OrderStatus.PENDING ||
+    (order.paymentStatus === OrderStatus.PAID && awaitingShipment);
+  const canRequestRefund =
+    order.paymentStatus === OrderStatus.PAID &&
+    !awaitingShipment &&
+    !order.customerCancelRequestedAt;
+
+  return {
+    orderNumber: order.orderNumber,
+    createdAt: order.createdAt,
+    paymentStatus: order.paymentStatus,
+    fulfillmentLabel: adminFulfillmentLabel(order),
+    awaitingShipment,
+    totalAmount: order.totalAmount,
+    customerName: order.customerName,
+    phone: order.phone,
+    address: order.address,
+    postalCode: order.postalCode,
+    items: order.orderItems.map((item) => ({
+      name: item.productNameSnapshot,
+      quantity: item.quantity,
+      lineTotal: item.unitPrice * item.quantity,
+    })),
+    customerCancelRequestedAt: order.customerCancelRequestedAt,
+    customerCancelReason: order.customerCancelReason,
+    canCancelNow,
+    canRequestRefund,
+  };
+}
+
+/** 비회원 주문 조회: 주문번호 + 연락처(숫자 일치) */
+export async function lookupCustomerOrder(orderNumber: string, phone: string): Promise<CustomerOrderView | null> {
+  const number = orderNumber.trim();
+  if (!number || digitsOnlyPhone(phone).length < 8) return null;
+
+  const order = await prisma.order.findUnique({
+    where: { orderNumber: number },
+    include: { orderItems: true },
+  });
+  if (!order || !phonesMatch(order.phone, phone)) return null;
+  return toCustomerOrderView(order);
+}
+
+/**
+ * 고객 즉시 취소.
+ * - PENDING → CANCELLED
+ * - PAID + 발송 전 → 토스 취소 후 REFUNDED
+ */
+export async function customerCancelOrder(orderNumber: string, phone: string, reason: string) {
+  const view = await lookupCustomerOrder(orderNumber, phone);
+  if (!view) {
+    throw new Error("주문번호 또는 연락처가 올바르지 않습니다.");
+  }
+  if (!view.canCancelNow) {
+    throw new Error("지금은 즉시 취소할 수 없습니다. 환불 요청을 남겨 주세요.");
+  }
+
+  const noteReason = reason.trim() || "고객 요청 취소";
+  return adminCancelOrder(orderNumber, { reason: `[고객] ${noteReason}` });
+}
+
+/** 발송 후 등: 관리자 확인용 환불·취소 요청만 접수 */
+export async function customerRequestCancelOrRefund(orderNumber: string, phone: string, reason: string) {
+  const cleaned = reason.trim().slice(0, 300);
+  if (!cleaned) {
+    throw new Error("요청 사유를 입력해 주세요.");
+  }
+
+  const order = await prisma.order.findUnique({
+    where: { orderNumber: orderNumber.trim() },
+    include: { orderItems: true },
+  });
+  if (!order || !phonesMatch(order.phone, phone)) {
+    throw new Error("주문번호 또는 연락처가 올바르지 않습니다.");
+  }
+  if (order.paymentStatus !== OrderStatus.PAID) {
+    throw new Error("결제완료 주문만 환불 요청이 가능합니다.");
+  }
+  if (isPaidOrderAwaitingShipment(order)) {
+    throw new Error("발송 전 주문은 바로 결제 취소가 가능합니다.");
+  }
+  if (order.customerCancelRequestedAt) {
+    return toCustomerOrderView(order);
+  }
+
+  const updated = await prisma.order.update({
+    where: { orderNumber: order.orderNumber },
+    data: {
+      customerCancelRequestedAt: new Date(),
+      customerCancelReason: cleaned,
+      adminNote: [order.adminNote?.trim(), `[고객 환불요청] ${cleaned}`].filter(Boolean).join("\n"),
+    },
+    include: { orderItems: true },
+  });
+  return toCustomerOrderView(updated);
 }
 
 export async function getProductSummaryForSlug(slug: string) {
