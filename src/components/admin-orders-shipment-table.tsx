@@ -173,10 +173,10 @@ export function AdminOrdersShipmentTable({ orders, emptyMessage }: Props) {
 
       <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-[#faf8f5] text-xs text-stone-600">
+          <table className="min-w-full text-left text-sm text-stone-800">
+            <thead className="bg-[#faf8f5] text-sm text-stone-600">
               <tr>
-                <th className="w-10 px-3 py-3 font-medium">
+                <th className="w-10 px-3 py-3 font-normal">
                   {registerable.length > 0 ? (
                     <input
                       type="checkbox"
@@ -187,15 +187,15 @@ export function AdminOrdersShipmentTable({ orders, emptyMessage }: Props) {
                     />
                   ) : null}
                 </th>
-                <th className="px-3 py-3 font-medium">주문번호</th>
-                <th className="px-3 py-3 font-medium">일시</th>
-                <th className="px-3 py-3 font-medium">상품</th>
-                <th className="px-3 py-3 font-medium">고객</th>
-                <th className="min-w-[7rem] px-3 py-3 font-medium">진행</th>
-                <th className="min-w-[9rem] px-3 py-3 font-medium">택배사</th>
-                <th className="min-w-[10rem] px-3 py-3 font-medium">운송장</th>
-                <th className="px-3 py-3 font-medium">레퍼럴·공구</th>
-                <th className="px-3 py-3 font-medium text-right">금액</th>
+                <th className="px-3 py-3 font-normal">주문번호</th>
+                <th className="px-3 py-3 font-normal">일시</th>
+                <th className="px-3 py-3 font-normal">상품</th>
+                <th className="px-3 py-3 font-normal">고객</th>
+                <th className="min-w-[7rem] px-3 py-3 font-normal">진행</th>
+                <th className="min-w-[9rem] px-3 py-3 font-normal">택배사</th>
+                <th className="min-w-[10rem] px-3 py-3 font-normal">운송장</th>
+                <th className="px-3 py-3 font-normal">레퍼럴·공구</th>
+                <th className="px-3 py-3 font-normal text-right">금액</th>
               </tr>
             </thead>
             <tbody>
@@ -209,48 +209,46 @@ export function AdminOrdersShipmentTable({ orders, emptyMessage }: Props) {
                 orders.map((order) => {
                   const draft = drafts[order.orderNumber];
                   return (
-                    <tr key={order.id} className="border-t border-stone-100 align-top">
-                      <td className="px-3 py-3">
+                    <tr key={order.id} className="border-t border-stone-100">
+                      <td className="px-3 py-3 align-middle">
                         {order.canRegisterShipment ? (
                           <input
                             type="checkbox"
                             checked={Boolean(draft?.selected)}
                             onChange={(e) => updateDraft(order.orderNumber, { selected: e.target.checked })}
                             aria-label={`${order.orderNumber} 선택`}
-                            className="mt-1 h-4 w-4 rounded border-stone-300"
+                            className="h-4 w-4 rounded border-stone-300"
                           />
                         ) : (
                           <span className="text-stone-300">—</span>
                         )}
                       </td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 align-middle">
                         <Link
                           href={`/admin/orders/${encodeURIComponent(order.orderNumber)}`}
-                          className="font-medium text-[#8b673f] underline-offset-2 hover:underline"
+                          className="text-sm font-normal text-[#8b673f] underline-offset-2 hover:underline"
                           prefetch={false}
                         >
                           {order.orderNumber}
                         </Link>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-3 text-stone-600">{order.createdAtLabel}</td>
-                      <td className="max-w-[160px] px-3 py-3 text-stone-600">
+                      <td className="whitespace-nowrap px-3 py-3 align-middle">{order.createdAtLabel}</td>
+                      <td className="max-w-[160px] px-3 py-3 align-middle">
                         <span className="line-clamp-2">{order.productSummary}</span>
                       </td>
-                      <td className="px-3 py-3 text-stone-600">
+                      <td className="px-3 py-3 align-middle">
                         <div>{order.customerName}</div>
-                        <div className="text-xs text-stone-400">{order.phoneDisplay}</div>
+                        <div>{order.phoneDisplay}</div>
                       </td>
-                      <td className="px-3 py-3 text-stone-800">
-                        <span className="text-[13px] font-medium leading-snug">{order.progressLabel}</span>
-                      </td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 align-middle">{order.progressLabel}</td>
+                      <td className="px-3 py-3 align-middle">
                         {order.canRegisterShipment ? (
                           <select
                             value={draft?.trackingCarrierCode ?? "04"}
                             onChange={(e) =>
                               updateDraft(order.orderNumber, { trackingCarrierCode: e.target.value })
                             }
-                            className="w-full min-w-[8.5rem] rounded-lg border border-stone-200 bg-white px-2 py-1.5 text-xs text-stone-900 outline-none focus:border-[#b89156]"
+                            className="w-full min-w-[8.5rem] rounded-lg border border-stone-200 bg-white px-2 py-1.5 text-sm text-stone-800 outline-none focus:border-[#b89156]"
                           >
                             {SWEET_TRACKER_CARRIER_OPTIONS.map((c) => (
                               <option key={c.code} value={c.code}>
@@ -258,38 +256,36 @@ export function AdminOrdersShipmentTable({ orders, emptyMessage }: Props) {
                               </option>
                             ))}
                           </select>
-                        ) : order.trackingNumber ? (
-                          <span className="text-xs text-stone-600">
-                            {SWEET_TRACKER_CARRIER_OPTIONS.find((c) => c.code === order.trackingCarrierCode)
-                              ?.label ||
-                              order.trackingCarrierCode ||
-                              "—"}
-                          </span>
                         ) : (
-                          <span className="text-xs text-stone-400">—</span>
+                          <span>
+                            {order.trackingNumber
+                              ? SWEET_TRACKER_CARRIER_OPTIONS.find((c) => c.code === order.trackingCarrierCode)
+                                  ?.label ||
+                                order.trackingCarrierCode ||
+                                "—"
+                              : "—"}
+                          </span>
                         )}
                       </td>
-                      <td className="px-3 py-3">
+                      <td className="px-3 py-3 align-middle">
                         {order.canRegisterShipment ? (
                           <input
                             type="text"
                             value={draft?.trackingNumber ?? ""}
                             onChange={(e) => updateDraft(order.orderNumber, { trackingNumber: e.target.value })}
                             placeholder="운송장 번호"
-                            className="w-full min-w-[9rem] rounded-lg border border-stone-200 bg-white px-2 py-1.5 font-mono text-xs text-stone-900 outline-none focus:border-[#b89156]"
+                            className="w-full min-w-[9rem] rounded-lg border border-stone-200 bg-white px-2 py-1.5 text-sm text-stone-800 outline-none focus:border-[#b89156]"
                           />
-                        ) : order.trackingNumber ? (
-                          <span className="font-mono text-xs text-stone-700">{order.trackingNumber}</span>
                         ) : (
-                          <span className="text-xs text-stone-400">—</span>
+                          <span>{order.trackingNumber || "—"}</span>
                         )}
                       </td>
-                      <td className="max-w-[140px] px-3 py-3">
-                        <div className="truncate font-mono text-xs text-stone-700" title={order.inflow}>
+                      <td className="max-w-[140px] px-3 py-3 align-middle">
+                        <div className="truncate" title={order.inflow}>
                           {order.inflow}
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-3 text-right font-medium text-stone-900">
+                      <td className="whitespace-nowrap px-3 py-3 align-middle text-right">
                         {formatCurrency(order.totalAmount)}
                       </td>
                     </tr>
